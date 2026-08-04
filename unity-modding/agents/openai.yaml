@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Mono / IL2CPP Modding"
+  short_description: "Source-first Unity Mono and IL2CPP modding"
+  default_prompt: "Use $unity-modding to create, extend, repair, or migrate this Unity mod while applying the three-option asset gate."
