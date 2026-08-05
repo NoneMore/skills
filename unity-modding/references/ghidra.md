@@ -4,7 +4,7 @@ Read this reference only after [tooling.md](tooling.md) permits deep-level escal
 
 ## Build the annotated persistent project
 
-Use a persistent Ghidra project as the source of analysis state. Import the exact native binary and apply a version-compatible Il2CppInspectorRedux Ghidra export—script, metadata/address map, and type header or the equivalent companion files emitted by the pinned release—to the exact native/metadata pair. Validate representative names and addresses against the native listing before trusting the bulk import.
+Use a persistent Ghidra project under `<mod-project-root>/.assets/<game-version>/ghidra/` as the source of analysis state. Import the exact native binary and apply a version-compatible Il2CppInspectorRedux Ghidra export from `<mod-project-root>/.assets/<game-version>/il2cppinspector-redux/`—script, metadata/address map, and type header or the equivalent companion files emitted by the pinned release—to the exact native/metadata pair. Validate representative names and addresses against the native listing before trusting the bulk import.
 
 Record the native and metadata hashes, build ID, Ghidra version, project path, program name/address space, image base, import settings, processor/language, analysis options, and Il2CppInspectorRedux/export versions. Reject work when the expected fingerprint differs from the open project. Treat imported names, types, and addresses as candidate annotations until representative entries agree with native listing or runtime evidence.
 

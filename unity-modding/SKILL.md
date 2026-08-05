@@ -39,9 +39,14 @@ For option 1, name the exact files, acceptable versions/fingerprints, and expect
 
 Treat downloading packages/binaries/artifacts, installing tools or templates, copying from a game installation, extracting, decompiling, dumping, generating interop/dummy assemblies, and launching a first run that generates them as asset acquisition. Perform those actions only after the user selects option 2 or explicitly requests the specific action. Keep normal read-only inspection of user-scoped project files, logs, configuration, file layout, versions, and hashes available under option 3. Treat reading public official documentation as information lookup rather than asset acquisition unless the user has forbidden web access.
 
-Use reverse-engineered or decompiled assets already supplied by the user or already present in the workspace under option 3. Do not seek replacements or newer copies automatically. Scope option 2 to the current task and acquire only the minimum needed; follow all runtime approval requirements and keep proprietary artifacts outside source control and release archives.
+Use reverse-engineered or decompiled assets already supplied by the user or already present in the workspace under option 3. Do not seek replacements or newer copies automatically. Scope option 2 to the current task and acquire only the minimum needed; follow all runtime approval requirements and keep proprietary artifacts out of source control and release archives.
 
-Before generating analysis output, choose and state a persistent, user-scoped analysis root outside the mod repository, following an existing workspace convention when available. Store costly or reusable outputs there under the game/build fingerprint and tool version: decompiler databases/projects, extracted metadata, generated wrappers, symbol/address maps, exports, and reusable helper tools. Do not place them in an OS temporary directory merely because they are generated. Use temporary storage only for bounded scratch data that is cheap to reproduce; promote any reusable result to the persistent analysis root and record its final path before cleanup or handoff.
+Before generating analysis output, resolve the corresponding `<mod-project-root>` rather than defaulting to the repository root. Keep two distinct in-project locations:
+
+- **Analysis** — store the compact, reviewable, version-controlled Markdown record at `<mod-project-root>/analysis/<game-version>/<target-slug>.md`.
+- **Analysis assets** — store costly, bulky, proprietary, or generated inputs and outputs at `<mod-project-root>/.assets/<game-version>/<tool>/`. This includes decompiler output, metadata exports, generated wrappers/stubs, symbol/address maps, reusable utilities, and Ghidra projects/databases. Record tool versions in the Markdown analysis instead of adding another directory level.
+
+Ensure the corresponding Mod project's `.gitignore` excludes `/.assets/`; add the narrow rule when repository policy permits and it is absent. Do not ignore `/analysis/`. Use temporary storage only for bounded scratch data that is cheap to reproduce; promote every reusable result into the in-project analysis-assets directory and link it from the analysis record before cleanup or handoff.
 
 Complete this step when the asset inventory, selected/default mode, missing items, and resulting validation limits are visible to the user.
 
@@ -53,7 +58,7 @@ Complete this step when the asset inventory, selected/default mode, missing item
 - Do not run or pre-plan all three levels as a routine pipeline. Installed tool availability is not an escalation reason. Evaluate the current level's actual output before selecting the next level; at every escalation, record the unanswered question, the evidence gap, and why the next level can answer it.
 - Create or update a versioned analysis record whenever the task discovers target-specific facts, invokes a reverse-engineering tool, creates costly/reusable output, establishes a compatibility bound, or rejects a plausible approach. Use [analysis-record-template.md](assets/analysis-record-template.md) and follow [analysis.md](references/analysis.md).
 - Treat the compact Markdown analysis record as the required reusable index. Raw tool output, an evidence directory, or a Ghidra project supports the record but never substitutes for it.
-- In every plan and handoff that invokes a tool level, name the record schema and repository path explicitly: reuse the project convention or default to `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md` with schema `unity-modding-analysis/v1`.
+- In every plan and handoff that invokes a tool level, name both in-project locations explicitly: analysis record `<mod-project-root>/analysis/<game-version>/<target-slug>.md` with schema `unity-modding-analysis/v1`, and analysis assets under `<mod-project-root>/.assets/<game-version>/<tool>/`.
 - Do not require a new record for a load-only/configuration scaffold or a mechanical change that produces no target knowledge. When exact-fingerprint source or an existing record fully proves the target, cite and reuse it instead.
 
 Analysis may be a bounded phase inside an implement, extend, repair, or migrate task; it does not require a separate user request. Complete this step when the required target facts are evidenced at the lowest sufficient level and reusable knowledge has been recorded or an explicit no-record exception applies.
@@ -67,7 +72,7 @@ Analysis may be a bounded phase inside an implement, extend, repair, or migrate 
 - Search for a reusable analysis record for the exact fingerprint before running tools. Reuse compatible evidence and preserve rejected hypotheses so later agents do not repeat the same work.
 - Prefer installed, version-identifiable tools over custom parsers. Record every tool's version, relevant invocation, input fingerprint, output location, and limitations.
 - Follow the shallow/intermediate/deep routing in [tooling.md](references/tooling.md). For IL2CPP, inspect exact-fingerprint BepInEx interop assemblies or Il2CppInspectorRedux shim DLLs/C# stubs first, use Cpp2IL disassembly with metadata second, and use Ghidra with compatible Il2CppInspectorRedux-generated scripts only at the deep level. Do not open or prepare Ghidra merely because it is installed.
-- Create or update a versioned analysis record from [analysis-record-template.md](assets/analysis-record-template.md). Follow an existing repository documentation convention; otherwise use `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md`.
+- Create or update a versioned analysis record from [analysis-record-template.md](assets/analysis-record-template.md) at `<mod-project-root>/analysis/<game-version>/<target-slug>.md`.
 - Record signatures, locators, call timing, candidate seams, compatibility bounds, and an evidence ledger. Label each material statement **Observed**, **Inferred**, or **Pending**.
 
 Complete this branch when the requested question is answered to the available evidence boundary, reusable evidence is saved under the exact build/tool versions, and every unresolved claim has a concrete next action. Stop there unless implementation was also requested.
@@ -190,4 +195,4 @@ Report the task class, selected asset mode, available and missing assets, finger
 
 Separate material claims into **Observed**, **Inferred**, and **Pending**. List every advertised mode with its actual test result. Never describe a parser, address map, hook, restart, rollback, or compatibility bound as complete merely because an intermediate structure looked plausible or a build succeeded.
 
-Keep proprietary game binaries, metadata, generated wrappers, decompiler projects/databases, and decompiled source out of the mod repository and release archive. Preserve reusable copies in the recorded persistent analysis root rather than disposable temporary storage.
+Keep proprietary game binaries, metadata, generated wrappers, decompiler projects/databases, and decompiled source out of source control and release archives. Preserve reusable copies under the corresponding Mod project's ignored `.assets/` directory rather than disposable temporary storage.

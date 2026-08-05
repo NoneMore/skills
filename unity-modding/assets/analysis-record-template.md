@@ -82,8 +82,10 @@ For Agent-driven Ghidra work, include the Headless/PyGhidra/MCP implementation a
 
 - Reusable while: <matching fingerprint facts>
 - Recheck after: <game, loader, generator, platform, or tool changes>
-- Persistent analysis root: <user-scoped path outside the mod repository or none>
-- Proprietary/generated artifacts remain at: <fingerprinted paths under that root or none>
+- Analysis record path: <mod-project-root>/analysis/<game-version>/<target-slug>.md
+- Analysis assets remain at: <mod-project-root>/.assets/<game-version>/<tool>/
+- Tool versions: <recorded here rather than encoded in directory names>
+- Git ignore rule: <project .gitignore containing /.assets/ or pending>
 - Disposable scratch used: <temporary paths and whether any useful result was promoted, or none>
 
 ## Pending work

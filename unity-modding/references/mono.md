@@ -25,7 +25,7 @@ Avoid raising the target framework merely to satisfy a convenience API; the game
 - Exclude `mscorlib`, `netstandard`, and broad `System.*` copies from local game references unless the pinned template explicitly requires them.
 - Keep game assemblies out of build output and source control.
 - Prefer repository source, public APIs, and user-supplied target evidence. If a patch target cannot be resolved, list the exact game assembly or decompiler output as a missing asset and apply the selected asset mode.
-- Under asset mode 2, decompile only the exact assemblies needed for the requested target and record their hashes or game build. Keep the outputs outside source control.
+- Under asset mode 2, decompile only the exact assemblies needed for the requested target and record their hashes or game build. Keep the outputs under the corresponding Mod project's ignored `.assets/<game-version>/ilspycmd/` directory.
 
 ## Analyze at the shallow level first
 

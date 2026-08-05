@@ -1,6 +1,23 @@
-# Versioned Analysis Records
+# Analysis Records and Assets
 
-Use an analysis record to preserve target knowledge across agents and sessions without carrying stale conclusions across game builds.
+Separate **analysis** from **analysis assets**. Analysis is the compact, version-controlled explanation and evidence ledger. Analysis assets are the persistent binaries, generated output, databases, maps, and tool state that support it. Keep both under the corresponding Mod project directory without committing the asset directory.
+
+## Use two in-project locations
+
+Resolve `<mod-project-root>` as the directory of the Mod project being analyzed, such as the directory containing its project file and source. In a repository containing several Mod projects, do not centralize their outputs at the repository root.
+
+Use these paths relative to that project root:
+
+```text
+<mod-project-root>/
+├── analysis/<game-version>/<target-slug>.md
+└── .assets/<game-version>/<tool>/...
+```
+
+- `analysis/` contains analysis itself: concise Markdown records suitable for review, reuse, and version control.
+- `.assets/` contains analysis assets: place each authorized or generated asset under the stable lowercase slug of the tool that consumes or produces it, such as `ilspycmd/`, `bepinex/`, `il2cppinspector-redux/`, `cpp2il/`, or `ghidra/`. Record exact tool versions in the Markdown analysis rather than the directory name.
+- Add `/.assets/` to the corresponding Mod project's `.gitignore` when repository policy permits and the rule is absent. Never ignore `/analysis/`.
+- Do not use an OS temporary directory for the only useful copy of either category.
 
 ## Decide when a record is required
 
@@ -22,15 +39,15 @@ Do not require a new record for a load-only/configuration scaffold, documentatio
 3. Reuse **Observed** evidence only when the relevant fingerprint fields still match. Re-evaluate **Inferred** claims when any premise changed.
 4. Create a new build directory instead of silently updating a record for another fingerprint.
 
-Use Markdown and copy [analysis-record-template.md](../assets/analysis-record-template.md). Follow the repository's documentation convention. Otherwise place records at:
+Use Markdown and copy [analysis-record-template.md](../assets/analysis-record-template.md). Place each record at:
 
 ```text
-docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md
+<mod-project-root>/analysis/<game-version>/<target-slug>.md
 ```
 
-Build `build-id` from an explicit game version when reliable. Otherwise use stable abbreviated hashes from the IL2CPP native/metadata pair or the Mono target assembly. Never use timestamps alone as a build identity.
+Build `game-version` from an explicit game version when reliable. When unavailable, use `build-<stable-abbreviated-hash>` derived from the IL2CPP native/metadata pair or the Mono target assembly. Never use timestamps alone as the directory identity.
 
-Keep the compact Markdown record in the repository only when repository policy permits it. Keep proprietary or bulky analysis artifacts in a persistent, user-scoped analysis root outside the mod repository, organized by game, build fingerprint, and tool version. Record that root and the exact artifact paths in the Markdown record. Do not use an OS temporary directory for the only copy of a decompilation, Ghidra project, generated wrapper set, address map, or other costly result.
+Keep the compact Markdown record in version control. Keep proprietary or bulky analysis assets in `<mod-project-root>/.assets/<game-version>/<tool>/`, organized by game version and corresponding tool and excluded from version control. Record exact project-relative asset paths and tool versions in the Markdown record.
 
 The Markdown record is the required reusable index and evidence ledger, not a container for bulk decompiler output. An artifact folder or tool database alone is not a saved analysis record. Preserve the template's YAML frontmatter and headings. A project may add fields or sections, but do not remove the fingerprint, tool ledger, evidence classification, compatibility, artifact-location, or pending-work data required by the template.
 
@@ -70,4 +87,4 @@ Record:
 - compatibility bounds and the exact facts that must be rechecked after an update;
 - concise next actions for every Pending item.
 
-Store summaries, signatures, hashes, commands, and evidence locators. Keep proprietary binaries, bulk decompiler output, generated wrappers, Ghidra projects/databases, and copied game source outside the mod repository unless the user explicitly requires and authorizes a suitable private location. Preserve them in the recorded persistent analysis root; reserve temporary directories for reproducible scratch work and promote useful results before cleanup or handoff.
+Store summaries, signatures, hashes, commands, and project-relative evidence locators in the Markdown analysis. Store proprietary binaries, bulk decompiler output, generated wrappers, Ghidra projects/databases, and copied game source as ignored analysis assets under the corresponding Mod project's `.assets/<game-version>/<tool>/` directory. Reserve temporary directories for reproducible scratch work and promote useful results into `.assets/` before cleanup or handoff.

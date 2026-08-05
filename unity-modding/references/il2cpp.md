@@ -15,7 +15,7 @@ Unity describes IL2CPP as managed assemblies converted to C++ and then compiled 
 - Inspect existing BepInEx-generated interop assemblies for the exact build pair with `ilspycmd`; reference them from the mod only when they match the installed loader and runtime.
 - Use Il2CppInspectorRedux-generated .NET shim/Dummy DLLs or C# stubs as analysis-only structural views. Do not substitute them for loader-generated runtime interop references.
 - When wrappers are missing or stale after a game or generator update, present the asset check. Regenerate through the loader's supported mechanism only under asset mode 2.
-- Keep generated game wrappers out of source control and release archives.
+- Keep generated game wrappers used as analysis assets under the corresponding Mod project's ignored `.assets/<game-version>/<generator>/` directory and out of release archives.
 - Resolve types and methods from existing wrappers and user-supplied evidence first. Treat new native/metadata analysis as reverse-asset acquisition.
 - Record the loader/generator version with the build pair so another machine can reproduce the reference set.
 
