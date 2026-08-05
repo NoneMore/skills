@@ -27,6 +27,12 @@ Avoid raising the target framework merely to satisfy a convenience API; the game
 - Prefer repository source, public APIs, and user-supplied target evidence. If a patch target cannot be resolved, list the exact game assembly or decompiler output as a missing asset and apply the selected asset mode.
 - Under asset mode 2, decompile only the exact assemblies needed for the requested target and record their hashes or game build. Keep the outputs outside source control.
 
+## Analyze at the shallow level first
+
+- Use `ilspycmd` directly on the exact managed game assembly for target discovery, managed IL, call sites, and method bodies.
+- Scope output to the smallest relevant assembly, type, or method. Record the assembly hash, `ilspycmd` version, invocation, and saved output locator in the analysis record.
+- Stop at this level when the managed evidence answers the question. Escalate only when a separate native component is the bounded target; do not route ordinary Mono game-code analysis through Cpp2IL or Ghidra.
+
 ## Patch managed code
 
 - Resolve the target by declaring type, method name, argument types, static/instance status, generic arity, and return type.

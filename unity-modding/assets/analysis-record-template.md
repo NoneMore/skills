@@ -8,6 +8,7 @@ backend: <Mono-or-IL2CPP>
 architecture: <architecture>
 loader: <name-and-version-or-none>
 interop_generator: <name-and-version-or-not-applicable>
+analysis_level: <shallow-intermediate-deep-or-not-needed>
 created: <YYYY-MM-DD>
 updated: <YYYY-MM-DD>
 ---
@@ -19,6 +20,8 @@ updated: <YYYY-MM-DD>
 - Question: <what this analysis must answer>
 - In scope: <targets and behaviors>
 - Out of scope: <implementation, deployment, unrelated systems>
+- Highest intervention level: <shallow, intermediate, deep, or not needed>
+- Escalation reason: <unanswered question and evidence gap for each escalation, or none>
 
 ## Fingerprint
 
@@ -31,10 +34,20 @@ updated: <YYYY-MM-DD>
 | Interop/generator |  |  |
 | Ghidra project/program |  |  |
 
+## Analysis-level progression
+
+| Level | Question | Inputs/output | Result | Escalation reason |
+| --- | --- | --- | --- | --- |
+| Shallow |  |  |  |  |
+| Intermediate |  |  |  |  |
+| Deep |  |  |  |  |
+
+Omit unused level rows or mark them `not used`. Source and reused records precede these tool levels.
+
 ## Tool ledger
 
-| Tool | Version | Invocation/configuration | Inputs | Output/reference | Limitation |
-| --- | --- | --- | --- | --- | --- |
+| Level | Tool | Version | Invocation/configuration | Inputs | Output/reference | Limitation |
+| --- | --- | --- | --- | --- | --- | --- |
 
 For Agent-driven Ghidra work, include the Headless/PyGhidra/MCP implementation and version, transport and endpoint scope, project persistence, allowed mutations, and mutation log location.
 

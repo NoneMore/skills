@@ -1,4 +1,4 @@
 interface:
   display_name: "Unity Mono / IL2CPP Modding"
-  short_description: "Evidence-first Unity analysis and modding"
-  default_prompt: "Use $unity-modding to analyze, document, create, extend, repair, or migrate this Unity mod with versioned evidence, gated hooks, and the three-option asset gate."
+  short_description: "Layered Unity analysis and modding"
+  default_prompt: "Use $unity-modding to analyze and modify this Unity Mono or IL2CPP target with shallow-to-deep tooling, versioned evidence, and gated assets."

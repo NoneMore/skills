@@ -5,7 +5,7 @@ description: Evidence-first Unity Mono and IL2CPP analysis and modding. Use when
 
 # Unity Mono / IL2CPP Modding
 
-Work **evidence-first** and prefer source when it exists. Treat the repository and user-supplied assets as authoritative; acquire reverse-engineered assets only under an explicit asset choice. Build backend-specific work and reusable analysis from a **versioned fingerprint**, not assumptions.
+Work **evidence-first** and prefer source when it exists. Treat the repository and user-supplied assets as authoritative; acquire reverse-engineered assets only under an explicit asset choice. Build backend-specific work and reusable analysis from a **versioned fingerprint**, not assumptions. Before target-dependent implementation, perform only enough analysis to prove the target and behavior, starting at the shallowest useful level and escalating only for a named unanswered question.
 
 ## 1. Bound and classify the task
 
@@ -45,7 +45,20 @@ Before generating analysis output, choose and state a persistent, user-scoped an
 
 Complete this step when the asset inventory, selected/default mode, missing items, and resulting validation limits are visible to the user.
 
-## 3. Route by task class
+## 3. Analyze before target-dependent work
+
+- Search source and compatible analysis records before invoking reverse-engineering tools. Existing source and records precede the three tool levels and do not justify repeating analysis.
+- Read [analysis.md](references/analysis.md) and [tooling.md](references/tooling.md) when target discovery or reverse-engineered evidence is needed.
+- Start at **shallow** inspection. Escalate to **intermediate** only when signatures, metadata, stubs, and wrappers cannot answer the named question. Escalate to **deep** only when Cpp2IL disassembly plus metadata remains insufficient or native xrefs, data flow, ABI, optimization, inlining, or a native detour must be proved.
+- Do not run or pre-plan all three levels as a routine pipeline. Installed tool availability is not an escalation reason. Evaluate the current level's actual output before selecting the next level; at every escalation, record the unanswered question, the evidence gap, and why the next level can answer it.
+- Create or update a versioned analysis record whenever the task discovers target-specific facts, invokes a reverse-engineering tool, creates costly/reusable output, establishes a compatibility bound, or rejects a plausible approach. Use [analysis-record-template.md](assets/analysis-record-template.md) and follow [analysis.md](references/analysis.md).
+- Treat the compact Markdown analysis record as the required reusable index. Raw tool output, an evidence directory, or a Ghidra project supports the record but never substitutes for it.
+- In every plan and handoff that invokes a tool level, name the record schema and repository path explicitly: reuse the project convention or default to `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md` with schema `unity-modding-analysis/v1`.
+- Do not require a new record for a load-only/configuration scaffold or a mechanical change that produces no target knowledge. When exact-fingerprint source or an existing record fully proves the target, cite and reuse it instead.
+
+Analysis may be a bounded phase inside an implement, extend, repair, or migrate task; it does not require a separate user request. Complete this step when the required target facts are evidenced at the lowest sufficient level and reusable knowledge has been recorded or an explicit no-record exception applies.
+
+## 4. Route by task class
 
 ### Analyze or discover a target
 
@@ -53,7 +66,7 @@ Complete this step when the asset inventory, selected/default mode, missing item
 - State the exact analysis question and stop boundary. Do not create, patch, deploy, or modify runtime configuration unless the user expands the task.
 - Search for a reusable analysis record for the exact fingerprint before running tools. Reuse compatible evidence and preserve rejected hypotheses so later agents do not repeat the same work.
 - Prefer installed, version-identifiable tools over custom parsers. Record every tool's version, relevant invocation, input fingerprint, output location, and limitations.
-- For modern IL2CPP native method bodies or control flow, prefer a version-pinned persistent Ghidra project with the exact native binary and metadata-derived labels. Automate repeatable import and analysis through `analyzeHeadless` or official PyGhidra; use an approved Ghidra MCP as an optional structured Agent interface rather than GUI automation. Treat Cpp2IL as a compatibility-sensitive metadata/structure aid, not the default native decompiler; require demonstrated support for the exact Unity/metadata version before trusting its output.
+- Follow the shallow/intermediate/deep routing in [tooling.md](references/tooling.md). For IL2CPP, inspect exact-fingerprint BepInEx interop assemblies or Il2CppInspectorRedux shim DLLs/C# stubs first, use Cpp2IL disassembly with metadata second, and use Ghidra with compatible Il2CppInspectorRedux-generated scripts only at the deep level. Do not open or prepare Ghidra merely because it is installed.
 - Create or update a versioned analysis record from [analysis-record-template.md](assets/analysis-record-template.md). Follow an existing repository documentation convention; otherwise use `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md`.
 - Record signatures, locators, call timing, candidate seams, compatibility bounds, and an evidence ledger. Label each material statement **Observed**, **Inferred**, or **Pending**.
 
@@ -104,7 +117,7 @@ Complete this branch when the root cause is evidenced, the original signal is gr
 
 Complete this branch when the destination build loads, supported features pass, rollback is documented, and unresolved porting work is listed.
 
-## 4. Capture the required fingerprint
+## 5. Capture the required fingerprint
 
 When a user-scoped game directory already exists, use the read-only probe if it helps the selected branch:
 
@@ -126,7 +139,7 @@ Mark unresolved fields without acquiring assets under option 3. Gate only the wo
 
 Complete this step when every required fingerprint field is evidenced or explicitly unresolved and its consequence is stated.
 
-## 5. Load only the matching technical branch
+## 6. Load only the matching technical branch
 
 - Read [loaders.md](references/loaders.md) for project creation, loader selection, bootstrap, or migration.
 - For a Mono fingerprint, read [mono.md](references/mono.md) before choosing framework references or managed patch techniques.
@@ -135,10 +148,11 @@ Complete this step when every required fingerprint field is evidenced or explici
 - Read [debugging.md](references/debugging.md) when a build, load, patch, or crash signal is red.
 - Read [analysis.md](references/analysis.md) when producing or updating reusable target knowledge.
 - Read [tooling.md](references/tooling.md) before installing a tool, writing a parser, or crossing from wrapper-level inspection into native analysis.
+- Read [ghidra.md](references/ghidra.md) only after [tooling.md](references/tooling.md) permits deep-level escalation and the analysis record contains the reason.
 
 Apply the asset mode while following every reference; a reference never grants acquisition authority.
 
-## 6. Advance through gated implementation stages
+## 7. Advance through gated implementation stages
 
 Do not combine stages unless an existing analysis record proves the earlier stage against the exact fingerprint:
 
@@ -156,7 +170,7 @@ Do not combine stages unless an existing analysis record proves the earlier stag
 
 Complete this step only when the current stage has its own evidence. Record failed and rejected approaches in the analysis record before changing direction.
 
-## 7. Prove the result
+## 8. Prove the result
 
 Run the applicable checks against the exact fingerprint:
 
@@ -172,7 +186,7 @@ Claim only the validation actually performed. A missing marker in one execution 
 
 ## Handoff
 
-Report the task class, selected asset mode, available and missing assets, fingerprint, analysis schema/revision, tool versions, files changed, chosen implementation seam, build/deployment commands, validation evidence, compatibility bounds, pending checks, and reversible disable/uninstall procedure.
+Report the task class, selected asset mode, available and missing assets, fingerprint, highest analysis level used and every escalation reason, analysis schema/revision or the applicable no-record exception, tool versions, files changed, chosen implementation seam, build/deployment commands, validation evidence, compatibility bounds, pending checks, and reversible disable/uninstall procedure.
 
 Separate material claims into **Observed**, **Inferred**, and **Pending**. List every advertised mode with its actual test result. Never describe a parser, address map, hook, restart, rollback, or compatibility bound as complete merely because an intermediate structure looked plausible or a build succeeded.
 

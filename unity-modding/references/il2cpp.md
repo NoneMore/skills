@@ -10,15 +10,24 @@ Match the loader distribution to backend, OS, process architecture, and loader v
 
 Unity describes IL2CPP as managed assemblies converted to C++ and then compiled and linked as native code: <https://docs.unity3d.com/Manual/scripting-backends-il2cpp.html>.
 
-## Use generated interop as a cache
+## Use generated shallow artifacts as a cache
 
-- Reference existing loader-generated interop assemblies for the exact build pair.
+- Inspect existing BepInEx-generated interop assemblies for the exact build pair with `ilspycmd`; reference them from the mod only when they match the installed loader and runtime.
+- Use Il2CppInspectorRedux-generated .NET shim/Dummy DLLs or C# stubs as analysis-only structural views. Do not substitute them for loader-generated runtime interop references.
 - When wrappers are missing or stale after a game or generator update, present the asset check. Regenerate through the loader's supported mechanism only under asset mode 2.
 - Keep generated game wrappers out of source control and release archives.
 - Resolve types and methods from existing wrappers and user-supplied evidence first. Treat new native/metadata analysis as reverse-asset acquisition.
 - Record the loader/generator version with the build pair so another machine can reproduce the reference set.
 
-Generated wrappers describe an interop surface; they do not turn the native game back into ordinary managed IL.
+Generated interop assemblies, shim/Dummy DLLs, and C# stubs describe a structural or callable surface; they do not turn the native game back into ordinary managed IL and their placeholder bodies do not prove behavior.
+
+## Escalate native analysis deliberately
+
+1. Start shallow with exact-fingerprint BepInEx interop or Il2CppInspectorRedux shim DLLs/C# stubs.
+2. Use compatible Cpp2IL disassembly/IR or method output with the exact metadata pair when the unanswered question concerns native instructions, calls, constants, or control flow.
+3. Use a persistent Ghidra project annotated by compatible Il2CppInspectorRedux-generated scripts and companion data only when intermediate evidence is insufficient or the question requires native xrefs, data flow, ABI, optimization/inlining, or a native detour.
+
+Follow [tooling.md](tooling.md) for escalation evidence and persistence requirements. Stop at the first sufficient level.
 
 ## Write interop-aware code
 

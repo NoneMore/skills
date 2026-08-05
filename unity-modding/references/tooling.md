@@ -1,6 +1,6 @@
 # Tool Selection
 
-Prefer an existing, version-identifiable tool over a custom parser. Use a custom parser only after existing tools cannot answer the bounded question, the failure is recorded, and the user accepts the extra implementation scope.
+Prefer an existing, version-identifiable tool over a custom parser. Use the lowest intervention level that can answer the bounded question. Use a custom parser only after the three-level route cannot answer it, the failure is recorded, and the user accepts the extra implementation scope.
 
 ## Discover tools first
 
@@ -12,54 +12,70 @@ Prefer an existing, version-identifiable tool over a custom parser. Use a custom
 
 Record the selected tool, version, relevant invocation/configuration, input hashes, output path, and limitations in the versioned analysis record.
 
+## Use three intervention levels
+
+Repository source and a compatible existing analysis record come before these levels. They are reusable evidence, not a fourth tool level.
+
+| Level | Mono | IL2CPP | What it can prove | Guardrail |
+| --- | --- | --- | --- | --- |
+| **Shallow** | Use `ilspycmd` on the exact managed game assembly. | Use `ilspycmd` on exact-fingerprint BepInEx-generated interop assemblies or Il2CppInspectorRedux-generated .NET shim/Dummy DLLs; use Il2CppInspectorRedux C# stubs when pointer metadata or a source-shaped index is clearer. | Assemblies, types, fields, properties, method names, overloads, signatures, tokens, and metadata-provided locators. Mono IL can also expose managed method bodies and call sites. | Treat BepInEx interop, shim/Dummy DLLs, and C# stubs as structural/signature surfaces, not IL2CPP managed implementations. Use BepInEx interop assemblies as build references only when they match the installed loader and build pair; keep Redux browse artifacts analysis-only. |
+| **Intermediate** | Normally unnecessary because exact Mono assemblies contain managed IL; use only when a separate native component is the bounded target. | Use a version-compatible Cpp2IL disassembly/IR or method output together with the exact `global-metadata.dat` and native/metadata mappings. | Candidate native method instructions, basic blocks, calls, constants, and control flow tied back to managed identities. | Keep the native module and metadata as one fingerprinted pair. Do not trust a generated DLL or unmapped disassembly as proof of a method body. Record unsupported instructions, failed mappings, and optimizer ambiguity. |
+| **Deep** | Use only for a native engine/plugin target that managed IL cannot explain. | Import the exact native binary into a persistent Ghidra project and apply the compatible Il2CppInspectorRedux-generated Ghidra script plus its companion metadata/type files. | Native decompilation, xrefs, callers/callees, data flow, globals, layout, ABI, optimization/inlining effects, and native-detour evidence. | Pin Ghidra and Il2CppInspectorRedux versions and record image base, import/analysis settings, script package, hashes, and representative address validation. Keep the project persistent and outside source control. |
+
+Treat the levels as serial checkpoints, not a list of tools to prepare in advance. Installed tool availability does not justify escalation. Start shallow even when implementation is the final goal. Escalate only as follows:
+
+1. Move to intermediate when shallow artifacts cannot answer a named IL2CPP method-body, call-order, constant, or control-flow question.
+2. Move to deep when intermediate output is absent, incompatible, ambiguous, or insufficient for native xrefs, data flow, ABI, optimization/inlining, or a native detour.
+3. Stop at the first level that answers the question to the required confidence. Do not generate the next level merely because the tool is available.
+
+At each escalation, add the unanswered question, evidence gap, attempted level/output, and expected proof from the next level to the analysis record.
+
+Before invoking any level, choose the Markdown record path from [analysis.md](analysis.md) and copy the template if no compatible record exists. Every execution plan and handoff involving a tool level must explicitly name schema `unity-modding-analysis/v1` and either the project-specific record path or the default `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md`. Update that record with the current result before escalating or handing off. Raw output directories, screenshots, exports, and analysis databases are supporting artifacts; they never replace the record.
+
+### Gate deep analysis
+
+Do not generate an Il2CppInspectorRedux Ghidra export, create/import a Ghidra project, or include Ghidra as an immediate next action until one of these is recorded:
+
+- the actual Cpp2IL output for the bounded target is incompatible, incomplete, ambiguous, or contradicts the exact metadata mapping;
+- Cpp2IL cannot process the exact fingerprint, with the attempted version and failure captured;
+- the requested proof inherently requires native xrefs, data flow, globals, layout, ABI, optimization/inlining analysis, or a native detour.
+
+A request about a candidate branch, constant, direct call, or basic control flow belongs to intermediate analysis first. Mention Ghidra only as a conditional fallback until the intermediate result demonstrates the deep-level need.
+
 ## Preserve expensive analysis
 
 Choose a persistent analysis root outside the mod repository before importing or generating assets. Follow the user's existing workspace layout; otherwise propose a location and include the game/build fingerprint and tool version in its path. Keep Ghidra projects, decompiler databases, metadata exports, generated wrappers, address/symbol maps, and reusable analysis utilities there. They are reusable evidence, not temporary files.
 
 Use an OS temporary directory only for downloads awaiting validation, unpacking, transient conversion files, and isolated experiments that are cheap to reproduce. If a scratch result becomes useful, move or regenerate it in the persistent analysis root and update the analysis record before ending the task. Never delete the only useful analysis copy during cleanup.
 
-## Integrate Ghidra with an Agent
+## Enter deep Ghidra analysis only after the gate
 
-Use a persistent Ghidra project as the source of analysis state. Prefer this stack, in order:
+Do not read or apply the Ghidra workflow while shallow or intermediate analysis remains sufficient. After the deep-analysis gate above is satisfied and recorded, read [ghidra.md](ghidra.md). Until then, keep Ghidra and Il2CppInspectorRedux Ghidra exports out of the immediate plan and name them only as a conditional fallback.
 
-1. Use Ghidra's `analyzeHeadless` for deterministic import, initial auto-analysis, and repeatable pre/post scripts.
-2. Use official PyGhidra as the stable automation layer for opening the persistent project, running bounded analysis, and accessing the Ghidra API from CPython.
-3. Use a pinned, approved Ghidra MCP implementation only as an optional structured Agent interface. Do not require GUI automation or bind the workflow to one community MCP implementation.
+## Route common questions
 
-Prefer high-level, bounded operations such as resolving a function by name/token/RVA, decompiling one function, returning callers/callees/xrefs/P-code, reading types, batching compact function context, and exporting evidence. Do not stream a whole-program decompilation into model context.
-
-Keep MCP read-only by default. Require explicit task authority for renames, type changes, comments, imports, patches, or script execution; apply state changes in transactions when supported and record the before/after values. Bind local integrations to stdio or loopback only unless the user explicitly authorizes and secures remote access. Restrict exposed tools with allowlists or lazy loading rather than presenting a broad arbitrary-script surface.
-
-Make every response identify the open program and analysis state: native input hash, build ID, Ghidra version, project path, program name/address space, image base, and relevant metadata/importer or script versions. Reject a request when its expected fingerprint differs from the open project. Treat metadata-derived IL2CPP names, types, and addresses as candidate annotations until representative entries agree with the native listing or runtime evidence.
-
-Record MCP/PyGhidra implementation and version, transport, endpoint scope, allowed write capabilities, project persistence, and mutation log location in the analysis record. Avoid MCP modes that discard the only project at session end; if a tool defaults to ephemeral projects, configure a persistent destination or export/promote the useful project before shutdown.
-
-## Route by question
-
-| Question | Prefer | Guardrail |
+| Question | Level and tool | Guardrail |
 | --- | --- | --- |
-| Browse managed or loader-generated interop types, methods, tokens, overloads, and parameter names | An already installed ILSpy GUI or `ilspycmd`, or another trusted metadata browser already used by the project | Treat generated interop as a signature surface, not a managed implementation body. Do not load untrusted target assemblies merely to enumerate metadata. |
-| Inspect IL2CPP native method bodies, data flow, cross-references, or control flow, especially for recent Unity builds | A version-pinned persistent Ghidra project imported from the exact native binary, automated through `analyzeHeadless` or PyGhidra; add metadata-derived names/types with a compatible loader or script | Prefer this route for native analysis. Record image base, import settings, processor/language, scripts/extensions and versions, input hashes, and analysis options. Use an approved MCP for bounded Agent queries when available. Keep the Ghidra project outside source control but do not treat it as disposable. |
-| Recover IL2CPP metadata, approximate managed structure, or method mappings when exact-version compatibility is demonstrated | A pinned Cpp2IL release and its documented output formats | Treat Cpp2IL as an optional metadata/structure aid, not the default native decompiler. Recent Unity/metadata formats may be unsupported or partially supported; a successful run or generated assembly alone is not proof of correct method bodies, mappings, or cross-references. Validate representative outputs against metadata, Ghidra, or runtime evidence. |
-| Generate address maps or Ghidra/debugger scaffolding when a compatible exporter is available | A version-compatible Il2CppInspector or other approved metadata tool | Treat every exporter as compatibility-sensitive; verify the exact Unity/metadata version and validate representative addresses before relying on bulk output. |
+| Browse Mono types, methods, emitted IL, overloads, or parameter names | Shallow: `ilspycmd` on the exact managed assembly | Record the assembly hash and decompiler version. Avoid bulk decompilation when a type or method is sufficient. |
+| Browse IL2CPP types, fields, methods, tokens, overloads, pointer metadata, or parameter names | Shallow: `ilspycmd` on matching BepInEx interop or Il2CppInspectorRedux shim/Dummy DLLs; use Redux C# stubs as needed | These outputs reconstruct structure and locators, not original managed bodies. Do not infer implementation behavior from placeholder bodies. |
+| Inspect an IL2CPP method's candidate instructions, constants, calls, or basic control flow | Intermediate: compatible Cpp2IL disassembly/IR or method output plus exact metadata mappings | Validate representative method identity and address mapping. Mark gaps and unsupported instructions instead of filling them by inference. |
+| Inspect IL2CPP native data flow, cross-references, globals, optimized/inlined behavior, or ABI | Deep: persistent Ghidra project annotated by compatible Il2CppInspectorRedux-generated scripts and companion data | Record all import and analysis state. Validate representative imported addresses before relying on bulk names/types. |
 | Observe a native call stack or live control flow | The debugger already available to the user, with symbols/address maps generated by an approved tool | Do not implement an in-plugin stack walker for a one-off diagnostic unless the debugger cannot answer the bounded question and reusable runtime stack capture is itself requested. |
 | Inspect exact loader bootstrap and lifecycle APIs | The installed loader assemblies, templates, and version-matched official documentation | Do not copy an example from another loader major or backend. |
 
 Primary project sources:
 
 - ILSpy and `ilspycmd`: <https://github.com/icsharpcode/ILSpy>
-- Ghidra: <https://github.com/NationalSecurityAgency/ghidra>
-- PyGhidra: <https://github.com/NationalSecurityAgency/ghidra/tree/master/Ghidra/Features/PyGhidra>
 - Cpp2IL: <https://github.com/SamboyCoding/Cpp2IL>
-- Il2CppInspector: <https://github.com/djkaty/Il2CppInspector>
+- Il2CppInspectorRedux: <https://github.com/LukeFZ/Il2CppInspectorRedux>
 
 ## Stop unproductive exploration
 
-Before crossing from wrapper-level inspection into native analysis, state:
+Before escalating to the next intervention level, state:
 
 - the exact unanswered question;
 - why current evidence and existing tools cannot answer it;
-- the minimum additional artifact or tool output needed;
+- the minimum additional artifact or tool output needed from the next level;
 - the fallback if the attempt fails.
 
 After two incompatible or failed approaches to the same subproblem, stop. Record them as rejected approaches, present the remaining tool/acquisition choices, and continue only work that is still independently useful.
