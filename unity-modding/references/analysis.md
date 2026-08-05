@@ -17,6 +17,8 @@ docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md
 
 Build `build-id` from an explicit game version when reliable. Otherwise use stable abbreviated hashes from the IL2CPP native/metadata pair or the Mono target assembly. Never use timestamps alone as a build identity.
 
+Keep the compact Markdown record in the repository only when repository policy permits it. Keep proprietary or bulky analysis artifacts in a persistent, user-scoped analysis root outside the mod repository, organized by game, build fingerprint, and tool version. Record that root and the exact artifact paths in the Markdown record. Do not use an OS temporary directory for the only copy of a decompilation, Ghidra project, generated wrapper set, address map, or other costly result.
+
 ## Version the record
 
 Copy [analysis-record-template.md](../assets/analysis-record-template.md) and preserve:
@@ -43,9 +45,10 @@ Record:
 - the analysis question and explicit stop boundary;
 - target assembly/module, declaring type, complete signature, parameter names when relevant to a patch framework, token/RVA or other locator, and call timing;
 - tool ledger with versions, relevant invocations/configuration, input fingerprints, output locations, and known limitations;
+- for Agent-driven Ghidra work, the persistent project/program identity, Ghidra and integration versions, transport scope, allowed mutations, and mutation log location;
 - candidate implementation seams and why each is supported or rejected;
 - validation matrix covering representative positive and negative paths;
 - compatibility bounds and the exact facts that must be rechecked after an update;
 - concise next actions for every Pending item.
 
-Store summaries, signatures, hashes, commands, and evidence locators. Keep proprietary binaries, bulk decompiler output, generated wrappers, and copied game source outside the mod repository unless the user explicitly requires and authorizes a suitable private location.
+Store summaries, signatures, hashes, commands, and evidence locators. Keep proprietary binaries, bulk decompiler output, generated wrappers, Ghidra projects/databases, and copied game source outside the mod repository unless the user explicitly requires and authorizes a suitable private location. Preserve them in the recorded persistent analysis root; reserve temporary directories for reproducible scratch work and promote useful results before cleanup or handoff.

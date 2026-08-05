@@ -29,11 +29,14 @@ updated: <YYYY-MM-DD>
 | IL2CPP metadata |  |  |
 | Loader |  |  |
 | Interop/generator |  |  |
+| Ghidra project/program |  |  |
 
 ## Tool ledger
 
 | Tool | Version | Invocation/configuration | Inputs | Output/reference | Limitation |
 | --- | --- | --- | --- | --- | --- |
+
+For Agent-driven Ghidra work, include the Headless/PyGhidra/MCP implementation and version, transport and endpoint scope, project persistence, allowed mutations, and mutation log location.
 
 ## Target facts
 
@@ -66,7 +69,9 @@ updated: <YYYY-MM-DD>
 
 - Reusable while: <matching fingerprint facts>
 - Recheck after: <game, loader, generator, platform, or tool changes>
-- Proprietary/generated artifacts remain at: <ignored/private location or none>
+- Persistent analysis root: <user-scoped path outside the mod repository or none>
+- Proprietary/generated artifacts remain at: <fingerprinted paths under that root or none>
+- Disposable scratch used: <temporary paths and whether any useful result was promoted, or none>
 
 ## Pending work
 

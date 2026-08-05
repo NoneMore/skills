@@ -41,6 +41,8 @@ Treat downloading packages/binaries/artifacts, installing tools or templates, co
 
 Use reverse-engineered or decompiled assets already supplied by the user or already present in the workspace under option 3. Do not seek replacements or newer copies automatically. Scope option 2 to the current task and acquire only the minimum needed; follow all runtime approval requirements and keep proprietary artifacts outside source control and release archives.
 
+Before generating analysis output, choose and state a persistent, user-scoped analysis root outside the mod repository, following an existing workspace convention when available. Store costly or reusable outputs there under the game/build fingerprint and tool version: decompiler databases/projects, extracted metadata, generated wrappers, symbol/address maps, exports, and reusable helper tools. Do not place them in an OS temporary directory merely because they are generated. Use temporary storage only for bounded scratch data that is cheap to reproduce; promote any reusable result to the persistent analysis root and record its final path before cleanup or handoff.
+
 Complete this step when the asset inventory, selected/default mode, missing items, and resulting validation limits are visible to the user.
 
 ## 3. Route by task class
@@ -51,6 +53,7 @@ Complete this step when the asset inventory, selected/default mode, missing item
 - State the exact analysis question and stop boundary. Do not create, patch, deploy, or modify runtime configuration unless the user expands the task.
 - Search for a reusable analysis record for the exact fingerprint before running tools. Reuse compatible evidence and preserve rejected hypotheses so later agents do not repeat the same work.
 - Prefer installed, version-identifiable tools over custom parsers. Record every tool's version, relevant invocation, input fingerprint, output location, and limitations.
+- For modern IL2CPP native method bodies or control flow, prefer a version-pinned persistent Ghidra project with the exact native binary and metadata-derived labels. Automate repeatable import and analysis through `analyzeHeadless` or official PyGhidra; use an approved Ghidra MCP as an optional structured Agent interface rather than GUI automation. Treat Cpp2IL as a compatibility-sensitive metadata/structure aid, not the default native decompiler; require demonstrated support for the exact Unity/metadata version before trusting its output.
 - Create or update a versioned analysis record from [analysis-record-template.md](assets/analysis-record-template.md). Follow an existing repository documentation convention; otherwise use `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md`.
 - Record signatures, locators, call timing, candidate seams, compatibility bounds, and an evidence ledger. Label each material statement **Observed**, **Inferred**, or **Pending**.
 
@@ -173,4 +176,4 @@ Report the task class, selected asset mode, available and missing assets, finger
 
 Separate material claims into **Observed**, **Inferred**, and **Pending**. List every advertised mode with its actual test result. Never describe a parser, address map, hook, restart, rollback, or compatibility bound as complete merely because an intermediate structure looked plausible or a build succeeded.
 
-Keep proprietary game binaries, metadata, generated wrappers, and decompiled source out of the mod repository and release archive.
+Keep proprietary game binaries, metadata, generated wrappers, decompiler projects/databases, and decompiled source out of the mod repository and release archive. Preserve reusable copies in the recorded persistent analysis root rather than disposable temporary storage.
