@@ -53,8 +53,8 @@ Complete this step when the asset inventory, selected/default mode, missing item
 ## 3. Analyze before target-dependent work
 
 - Search source and compatible analysis records before invoking reverse-engineering tools. Existing source and records precede the three tool levels and do not justify repeating analysis.
-- Read [analysis.md](references/analysis.md) and [tooling.md](references/tooling.md) when target discovery or reverse-engineered evidence is needed.
-- Start at **shallow** inspection. Escalate to **intermediate** only when signatures, metadata, stubs, and wrappers cannot answer the named question. Escalate to **deep** only when Cpp2IL disassembly plus metadata remains insufficient or native xrefs, data flow, ABI, optimization, inlining, or a native detour must be proved.
+- Read [analysis.md](references/analysis.md) and [tooling.md](references/tooling.md) when target discovery or reverse-engineered evidence is needed. Before invoking an analysis tool, read its command card in [tool-usage.md](references/tool-usage.md).
+- Start at **shallow** inspection. Escalate to **intermediate** only when signatures, metadata, stubs, and wrappers cannot answer the named question. Escalate to **deep** only when Cpp2IL reconstruction plus metadata remains insufficient or exact native instructions, native xrefs, data flow, ABI, optimization, inlining, or a native detour must be proved.
 - Do not run or pre-plan all three levels as a routine pipeline. Installed tool availability is not an escalation reason. Evaluate the current level's actual output before selecting the next level; at every escalation, record the unanswered question, the evidence gap, and why the next level can answer it.
 - Create or update a versioned analysis record whenever the task discovers target-specific facts, invokes a reverse-engineering tool, creates costly/reusable output, establishes a compatibility bound, or rejects a plausible approach. Use [analysis-record-template.md](assets/analysis-record-template.md) and follow [analysis.md](references/analysis.md).
 - Treat the compact Markdown analysis record as the required reusable index. Raw tool output, an evidence directory, or a Ghidra project supports the record but never substitutes for it.
@@ -71,7 +71,7 @@ Analysis may be a bounded phase inside an implement, extend, repair, or migrate 
 - State the exact analysis question and stop boundary. Do not create, patch, deploy, or modify runtime configuration unless the user expands the task.
 - Search for a reusable analysis record for the exact fingerprint before running tools. Reuse compatible evidence and preserve rejected hypotheses so later agents do not repeat the same work.
 - Prefer installed, version-identifiable tools over custom parsers. Record every tool's version, relevant invocation, input fingerprint, output location, and limitations.
-- Follow the shallow/intermediate/deep routing in [tooling.md](references/tooling.md). For IL2CPP, inspect exact-fingerprint BepInEx interop assemblies or Il2CppInspectorRedux shim DLLs/C# stubs first, use Cpp2IL disassembly with metadata second, and use Ghidra with compatible Il2CppInspectorRedux-generated scripts only at the deep level. Do not open or prepare Ghidra merely because it is installed.
+- Follow the shallow/intermediate/deep routing in [tooling.md](references/tooling.md). For IL2CPP, inspect exact-fingerprint BepInEx interop assemblies or Il2CppInspectorRedux shim DLLs/C# stubs first, use Cpp2IL recovered IL/IR or mappings with metadata second when reconstruction can answer the question, and use Ghidra with compatible Il2CppInspectorRedux-generated scripts at the deep level. Go directly to the gated Ghidra route when exact native instructions are the requested representation; do not open or prepare Ghidra merely because it is installed.
 - Create or update a versioned analysis record from [analysis-record-template.md](assets/analysis-record-template.md) at `<mod-project-root>/analysis/<game-version>/<target-slug>.md`.
 - Record signatures, locators, call timing, candidate seams, compatibility bounds, and an evidence ledger. Label each material statement **Observed**, **Inferred**, or **Pending**.
 
@@ -152,7 +152,7 @@ Complete this step when every required fingerprint field is evidenced or explici
 - Read [patching.md](references/patching.md) before any Harmony, HarmonyX, transpiler, reflection, or native-detour change.
 - Read [debugging.md](references/debugging.md) when a build, load, patch, or crash signal is red.
 - Read [analysis.md](references/analysis.md) when producing or updating reusable target knowledge.
-- Read [tooling.md](references/tooling.md) before installing a tool, writing a parser, or crossing from wrapper-level inspection into native analysis.
+- Read [tooling.md](references/tooling.md) before installing a tool, writing a parser, or crossing from wrapper-level inspection into native analysis. Read [tool-usage.md](references/tool-usage.md) before invoking `inspect_unity_game.py`, `ilspycmd`, Cpp2IL, Il2CppInspectorRedux, or Ghidra.
 - Read [ghidra.md](references/ghidra.md) only after [tooling.md](references/tooling.md) permits deep-level escalation and the analysis record contains the reason.
 
 Apply the asset mode while following every reference; a reference never grants acquisition authority.

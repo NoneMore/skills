@@ -24,8 +24,8 @@ Generated interop assemblies, shim/Dummy DLLs, and C# stubs describe a structura
 ## Escalate native analysis deliberately
 
 1. Start shallow with exact-fingerprint BepInEx interop or Il2CppInspectorRedux shim DLLs/C# stubs.
-2. Use compatible Cpp2IL disassembly/IR or method output with the exact metadata pair when the unanswered question concerns native instructions, calls, constants, or control flow.
-3. Use a persistent Ghidra project annotated by compatible Il2CppInspectorRedux-generated scripts and companion data only when intermediate evidence is insufficient or the question requires native xrefs, data flow, ABI, optimization/inlining, or a native detour.
+2. Use compatible Cpp2IL recovered IL/IR, mapping, or method output with the exact metadata pair when the unanswered question concerns approximate behavior, calls, constants, control flow, or method identity/address.
+3. Use a persistent Ghidra project annotated by compatible Il2CppInspectorRedux-generated scripts and companion data when intermediate evidence is insufficient or the question requires exact native instructions, native xrefs, data flow, ABI, optimization/inlining, or a native detour.
 
 Follow [tooling.md](tooling.md) for escalation evidence and persistence requirements. Stop at the first sufficient level.
 
