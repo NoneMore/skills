@@ -38,12 +38,16 @@ Redact account names, tokens, and unrelated personal paths before sharing logs.
 ## Run controlled experiments
 
 1. Return to a minimal plugin that only logs startup.
-2. Add target resolution without applying the hook.
-3. Apply a marker-only hook.
-4. Add feature logic without optimization.
-5. Reintroduce integrations one at a time.
+2. Resolve and validate the complete hook manifest without applying a hook.
+3. Apply one marker-only hook with feature behavior disabled.
+4. Add the smallest feature logic without optimization.
+5. Reintroduce additional hooks and integrations one at a time.
 
 Keep each experiment on the same fingerprint. If the fingerprint changes, discard cached conclusions and generated IL2CPP interop inputs.
+
+For shared or global targets, correlate logs to the initiating instance/action and a bounded scope. Disable broad logging after the required event is captured. Do not treat calls from unrelated gameplay systems as evidence for the feature under test.
+
+Keep a hypothesis ledger in the versioned analysis record. Mark direct signals **Observed**, causal explanations **Inferred**, and missing experiments **Pending**. Preserve rejected hypotheses and the evidence that rejected them.
 
 ## Build artifact inspection
 
@@ -56,4 +60,4 @@ Inspect the final output directory and archive. Flag:
 - symbols or configuration files containing private paths;
 - stale DLLs from prior builds.
 
-Accept the artifact only when every file has a named owner and runtime purpose.
+Accept the artifact only when every file has a named owner and runtime purpose, and its source version, assembly metadata, runtime marker, configuration header, documentation, and artifact name agree.

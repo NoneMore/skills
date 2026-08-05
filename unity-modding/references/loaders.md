@@ -29,7 +29,7 @@ Capture these facts from the installed files, project, template, or package meta
 | Plugin directory | Loader configuration and successful startup log |
 | Logging/config API | Referenced assembly or pinned docs |
 
-Treat copied snippets as untrusted until they compile against the pinned assemblies.
+Inspect exact local assemblies with an existing version-identifiable metadata tool when documentation is ambiguous. Treat copied snippets as untrusted until they compile against the pinned assemblies.
 
 ## Bootstrap rules
 
@@ -37,6 +37,7 @@ Treat copied snippets as untrusted until they compile against the pinned assembl
 - Delay scene-object lookup until the relevant scene or subsystem exists.
 - Keep expensive discovery out of per-frame callbacks.
 - Assign a stable unique plugin identifier and version it independently from the game.
+- Define the plugin version in one authoritative source and propagate it to assembly metadata, runtime markers, configuration headers, documentation, and artifact names. Reject a deployment when those versions disagree.
 - Declare hard dependencies only when the plugin cannot function without them; detect optional integrations at runtime.
 - Make initialization idempotent and expose a cleanup path for hooks, callbacks, native allocations, and injected objects.
 - For MelonLoader, inspect whether the pinned version automatically applies annotated Harmony patches. Use either its automatic path or one manual `PatchAll` call during process-level initialization, never both.
@@ -58,6 +59,6 @@ Make bootstrap success observable with one line containing:
 - backend;
 - loader version;
 - game/build marker;
-- hook count after registration.
+- implementation stage and hook count after registration.
 
-Accept bootstrap only when authorized runtime testing shows that line once during a cold start and no assembly-resolution error precedes it. Otherwise mark runtime proof pending.
+At the load-only stage, require hook count `0`. Accept bootstrap only when authorized runtime testing shows that line once during a cold start and no assembly-resolution error precedes it. Otherwise mark runtime proof **Pending**.

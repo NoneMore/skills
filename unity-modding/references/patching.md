@@ -8,7 +8,7 @@ Collect the target from repository source, public API, or an exact user-supplied
 
 - assembly/module and declaring type;
 - method name and metadata token, RVA, or other stable locator when available;
-- static/instance status, visibility, generic arity, parameter types, and return type;
+- static/instance status, visibility, generic arity, parameter types, parameter names when the patch framework maps by name, and return type;
 - caller and call timing relevant to the requested behavior;
 - hash or build marker for the inspected artifact.
 
@@ -17,6 +17,22 @@ When available evidence cannot prove the target, list the exact decompiler, inte
 For obfuscated games, use existing or user-authorized structural evidence such as call relationships, field types, constants, and control flow. Keep fragile names behind one resolver.
 
 Accept a resolver only when it returns exactly one target and rejects an incompatible build with a clear log message.
+
+## Preflight a hook manifest
+
+Build and log a manifest before applying any hook:
+
+| Field | Required proof |
+| --- | --- |
+| Target | Exact declaring type, overload, signature, locator, and fingerprint |
+| Argument mapping | Verified parameter names or a supported index-based mapping for the pinned patch framework |
+| Patch method | Non-null method, compatible injected arguments, return/result handling, and static/instance form |
+| Contract | Marker-only or behavior-changing; hard or optional; expected count/thread |
+| Ownership | Unique owner ID and exact unpatch/rollback path |
+
+Resolve all hard targets and patch methods before mutating registration state. Abort with zero applied hooks when any hard entry is missing, ambiguous, version-incompatible, or signature-incompatible. Install optional entries separately so one failure disables only that feature.
+
+Never invent a parameter name from its apparent semantics. Inspect it with an existing versioned metadata tool or use a documented index mapping supported by the exact Harmony/HarmonyX version.
 
 ## Use the hook ladder
 
@@ -53,12 +69,14 @@ Keep patch methods small. Move feature logic into ordinary testable C# methods.
 - Apply priorities or before/after relationships only for a demonstrated conflict.
 - Preserve original behavior by default; skip it only when replacement is the explicit contract.
 - Avoid per-frame reflection, allocations, disk I/O, and repeated logging.
+- Scope observations of shared/global methods by initiating instance, action ID, thread, call scope, or a bounded time window. Treat uncorrelated global logs as noise, not target evidence.
 - Guard reentrancy when patched code can call the target again.
 - Keep shared state synchronized and clear it during teardown.
 
 ## Make failure loud and local
 
 - Validate target count before applying hooks.
+- Validate every patch method and injected argument mapping before applying the first hook.
 - Log the resolved signature and target evidence once.
 - Assert transpiler match counts before emitting modified IL.
 - Catch exceptions at the loader boundary where they can be logged; keep native callbacks from unwinding managed exceptions across the ABI boundary.
@@ -71,5 +89,9 @@ Prove a hook with a harmless marker before changing behavior. Then test:
 - expected call count and thread;
 - original behavior when the feature is disabled;
 - boundary inputs and null/destroyed instances;
+- representative positive and negative paths before concluding that a target is used or unused;
+- each advertised configuration mode independently;
 - another mod patching the same method when that ecosystem is in scope;
 - one cold restart and one clean uninstall.
+
+Record results as **Observed**, explanations as **Inferred**, and missing checks as **Pending** in the versioned analysis record. One missing call in one run is not proof of absence.

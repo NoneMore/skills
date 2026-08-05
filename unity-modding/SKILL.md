@@ -1,18 +1,18 @@
 ---
 name: unity-modding
-description: Source-first Unity Mono and IL2CPP modding. Use when creating projects, implementing or extending features, repairing or migrating BepInEx or MelonLoader plugins, choosing managed or interop references, applying Harmony/HarmonyX or native hooks, or diagnosing loader, metadata, stripping, and ABI failures.
+description: Evidence-first Unity Mono and IL2CPP analysis and modding. Use when discovering or documenting game types and methods, creating projects, implementing or extending features, repairing or migrating BepInEx or MelonLoader plugins, choosing managed or interop references, applying Harmony/HarmonyX or native hooks, or diagnosing loader, metadata, stripping, and ABI failures.
 ---
 
 # Unity Mono / IL2CPP Modding
 
-Work **source-first**. Treat the repository and user-supplied assets as authoritative; acquire reverse-engineered assets only under an explicit asset choice. Build backend-specific work from a **fingerprint**, not assumptions.
+Work **evidence-first** and prefer source when it exists. Treat the repository and user-supplied assets as authoritative; acquire reverse-engineered assets only under an explicit asset choice. Build backend-specific work and reusable analysis from a **versioned fingerprint**, not assumptions.
 
 ## 1. Bound and classify the task
 
 - Work only on a game or build the user is authorized to modify.
 - For multiplayer or anti-cheat titles, keep work inside an officially supported mod environment or a developer-provided offline test build. Keep hooks local and exclude bypass, evasion, and unfair-advantage behavior.
 - Inspect the existing repository and user-provided files before choosing a loader, package version, target framework, reference set, or deployment layout.
-- Classify the request as one or more of: **create**, **implement**, **extend**, **repair**, or **migrate**.
+- Classify the request as one or more of: **analyze**, **create**, **implement**, **extend**, **repair**, or **migrate**.
 - Separate the mod project from the game installation. Treat the installation as read-only input and deploy only explicit build outputs.
 
 Complete this step when the authorized target, task class, source workspace, requested behavior, and allowed runtime test surface are explicit.
@@ -45,11 +45,23 @@ Complete this step when the asset inventory, selected/default mode, missing item
 
 ## 3. Route by task class
 
+### Analyze or discover a target
+
+- Read [analysis.md](references/analysis.md) and [tooling.md](references/tooling.md).
+- State the exact analysis question and stop boundary. Do not create, patch, deploy, or modify runtime configuration unless the user expands the task.
+- Search for a reusable analysis record for the exact fingerprint before running tools. Reuse compatible evidence and preserve rejected hypotheses so later agents do not repeat the same work.
+- Prefer installed, version-identifiable tools over custom parsers. Record every tool's version, relevant invocation, input fingerprint, output location, and limitations.
+- Create or update a versioned analysis record from [analysis-record-template.md](assets/analysis-record-template.md). Follow an existing repository documentation convention; otherwise use `docs/unity-analysis/<game-slug>/<build-id>/<target-slug>.md`.
+- Record signatures, locators, call timing, candidate seams, compatibility bounds, and an evidence ledger. Label each material statement **Observed**, **Inferred**, or **Pending**.
+
+Complete this branch when the requested question is answered to the available evidence boundary, reusable evidence is saved under the exact build/tool versions, and every unresolved claim has a concrete next action. Stop there unless implementation was also requested.
+
 ### Create a project
 
 - Read [loaders.md](references/loaders.md) and preserve any loader choice already provided.
 - Determine backend, loader/version, OS/architecture, target framework, plugin identity, and deployment contract from existing assets.
 - When facts are missing, run the asset gate. Under option 3, create a clearly labeled configurable scaffold instead of acquiring or reverse-engineering missing game assets.
+- Reuse a compatible versioned analysis record when one exists.
 - Build a load-only plugin first, then add configuration, logging, lifecycle cleanup, and feature seams.
 
 Complete this branch when the project builds with available dependencies and its unresolved target-specific inputs are explicit.
@@ -57,6 +69,7 @@ Complete this branch when the project builds with available dependencies and its
 ### Implement a new feature
 
 - Build the current project when one exists and capture the feature's expected observable behavior.
+- Reuse a compatible versioned analysis record when one exists; revalidate only facts affected by the current fingerprint.
 - Prefer existing source interfaces, public game APIs, events, configuration, and established project abstractions.
 - Read [patching.md](references/patching.md) only when the feature requires a runtime patch. Gate any missing target evidence as an asset choice.
 - Implement the smallest end-to-end slice and test feature-disabled behavior.
@@ -103,7 +116,8 @@ Record only what the task needs from:
 - loader/version, project target framework, and packages;
 - available source or game-code references;
 - loader log, deployment directory, and runtime access;
-- for a patch, target type, full method signature, and existing evidence.
+- for a patch, target type, full method signature, and existing evidence;
+- analysis schema/revision and tool versions when reusing a prior analysis record.
 
 Mark unresolved fields without acquiring assets under option 3. Gate only the work that depends on them.
 
@@ -116,20 +130,28 @@ Complete this step when every required fingerprint field is evidenced or explici
 - For an IL2CPP fingerprint, read [il2cpp.md](references/il2cpp.md) before using generated wrappers, class injection, or native signatures.
 - Read [patching.md](references/patching.md) before any Harmony, HarmonyX, transpiler, reflection, or native-detour change.
 - Read [debugging.md](references/debugging.md) when a build, load, patch, or crash signal is red.
+- Read [analysis.md](references/analysis.md) when producing or updating reusable target knowledge.
+- Read [tooling.md](references/tooling.md) before installing a tool, writing a parser, or crossing from wrapper-level inspection into native analysis.
 
 Apply the asset mode while following every reference; a reference never grants acquisition authority.
 
-## 6. Implement a tracer slice
+## 6. Advance through gated implementation stages
 
-- First make the plugin load and emit one fingerprinted startup marker when runtime testing is in scope.
-- Add one narrow hook marker before feature behavior when a patch is required.
+Do not combine stages unless an existing analysis record proves the earlier stage against the exact fingerprint:
+
+1. **Load-only** — make the plugin load with zero hooks and emit one marker containing plugin version, fingerprint, loader, backend, and hook count `0`.
+2. **Resolve-only** — build a hook manifest and resolve every target and patch method without applying hooks. Validate exact overloads, parameter names or supported index mappings, patch signatures, hard/optional status, and rollback owner.
+3. **Marker-only** — apply one narrow, harmless hook; prove expected call count and thread with feature behavior disabled.
+4. **Behavior** — add the smallest requested behavior only after the marker is green. Add later hooks one at a time unless the manifest proves they form one atomic hard contract.
+
+- Abort before registration when any hard manifest entry is null, ambiguous, version-incompatible, or signature-incompatible. Optional entries must fail locally without aborting unrelated features.
 - Prefer the least invasive stable seam: supported API or event, then Postfix, Prefix, a narrowly anchored managed IL rewrite, and finally a native detour.
 - Keep loader bootstrap, target discovery, hook logic, and feature logic separate.
 - Keep Unity object access on the Unity main thread unless the observed API explicitly permits otherwise.
 - Make registration idempotent and release owned hooks, callbacks, objects, and native allocations through the loader lifecycle.
-- Put user-tunable behavior behind configuration and log compatibility failures without per-frame noise.
+- Put user-tunable behavior behind configuration. Scope broad observations by instance, action ID, thread, or a bounded time window; do not leave global gameplay hooks producing uncorrelated noise.
 
-Complete this step when the smallest available slice builds and each accessible execution boundary has one observable marker.
+Complete this step only when the current stage has its own evidence. Record failed and rejected approaches in the analysis record before changing direction.
 
 ## 7. Prove the result
 
@@ -139,12 +161,16 @@ Run the applicable checks against the exact fingerprint:
 2. Inspect output so game, Unity, loader, and generated reference assemblies are not copied as mod-owned dependencies.
 3. Deploy only explicit mod outputs when runtime testing is authorized.
 4. Prove load, requested behavior, one restart, feature-disabled behavior, rollback, and a neighboring behavior.
-5. Report every check blocked by the selected asset mode or unavailable runtime access as pending.
+5. Test each advertised mode separately. Do not infer an untested mode from a symmetric implementation.
+6. Verify that the version reported by source, assembly metadata, runtime marker, configuration header, documentation, and artifact name agrees.
+7. Report every check blocked by the selected asset mode or unavailable runtime access as **Pending**.
 
-Claim only the validation actually performed.
+Claim only the validation actually performed. A missing marker in one execution path is not proof that a target is unused; require representative positive and negative paths before excluding it.
 
 ## Handoff
 
-Report the task class, selected asset mode, available and missing assets, fingerprint, files changed, chosen implementation seam, build/deployment commands, validation evidence, compatibility bounds, pending checks, and reversible disable/uninstall procedure.
+Report the task class, selected asset mode, available and missing assets, fingerprint, analysis schema/revision, tool versions, files changed, chosen implementation seam, build/deployment commands, validation evidence, compatibility bounds, pending checks, and reversible disable/uninstall procedure.
+
+Separate material claims into **Observed**, **Inferred**, and **Pending**. List every advertised mode with its actual test result. Never describe a parser, address map, hook, restart, rollback, or compatibility bound as complete merely because an intermediate structure looked plausible or a build succeeded.
 
 Keep proprietary game binaries, metadata, generated wrappers, and decompiled source out of the mod repository and release archive.
