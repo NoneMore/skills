@@ -15,7 +15,7 @@ Use these paths relative to that project root:
 ```
 
 - `analysis/` contains analysis itself: concise Markdown records suitable for review, reuse, and version control.
-- `.assets/` contains analysis assets: place each authorized or generated asset under the stable lowercase slug of the tool that consumes or produces it, such as `ilspycmd/`, `bepinex/`, `il2cppinspector-redux/`, `cpp2il/`, or `ghidra/`. Record exact tool versions in the Markdown analysis rather than the directory name.
+- `.assets/` contains analysis assets: place each authorized or generated asset under the stable lowercase slug of the tool that consumes or produces it, such as `ilspycmd/`, `bepinex/`, `il2cppinspector-redux/`, `il2cpp-dumper-rs/`, `cpp2il/`, or `ghidra/`. Record exact tool versions in the Markdown analysis rather than the directory name.
 - Add `/.assets/` to the corresponding Mod project's `.gitignore` when repository policy permits and the rule is absent. Never ignore `/analysis/`.
 - Do not use an OS temporary directory for the only useful copy of either category.
 
@@ -26,7 +26,7 @@ Perform bounded analysis before target-dependent implementation, but do not equa
 Create or update a record when any of these occurs:
 
 - discover a target-specific signature, locator, call relationship, timing fact, implementation seam, or compatibility bound;
-- invoke `ilspycmd`, Il2CppInspectorRedux, Cpp2IL, Ghidra, a debugger, or another reverse-engineering tool for the task;
+- invoke `ilspycmd`, Il2CppInspectorRedux, `rodroidmods/il2cpp-dumper-rs`, Cpp2IL, Ghidra, a debugger, or another reverse-engineering tool for the task;
 - generate or materially reuse an interop/shim DLL, C# stub, disassembly, metadata export, address map, or Ghidra project;
 - reject or supersede a plausible hypothesis or implementation approach.
 

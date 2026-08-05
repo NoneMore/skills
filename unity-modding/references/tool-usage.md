@@ -4,6 +4,17 @@ Read the matching card before invoking an analysis tool. Treat every command as 
 
 For every tool run, save the command, version, input fingerprint, output location, exit status, and a short output validation in the analysis record. A zero exit code without the expected artifact is not success.
 
+## Contents
+
+- [Common preflight](#common-preflight)
+- [`inspect_unity_game.py`](#inspect_unity_gamepy)
+- [`ilspycmd`](#ilspycmd)
+- [`rodroidmods/il2cpp-dumper-rs`](#rodroidmodsil2cpp-dumper-rs)
+- [Cpp2IL](#cpp2il)
+- [Il2CppInspectorRedux](#il2cppinspectorredux)
+- [Ghidra and PyGhidra](#ghidra-and-pyghidra)
+- [Choose the representation deliberately](#choose-the-representation-deliberately)
+
 ## Common preflight
 
 1. Resolve the exact executable; do not assume it is on `PATH`.
@@ -62,6 +73,76 @@ ilspycmd -p -o <output-directory> <assembly.dll>
 
 If stdout is empty, check the exit code and stderr, confirm the assembly argument, list the type names, retry once with the exact listed type, and stop. Do not cycle through guessed flag orders or write a replacement metadata parser merely because the invocation was incomplete.
 
+## `rodroidmods/il2cpp-dumper-rs`
+
+Use [Rodroid Il2CppDumper (Rust)](https://github.com/rodroidmods/il2cpp-dumper-rs) as the preferred IL2CPP intermediate tool when the question is best answered by original native instructions combined with IL2CPP class, method, field, annotation, or CFG context. Its disassembler reads the exact native binary and embeds per-method assembly into `dump.cs`, split `DiffableCs` files, or both. It supports ARM64, ARM32, x86, and x64; verify the installed release's supported binary and metadata versions before relying on it.
+
+Treat downloading a release, running `cargo install il2cpp_dumper`, or building the repository as tool acquisition. Apply the asset gate first, pin a release/tag/commit, and record the executable hash or version. Resolve the installed syntax before use:
+
+```bash
+<il2cpp-dumper-rs> --version
+<il2cpp-dumper-rs> --help
+```
+
+Use this command shape when the installed help confirms it:
+
+```bash
+<il2cpp-dumper-rs> \
+  --config <config.json> \
+  <GameAssembly.dll-or-libil2cpp.so-or-UnityFramework> \
+  <global-metadata.dat> \
+  <mod-project-root>/.assets/<game-version>/il2cpp-dumper-rs
+```
+
+The third positional argument is an output **root**. Current releases create an automatically numbered `DumpN/` child; inspect the run log to resolve the actual output directory instead of assuming `Dump0/`. If `--config` is omitted, the tool looks for `config.json` in its current working directory and otherwise uses compiled defaults. Always pass `--config` explicitly for reproducible analysis.
+
+Use this reference configuration for the metadata-enriched, per-type intermediate representation requested by this skill:
+
+```json
+{
+  "requireAnyKey": false,
+
+  "splitDumpPerType": true,
+  "dumpMethod": true,
+  "dumpField": true,
+  "dumpProperty": true,
+  "dumpMethodOffset": true,
+  "dumpFieldOffset": true,
+  "dumpAssemblyName": true,
+
+  "dumpDisassembly": true,
+  "dumpDisassemblyTarget": 2,
+  "dumpDisassemblyHexBytes": true,
+  "dumpDisassemblyFieldNames": true,
+  "dumpDisassemblyAnnotations": true,
+  "dumpDisassemblyCfg": true,
+  "maxDisassemblyInstructions": 2048,
+
+  "generateDummyDll": false,
+  "generateStruct": false,
+  "generateGenericsDump": false,
+  "generateCppScaffold": false
+}
+```
+
+- Keep `splitDumpPerType: true` with `dumpDisassemblyTarget: 2`. Target `2` writes disassembly only to split `DiffableCs`; target `1` writes only to flat `dump.cs`; target `0` writes to both.
+- Use `maxDisassemblyInstructions: 2048` as a ceiling, not proof of a complete function. Record any truncation marker and raise the limit only for a named target when the additional cost is justified.
+- Keep hex bytes enabled when instruction fidelity matters. They permit a representative byte-for-byte comparison against the native module at the reported RVA.
+- Treat field names, resolved calls, string/type/vtable annotations, semantic variables, and CFG reconstruction as derived metadata-aware analysis. Label claims based solely on them **Inferred** until representative addresses, bytes, and identities validate them.
+- Keep the native module and `global-metadata.dat` as one hashed build pair. Do not combine a dump with wrappers or metadata from another game build.
+- Prefer the split output for navigation and diffs, but do not compile `DiffableCs` as game source or runtime interop assemblies. It is an analysis view.
+- The reference JSON intentionally omits unrelated keys. Because omitted keys inherit defaults from the installed build, preserve the exact config alongside the output and record the pinned tool version; add explicit values if an omitted default would materially affect the task.
+
+Validate the run by checking all of the following:
+
+1. Resolve the newly created `DumpN/` and confirm `DiffableCs/` contains non-empty per-type `.cs` files.
+2. Open one known type and verify its assembly name, fields and offsets, method signature, RVA/offset, inline hex bytes, and native instructions.
+3. Compare one representative instruction byte sequence at the reported RVA with the exact native input and confirm the detected architecture.
+4. Check that a method expected to contain a branch or field access has CFG/annotation output, and record absent or unresolved annotations as limitations.
+5. Record the tool version/commit, config file, command, input hashes, actual `DumpN/` path, exit status, and representative validation in the analysis record.
+
+If parsing fails or representative RVAs/bytes do not agree, retry once only when the log or installed documentation identifies a concrete input, version, dump-image-base, or configuration correction. Otherwise record the incompatibility. Use Cpp2IL when recovered IL/IR is the missing representation; escalate to Ghidra only when the deep-analysis gate is satisfied.
+
 ## Cpp2IL
 
 Use Cpp2IL on an exact IL2CPP game build to obtain metadata-aware mappings, Dummy DLLs, or the specific output format exposed by the installed build. Cpp2IL's CLI and output formats vary substantially by release; never copy flags from another release without querying the binary.
@@ -88,10 +169,10 @@ For current builds whose help advertises these options, use this shape:
 - Select `--output-as` only from the current binary's `--list-output-formats` output. Do not assume old switches such as `--analysis-level`, `--skip-analysis`, or `--dump-method-addresses` still exist.
 - Use a Dummy DLL or metadata-oriented output for structure and address mapping. Use an IL-recovery format only when approximate recovered managed IL is the named evidence needed.
 - Treat recovered CIL, ISIL, control-flow graphs, or decompiled C# as reconstruction. They are not the compiler's original C# and are not the original native assembly listing.
-- When the question asks for exact native instructions or bytes at a mapped RVA, stop trying additional IL-recovery settings. Use Cpp2IL only to establish the method identity/RVA if it can, then enter the deep native-disassembly route in [ghidra.md](ghidra.md) with that recorded reason.
+- When the question asks for native instructions or bytes at a mapped RVA, stop trying additional IL-recovery settings. Use Cpp2IL only to establish the method identity/RVA if useful, then use the `rodroidmods/il2cpp-dumper-rs` intermediate card above. Escalate beyond it only when the deep-analysis gate is satisfied.
 - Validate at least one method identity, token/RVA mapping, architecture, and non-empty output. Record unsupported instructions and analysis failures verbatim instead of filling gaps with plausible pseudocode.
 
-After one capability-correct run fails, retry once only when the log identifies a concrete compatibility or input correction. Otherwise record the incompatibility and escalate or stop; do not repeatedly switch recovery formats hoping to obtain exact disassembly.
+After one capability-correct run fails, retry once only when the log identifies a concrete compatibility or input correction. Otherwise record the incompatibility and switch representation or stop; do not repeatedly switch recovery formats hoping to obtain native disassembly.
 
 ## Il2CppInspectorRedux
 
@@ -154,6 +235,6 @@ Use Ghidra only after the deep-analysis gate in [tooling.md](tooling.md) is sati
 | Managed Mono C# body | `ilspycmd -t` | IL2CPP stub C# |
 | Managed Mono IL | `ilspycmd --ilcode -t` | Cpp2IL recovered IL |
 | IL2CPP types, signatures, tokens, addresses | BepInEx interop or Il2CppInspectorRedux exports; browse DLLs with `ilspycmd` | Placeholder bodies |
-| Approximate IL2CPP body/control flow | A compatible Cpp2IL recovery/IR output | Claims of original source or exact native instructions |
-| Exact IL2CPP native assembly/bytes | Ghidra Listing at a validated RVA, after the deep gate | Cpp2IL pseudocode, recovered CIL, or Ghidra decompiler C |
+| IL2CPP native instructions/bytes with class, field, annotation, and CFG context | `rodroidmods/il2cpp-dumper-rs` split per-type output | Claims that derived annotations or inferred boundaries are original source |
+| Approximate IL2CPP managed-like body/control flow | A compatible Cpp2IL recovery/IR output | Claims of original source or exact native instructions |
 | IL2CPP native xrefs, data flow, ABI | Annotated persistent Ghidra project | Shim DLL metadata alone |
