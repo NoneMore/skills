@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyze Native Binaries"
+  short_description: "Evidence-first static analysis across binary tools"
+  default_prompt: "Use $analyze-native-binaries to statically analyze this native binary and save a reusable evidence report."
