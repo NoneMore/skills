@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Logic Analysis"
+  short_description: "按实现边界路由分析离线单机游戏逻辑，并保留可复现证据"
+  default_prompt: "使用 $analyze-game-logic 分析这个已授权的离线单机游戏目标逻辑。先判断实现边界；如果源码直接可读，优先按源码依赖关系批量定位语义锚点；如果是打包、压缩或混淆的 Web/JavaScript 产物，按 Web/JS adapter 优先检查 source map，并把多工具视图先视为临时比较产物，默认只长期保留最清晰且具有独立价值的规范视图，明显混淆或显式比较时再并行保留 webcrack 等替代视图；否则按匹配的引擎/编译边界追到实际状态与调用路径；对关键结论保留版本、哈希、源码定位或（编译/原生边界时）module+RVA、证据与必要的独立验证。优先只读静态分析，只有在我的请求范围明确包含运行时操作时才启动、附加或修改进程。"

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lean Blueprint Author"
+  short_description: "Create, edit, and sync Lean blueprints"
+  default_prompt: "Use $lean-blueprint-author to create, modify, or synchronize this Lean project's blueprint with concise leanblueprint-aligned rules."
+
+policy:
+  allow_implicit_invocation: false

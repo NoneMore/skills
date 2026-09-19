@@ -1,0 +1,4 @@
+interface:
+  display_name: "Math Paper Reader"
+  short_description: "Read math papers and formulas"
+  default_prompt: "Use $math-paper-reader to read this mathematical paper and explain the key formulas with page or equation references."

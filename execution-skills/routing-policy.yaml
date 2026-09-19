@@ -1,0 +1,108 @@
+version: v5-rc.1
+policy: invocation-is-an-api
+bundle_purpose: long-lived-engineering-systems
+
+workload_envelope:
+  owner: user
+  meta_agent_role: may carry or apply the classification only when the user explicitly delegates that policy; it must not invent a class from engineering complexity signals
+  semantics: user-specific-capacity-budget-not-engineering-complexity
+  leaf_inference: forbidden
+  required_for_leaf_routing: false
+  profile_activation: requires explicit upstream profile selection and assignment of the current skill's artifact responsibility; a capacity label alone activates no workflow
+  capacity_feedback:
+    trigger: observed progress, newly discovered necessary work, or verification/continuity needs materially undermine the supplied capacity assumption or threaten an explicit time, context, or budget limit
+    not_a_trigger: greater apparent complexity or a routine local adjustment without material capacity impact
+    report: provide changed assumptions and evidence, completed and remaining work including verification, estimated capacity impact with uncertainty, and feasible options with a recommendation; report unavailable budget telemetry as unknown
+    decision_owner: user, or upstream meta-agent within explicitly delegated capacity policy; without an authorized upstream owner report directly to the user
+    options: continue within current bounds, adjust budget or execution topology, split or defer remaining work, or pause with recoverable state; scope and acceptance changes require separate authority
+    pending_decision: continue useful bounded work only within existing authority and limits that does not depend on the pending decision; silence grants no extension
+    limit_handling: before the known limit, preserve permitted minimal resume state and stop affected work at a safe boundary; do not begin a unit that cannot reasonably fit including verification and recovery; if already at the limit report available state without starting further work
+    resume: apply the owner's explicit decision within its bounds, reuse valid progress and evidence, and do not repeat the request unless new evidence materially changes the forecast
+    invariants:
+      - preserve the existing workload class until the authorized owner changes it; reporting a capacity mismatch is not leaf reclassification
+      - capacity feedback does not invoke specification, planning, delegation, or initiative shaping by itself
+      - unknown capacity policy or telemetry does not justify invented thresholds, mandatory classification, or stopping ordinary authorized work
+      - do not silently reduce scope, weaken verification, expand budget, or claim completion to fit the original estimate
+  classes:
+    small:
+      meaning: expected to fit inside the user's short single-agent capacity envelope
+      orchestration: confirm intent briefly, then dispatch directly to the applicable execution discipline; no mandatory prewritten plan
+    medium:
+      meaning: expected to fit inside the user's medium capacity envelope, typically one primary agent coordinating bounded subagents or sessions
+      orchestration: stabilize a written specification, then a concrete execution plan, then execute; create work packages only at real handoff boundaries
+    large:
+      meaning: expected to exceed the user's medium capacity envelope or require multiple primary-agent waves
+      orchestration: explicitly enter initiative shaping, establish macro intent and governing design, then divide the initiative into medium-sized requirements; do not attempt a single giant execution plan
+  invariants:
+    - exact capacity thresholds belong to the user or upstream meta-agent and may reflect subscription budgets, context budgets, preferred agent topology, or working habits
+    - workload class must not be inferred from file count, line count, architectural reach, uncertainty, risk, or apparent complexity
+    - risk, consequence, reversibility, ambiguity, and decision burden still control execution rigor and capability selection, but never redefine workload class
+    - project bootstrap is orthogonal to workload class
+
+skills:
+  engineering-implementation:
+    invocation: model
+    routing_goal: high-recall-within-authorized-persistent-repository-mutation
+    trigger: scoped persistent working-tree mutation is unconditionally authorized, or evidence has established the authorization condition and the qualifying fix is now being pursued
+    anti_trigger: read-only work, disposable experiments, or conditional fixes whose authorization condition is false, unresolved, or not yet established
+
+  engineering-investigation:
+    invocation: model
+    routing_goal: high-recall-evidence-seeking-without-persistent-mutation
+    trigger: the primary task is research, diagnosis, investigation, exploratory testing, measurement, reproduction, or a disposable experiment whose intended outcome is evidence rather than a persistent code change
+    anti_trigger: the current task is acceptance judgment, or authorized persistent mutation is now being pursued; an unestablished conditional fix does not exclude investigation
+
+  engineering-review:
+    invocation: model
+    routing_goal: high-recall-read-only-evaluation-and-acceptance
+    trigger: the primary task is to review, audit, verify, or accept an existing implementation, diff, design, or engineering artifact against requirements, governing constraints, standards, regressions, or unnecessary complexity
+    anti_trigger: the current task is open-ended fact finding, or authorized persistent mutation is now being pursued; an unestablished conditional fix does not exclude review
+
+  engineering-specification:
+    invocation: model
+    routing_goal: high-precision-explicit-intent-and-design-stabilization
+    trigger: the current task explicitly requires a requirements/specification/design artifact, or an upstream orchestration mode requests specification before execution
+    anti_trigger: ordinary implementation with already accepted intent, mere task size or complexity, or brainstorming without a requested specification artifact; an explicit draft/RFC request may preserve unresolved design
+
+  engineering-execution-planning:
+    invocation: model
+    routing_goal: high-precision-explicit-execution-planning
+    trigger: the current task explicitly requires an execution plan, or an upstream orchestration mode requests planning after intent and governing design are accepted
+    anti_trigger: ordinary implementation where no plan was requested, mere task size or complexity, or unresolved consequential product/design questions that belong in specification or shaping
+
+  engineering-knowledge-governance:
+    invocation: model
+    routing_goal: high-precision-durable-knowledge-events
+    trigger: durable engineering knowledge must be persisted, reconciled, moved, superseded, retired, or a maintained canonical source became stale or contradictory
+    anti_trigger: engineering activity occurred but no durable knowledge decision or reconciliation is needed
+
+  engineering-handoff:
+    invocation: model
+    routing_goal: high-precision-real-handoff-boundaries
+    trigger: work is actually crossing an agent, model, session, context, or executor boundary and needs a bounded execution contract
+    anti_trigger: planning occurred, workload class is medium or large, or delegation is merely hypothetical
+
+  engineering-foundation-design:
+    invocation: user
+    routing_goal: explicit-mode-only
+    trigger: explicit invocation by the user or an upstream meta-agent acting under a user-selected orchestration policy
+    anti_trigger: never infer invocation from greenfield status, architecture relevance, project-initialization wording, or workload class
+
+  engineering-plan-and-delegate:
+    invocation: user
+    routing_goal: explicit-mode-only
+    trigger: explicit invocation by the user or an upstream meta-agent acting under a user-selected orchestration policy
+    anti_trigger: never infer invocation from task size, workload class, complexity, multi-file scope, or the mere usefulness of planning/delegation
+
+  engineering-initiative-shaping:
+    invocation: user
+    routing_goal: explicit-large-mode-only
+    trigger: explicit invocation by the user or upstream meta-agent, normally after the upstream layer has selected the Large workload envelope
+    anti_trigger: never infer Large or enter initiative shaping from apparent complexity, architecture scope, file count, uncertainty, risk, or estimated implementation difficulty
+
+runtime_note: >-
+  User-invoked means explicit orchestration authority, not necessarily a literal human slash-command.
+  An upstream meta-agent may invoke such a mode only when acting under user-selected or user-configured policy.
+  Leaf skills must never infer that permission from semantic relevance. Compatible runtimes may honor
+  disable-model-invocation directly; other adapters should map invocation=user to their equivalent implicit-invocation
+  prohibition. Relevance never overrides an explicit-only policy.

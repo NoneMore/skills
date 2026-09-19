@@ -1,0 +1,4 @@
+interface:
+  display_name: "Math Writing Editor"
+  short_description: "Edit and rewrite math notes"
+  default_prompt: "Use $math-writing-editor to edit, restructure, or rewrite the specified mathematical .tex or .md note according to my requested level of autonomy."
