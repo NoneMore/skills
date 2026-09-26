@@ -10,7 +10,7 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 ## Process
 
-1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.
+1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect current ADRs in the area you're touching. Deprecated or superseded ADRs are historical context, not active constraints.
 
 2. Resolve the testing seams from what has already been agreed. Existing seams should be preferred to new ones, and the highest useful seam should win; the fewer seams across the codebase, the better - the ideal number is one. If the conversation did **not** already settle the seams, treat that as an unresolved design decision rather than starting a new interview inside this skill.
 
