@@ -18,7 +18,7 @@ A **flow** is a path through the skills. Most paths run along one **main flow**,
 
 The route most work travels. You have an idea and want it built.
 
-1. **`grill-with-docs`** sharpens the idea by interview. Start here whenever you are **working in a working directory**: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No working directory? Use `grill-me` instead, covered under Standalone. Both run the same `grilling` primitive; `grill-with-docs` is the one that leaves a paper trail, which makes it the better of the two whenever a repo is there to leave it in.)
+1. **`grill-with-docs`** sharpens the idea by interview. Start here whenever you are **working in a working directory**: it can keep the domain glossary current and, only when warranted, record durable project constraints as ADRs. Task-local decisions stay with the task rather than becoming repository-wide architecture. (No working directory? Use `grill-me` instead, covered under Standalone.)
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`handoff`** in both directions (a prototype lives in its own directory, which is exactly what `handoff` is for; see Phase boundaries):
    - **`handoff`** out, then open a fresh session against that file,
    - **`prototype`** to answer the question with throwaway code,
@@ -59,7 +59,7 @@ Not feature work, just upkeep.
 
 Two model-invoked references that run *beneath* the other skills, each the single source of truth for its vocabulary. Reach for them directly when the **words**, not the process, are the problem; or let the skills above pull them in.
 
-- **`domain-modeling`**: sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), record a hard-to-reverse decision as an ADR. It's the active discipline `grill-with-docs` drives to keep `CONTEXT.md` a clean glossary.
+- **`domain-modeling`**: sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), and record only durable project constraints as ADRs. ADRs are mutable current-state docs; provisional task decisions are not promoted. It's the active discipline `grill-with-docs` drives to keep `CONTEXT.md` a clean glossary.
 - **`codebase-design`** is the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's *shape*: a lot of behaviour behind a small interface at a clean seam. `tdd` and `improve-codebase-architecture` both speak it.
 
 ## Phase boundaries
@@ -78,7 +78,7 @@ Read [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) for the ordered tree: the five q
 
 Off the main flow entirely.
 
-- **`grill-me`**: the same relentless interview as `grill-with-docs`, but **stateless**: it saves nothing locally and builds no `CONTEXT.md`. Reach for it when you are **not working in a working directory** (sharpening a plan, a design, a piece of writing, anything with no repo under it). If you are in a working directory, use `grill-with-docs` instead: it runs the same interview and leaves a paper trail, so it is strictly the better one.
+- **`grill-me`**: the same relentless interview as `grill-with-docs`, but **stateless**: it saves nothing locally and builds no `CONTEXT.md`. Reach for it when you are **not working in a working directory** (sharpening a plan, a design, a piece of writing, anything with no repo under it). If you are in a working directory, use `grill-with-docs` when keeping the domain glossary or a genuinely durable constraint current would be useful.
 - **`grilling`** is the interview primitive itself: rounds, the frontier, facts are the agent's job and decisions are yours. `grill-me` and `grill-with-docs` are the two named ways in, and `triage`, `wayfinder` and `improve-codebase-architecture` all run it internally. Reach for it directly only when you want the interview with no wrapper around it.
 - **`resolving-merge-conflicts`** works an in-progress merge or rebase conflict hunk by hunk, resolving by **intent** traced to each side's primary source rather than by picking lines, then finishes the operation. It never runs `--abort`. Standalone and off every flow: reach for it when you are already mid-conflict.
 - **`prototype`** is a small, throwaway program that answers one design question: does this state model feel right, or what should this UI look like. Throwaway is a constraint on how the code is written, not a promise to destroy it: the answer folds into the real code, and the prototype itself is kept as a **primary source** on a `prototype/<name>` branch out of main, pointed at from the implementation issue. It's the detour in step 2 of the main flow, but reach for it any time a design question is hard to settle on paper.
