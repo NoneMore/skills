@@ -5,7 +5,7 @@ description: Build and sharpen a project's domain model. Use when discussing cod
 
 # Domain Modeling
 
-Actively build and sharpen the project's domain model as you design. This is the *active* discipline: challenging terms, inventing edge-case scenarios, and writing the glossary and decisions down the moment they crystallise. (Merely *reading* `CONTEXT.md` for vocabulary is not this skill: that's a one-line habit any skill can do. This skill is for when you're changing the model, not just consuming it.)
+Actively build and sharpen the project's domain model as you design. This is the *active* discipline: challenging terms, inventing edge-case scenarios, and writing down durable domain knowledge when it crystallises. Task-local implementation choices stay task-local unless they become a genuine long-lived project constraint. (Merely *reading* `CONTEXT.md` for vocabulary is not this skill: that's a one-line habit any skill can do. This skill is for when you're changing the model, not just consuming it.)
 
 ## File structure
 
@@ -63,12 +63,26 @@ When a term is resolved, update `CONTEXT.md` right there. Don't batch these up: 
 
 `CONTEXT.md` should be totally devoid of implementation details. Do not treat `CONTEXT.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
 
+### Keep task decisions ephemeral
+
+Do not promote a choice into persistent architecture merely because it was made during design or implementation. Specs, issues, and code may contain provisional choices that are valid only for the current task.
+
+Treat existing implementation patterns as examples, not project constraints, unless the project explicitly documents them as durable.
+
 ### Offer ADRs sparingly
 
-Only offer to create an ADR when all three are true:
+An ADR represents a **current durable constraint**, not a permanent log of every architectural choice.
 
-1. **Hard to reverse**: the cost of changing your mind later is meaningful
-2. **Surprising without context**: a future reader will wonder "why did they do it this way?"
-3. **The result of a real trade-off**: there were genuine alternatives and you picked one for specific reasons
+Offer an ADR only when either:
 
-If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
+- the user explicitly says the decision is a durable project constraint, or
+- all three are true:
+  1. **Future work must obey it** beyond the current task
+  2. **Changing it is meaningfully expensive or externally observable** — for example it affects compatibility, persisted data, users, integrations, or requires a coordinated migration
+  3. **The reason is not obvious from the code** and captures a real trade-off a future reader would otherwise re-litigate
+
+If these conditions are missing, keep the decision in the task/spec/code and skip the ADR.
+
+ADRs are mutable current-state documents. When the decision evolves, edit the ADR in place. When it stops being useful, deprecate or delete it. Create a superseding ADR only when preserving the distinction between the old and new decisions is itself useful. Git history is the historical record.
+
+Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
