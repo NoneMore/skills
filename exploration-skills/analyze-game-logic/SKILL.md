@@ -2,13 +2,15 @@
 name: analyze-game-logic
 description: Analyze authorized offline/single-player game logic, including Windows PC and Web/JavaScript builds, with reproducible, evidence-backed static and dynamic reverse engineering. Use to identify how gameplay behavior is implemented; trace timers, formulas, state, scripts, and native or managed call paths; inspect binaries or IDA databases; design controlled runtime observations; assess reversible runtime changes; or produce a versioned report. Detect the engine and compilation boundary first, then load matching engine-specific guidance when available. Excludes multiplayer cheating, online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v4.3.2"
+  version: "v4.4.0"
 ---
 
 # Analyze Game Logic
 
-Use a common evidence protocol across engines. Keep engine/runtime conventions in
-engine adapters rather than expanding this file with engine-specific details.
+Use a common evidence protocol across engines. Treat the gameplay mechanic—not an
+individual function, address, or decompiler view—as the primary unit of analysis.
+Keep engine/runtime conventions in engine adapters rather than expanding this file
+with engine-specific details.
 
 ## 1. Establish scope
 
@@ -134,11 +136,40 @@ version-sensitive conventions you establish from evidence.
 Bundled references are directly discoverable here without implying that they
 should all be loaded:
 
+- Gameplay semantic model: [references/gameplay-semantics.md](references/gameplay-semantics.md)
 - GameMaker YYC: [references/engine-gamemaker-yyc.md](references/engine-gamemaker-yyc.md)
 - Web / JavaScript: [references/engine-web-javascript.md](references/engine-web-javascript.md)
 - Adapter authoring contract: [references/engine-adapter-contract.md](references/engine-adapter-contract.md)
 
-## 5. Trace the logic
+## 5. Reconstruct the gameplay mechanic
+
+For focused/full analysis, reconstruct the mechanic before treating any one
+function as the answer. Use
+[references/gameplay-semantics.md](references/gameplay-semantics.md) to model the
+relevant chain, typically:
+
+```text
+Trigger
+  -> Eligibility / Preconditions
+  -> Input state
+  -> Computation / Rule
+  -> Randomness (when applicable)
+  -> Authoritative state mutation
+  -> Secondary gameplay effects
+  -> Presentation
+  -> Persistence / Reset / Lifetime
+```
+
+Do not force irrelevant stages into the model. Do explicitly resolve the
+cross-cutting gameplay primitives that can change the interpretation: time
+domain, state-machine transitions, modifier order, RNG source, entity/object
+lifecycle, event ordering, persistence/reset behavior, authority/prediction, and
+presentation-versus-state ownership.
+
+Prefer a small complete mechanic slice over a broad call graph that never closes
+the loop from player-visible trigger to authoritative mutation and lifetime.
+
+### Trace the implementation
 
 1. Start from strong semantic anchors: internal variable names, script/event
    names, diagnostic text, configuration keys, symbols, registrations, or
@@ -309,7 +340,10 @@ navigation entry point rather than the sole knowledge store. Include:
 - baseline metadata and hashes;
 - research question and reproduction steps;
 - implementation boundary and engine/runtime overview;
-- conclusions and concise pseudocode with finding/evidence references;
+- conclusions and concise gameplay pseudocode with finding/evidence references;
+- the mechanic model as applicable: trigger, eligibility, inputs, computation/RNG,
+  authoritative mutation, secondary effects, presentation, time domain,
+  state/entity owner, persistence/reset, and authority;
 - dynamic procedure and results when used;
 - material functions, types, fields, call paths, signatures, and source-level
   locators or `module + RVA` when applicable;
@@ -333,6 +367,9 @@ Before finishing a focused/full analysis:
   are valid;
 - confirm no destructive modification occurred without explicit authorization;
 - separate observed behavior from inferred behavior;
+- verify that presentation-only paths are not being treated as the authoritative
+  gameplay mutation and that the mechanic's trigger, state owner, and lifetime
+  are explicit where material;
 - state whether dynamic validation was performed, unavailable, outside scope,
   unsafe/prohibited, or unnecessary, and do not mark dynamically material claims
   Confirmed when the required runtime check was available but omitted;
