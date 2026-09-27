@@ -150,29 +150,29 @@ causality claim, reconstruct the mechanic before treating any one implementation
 site as the answer. For a pure identity/location question, resolve only the
 semantic stages material to that question and do not expand scope merely to fill
 this model. Use
-[references/gameplay-semantics.md](references/gameplay-semantics.md) to model the
-relevant chain, typically:
+[references/gameplay-semantics.md](references/gameplay-semantics.md) as a
+semantic coverage/decomposition model, not as a presumed execution pipeline.
+When material, recover the causal spine:
 
 ```text
-Trigger
+Trigger / Event / Source
   -> Eligibility / Preconditions
   -> Input state
   -> Computation / Rule
   -> Randomness (when applicable)
   -> Authoritative state mutation
   -> Secondary gameplay effects
-  -> Presentation
-  -> Persistence / Reset / Lifetime
 ```
 
-Do not force irrelevant stages into the model. For gameplay-semantic claims,
-resolve the cross-cutting primitives that can materially change the
-interpretation: time domain, state-machine transitions, modifier order, RNG
-source, entity/object lifecycle, event ordering, persistence/reset behavior,
-authority/prediction, and presentation-versus-state ownership.
+Then resolve the cross-cutting dimensions that can materially change the
+interpretation: time domain and scheduling, state/entity ownership and lifecycle,
+event ordering, persistence/reset behavior, authority/prediction, and
+presentation/other consumers. These dimensions may branch, interleave, repeat,
+or apply across the whole mechanic rather than execute after the mutation.
 
-Prefer a small complete mechanic slice over a broad call graph that never closes
-the loop from player-visible trigger to authoritative mutation and lifetime.
+Do not force irrelevant elements into the model. Prefer a small complete
+mechanic slice over a broad call graph that never closes the material loop from
+trigger/event/source to authoritative mutation and lifetime.
 
 ### Trace the implementation
 
