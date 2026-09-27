@@ -108,9 +108,11 @@ bundle structure. Map the core mechanic model onto these runtime concepts:
 - **Physics/spatial rules:** distinguish engine/custom physics ticks and worker or
   server simulation from renderer interpolation.
 
-Use these mappings to recover trigger -> eligibility -> computation/RNG ->
-authoritative mutation -> secondary effects -> presentation -> persistence/reset
-for the target mechanic.
+Use these mappings to recover the target mechanic's material causal spine
+(trigger/event/source -> eligibility -> computation/RNG -> authoritative
+mutation -> secondary gameplay effects), then resolve time, lifecycle,
+persistence/reset, authority, and presentation as cross-cutting dimensions
+rather than terminal execution stages.
 
 ### Electron / NW.js container discovery
 
