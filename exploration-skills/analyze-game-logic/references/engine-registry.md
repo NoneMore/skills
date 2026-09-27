@@ -25,7 +25,7 @@ To add support for another engine/runtime boundary:
    [engine-adapter-contract.md](engine-adapter-contract.md) into a new focused
    file named `engine-<engine-or-boundary>.md`, including an explicit mapping of
    the gameplay semantic model onto the engine/runtime lifecycle.
-2. Add one row to this registry describing the detection boundary, adapter, and
+2. Add one row to this registry describing the material boundary, adapter, and
    optional bundled tool.
 3. Add deterministic helper scripts under `scripts/` only when they automate
    repeatable mechanical triage or artifact recovery. Treat those helpers as
