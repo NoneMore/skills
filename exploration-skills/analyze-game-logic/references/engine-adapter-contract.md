@@ -45,27 +45,17 @@ logic targets and which are only metadata/resource containers.
 
 ### Gameplay semantic mapping
 
-Map the cross-engine model in
-[gameplay-semantics.md](gameplay-semantics.md) onto this boundary. Document the
-engine/runtime constructs that normally own:
+Map each applicable primitive in
+[gameplay-semantics.md](gameplay-semantics.md) to the concrete engine/runtime
+constructs that implement or expose it. For each useful mapping, document:
 
-- simulation/update loops and fixed versus variable time;
-- entity/object/component creation, update, disable/death, and destruction;
-- events, input, messages, coroutines/tasks, alarms, or timer callbacks;
-- gameplay state, configuration/data assets, and common modifier sources;
-- save/checkpoint persistence and reset/reload behavior;
-- physics/spatial callbacks when material;
-- presentation-only paths such as draw/render, HUD/UI, VFX, SFX, and animation;
-- local authority, prediction, serialization, or remote authority boundaries
-  when the runtime can participate in networked play.
+- the concrete construct or subsystem;
+- whether the mapping is a strong convention or only a search heuristic;
+- the strongest engine-specific anchors for locating it;
+- material version/runtime caveats.
 
-State which mappings are strong conventions and which are only search heuristics.
-The goal is to help the analyst reconstruct the material causal spine
-(trigger/event/source -> eligibility -> computation/RNG -> authoritative
-mutation -> secondary gameplay effects) and the cross-cutting time, lifecycle,
-persistence, authority, and presentation dimensions, not merely locate
-engine-generated functions. Do not imply that those cross-cutting dimensions
-execute as terminal stages of the causal spine.
+Keep this section engine-specific. Reference the canonical model instead of
+restating its generic mechanic stages, cross-cutting dimensions, or workflow.
 
 ## 3. Semantic anchors
 
@@ -94,16 +84,15 @@ public ABI. Include how to validate them before applying types or writes.
 
 ## 5. Recommended tracing workflow
 
-Preserve the analysis scope established by the core workflow. For pure
-identity/location questions, keep the engine-specific workflow narrow and skip
-mechanic stages that are not material to the question. The mechanic-first
-progression below applies when analyzing gameplay behavior or causality, or when
-an implementation site is being used to support such a claim.
+Preserve the scope established by the core workflow. Pure identity/location
+questions should stay narrow.
 
-Translate the core mechanic-reconstruction and trace procedure into the most
-efficient engine-specific progression from gameplay-observable behavior or a
-reproducible/controlled scenario and semantic anchor to authoritative state
-mutation, lifetime, implementation, and validation.
+For gameplay behavior or causality analysis, describe the shortest
+engine-specific progression from a semantic anchor to the concrete state-changing
+implementation, relevant ownership/lifetime paths, and validation points. Refer
+to the canonical gameplay model for the semantic stages rather than repeating
+them here.
+
 Prefer a short ordered flow over a second generic reverse-engineering tutorial.
 
 ## 6. Static-analysis guidance
