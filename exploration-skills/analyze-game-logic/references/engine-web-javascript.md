@@ -194,8 +194,10 @@ the question, and skip mechanic stages that are not material.
 
 For gameplay behavior or causality analysis:
 
-1. Define the player-visible mechanic and reproduction path without inferring
-   implementation ownership that has not yet been established.
+1. Define the gameplay-observable behavior when available; otherwise bound the
+   mechanic with a reproducible/controlled scenario, trigger/event/source, and
+   relevant state conditions, without inferring implementation ownership that
+   has not yet been established.
 2. Identify the container/bootstrap, entry module, chunk/worker, source-map, and
    JavaScript-versus-WebAssembly/native boundaries material to the target.
 3. Obtain the minimum readable view required for semantic tracing:
@@ -426,8 +428,8 @@ Before considering a Web/JS mechanic understood, record:
 - original source-map provenance and bundle/map association status when used;
 - tool names, versions, commands/options, and which generated tree supplied the
   cited locator;
-- player-visible trigger, simulation/state owner, time domain, and relevant
-  lifetime/reset behavior;
+- mechanic trigger/event/source, simulation/state owner, time domain, and
+  relevant lifetime/reset behavior;
 - module path/ID and function/structural locator for the state-changing logic;
 - relevant callers/consumers and data-flow into/out of the mutation;
 - whether the value is local, predicted, persisted, sent, received, or
