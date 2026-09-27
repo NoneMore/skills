@@ -209,8 +209,6 @@ recovery may stop once the requested claim is closed with sufficient evidence.
 
 ### Tool roles and ordering
 
-### Tool roles and ordering
-
 The three tools are complementary, not interchangeable:
 
 - **webcrack** is the first-choice additional pass when obfuscator-style
