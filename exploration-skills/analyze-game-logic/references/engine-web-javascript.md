@@ -65,7 +65,6 @@ implemented in JavaScript.
 
 Typical logic-bearing artifacts include:
 
-
 - entry bundles and lazy chunks;
 - unpacked module bodies and recovered original source from source maps;
 - Web Workers / Shared Workers and service-worker code when they own state or
@@ -77,42 +76,33 @@ Typical logic-bearing artifacts include:
 
 ### Gameplay semantic mapping
 
-For a Web/JS game, recover gameplay ownership before spending effort on generic
-bundle structure. Map the core mechanic model onto these runtime concepts:
+Map the canonical model onto Web/JS runtime constructs using these
+engine/runtime-specific anchors:
 
-- **Simulation/update:** identify the actual simulation loop or scheduler:
-  `requestAnimationFrame`, a fixed-step accumulator, `setInterval`, engine
-  lifecycle callback, worker loop, or local server tick. Rendering cadence does
-  not by itself establish simulation cadence.
-- **Entity/state ownership:** determine whether mechanic state lives in plain
-  objects/classes, an ECS, a reducer/store, a scene/world singleton, a worker,
-  a local authoritative server module, or another state container.
-- **Entity lifecycle:** find spawn/construction, activation, update, death/
-  disable/despawn, pooling/reuse, and scene/world teardown when they affect
-  state lifetime.
-- **Events/input:** distinguish DOM/device input, engine input abstraction,
-  event-bus messages, reducer/actions, worker messages, timers, and direct calls.
-  Record queued/deferred ordering when it changes behavior.
-- **Time:** distinguish render timestamps, simulation delta/fixed step, wall
-  clock, browser timers, worker timers, and local server ticks. Check pause,
-  time-scale, background throttling, loading, and scene transitions.
-- **Persistence/reset:** locate localStorage/IndexedDB/files/config/save modules
-  or server-side persistence supplied with the authorized artifact, and separate
-  serialized state from runtime defaults and reconstruction.
-- **Authority:** distinguish local authoritative simulation, local prediction,
-  serialized outbound values, received state, and remote authority. Client code
-  cannot prove unavailable server internals.
-- **Presentation:** React/UI state, DOM/canvas rendering, Pixi/Phaser/Cocos draw
-  paths, animation, audio, and effects are presentation unless their data flow
-  also owns the authoritative mutation.
-- **Physics/spatial rules:** distinguish engine/custom physics ticks and worker or
-  server simulation from renderer interpolation.
+- **Simulation and time:** identify the actual simulation owner and scheduler:
+  `requestAnimationFrame`, fixed-step accumulators, browser timers, engine
+  callbacks, worker loops, or local server ticks. Rendering cadence does not prove
+  simulation cadence.
+- **State ownership and lifecycle:** state may live in objects/classes, an ECS,
+  reducer/store, scene/world singleton, worker, or local server module. Locate
+  creation/activation, update, death/disable/despawn, pooling/reuse, and teardown
+  only when they affect the target state.
+- **Events and dispatch:** distinguish DOM/device input, engine abstractions,
+  event buses, reducer/actions, worker messages, timers, and direct calls; record
+  queued/deferred ordering when material.
+- **Persistence:** locate localStorage/IndexedDB/files/config/save modules or
+  supplied server-side persistence, and separate serialized state from runtime
+  defaults/reconstruction.
+- **Authority:** distinguish local simulation, prediction, serialized outbound
+  values, received state, and remote authority. Client artifacts cannot prove
+  unavailable server internals.
+- **Presentation and physics:** React/UI state, DOM/canvas rendering,
+  Pixi/Phaser/Cocos draw paths, animation/audio/effects, renderer interpolation,
+  and engine/custom physics may expose a mechanic without owning its gameplay
+  mutation.
 
-Use these mappings to recover the target mechanic's material causal spine
-(trigger/event/source -> eligibility -> computation/RNG -> authoritative
-mutation -> secondary gameplay effects), then resolve time, lifecycle,
-persistence/reset, authority, and presentation as cross-cutting dimensions
-rather than terminal execution stages.
+Use the canonical semantic model to decide which mappings are material before
+spending effort on generic bundle structure.
 
 ### Electron / NW.js container discovery
 
@@ -190,44 +180,34 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
-Preserve narrow core scope for pure identity/location questions: obtain only the
-container/module/readability context and implementation evidence needed to answer
-the question, and skip mechanic stages that are not material.
+Keep pure identity/location questions narrow: obtain only the
+container/module/readability context and implementation evidence needed to close
+the claim.
 
 For gameplay behavior or causality analysis:
 
-1. Define the gameplay-observable behavior when available; otherwise bound the
-   mechanic with a reproducible/controlled scenario, trigger/event/source, and
-   relevant state conditions, without inferring implementation ownership that
-   has not yet been established.
-2. Identify the container/bootstrap, entry module, chunk/worker, source-map, and
-   JavaScript-versus-WebAssembly/native boundaries material to the target.
-3. Obtain the minimum readable view required for semantic tracing:
-   - prefer matching source maps and original `sourcesContent`;
-   - otherwise unpack/minify-recover only the relevant bundle/chunk set;
-   - use deobfuscation when the target is genuinely obfuscated;
-   - keep recovery outputs outside the original game tree and preserve provenance.
-4. From that readable view, identify the simulation owner, state container, time
-   domain, lifecycle, and authority boundary supported by evidence.
-5. Batch-search gameplay vocabulary and state-mutation APIs across the recovered
-   tree, then narrow to the smallest module cluster connecting the trigger to the
-   authoritative mutation.
-6. Trace eligibility, inputs, formula/transition/RNG, the state write, secondary
-   gameplay effects, and all materially distinct callers/sources.
-7. Resolve time behavior, entity/state lifetime, save/reset behavior, and
-   presentation consumers that can change or merely display the observed result.
-8. For network-capable code, record whether each relevant value is local,
-   predicted, sent, received, or authoritative; do not substitute protocol
-   observations for unavailable server implementation.
-9. Reconstruct concise gameplay pseudocode using original/recovered module paths,
-   function or stable structural locators, then perform the independent
-   consistency check and dynamic validation required by the core workflow.
+1. Identify the container/bootstrap and the JavaScript, worker, WebAssembly, or
+   native boundaries material to the target.
+2. Obtain the minimum readable view needed for semantic tracing: prefer matching
+   source maps; otherwise unpack or deobfuscate only the relevant bundle/chunk
+   set while preserving provenance outside the original game tree.
+3. Locate the simulation/state owner, relevant scheduler, and authority boundary
+   supported by evidence.
+4. Batch-search gameplay vocabulary and mutation APIs, then narrow to the
+   smallest module cluster containing the mechanic.
+5. Apply the canonical gameplay semantic model to that cluster, following
+   materially distinct callers/consumers and lifecycle or persistence paths as
+   needed.
+6. Reconstruct concise gameplay pseudocode with stable module/function locators,
+   then perform the independent consistency check and dynamic validation required
+   by the core workflow.
 
 Bundle recovery is a supporting capability, not the analysis goal. A successful
 source-map extraction, Wakaru split, webcrack transform, or formatting pass does
-not establish which code owns the gameplay mechanic. For a narrow identity or
-location question, however, recovery may legitimately stop once the requested
-identity/location claim is closed with sufficient evidence.
+not establish mechanic ownership. For a narrow identity/location question,
+recovery may stop once the requested claim is closed with sufficient evidence.
+
+### Tool roles and ordering
 
 ### Tool roles and ordering
 
