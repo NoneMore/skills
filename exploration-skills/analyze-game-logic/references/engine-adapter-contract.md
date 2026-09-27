@@ -17,9 +17,14 @@ positives. Do not rely on one filename when stronger corroboration is available.
 
 ## 2. Implementation model
 
-Explain where gameplay logic, resources, metadata/registrations, scripts, and
-runtime state live. Distinguish primary logic targets from supporting
-metadata/resource containers.
+Explain the implementation layers that can participate in a mechanic: for
+example declarative data/configuration, readable scripts/source, generated or
+native code, engine/middleware APIs, and runtime state. Distinguish primary logic
+owners from supporting metadata/resource containers, and identify material
+cross-layer transitions or opaque calls.
+
+Do not collapse a layered implementation into one global boundary when doing so
+would encourage premature escalation into a heavier layer.
 
 ### Gameplay semantic mapping
 
@@ -48,8 +53,11 @@ writes.
 
 Give the shortest engine-specific progression from a strong anchor to the
 state-changing implementation, including only engine-specific ownership,
-lifetime, shared-use, or validation pivots. Do not restate core scope or the
-canonical semantic stages.
+lifetime, shared-use, or validation pivots. Preserve the core layer-escalation
+rule: characterize directly inspectable layers first when they are material, and
+cross into a more opaque or expensive layer only to close a named unresolved
+semantic relation. State any engine-specific evidence that makes such a crossing
+decisive. Do not restate core scope or the canonical semantic stages.
 
 ## 6. Static-analysis guidance
 
@@ -89,7 +97,10 @@ evidence states, and independence rules.
 
 For bundled helpers, state what they automate, where they run, whether they
 modify source/runtime state, their material version/heuristic assumptions, and
-what still requires manual interpretation. Keep helpers mechanical.
+what still requires manual interpretation. When an engine has a preferred
+persistent or structured analysis interface, identify it as an optimization
+without making that specific tool a prerequisite for the adapter. Keep helpers
+mechanical.
 
 If third-party-tool recipes or volatile CLI/version details become lengthy, put
 them in a focused support reference and load it only when that recovery/tooling
