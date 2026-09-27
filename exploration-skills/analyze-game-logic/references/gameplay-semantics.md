@@ -1,190 +1,143 @@
 # Gameplay Semantic Model
 
-Use this reference for focused/full analysis of a gameplay mechanic. The unit of
-analysis is the **mechanic**, not an individual function, address, script, bundle,
-or decompiler view. Engine adapters map their concrete lifecycle and runtime
-conventions onto this model.
+Use this reference as the canonical semantic model for focused/full analysis of a
+gameplay mechanic. The unit of analysis is the **mechanic**, not an individual
+function, address, script, bundle, or decompiler view. Engine adapters map
+concrete runtime constructs onto this model.
 
-Do not force every mechanic through every model element or cross-cutting
-dimension. Mark an element `not applicable` when evidence shows it is absent,
-and `unknown` when it has not yet been resolved.
+Do not force every mechanic through every field. Omit elements that are genuinely
+irrelevant, and mark unresolved elements `unknown` when they could change the
+interpretation.
 
-## 1. Define the mechanic from gameplay behavior or a controlled scenario
+## 1. Define the mechanic
 
-Prefer a player-observable behavior and reproduction path when one exists. Do
-not require a player-facing trigger or immediately visible effect. Hidden or
-background gameplay systems are still mechanics when they can be bounded by a
-reproducible/controlled scenario, system event, state transition, or other
+Prefer a player-observable behavior and reproduction path when one exists. Hidden
+or background systems are still mechanics when they can be bounded by a
+reproducible or controlled scenario, system event, state transition, or other
 evidence-backed condition.
 
-Examples include:
+Useful definitions include:
 
 - taking damage grants temporary invulnerability;
-- an attack sometimes becomes a critical hit;
-- a cooldown advances while playing but stops while paused;
+- a cooldown advances during play but stops while paused;
 - an AI director changes spawn pressure after a hidden threshold;
-- a background economy tick updates resources without direct input;
-- procedural generation chooses content from hidden state;
 - a checkpoint preserves some state but resets other state.
 
 Record the observable behavior when available; otherwise record the controlled
-scenario, trigger/event/source, relevant state conditions, and expected evidence.
-Do this before collapsing the question into implementation details. A function
-name such as `Update`, `Tick`, or `Step` is not a mechanic definition.
+scenario, trigger/source, relevant state conditions, and expected evidence. A
+function name such as `Update`, `Tick`, or `Step` is not a mechanic
+definition.
 
-## 2. Reconstruct the semantic model
+## 2. Canonical mechanic model
 
-Use this as a **semantic coverage/decomposition model, not a presumed execution
-order**. Real mechanics may branch, interleave, repeat, short-circuit, or run
+Treat this as a coverage/decomposition model, not a fixed execution pipeline.
+Real mechanics may branch, interleave, repeat, short-circuit, or run
 asynchronously.
 
-Recover the causal spine when material:
+Recover the material causal core:
 
 ```text
-Trigger / Event / Source
-  -> Eligibility / Preconditions
-  -> Input state
-  -> Computation / Rule
-  -> Randomness (when applicable)
+Source / Trigger
+  -> Eligibility / Gate
+  -> Rule / Transition
   -> Authoritative state mutation
-  -> Secondary gameplay effects
 ```
 
-Then resolve the cross-cutting dimensions that can change the interpretation:
+Inputs, modifiers, and RNG may feed the rule/transition. Secondary gameplay
+effects and presentation are usually consumers or branches of the resulting
+state rather than fixed terminal stages.
+
+Resolve these cross-cutting dimensions when they can change the interpretation:
 
 - time domain and scheduling;
 - entity/state ownership and lifecycle;
+- event ordering and deferred dispatch;
 - persistence, reset, and reload behavior;
 - authority, prediction, and serialization boundaries;
-- presentation paths and other observers/consumers.
+- presentation and other observers/consumers;
+- physics/spatial rules when material.
 
-These dimensions are not terminal stages. Presentation may occur before, during,
-or after mutation; persistence/lifetime constrain state across many parts of the
-mechanic rather than executing after presentation.
+For each material part, retain the implementation locator and evidence supporting
+the interpretation. A UI read, animation, sound, combat-log entry, or
+localization string may expose a mechanic without owning its authoritative state.
+Likewise, a low-level state write is not fully understood when its trigger,
+ownership, or lifetime remains material and unresolved.
 
-For each material element or dimension, record:
-
-- the owning object/module/system;
-- the event, function, script, table, or call path that implements it;
-- the important inputs and outputs;
-- the relevant time domain;
-- the authority boundary;
-- the lifetime/reset conditions;
-- the evidence that supports the interpretation.
-
-A UI read, animation, sound, combat-log entry, or localization string may expose
-a mechanic without owning the authoritative state mutation. Conversely, a low-
-level state write is not understood until its trigger, eligibility, and lifetime
-are known.
-
-## 3. Cross-engine gameplay primitives
-
-Use these primitives to decide what evidence matters. They are gameplay
-semantics, not engine-specific ABI rules.
+## 3. Cross-engine primitives
 
 ### Time and scheduling
 
-Determine which clock advances the mechanic:
+Determine which clock advances the mechanic: render frames, simulation/fixed
+ticks, variable delta time, wall/monotonic time, alarms/timers/coroutines/tasks,
+animation frames, event counts, or another scheduler. Establish pause,
+time-scale, loading, cutscene, background, and scene/room-transition behavior
+before converting counters to seconds.
 
-- render frames;
-- simulation/fixed ticks;
-- variable delta time;
-- wall clock / monotonic time;
-- alarms/timers/coroutines/tasks;
-- animation frames or event counts.
+### State, formulas, and randomness
 
-Establish pause, slow-motion/time-scale, loading, cutscene, background-tab, and
-scene/room-transition behavior before converting counters to seconds.
+For state machines, identify transition predicates, entry/exit effects,
+interrupt paths, and reset conditions.
 
-### State machines and transitions
+For formulas, recover the evidence-backed order of operations, including
+material modifiers, clamping, quantization, and rounding. Do not infer a generic
+modifier order.
 
-Identify states, transition predicates, entry/exit effects, interrupt paths,
-fallback/default states, and reset conditions. Trace both the transition that
-enters a state and the path that leaves or expires it.
+For randomness, identify the RNG source/stream, roll site, range mapping,
+comparison, rerolls or bias modifiers, and conditions under which a roll is
+skipped or repeated. A displayed percentage does not establish the effective
+runtime probability by itself.
 
-### Stats, formulas, and modifiers
+### Ownership, lifecycle, and dispatch
 
-Recover the evidence-backed order of operations, not only the final constant.
-Additive modifiers, multiplicative modifiers, conditional modifiers, clamping,
-quantization, and rounding are common operation types, but their ordering is
-game-specific and may be interleaved or repeated.
+Determine whether state belongs to an entity/component, world/scene,
+singleton/global store, transient event object, worker, local server, or another
+owner. Map creation/spawn, initialization, activation, update,
+disable/death/despawn, pooling/reuse, and destruction when they affect lifetime.
 
-For example, the following is **illustrative only; do not assume this sequence
-without evidence**:
+Trace material input/events to their gameplay handlers. Distinguish direct calls
+from queued/deferred dispatch and establish ordering when it changes semantics.
 
-```text
-base
-  -> additive modifiers
-  -> multiplicative modifiers
-  -> conditional modifiers
-  -> clamp / quantization / rounding
-  -> derived value
-```
+### Persistence, authority, and presentation
 
-Audit difficulty, equipment, skills/perks, buffs/debuffs, level scaling, global
-modifiers, and source-specific overrides when they can share the same formula.
+Separate runtime state from serialized state and defaults reconstructed during
+load. Determine what survives death, checkpoint, scene/room transitions,
+save/reload, new-game/reset, or version migration when material.
 
-### Randomness
+Record where the authoritative value is computed. For network-capable code,
+distinguish local prediction, presentation, serialization, received state, and
+authoritative simulation; do not infer unavailable server implementation from a
+client prediction path.
 
-Identify the RNG source/stream, seed or state when available, range mapping,
-roll site, comparison, rerolls, luck/bias modifiers, and the conditions under
-which a roll is skipped or repeated. A displayed percentage does not by itself
-establish the effective runtime probability.
-
-### Entity and object lifecycle
-
-Map creation/spawn, initialization, activation, update, disable/death/despawn,
-pooling/reuse, and destruction. Determine whether state belongs to an entity,
-component, world/scene, singleton/global store, or transient event object.
-
-### Events, input, and dispatch
-
-Trace the path from input/event source to gameplay handler and any secondary
-events. Distinguish direct calls from queued/deferred events and identify
-ordering when it changes semantics.
-
-### Persistence and reset
-
-Determine what survives checkpoint, death, room/scene change, save/reload,
-new-game/reset, and version migration. Separate runtime state from serialized
-state and from defaults reconstructed during load.
-
-### Authority and prediction
-
-Record where the authoritative value is computed. For local/offline games this
-may simply be the local simulation owner. For network-capable code, distinguish
-local prediction, presentation, serialization, received state, and authoritative
-simulation. Do not infer unavailable server logic from a client prediction path.
-
-### Presentation separation
-
-Separate state-changing logic from UI, HUD, draw/render, VFX, SFX, animation,
-localization, and telemetry. Presentation can be a useful semantic anchor but is
-not evidence of mechanic ownership unless data flow shows that it mutates the
-authoritative state.
+Separate gameplay state changes from UI/HUD, draw/render, VFX, SFX, animation,
+localization, and telemetry unless data flow proves those paths also own the
+mutation.
 
 ### Physics and spatial rules
 
 When material, identify the physics/update domain, collision/query source,
 coordinate/unit conventions, integration step, and whether the mechanic is
-implemented in engine physics callbacks or custom simulation code.
+implemented in engine callbacks or custom simulation code.
 
-## 4. Mechanic-first tracing procedure
+## 4. Trace and close the mechanic
 
-1. State the gameplay behavior when observable; otherwise define the
-   reproducible/controlled scenario, trigger/event/source, and state conditions.
-2. Select the relevant primitives above; do not investigate unrelated engine
-   subsystems.
-3. Find the trigger and likely state owner. Trace forward toward authoritative
-   mutation and backward from observed state consumers when that is faster.
-4. Recover eligibility, inputs, formula/transition/RNG, and the exact mutation.
-5. Audit secondary sources and shared paths so one caller or event is not
-   mistaken for the whole mechanic.
-6. Resolve lifetime, reset, time-domain, and persistence behavior that can change
-   the player's observed result.
-7. Separate presentation from state ownership and record the authority boundary.
-8. Express the result as concise gameplay pseudocode plus implementation
-   locators, then apply the evidence protocol from `SKILL.md`.
+1. Define the observable behavior or controlled scenario.
+2. Select only the semantic primitives material to the question.
+3. Find the trigger/source and likely state owner; trace forward toward the
+   authoritative mutation and backward from consumers when useful.
+4. Recover the relevant gate, inputs/modifiers/RNG, rule/transition, and exact
+   mutation.
+5. Audit materially distinct callers/sources so one event is not mistaken for
+   the whole mechanic.
+6. Resolve time, lifetime, reset/persistence, authority, event ordering, and
+   presentation only where they can change the result or the interpretation.
+7. Express the result as concise gameplay pseudocode plus implementation
+   locators, then apply the evidence and validation protocol from `SKILL.md`.
+
+A mechanic is complete enough for the claim when the material trigger reaches
+the claimed authoritative mutation; relevant source-specific branches, units,
+timing, state ownership/lifetime, persistence/reset, authority, and presentation
+boundaries are either resolved or explicitly unknown; and the supporting
+locators/evidence are version-scoped and reproducible.
 
 Prefer a small complete mechanic slice over a broad call graph that does not
 explain the behavior.
@@ -195,19 +148,18 @@ A focused finding or report can use this shape:
 
 ```text
 Mechanic:
-Reproduction:
-Trigger:
-Eligibility:
-Inputs:
-Computation / transition:
-RNG:
+Reproduction / controlled scenario:
+Source / trigger:
+Eligibility / gate:
+Inputs / modifiers / RNG:
+Rule / transition:
 Authoritative mutation:
-Secondary gameplay effects:
-Presentation:
-Time domain:
-Entity/state owner:
+Secondary effects / consumers:
+Time / scheduling:
+Entity/state owner and lifetime:
 Persistence / reset:
-Authority:
+Authority / serialization:
+Presentation:
 Implementation locators:
 Validation:
 Unknowns / version sensitivity:
@@ -216,22 +168,6 @@ Unknowns / version sensitivity:
 Omit genuinely irrelevant fields, but do not silently omit unresolved fields
 that could change the interpretation.
 
-## 6. Completion criteria
-
-Before calling a mechanic understood, verify as applicable that:
-
-- the trigger reaches the claimed authoritative mutation;
-- eligibility and source-specific branches are accounted for;
-- units, update rates, and time scaling are established;
-- formulas include modifier order, clamping, and rounding that affect outcomes;
-- RNG claims include the roll source and effective conditions;
-- state ownership and entity/object lifetime are known;
-- death, pause, loading, scene/room change, and save/reload behavior are resolved
-  when they can affect the mechanic;
-- presentation-only paths are not mistaken for state-changing paths;
-- authority/prediction boundaries are explicit;
-- the implementation locators and evidence are version-scoped and reproducible.
-
-The mechanic model complements the generic evidence/provenance rules. It does
-not replace independent validation, version/hash binding, or engine-specific
-runtime knowledge.
+This model complements the generic evidence/provenance rules. It does not replace
+independent validation, version/hash binding, or engine-specific runtime
+knowledge.
