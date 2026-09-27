@@ -7,10 +7,11 @@ metadata:
 
 # Analyze Game Logic
 
-Use a common evidence protocol across engines. Treat the gameplay mechanic—not an
-individual function, address, or decompiler view—as the primary unit of analysis.
-Keep engine/runtime conventions in engine adapters rather than expanding this file
-with engine-specific details.
+Use a common evidence protocol across engines. When the research question is about
+gameplay behavior or causality, treat the gameplay mechanic—not an individual
+function, address, or decompiler view—as the primary semantic unit. Narrow
+identity/location questions may remain narrow. Keep engine/runtime conventions in
+engine adapters rather than expanding this file with engine-specific details.
 
 ## 1. Establish scope
 
@@ -143,8 +144,12 @@ should all be loaded:
 
 ## 5. Reconstruct the gameplay mechanic
 
-For focused/full analysis, reconstruct the mechanic before treating any one
-function as the answer. Use
+When the research question is a gameplay mechanic/behavior, or when a function,
+formula, field, or call path is being used to support a gameplay-semantic or
+causality claim, reconstruct the mechanic before treating any one implementation
+site as the answer. For a pure identity/location question, resolve only the
+semantic stages material to that question and do not expand scope merely to fill
+this model. Use
 [references/gameplay-semantics.md](references/gameplay-semantics.md) to model the
 relevant chain, typically:
 
@@ -160,11 +165,11 @@ Trigger
   -> Persistence / Reset / Lifetime
 ```
 
-Do not force irrelevant stages into the model. Do explicitly resolve the
-cross-cutting gameplay primitives that can change the interpretation: time
-domain, state-machine transitions, modifier order, RNG source, entity/object
-lifecycle, event ordering, persistence/reset behavior, authority/prediction, and
-presentation-versus-state ownership.
+Do not force irrelevant stages into the model. For gameplay-semantic claims,
+resolve the cross-cutting primitives that can materially change the
+interpretation: time domain, state-machine transitions, modifier order, RNG
+source, entity/object lifecycle, event ordering, persistence/reset behavior,
+authority/prediction, and presentation-versus-state ownership.
 
 Prefer a small complete mechanic slice over a broad call graph that never closes
 the loop from player-visible trigger to authoritative mutation and lifetime.
