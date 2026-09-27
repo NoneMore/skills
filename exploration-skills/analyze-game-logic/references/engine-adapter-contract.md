@@ -60,9 +60,12 @@ engine/runtime constructs that normally own:
   when the runtime can participate in networked play.
 
 State which mappings are strong conventions and which are only search heuristics.
-The goal is to help the analyst reconstruct a complete mechanic
-(trigger -> eligibility -> computation/RNG -> authoritative mutation ->
-lifetime/persistence), not merely locate engine-generated functions.
+The goal is to help the analyst reconstruct the material causal spine
+(trigger/event/source -> eligibility -> computation/RNG -> authoritative
+mutation -> secondary gameplay effects) and the cross-cutting time, lifecycle,
+persistence, authority, and presentation dimensions, not merely locate
+engine-generated functions. Do not imply that those cross-cutting dimensions
+execute as terminal stages of the causal spine.
 
 ## 3. Semantic anchors
 
