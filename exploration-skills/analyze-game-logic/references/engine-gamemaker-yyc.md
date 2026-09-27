@@ -94,9 +94,11 @@ the target runner/game version.
   extensions or local-coop code can still create multiple sources/actors that
   must be discriminated.
 
-Map the recovered implementation back to the mechanic chain from
-`gameplay-semantics.md`: trigger, eligibility, inputs, computation/RNG,
-authoritative mutation, secondary effects, presentation, and lifetime/reset.
+Map the recovered implementation back to the semantic model from
+`gameplay-semantics.md`: recover the material causal spine
+(trigger/event/source, eligibility, inputs, computation/RNG, authoritative
+mutation, and secondary gameplay effects), then resolve time, lifecycle,
+persistence/reset, authority, and presentation as cross-cutting dimensions.
 
 ## 3. Semantic anchors
 
