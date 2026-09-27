@@ -1,8 +1,9 @@
 # Engine Adapter Registry
 
 Use this registry only after the implementation boundary has been detected from
-evidence. Load a single matching adapter when possible; do not preload unrelated
-engine references.
+evidence. The core gameplay semantic model still applies across boundaries; load
+a single matching adapter to map that model onto the confirmed engine/runtime.
+Do not preload unrelated engine references.
 
 | Detected boundary | Adapter | Optional bundled tooling | Status |
 | --- | --- | --- | --- |
@@ -21,12 +22,14 @@ To add support for another engine/runtime boundary:
 
 1. Copy the structure in
    [engine-adapter-contract.md](engine-adapter-contract.md) into a new focused
-   file named `engine-<engine-or-boundary>.md`.
+   file named `engine-<engine-or-boundary>.md`, including an explicit mapping of
+   the gameplay semantic model onto the engine/runtime lifecycle.
 2. Add one row to this registry describing the detection boundary, adapter, and
    optional bundled tool.
 3. Add deterministic helper scripts under `scripts/` only when they automate
-   repeatable mechanical triage. Keep interpretation and version-sensitive
-   knowledge in the adapter.
+   repeatable mechanical triage or artifact recovery. Treat those helpers as
+   support capabilities, not as evidence that gameplay ownership has been
+   established. Keep interpretation and version-sensitive knowledge in the adapter.
 4. Do not add engine-specific ABI, layout, metadata, naming, or tooling rules to
    `SKILL.md` unless they are genuinely cross-engine invariants.
 5. Keep adapter links shallow: adapters may link to focused supporting references,
