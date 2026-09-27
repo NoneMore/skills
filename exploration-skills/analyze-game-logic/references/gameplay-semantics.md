@@ -5,9 +5,9 @@ analysis is the **mechanic**, not an individual function, address, script, bundl
 or decompiler view. Engine adapters map their concrete lifecycle and runtime
 conventions onto this model.
 
-Do not force every mechanic through every stage. Mark a stage `not applicable`
-when evidence shows it is absent, and `unknown` when it has not yet been
-resolved.
+Do not force every mechanic through every model element or cross-cutting
+dimension. Mark an element `not applicable` when evidence shows it is absent,
+and `unknown` when it has not yet been resolved.
 
 ## 1. Define the mechanic from gameplay behavior or a controlled scenario
 
