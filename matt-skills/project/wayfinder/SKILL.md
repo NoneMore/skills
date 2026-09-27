@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 A loose idea has arrived, too big for one agent session, and wrapped in fog: the way from here to the **destination** isn't visible yet. Wayfinding is about finding that way, not charging at the destination. This skill charts the way as a **shared map** on the repo's issue tracker, then works its **decision tickets** (questions whose resolution is a decision, not slices of a build to execute) one at a time until the route is clear.
 
-The destination varies per effort, and naming it is the first act of charting: it shapes every ticket. It might be a spec to hand off and iterate on, a decision to lock before planning starts, or a change made in place like a data-structure migration. The map is domain-agnostic: engineering work, course content, whatever fits the shape.
+The destination varies per effort, and naming it is the first act of charting: it shapes every ticket. It might be a spec to hand off and iterate on, a decision to lock before planning starts, or a migration whose path must be decided before execution. The map is domain-agnostic: engineering work, course content, whatever fits the shape.
 
 ## Plan, don't do
 
-Wayfinder is **planning** by default: each ticket resolves a decision, and the map is done when the way is clear, with nothing left to decide before someone goes and does the thing. The pull to just do the work is usually the signal you've reached the edge of the map and it's time to hand off. An effort can override this in its **Notes**, carrying execution into the map itself, but absent that, produce decisions, not deliverables.
+Wayfinder is **planning, never execution**: each ticket resolves a decision, and the map is done when the way is clear, with nothing left to decide before someone goes and does the thing. The pull to just do the work is the signal you've reached the edge of the map and it's time to hand off. A destination may describe a built state, but that is what the downstream workflow reaches; it does not authorize Wayfinder to build it. Notes cannot override this boundary.
 
 ## Refer by name
 
@@ -22,7 +22,7 @@ Once published, the map is the configured tracker's canonical artifact, with tic
 
 The map is an **index**, not a store. It lists the decisions made and points at the tickets that hold their detail; a decision lives in exactly one place, its ticket, so the map never restates it, only gists it and links.
 
-**Where the map, its child tickets, blocking, and frontier queries physically live is tracker-specific.** The issue tracker should have been provided to you. If not, tell the user to invoke the user-invoked `setup-matt-pocock-skills` skill explicitly using their harness's user-invocation mechanism. Consult the tracker doc's "Wayfinding operations" section for how _this_ repo expresses them. If no tracker has been provided, default to the local-markdown tracker.
+**Where the map, its child tickets, blocking, and frontier queries physically live is tracker-specific.** The issue tracker should have been provided to you. Consult its "Wayfinding operations" section for how _this_ repo expresses them. If no tracker has been configured, the draft may remain in the conversation, but do not publish it; tell the user to invoke the user-invoked `setup-matt-pocock-skills` skill explicitly before publication.
 
 ### The map body
 
@@ -110,12 +110,12 @@ User invokes with a loose idea.
 
 1. **Name the destination.** Call the Skill tool twice, for "grilling" and "domain-modeling", to pin down what this map is finding its way to: the spec, decision, or change. The destination fixes the scope, so it's settled first.
 2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** (the way to the destination is already clear, the whole journey small enough for one session), you don't need a map. Stop and ask the user how they'd like to proceed.
-3. **Draft the map in conversation.** Show the proposed Destination, Notes, fog, ticket titles/questions/types, and blocking relationships, plus where it would be published. This is the candidate decision graph, not yet canonical.
-4. **Review the draft with the human.** They may mark tickets already decided, change a type, add/remove/reword tickets, change dependencies, move something to fog or out of scope, or choose a different publication target. Do not write to any tracker or start research until they approve the graph. Approval is for the **structure and publication target**, not merely permission to perform writes.
-5. **Publish the approved map.** Use the configured tracker's Wayfinding operations to create the canonical map with Destination and Notes filled in, Decisions-so-far empty, and the approved fog in **Not yet specified**. If the human chooses conversation-only, publish nothing and stop after the reviewed draft; if they choose local markdown, that explicit choice authorizes the local write.
-6. **Create the approved tickets** as children of the map, then wire blocking edges in a **second pass** where the tracker requires created identities before relationships. Wiring sorts them into the frontier and the blocked.
-7. **Fire the research subagents.** For each approved `research` ticket, spin up a subagent that calls the Skill tool with "research" to resolve it in parallel, capturing its findings on a throwaway `research/<name>` branch with a context pointer from the ticket.
-8. Stop: charting is one session's work; it hand-resolves nothing.
+3. **Draft the map in conversation.** Show the proposed Destination, Notes, fog, ticket titles/questions/types, and blocking relationships, plus the configured tracker if one exists. This is the candidate decision graph, not yet canonical.
+4. **Review the draft with the human.** They may mark tickets already decided, change a type, add/remove/reword tickets, change dependencies, or move something to fog or out of scope. Do not write to the tracker or start research until they approve the graph. Publication is either to the repo's configured tracker or nowhere; changing trackers is a repo-level setup change, not a per-map choice.
+5. **Publish the approved map.** If the human keeps it conversation-only, publish nothing and stop after the reviewed draft. Otherwise use the configured tracker's Wayfinding operations to create the canonical map with Destination and Notes filled in and the approved fog in **Not yet specified**.
+6. **Create the approved tickets** as children of the map, including tickets the human marked already decided. Wire blocking edges in a **second pass** where the tracker requires created identities before relationships. Immediately resolve each already-decided ticket with its existing answer and append its context pointer to **Decisions so far**; every decision still has exactly one ticket as its canonical home.
+7. **Fire the research subagents.** Draft approval also authorizes launching every approved `research` ticket. Spin them up in parallel, each calling the Skill tool with "research" and capturing its findings on a throwaway `research/<name>` branch with a context pointer from the ticket.
+8. Stop: charting is one session's work; it hand-resolves nothing beyond recording decisions the human had already settled before publication.
 
 ### Work through the map
 
