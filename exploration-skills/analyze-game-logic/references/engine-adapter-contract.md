@@ -98,8 +98,9 @@ progression below applies when analyzing gameplay behavior or causality, or when
 an implementation site is being used to support such a claim.
 
 Translate the core mechanic-reconstruction and trace procedure into the most
-efficient engine-specific progression from player-visible behavior and semantic
-anchor to authoritative state mutation, lifetime, implementation, and validation.
+efficient engine-specific progression from gameplay-observable behavior or a
+reproducible/controlled scenario and semantic anchor to authoritative state
+mutation, lifetime, implementation, and validation.
 Prefer a short ordered flow over a second generic reverse-engineering tutorial.
 
 ## 6. Static-analysis guidance
