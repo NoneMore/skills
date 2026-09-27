@@ -129,12 +129,16 @@ compiled/native decompilation, record:
 - the related semantic anchors searched as a batch;
 - what those layers demonstrably own or configure;
 - the exact mechanic relation that remains unresolved; and
-- the evidence that the unresolved relation crosses into an opaque boundary.
+- the evidence or bounded-search rationale that makes a more opaque boundary the
+  next material place to investigate.
 
-Escalation is justified when readable evidence terminates at an opaque API/call,
-the required behavior is absent after a bounded semantic search, or competing
-hypotheses cannot otherwise be distinguished. Use the heavier layer to close a
-named semantic unknown, not as a default second phase.
+Escalation is justified by either positive transition evidence—such as readable
+evidence terminating at an opaque API/call—or bounded negative evidence: the
+required behavior remains absent after a documented semantic search sufficient
+to make the opaque boundary the next material place to investigate. Escalation
+is also justified when competing hypotheses cannot otherwise be distinguished.
+In each case, use the heavier layer to close a named semantic unknown, not as a
+default second phase.
 
 If the user explicitly requests a starting layer or analysis order, preserve that
 ordering until the corresponding layer has been characterized enough to justify
@@ -160,8 +164,14 @@ as a source and retain only generated evidence that is useful independently.
 
 ### Tooling economy
 
-Prefer the least costly tooling path that preserves the required evidence. Before
-building task-specific analysis infrastructure, check for:
+Prefer the least costly tooling path that preserves the required evidence. Treat
+the order below as a default preference, not a mandatory sequence: choose the
+lowest total setup and execution cost that can close the named unknown. A bounded
+one-shot API/CLI query may outrank establishing a persistent integration for a
+narrow question; persistent structured tooling should outrank repeated ad-hoc
+helpers when the work is iterative.
+
+Before building task-specific analysis infrastructure, check for:
 
 1. an existing reusable analysis database/project;
 2. an available persistent, structured integration with the analysis tool;
