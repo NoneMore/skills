@@ -7,7 +7,7 @@ Interview the user relentlessly until you reach a shared understanding. Map this
 
 Work the tree in **rounds**. The **frontier** is every unsettled decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round.
 
-Questions in the same round must be **parallel**. If answering one could change whether another should be asked, what it means, which answers are valid, or what you would recommend, the latter is downstream and belongs in a later round. Never batch a decision with its descendant. Recompute the frontier after every round.
+Questions in the same round must be **parallel**. If answering one could change whether another should be asked, what it means, which answers are valid, or what you would recommend, they are not parallel: ask the upstream decision first and defer the other. Never batch a decision with its descendant. Recompute the frontier after every round.
 
 Prefer the harness's native structured question tool when available. Treat each frontier node as a separate question, use choices when natural, and include your recommended answer. If the tool has per-call limits, split the frontier across calls, but do not advance downstream until the whole frontier is answered.
 
