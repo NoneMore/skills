@@ -10,6 +10,7 @@ obfuscated JavaScript while preserving evidence provenance.
 
 1. [Applicability and detection](#1-applicability-and-detection)
 2. [Implementation model](#2-implementation-model)
+   - [Gameplay semantic mapping](#gameplay-semantic-mapping)
    - [Electron / NW.js container discovery](#electron--nwjs-container-discovery)
 3. [Semantic anchors](#3-semantic-anchors)
 4. [ABI, runtime values, and object model](#4-abi-runtime-values-and-object-model)
@@ -64,6 +65,7 @@ implemented in JavaScript.
 
 Typical logic-bearing artifacts include:
 
+
 - entry bundles and lazy chunks;
 - unpacked module bodies and recovered original source from source maps;
 - Web Workers / Shared Workers and service-worker code when they own state or
@@ -72,6 +74,43 @@ Typical logic-bearing artifacts include:
   definitions referenced by code;
 - locally supplied Node.js modules for authoritative simulation or game-server
   logic.
+
+### Gameplay semantic mapping
+
+For a Web/JS game, recover gameplay ownership before spending effort on generic
+bundle structure. Map the core mechanic model onto these runtime concepts:
+
+- **Simulation/update:** identify the actual simulation loop or scheduler:
+  `requestAnimationFrame`, a fixed-step accumulator, `setInterval`, engine
+  lifecycle callback, worker loop, or local server tick. Rendering cadence does
+  not by itself establish simulation cadence.
+- **Entity/state ownership:** determine whether mechanic state lives in plain
+  objects/classes, an ECS, a reducer/store, a scene/world singleton, a worker,
+  a local authoritative server module, or another state container.
+- **Entity lifecycle:** find spawn/construction, activation, update, death/
+  disable/despawn, pooling/reuse, and scene/world teardown when they affect
+  state lifetime.
+- **Events/input:** distinguish DOM/device input, engine input abstraction,
+  event-bus messages, reducer/actions, worker messages, timers, and direct calls.
+  Record queued/deferred ordering when it changes behavior.
+- **Time:** distinguish render timestamps, simulation delta/fixed step, wall
+  clock, browser timers, worker timers, and local server ticks. Check pause,
+  time-scale, background throttling, loading, and scene transitions.
+- **Persistence/reset:** locate localStorage/IndexedDB/files/config/save modules
+  or server-side persistence supplied with the authorized artifact, and separate
+  serialized state from runtime defaults and reconstruction.
+- **Authority:** distinguish local authoritative simulation, local prediction,
+  serialized outbound values, received state, and remote authority. Client code
+  cannot prove unavailable server internals.
+- **Presentation:** React/UI state, DOM/canvas rendering, Pixi/Phaser/Cocos draw
+  paths, animation, audio, and effects are presentation unless their data flow
+  also owns the authoritative mutation.
+- **Physics/spatial rules:** distinguish engine/custom physics ticks and worker or
+  server simulation from renderer interpolation.
+
+Use these mappings to recover trigger -> eligibility -> computation/RNG ->
+authoritative mutation -> secondary effects -> presentation -> persistence/reset
+for the target mechanic.
 
 ### Electron / NW.js container discovery
 
@@ -149,36 +188,31 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
-1. Hash the exact HTML/bootstrap, bundle/chunk, source-map, worker, and config
-   files material to the claim.
-2. Look for a usable source map before transforming code. If original source is
-   recoverable, prefer it and retain the bundle/map hashes as provenance.
-3. Inventory entries, lazy chunks, workers/service workers, source maps,
-   WebAssembly/config boundaries, and bundler signatures. For Electron/NW.js,
-   perform the container/bootstrap discovery above first. Record the detected
-   bundler/runtime when evidence supports it.
-4. For unreadable production JavaScript, generate and compare webcrack and
-   Wakaru views as needed in temporary staging rather than overwriting the source;
-   after comparison, choose one canonical readable view for durable retention.
-   - run **Wakaru** on the original bundle for bundle-aware unpacking and
-     production-JS recovery, preferably `--unpack=inspect` during reverse
-     engineering;
-   - run **webcrack** when obfuscation/deobfuscation value is evident, or when an
-     explicit tool comparison is requested;
-   - use **Prettier** only on generated output selected for readable retention;
-     formatting alone does not justify a second durable copy.
-5. When both webcrack and Wakaru views were generated, compare them before
-   deciding whether the alternative view preserves materially distinct value.
-   Treat agreement on module boundaries, strings, constants, and call/data-flow
-   as corroboration, not as independent semantic proof when both derive from the
-   same input relation.
-6. Batch semantic searches across the recovered tree, then trace the smallest
-   module cluster that owns the state transition.
-7. Reconstruct concise pseudocode in terms of original/recovered module path,
-   function or stable structural locator, input state, mutation, output, and
-   network boundary if any.
-8. Validate dynamically only when required by the core workflow and within the
-   authorized local/offline scope.
+1. Define the player-visible mechanic and reproduction path, then sketch the
+   relevant semantic chain from `gameplay-semantics.md`.
+2. Identify the likely simulation owner, state container, time domain, lifecycle,
+   and authority boundary before reading large bundle regions.
+3. Recover readable code only to the degree needed to trace the mechanic:
+   - prefer matching source maps and original `sourcesContent`;
+   - otherwise unpack/minify-recover the smallest relevant bundle/chunk set;
+   - keep recovery outputs outside the original game tree and preserve provenance.
+4. Batch-search gameplay vocabulary and state-mutation APIs across the recovered
+   tree, then narrow to the smallest module cluster connecting the trigger to the
+   authoritative mutation.
+5. Trace eligibility, inputs, formula/transition/RNG, the state write, secondary
+   gameplay effects, and all materially distinct callers/sources.
+6. Resolve time behavior, entity/state lifetime, save/reset behavior, and
+   presentation consumers that can change or merely display the observed result.
+7. For network-capable code, record whether each relevant value is local,
+   predicted, sent, received, or authoritative; do not substitute protocol
+   observations for unavailable server implementation.
+8. Reconstruct concise gameplay pseudocode using original/recovered module paths,
+   function or stable structural locators, then perform the independent
+   consistency check and dynamic validation required by the core workflow.
+
+Bundle recovery is a supporting capability, not the analysis goal. A successful
+source-map extraction, Wakaru split, webcrack transform, or formatting pass does
+not establish which code owns the gameplay mechanic.
 
 ### Tool roles and ordering
 
@@ -363,6 +397,8 @@ used for each analysis.
   support.
 - Searching one giant bundle repeatedly instead of unpacking and narrowing to a
   module cluster.
+- Spending analysis effort on bundle/tool recovery without establishing the
+  simulation owner, authoritative mutation, or mechanic lifetime.
 - Mistaking UI rendering or client prediction for authoritative state mutation.
 - Ignoring worker code, lazy chunks, or a WebAssembly boundary.
 - Assuming a failed unpack means the file is not bundled; wrappers and new
@@ -379,6 +415,8 @@ Before considering a Web/JS mechanic understood, record:
 - original source-map provenance and bundle/map association status when used;
 - tool names, versions, commands/options, and which generated tree supplied the
   cited locator;
+- player-visible trigger, simulation/state owner, time domain, and relevant
+  lifetime/reset behavior;
 - module path/ID and function/structural locator for the state-changing logic;
 - relevant callers/consumers and data-flow into/out of the mutation;
 - whether the value is local, predicted, persisted, sent, received, or
