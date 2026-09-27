@@ -188,25 +188,28 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
-1. Define the player-visible mechanic and reproduction path, then sketch the
-   relevant semantic chain from `gameplay-semantics.md`.
-2. Identify the likely simulation owner, state container, time domain, lifecycle,
-   and authority boundary before reading large bundle regions.
-3. Recover readable code only to the degree needed to trace the mechanic:
+1. Define the player-visible mechanic and reproduction path without inferring
+   implementation ownership that has not yet been established.
+2. Identify the container/bootstrap, entry module, chunk/worker, source-map, and
+   JavaScript-versus-WebAssembly/native boundaries material to the target.
+3. Obtain the minimum readable view required for semantic tracing:
    - prefer matching source maps and original `sourcesContent`;
-   - otherwise unpack/minify-recover the smallest relevant bundle/chunk set;
+   - otherwise unpack/minify-recover only the relevant bundle/chunk set;
+   - use deobfuscation when the target is genuinely obfuscated;
    - keep recovery outputs outside the original game tree and preserve provenance.
-4. Batch-search gameplay vocabulary and state-mutation APIs across the recovered
+4. From that readable view, identify the simulation owner, state container, time
+   domain, lifecycle, and authority boundary supported by evidence.
+5. Batch-search gameplay vocabulary and state-mutation APIs across the recovered
    tree, then narrow to the smallest module cluster connecting the trigger to the
    authoritative mutation.
-5. Trace eligibility, inputs, formula/transition/RNG, the state write, secondary
+6. Trace eligibility, inputs, formula/transition/RNG, the state write, secondary
    gameplay effects, and all materially distinct callers/sources.
-6. Resolve time behavior, entity/state lifetime, save/reset behavior, and
+7. Resolve time behavior, entity/state lifetime, save/reset behavior, and
    presentation consumers that can change or merely display the observed result.
-7. For network-capable code, record whether each relevant value is local,
+8. For network-capable code, record whether each relevant value is local,
    predicted, sent, received, or authoritative; do not substitute protocol
    observations for unavailable server implementation.
-8. Reconstruct concise gameplay pseudocode using original/recovered module paths,
+9. Reconstruct concise gameplay pseudocode using original/recovered module paths,
    function or stable structural locators, then perform the independent
    consistency check and dynamic validation required by the core workflow.
 
