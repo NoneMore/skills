@@ -172,7 +172,7 @@ require retain/release behavior; never overwrite them speculatively.
 
 ## 5. Recommended tracing workflow
 
-Use this YYC-specific path:
+When mechanic reconstruction applies, use this YYC-specific path:
 
 ```text
 semantic anchor / gml_* identity

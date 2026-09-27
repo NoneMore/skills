@@ -144,7 +144,8 @@ should all be loaded:
 
 ## 5. Reconstruct the gameplay mechanic
 
-For gameplay behavior or causality questions, use
+For gameplay behavior or causality questions—or when a function, formula,
+field, or call path is used to support such a claim—use
 [references/gameplay-semantics.md](references/gameplay-semantics.md) as the
 canonical model and the selected engine adapter for concrete runtime mappings.
 Close the smallest material mechanic slice needed for the claim; keep pure

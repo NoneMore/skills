@@ -147,7 +147,7 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
-Use this Web/JS-specific progression:
+When mechanic reconstruction applies, use this Web/JS-specific progression:
 
 1. Identify the container/bootstrap and the JavaScript, worker, WebAssembly, or
    native boundaries material to the target.

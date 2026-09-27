@@ -38,8 +38,13 @@ webcrack input.js > <artifacts>/webcrack.js
 ```
 
 Process entry bundles, lazy chunks, and workers as distinct inputs; one unpack
-does not necessarily reconstruct a dynamic chunk graph. Generated variable names
-are not recovered originals without separate support.
+does not necessarily reconstruct a dynamic chunk graph. A failed unpack is a
+tool-capability result, not evidence that the input is not bundled; wrappers or
+unsupported bundler variants may defeat detection. Generated variable names are
+not recovered originals without separate support.
+
+Do not pre-create the webcrack `-o` leaf directory unless the invocation
+deliberately uses the tool's overwrite semantics.
 
 When analyzing untrusted code, use a constrained environment without secrets and
 preferably without network access because deobfuscation may use code-evaluation
