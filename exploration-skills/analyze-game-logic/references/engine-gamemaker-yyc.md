@@ -209,8 +209,13 @@ require retain/release behavior; never overwrite them speculatively.
 
 ## 5. Recommended tracing workflow
 
-Start by sketching the target mechanic with the core gameplay semantic model,
-then use this YYC-specific progression to map each stage to implementation:
+Preserve narrow core scope for pure identity/location questions: use the YYC
+anchors, metadata, ABI, and xrefs needed to answer the question without expanding
+into unrelated mechanic stages.
+
+For gameplay behavior or causality analysis, start by sketching the target
+mechanic with the core gameplay semantic model, then use this YYC-specific
+progression to map each material stage to implementation:
 
 ```text
 player-visible behavior and reproduction
@@ -226,9 +231,10 @@ player-visible behavior and reproduction
   -> controlled runtime validation
 ```
 
-Do not stop after recovering a plausible script body. Close the mechanic loop:
-show which event triggers it, which state it owns or mutates, which other sources
-share the path, and how the state expires or survives lifecycle transitions.
+For gameplay-semantic claims, do not stop after recovering a plausible script
+body. Close the material mechanic loop: show which event triggers it, which state
+it owns or mutates, which other sources share the path, and how the state expires
+or survives lifecycle transitions when those facts affect the claim.
 
 When registration xrefs dominate, inspect adjacent parallel tables and function
 pointers before scanning the entire text segment.
