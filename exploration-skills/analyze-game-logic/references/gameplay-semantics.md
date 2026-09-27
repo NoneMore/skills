@@ -81,7 +81,13 @@ enters a state and the path that leaves or expires it.
 
 ### Stats, formulas, and modifiers
 
-Recover the order of operations, not only the final constant:
+Recover the evidence-backed order of operations, not only the final constant.
+Additive modifiers, multiplicative modifiers, conditional modifiers, clamping,
+quantization, and rounding are common operation types, but their ordering is
+game-specific and may be interleaved or repeated.
+
+For example, the following is **illustrative only; do not assume this sequence
+without evidence**:
 
 ```text
 base
