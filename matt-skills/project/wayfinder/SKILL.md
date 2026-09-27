@@ -112,8 +112,8 @@ User invokes with a loose idea.
 2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** (the way to the destination is already clear, the whole journey small enough for one session), you don't need a map. Stop and ask the user how they'd like to proceed.
 3. **Draft the map in conversation.** Show the proposed Destination, Notes, fog, ticket titles/questions/types, and blocking relationships, plus where it would be published. This is the candidate decision graph, not yet canonical.
 4. **Review the draft with the human.** They may mark tickets already decided, change a type, add/remove/reword tickets, change dependencies, move something to fog or out of scope, or choose a different publication target. Do not write to any tracker or start research until they approve the graph. Approval is for the **structure and publication target**, not merely permission to perform writes.
-5. **Publish the approved map.** Create the map (label `wayfinder:map`) with Destination and Notes filled in, Decisions-so-far empty, and the approved fog in **Not yet specified**. If the human chooses conversation-only, publish nothing and stop after the reviewed draft; if they choose local markdown, that explicit choice authorizes the local write.
-6. **Create the approved tickets** as child issues of the map, then wire blocking edges in a **second pass** (issues need ids before they can reference each other). Wiring sorts them into the frontier and the blocked.
+5. **Publish the approved map.** Use the configured tracker's Wayfinding operations to create the canonical map with Destination and Notes filled in, Decisions-so-far empty, and the approved fog in **Not yet specified**. If the human chooses conversation-only, publish nothing and stop after the reviewed draft; if they choose local markdown, that explicit choice authorizes the local write.
+6. **Create the approved tickets** as children of the map, then wire blocking edges in a **second pass** where the tracker requires created identities before relationships. Wiring sorts them into the frontier and the blocked.
 7. **Fire the research subagents.** For each approved `research` ticket, spin up a subagent that calls the Skill tool with "research" to resolve it in parallel, capturing its findings on a throwaway `research/<name>` branch with a context pointer from the ticket.
 8. Stop: charting is one session's work; it hand-resolves nothing.
 
@@ -122,9 +122,9 @@ User invokes with a loose idea.
 User invokes with a map (URL or number). A ticket is **optional**: without one, you pick the next decision, not the user.
 
 1. Load the **map**: the low-res view, not every ticket body.
-2. Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. **Claim it**: assign it to yourself before any work.
+2. Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. **Claim it before any work** using the configured tracker's Wayfinding operations.
 3. Resolve it. **Zoom as needed**: fetch the full body of any related or closed ticket on demand. For skills named in the `## Notes` block, call the Skill tool only when that skill is **model-invoked**. If Notes names a **user-invoked** workflow, do not call or read it; tell the user to invoke it explicitly when its phase is reached. If in doubt about the decision work itself, call the Skill tool twice, for "grilling" and "domain-modeling".
-4. Record the resolution: post the answer as a **resolution comment**, **close** the issue, and **append a context pointer** to the map's Decisions-so-far.
+4. Record the resolution using the configured tracker's Wayfinding operations, then **append a context pointer** to the map's Decisions-so-far.
 5. Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals that a ticket (this one or another) sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
 
 The user may run unblocked tickets in parallel, so expect other sessions to be editing the tracker concurrently.
