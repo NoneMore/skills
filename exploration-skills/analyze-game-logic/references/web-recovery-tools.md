@@ -23,15 +23,9 @@ and are not independent semantic checks. Retain the clearest useful view by
 default; keep alternatives only when they preserve materially distinct,
 easy-to-lose information.
 
-## Source maps
-
-Check adjacent `.map` files, inline maps, and `sourceMappingURL` references.
-Treat bundle/map association as evidence. Useful association labels include
-`linked-by-sourceMappingURL`, `source-map-file-field-match`,
-`adjacent-name-match`, and `manually-supplied-unverified`.
-
-A mismatched map can produce plausible but false names and paths. Keep
-map-derived source separate from tool-rewritten source.
+Source-map matching, provenance, and association-strength rules remain in
+[engine-web-javascript.md](engine-web-javascript.md) §6; do not duplicate them
+here.
 
 ## webcrack
 
@@ -80,19 +74,19 @@ prettier --write --no-config --no-editorconfig <generated-copy>
 Record the formatter version when line-based locators depend on its output.
 Prefer module/function/AST-structural locators for durable findings.
 
-## Version notes
+## Versioning
 
-Third-party tool behavior changes. Record the actual versions used in each
-analysis and validate compatibility instead of treating a documentation snapshot
-as a requirement. Historical reference points from the adapter refresh on
-2026-09-07 were webcrack 2.16.0, `@wakaru/cli` 1.10.0, and Prettier 3.9.6.
+Record the actual tool and runtime versions used in each analysis. Treat
+third-party compatibility and behavior as version-sensitive rather than relying
+on documentation snapshots.
 
 ## Bundled orchestrator
 
 `scripts/web_js_triage.py` accepts JS/TS files or directories and creates
 stable isolated analysis IDs. It hashes material inputs, source maps, and
 retained generated artifacts; records map-association strength; resolves
-webcrack/Wakaru/Prettier; and writes a `triage-manifest.json` containing status,
+installed webcrack/Wakaru/Prettier commands (or pinned `npx` packages only when
+explicitly enabled); and writes a `triage-manifest.json` containing status,
 commands, versions, hashes, provenance, associations, outcomes, and generated
 paths.
 
