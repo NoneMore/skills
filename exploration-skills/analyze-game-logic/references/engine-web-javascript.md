@@ -6,27 +6,6 @@ runtime, or locally supplied Node.js game/server code. This adapter focuses on
 recovering readable modules and logic from bundled, transpiled, minified, or
 obfuscated JavaScript while preserving evidence provenance.
 
-## Contents
-
-1. [Applicability and detection](#1-applicability-and-detection)
-2. [Implementation model](#2-implementation-model)
-   - [Electron / NW.js container discovery](#electron--nwjs-container-discovery)
-3. [Semantic anchors](#3-semantic-anchors)
-4. [ABI, runtime values, and object model](#4-abi-runtime-values-and-object-model)
-5. [Recommended tracing workflow](#5-recommended-tracing-workflow)
-   - [Tool roles and ordering](#tool-roles-and-ordering)
-6. [Static-analysis guidance](#6-static-analysis-guidance)
-   - [Source maps first](#source-maps-first)
-   - [webcrack](#webcrack)
-   - [Wakaru](#wakaru)
-   - [Prettier](#prettier)
-7. [Runtime-observation guidance](#7-runtime-observation-guidance)
-8. [Modification-point selection](#8-modification-point-selection)
-9. [Version-sensitive assumptions](#9-version-sensitive-assumptions)
-10. [Common failure modes](#10-common-failure-modes)
-11. [Evidence checklist](#11-evidence-checklist)
-12. [Bundled tools](#12-bundled-tools)
-
 ## 1. Applicability and detection
 
 Apply this adapter when at least two supporting indicators point to a Web/JS
@@ -72,6 +51,25 @@ Typical logic-bearing artifacts include:
   definitions referenced by code;
 - locally supplied Node.js modules for authoritative simulation or game-server
   logic.
+
+### Gameplay semantic mapping
+
+Use these Web/JS mappings as runtime anchors:
+
+- **Simulation/time:** `requestAnimationFrame`, fixed-step accumulators,
+  browser timers, engine callbacks, worker loops, or local server ticks; render
+  cadence does not prove simulation cadence.
+- **State/lifecycle:** objects/classes, ECS, reducer/store, scene/world
+  singletons, workers, or local server modules and their creation/update/teardown
+  paths.
+- **Events/dispatch:** DOM/device input, engine abstractions, event buses,
+  actions/reducers, worker messages, timers, direct calls, and queued ordering.
+- **Persistence/authority:** localStorage/IndexedDB/files/config/save modules;
+  local simulation, prediction, serialized outbound values, received state, and
+  remote authority. Client artifacts cannot prove unavailable server internals.
+- **Presentation/physics:** React/UI state, DOM/canvas, Pixi/Phaser/Cocos draw
+  paths, animation/audio/effects, interpolation, and engine/custom physics may
+  expose a mechanic without owning its gameplay mutation.
 
 ### Electron / NW.js container discovery
 
@@ -149,59 +147,39 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
-1. Hash the exact HTML/bootstrap, bundle/chunk, source-map, worker, and config
-   files material to the claim.
-2. Look for a usable source map before transforming code. If original source is
-   recoverable, prefer it and retain the bundle/map hashes as provenance.
-3. Inventory entries, lazy chunks, workers/service workers, source maps,
-   WebAssembly/config boundaries, and bundler signatures. For Electron/NW.js,
-   perform the container/bootstrap discovery above first. Record the detected
-   bundler/runtime when evidence supports it.
-4. For unreadable production JavaScript, generate and compare webcrack and
-   Wakaru views as needed in temporary staging rather than overwriting the source;
-   after comparison, choose one canonical readable view for durable retention.
-   - run **Wakaru** on the original bundle for bundle-aware unpacking and
-     production-JS recovery, preferably `--unpack=inspect` during reverse
-     engineering;
-   - run **webcrack** when obfuscation/deobfuscation value is evident, or when an
-     explicit tool comparison is requested;
-   - use **Prettier** only on generated output selected for readable retention;
-     formatting alone does not justify a second durable copy.
-5. When both webcrack and Wakaru views were generated, compare them before
-   deciding whether the alternative view preserves materially distinct value.
-   Treat agreement on module boundaries, strings, constants, and call/data-flow
-   as corroboration, not as independent semantic proof when both derive from the
-   same input relation.
-6. Batch semantic searches across the recovered tree, then trace the smallest
-   module cluster that owns the state transition.
-7. Reconstruct concise pseudocode in terms of original/recovered module path,
-   function or stable structural locator, input state, mutation, output, and
-   network boundary if any.
-8. Validate dynamically only when required by the core workflow and within the
-   authorized local/offline scope.
+When mechanic reconstruction applies, use this Web/JS-specific progression:
 
-### Tool roles and ordering
+1. Identify the container/bootstrap and the JavaScript, worker, WebAssembly, or
+   native boundaries material to the target.
+2. Obtain the minimum readable view needed for semantic tracing: prefer matching
+   source maps; otherwise unpack or deobfuscate only the relevant bundle/chunk
+   set while preserving provenance outside the original game tree.
+3. Locate the simulation/state owner, relevant scheduler, and authority boundary
+   supported by evidence.
+4. Batch-search gameplay vocabulary and mutation APIs, then narrow to the
+   smallest module cluster containing the mechanic.
+5. Apply the canonical gameplay semantic model to that cluster, following
+   materially distinct callers/consumers and lifecycle or persistence paths as
+   needed.
+6. Reconstruct concise gameplay pseudocode with stable module/function locators,
+   then perform the independent consistency check and dynamic validation required
+   by the core workflow.
 
-The three tools are complementary, not interchangeable:
+Bundle recovery is a supporting capability; a successful source-map extraction,
+Wakaru split, webcrack transform, or formatting pass does not establish mechanic
+ownership.
 
-- **webcrack** is the first-choice additional pass when obfuscator-style
-  transforms or other clear deobfuscation needs are present. It can deobfuscate,
-  unminify, transpile, and unpack webpack/Browserify bundles; ordinary production
-  minification alone does not require durable parallel retention.
-- **Wakaru** is production-JS recovery and bundle decomposition. It supports
-  multiple bundler families and explicitly is not a general-purpose
-  deobfuscator, so heavily obfuscated input may need webcrack first. Running
-  Wakaru separately on the original bundle is often more useful than feeding it
-  only a rewritten output because bundle structure may be easier to detect
-  before another tool changes it. These are parallel views of the same evidence,
-  not independent semantic evidence.
-- **Prettier** is a formatter, not a reverse-engineering engine. Use it last on
-  generated copies; formatting does not validate semantics.
+### Recovery tooling
 
-Do not force a single linear pipeline when one transform destroys information
-needed by another. Preserve parallel outputs only until their information value
-has been compared. Retain the clearest view by default; keep alternatives only
-when they preserve materially distinct structure or evidence.
+When readable source is not directly available, recover only the minimum view
+needed for semantic tracing. Prefer a matching source map; otherwise choose
+bundle decomposition, deobfuscation, or formatting according to the artifact.
+Generated views of the same bundle are corroborating views, not independent
+semantic evidence.
+
+Load [web-recovery-tools.md](web-recovery-tools.md) only when detailed
+webcrack/Wakaru/Prettier ordering, CLI recipes, version caveats, or
+`web_js_triage.py` operation is needed.
 
 ## 6. Static-analysis guidance
 
@@ -230,73 +208,6 @@ source so provenance remains obvious. A mismatched map can create highly
 plausible but false names and source paths, so source-map association is part of
 the evidence, not bookkeeping.
 
-### webcrack
-
-Current webcrack releases provide a CLI/API that parses to AST, prepares,
-deobfuscates, unminifies/transpiles, optionally reconstructs JSX, unpacks
-supported bundles, and regenerates code. Use output directories outside the
-original game tree. Its current package line requires a supported even-numbered
-Node.js release; record the actual Node and webcrack versions used.
-
-Useful patterns:
-
-```bash
-webcrack bundle.js -o <artifacts>/webcrack
-webcrack input.js > <artifacts>/webcrack.js
-```
-
-Run bundle/chunk inputs into distinct output directories and preserve the entry /
-lazy-chunk / worker relation separately; do not assume one unpack invocation
-reconstructs an application's entire dynamic chunk graph. Do not pre-create a
-webcrack `-o` leaf directory unless the invocation also deliberately uses the
-tool's overwrite semantics.
-
-Do not treat generated variable names as recovered originals unless separately
-supported. If processing untrusted code, run transformation tooling in a
-constrained analysis environment with no secrets and preferably no network
-access; deobfuscation can involve code-evaluation mechanisms depending on tool
-and pattern.
-
-### Wakaru
-
-Wakaru can decompile a file or unpack detected bundles/chunks. For reverse
-engineering, `--unpack=inspect` is useful when finer module boundaries matter;
-`--unpack=strict` is useful when heuristic fallback would create ambiguous
-splits. `--source-map` can improve name recovery, and `wakaru extract <map>` can
-recover `sourcesContent` when present.
-
-**Important:** `--unpack=inspect` is an inspection-oriented decomposition. Its
-module output may not preserve the bundle's executable initialization order, so
-do not use an inspect tree as a drop-in rebuilt application or as proof of
-runtime ordering. Trace initialization/order claims back to the original bundle
-or another order-preserving representation.
-
-Useful patterns:
-
-```bash
-wakaru bundle.js --unpack=inspect -o <artifacts>/wakaru
-wakaru input.js --source-map input.js.map -o <artifacts>/wakaru-source-aware.js
-wakaru extract input.js.map -o <artifacts>/sourcemap-sources
-```
-
-Start at the standard rewrite level. Use aggressive/speculative rewrites only
-when needed and record that choice because readability can improve while
-semantic confidence decreases.
-
-### Prettier
-
-Prettier parses and reprints code for consistent formatting. Never run
-`prettier --write` against original evidence. Format a generated copy, ideally
-with project configuration disabled when reproducibility matters:
-
-```bash
-prettier --write --no-config --no-editorconfig <generated-copy>
-```
-
-Record the formatter version when line-based locators depend on its output.
-Prefer module/function/AST-structural locators over formatted line numbers for
-long-lived findings.
-
 ## 7. Runtime-observation guidance
 
 For browser/Electron gameplay, useful read-only observation points include:
@@ -311,11 +222,6 @@ For browser/Electron gameplay, useful read-only observation points include:
 Do not infer server authority from a client-side prediction path. For a local
 Node.js backend supplied by the user, prefer a minimal test harness around the
 specific pure function/module over starting a complete service stack.
-
-Browser DevTools, local instrumentation, or a harness may be appropriate only
-within the authorized scope established by the core workflow. Do not use this
-adapter as permission to tamper with live multiplayer services, authentication,
-leaderboards, or other users.
 
 ## 8. Modification-point selection
 
@@ -333,120 +239,47 @@ if they changed the authoritative rule.
 
 ## 9. Version-sensitive assumptions
 
-Revalidate per target/tool version:
-
-- bundler signatures and chunk/runtime layouts;
-- webcrack unpack/deobfuscation coverage;
-- Wakaru-supported bundler forms and rewrite rules;
-- Node.js version compatibility for webcrack and its native isolation
-  dependency;
-- formatter output and parser behavior;
-- source-map completeness and whether paths/names correspond to the shipped
-  bundle;
-- framework/engine-generated lifecycle patterns.
-
-As of the adapter refresh on 2026-09-07, the documentation consulted described
-`webcrack` 2.16.0, `@wakaru/cli` 1.10.0, and Prettier 3.9.6. These are reference
-points, not hard-coded requirements; record and validate the versions actually
-used for each analysis.
+Revalidate bundler/chunk/runtime layouts, source-map completeness and bundle
+association, framework-generated lifecycle patterns, and any transformation-tool
+behavior material to the cited recovery view. Record actual tool/runtime
+versions in provenance rather than treating documentation snapshots as
+requirements.
 
 ## 10. Common failure modes
 
-- Running Prettier on the original bundle and losing byte/hash provenance.
-- Treating beautification as deobfuscation or semantic recovery.
-- Feeding only a rewritten webcrack output to Wakaru and losing a bundler
-  signature Wakaru could have recognized in the original, or vice versa.
-- Assuming two decompiler outputs are independent proof of a gameplay formula.
-- Treating Wakaru `--unpack=inspect` output as an executable reconstruction or
-  trusting its file order as original initialization order.
-- Trusting generated variable names as original names without source-map
-  support.
-- Searching one giant bundle repeatedly instead of unpacking and narrowing to a
-  module cluster.
-- Mistaking UI rendering or client prediction for authoritative state mutation.
-- Ignoring worker code, lazy chunks, or a WebAssembly boundary.
-- Assuming a failed unpack means the file is not bundled; wrappers and new
-  bundler variants can defeat detection.
-- Running third-party deobfuscation tooling over untrusted input in an analysis
-  environment that contains credentials or unrestricted network access.
+- Treating beautification/deobfuscation or multiple generated views as semantic
+  proof.
+- Trusting generated names or a source map without establishing provenance and
+  bundle association.
+- Searching one giant bundle repeatedly instead of narrowing to the relevant
+  module/chunk/worker cluster.
+- Mistaking UI state or client prediction for authoritative mutation.
+- Ignoring lazy chunks, workers, native addons, or a WebAssembly boundary.
+- Inferring initialization order from an inspection-oriented decomposition
+  rather than an order-preserving representation.
 
 ## 11. Evidence checklist
 
-Before considering a Web/JS mechanic understood, record:
+Record Web/JS-specific evidence as applicable:
 
-- exact bundle/chunk/map/config hashes material to the claim;
-- detected JS/bundler/runtime boundary and supporting indicators;
-- original source-map provenance and bundle/map association status when used;
-- tool names, versions, commands/options, and which generated tree supplied the
+- exact bundle/chunk/source-map/config hashes material to the cited path;
+- runtime/bundler boundary and supporting indicators;
+- source-map provenance and bundle/map association status;
+- generated-view provenance: tool/version/options plus the tree supplying the
   cited locator;
-- module path/ID and function/structural locator for the state-changing logic;
-- relevant callers/consumers and data-flow into/out of the mutation;
-- whether the value is local, predicted, persisted, sent, received, or
-  server-authoritative;
-- an independent consistency check required by the core workflow;
-- runtime validation status when timing, causality, lifetime, randomness, or a
-  modification point makes it material.
+- stable module path/ID and function/structural locator;
+- local/predicted/persisted/sent/received/authoritative role when authority is
+  material.
+
+Generic mechanic, validation, and evidence requirements remain in the core.
 
 ## 12. Bundled tools
 
-`scripts/web_js_triage.py` is a read-only-to-source orchestration helper. It:
+`scripts/web_js_triage.py` is a read-only-to-source recovery orchestrator. It
+inventories JS/TS inputs, hashes inputs and retained outputs, records source-map
+association strength and tool/runtime provenance, and manages isolated generated
+recovery views without editing the input bundle/map or executing the game.
 
-- accepts one or more JS/TS files or directories, inventories Web-relevant files,
-  and gives each code input a stable isolated analysis ID;
-- hashes material input inventory, explicit/auto-discovered source maps, and all
-  retained generated artifacts;
-- records source-map association strength rather than silently assuming a map
-  belongs to a bundle;
-- resolves installed `webcrack`, `wakaru`, and `prettier` commands, or can use
-  pinned `npx` package versions when explicitly enabled;
-- defaults to `--retention lean`: tool output is generated in temporary staging,
-  Wakaru is the default canonical recovery view, and webcrack runs/is retained
-  only when a lightweight heuristic detects obvious obfuscation or
-  `--force-webcrack` explicitly requests it;
-- supports `--retention all` for difficult deobfuscation/tool comparison, keeping
-  the prior parallel raw webcrack/Wakaru trees plus formatted copies;
-- optionally extracts source-map sources through Wakaru and records the
-  inspection-mode initialization-order caveat;
-- in lean mode formats promoted canonical output in place, verifies successful
-  Prettier formatting with `--check`, removes verified raw staging copies after
-  success, and keeps raw staging on transformation/verification failure;
-- in lean mode summarizes successful tool steps in the manifest without retaining
-  their log files; failed/timeout logs remain available for diagnosis;
-- when `--force` is used, removes only helper-managed output trees before the new
-  run, preventing stale generated evidence while preserving unknown user files;
-  if managed-looking paths already exist without a recognizable prior triage
-  manifest, cleanup is refused rather than guessing ownership;
-- returns a non-zero status when no analyzer step can run, rather than reporting
-  an empty triage as success;
-- writes schema-2 `triage-manifest.json` with overall status, commands, tool/Node
-  versions, input and output hashes, provenance, map associations, outcomes, and
-  generated paths.
-
-The helper never edits the input bundle/map. It does not execute the game or
-contact a service. Directory inventory detects Electron `app.asar` as a
-container indicator but does not extract it; expose authorized ASAR contents
-first. Third-party transformation tools still process untrusted syntax, so run
-them in a constrained analysis environment when input is not trusted.
-
-Examples:
-
-```bash
-python scripts/web_js_triage.py game.bundle.js --out <analysis-root>/artifacts/js-triage
-python scripts/web_js_triage.py game.bundle.js --source-map game.bundle.js.map \
-  --out <analysis-root>/artifacts/js-triage
-python scripts/web_js_triage.py dist/ --out <analysis-root>/artifacts/js-triage
-python scripts/web_js_triage.py main.js lazy-1.js worker.js \
-  --source-map main.js.map --source-map lazy-1.js.map --source-map worker.js.map \
-  --out <analysis-root>/artifacts/js-triage
-python scripts/web_js_triage.py game.bundle.js --out <analysis-root>/artifacts/js-triage \
-  --allow-npx
-python scripts/web_js_triage.py game.bundle.js --out <analysis-root>/artifacts/js-triage \
-  --force-webcrack
-python scripts/web_js_triage.py game.bundle.js --out <analysis-root>/artifacts/js-triage \
-  --retention all
-python scripts/web_js_triage.py --self-test
-```
-
-The helper is mechanical only. A successful transform does not establish which
-module owns the mechanic, whether a network value is authoritative, or whether
-a recovered rewrite is semantically exact.
+Use [web-recovery-tools.md](web-recovery-tools.md) for retention modes, tool
+selection/ordering, CLI examples, version caveats, and operational details.
+Generated output remains recovered working evidence, not semantic proof.

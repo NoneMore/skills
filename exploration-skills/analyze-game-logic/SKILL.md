@@ -2,12 +2,15 @@
 name: analyze-game-logic
 description: Analyze authorized offline/single-player game logic, including Windows PC and Web/JavaScript builds, with reproducible, evidence-backed static and dynamic reverse engineering. Use to identify how gameplay behavior is implemented; trace timers, formulas, state, scripts, and native or managed call paths; inspect binaries or IDA databases; design controlled runtime observations; assess reversible runtime changes; or produce a versioned report. Detect the engine and compilation boundary first, then load matching engine-specific guidance when available. Excludes multiplayer cheating, online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v4.3.2"
+  version: "v4.4.0"
 ---
 
 # Analyze Game Logic
 
-Use a common evidence protocol across engines. Keep engine/runtime conventions in
+Use a common evidence protocol across engines. When the research question is about
+gameplay behavior or causality, treat the gameplay mechanic—not an individual
+function, address, or decompiler view—as the primary semantic unit. Narrow
+identity/location questions may remain narrow. Keep engine/runtime conventions in
 engine adapters rather than expanding this file with engine-specific details.
 
 ## 1. Establish scope
@@ -134,20 +137,30 @@ version-sensitive conventions you establish from evidence.
 Bundled references are directly discoverable here without implying that they
 should all be loaded:
 
+- Gameplay semantic model: [references/gameplay-semantics.md](references/gameplay-semantics.md)
 - GameMaker YYC: [references/engine-gamemaker-yyc.md](references/engine-gamemaker-yyc.md)
 - Web / JavaScript: [references/engine-web-javascript.md](references/engine-web-javascript.md)
 - Adapter authoring contract: [references/engine-adapter-contract.md](references/engine-adapter-contract.md)
 
-## 5. Trace the logic
+## 5. Reconstruct the gameplay mechanic
+
+For gameplay behavior or causality questions—or when a function, formula,
+field, or call path is used to support such a claim—use
+[references/gameplay-semantics.md](references/gameplay-semantics.md) as the
+canonical model and the selected engine adapter for concrete runtime mappings.
+Close the smallest material mechanic slice needed for the claim; keep pure
+identity/location questions narrow.
+
+### Trace the implementation
 
 1. Start from strong semantic anchors: internal variable names, script/event
    names, diagnostic text, configuration keys, symbols, registrations, or
    distinctive resources.
-2. Separate UI/localization references from state-changing code.
+2. Separate presentation/localization references from state-changing code.
 3. Follow cross-references into candidate functions and recover types, calling
    conventions, object layouts, or runtime value formats from evidence.
 4. Trace callers, callees, field accesses, constants, and return values until
-   the behavior can be expressed as concise pseudocode.
+   the relevant mechanic can be expressed as concise pseudocode.
 5. Verify material claims with an independent consistency check. Independence
    is about the underlying evidence relation, not the number of tools, views, or
    renderings. A second view of the same instructions or metadata relation is
@@ -309,7 +322,9 @@ navigation entry point rather than the sole knowledge store. Include:
 - baseline metadata and hashes;
 - research question and reproduction steps;
 - implementation boundary and engine/runtime overview;
-- conclusions and concise pseudocode with finding/evidence references;
+- conclusions and concise gameplay pseudocode with finding/evidence references;
+- the applicable compact mechanic record and closure criteria from
+  [references/gameplay-semantics.md](references/gameplay-semantics.md);
 - dynamic procedure and results when used;
 - material functions, types, fields, call paths, signatures, and source-level
   locators or `module + RVA` when applicable;
@@ -333,6 +348,9 @@ Before finishing a focused/full analysis:
   are valid;
 - confirm no destructive modification occurred without explicit authorization;
 - separate observed behavior from inferred behavior;
+- for gameplay/causality claims, verify the closure criteria in
+  [references/gameplay-semantics.md](references/gameplay-semantics.md) and leave
+  material unknowns explicit;
 - state whether dynamic validation was performed, unavailable, outside scope,
   unsafe/prohibited, or unnecessary, and do not mark dynamically material claims
   Confirmed when the required runtime check was available but omitted;

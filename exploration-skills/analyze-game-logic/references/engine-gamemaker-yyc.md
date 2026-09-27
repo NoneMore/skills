@@ -5,21 +5,6 @@ to native code by YYC. Apply the core evidence and project-knowledge rules from
 `SKILL.md`; this file supplies YYC-specific detection, runtime conventions, and
 tracing tactics.
 
-## Contents
-
-1. [Applicability and detection](#1-applicability-and-detection)
-2. [Implementation model](#2-implementation-model)
-3. [Semantic anchors](#3-semantic-anchors)
-4. [ABI, runtime values, and object model](#4-abi-runtime-values-and-object-model)
-5. [Recommended tracing workflow](#5-recommended-tracing-workflow)
-6. [Static-analysis guidance](#6-static-analysis-guidance)
-7. [Runtime-observation guidance](#7-runtime-observation-guidance)
-8. [Modification-point selection](#8-modification-point-selection)
-9. [Version-sensitive assumptions](#9-version-sensitive-assumptions)
-10. [Common failure modes](#10-common-failure-modes)
-11. [Evidence checklist](#11-evidence-checklist)
-12. [Bundled tools](#12-bundled-tools)
-
 ## 1. Applicability and detection
 
 Treat YYC as a native-code target. Game logic is compiled into the executable or
@@ -56,6 +41,25 @@ script/event/variable registration metadata
 
 Do not treat the resource container as the primary bytecode target when the
 logic is native.
+
+### Gameplay semantic mapping
+
+Validate these YYC search mappings against the target runner/game version:
+
+- **Update/lifecycle:** Begin Step, Step, End Step; Create, Destroy, Clean Up,
+  and room/game lifecycle events.
+- **Triggers/time:** object events, scripts, alarms, collisions, async callbacks,
+  and explicit calls; room steps, alarms, `delta_time`, wall-clock helpers,
+  animation/image progression, or custom accumulators.
+- **State owners:** instances, globals, structs/arrays/data structures,
+  controller objects, and resource/config values surfaced through `RValue`
+  operations and variable metadata.
+- **Physics/presentation:** collision callbacks, built-in physics, custom
+  movement/query code; Draw/GUI, sprite/image, particles, audio, camera, and HUD
+  are observers unless data flow shows they own gameplay mutation.
+- **Persistence/authority:** save/checkpoint/reset paths plus any networking or
+  local-co-op boundaries; determine ownership/authority from data flow rather
+  than from presentation or registration paths.
 
 ## 3. Semantic anchors
 
@@ -168,34 +172,28 @@ require retain/release behavior; never overwrite them speculatively.
 
 ## 5. Recommended tracing workflow
 
-Use this YYC-specific progression:
+When mechanic reconstruction applies, use this YYC-specific path:
 
 ```text
-behavioral question and reproduction
-  -> semantic strings or variable names
-  -> metadata/registration entries
+semantic anchor / gml_* identity
+  -> metadata / registration
   -> runtime ID or function-pointer xrefs
-  -> native function with gml_* identity evidence
-  -> callers and callees
-  -> input arguments and state fields
-  -> static RValue or immediate constants
-  -> uniqueness/shared-use audit
-  -> controlled runtime validation
+  -> native event/script implementation
+  -> decisive state reads/writes
+  -> callers, shared-use, and lifecycle paths
+  -> controlled runtime validation when material
 ```
 
-When registration xrefs dominate, inspect adjacent parallel tables and function
-pointers before scanning the entire text segment.
+Do not stop at a plausible script body when the claim depends on trigger/source,
+state ownership, or lifetime. When registration xrefs dominate, inspect adjacent
+parallel tables and function pointers before scanning the entire text segment.
 
-For timers/state machines, trace both the refresh/write path and the
-decrement/expiry path. Determine whether time is expressed in room steps, Step
-events, milliseconds, `delta_time` microseconds, alarms, real-time clocks,
-animation frames, or a paused/scaled clock.
+For timers/state machines, trace both refresh/write and decrement/expiry paths,
+then establish the actual YYC time domain before converting counters to seconds.
 
-Search for special sources that may share the same refresh/transition function,
-including damage, death, cutscenes, pause/loading transitions, damage-over-time,
-reflected damage, local-coop slots, difficulty, skills, equipment, artifacts,
-or stats. Convert steps to seconds only after the effective update rate is
-established.
+Search for materially distinct sources that may share the same path, such as
+damage, death, cutscenes, pause/loading transitions, damage-over-time, reflected
+damage, local-coop slots, difficulty, skills, equipment, artifacts, or stats.
 
 ## 6. Static-analysis guidance
 
@@ -218,36 +216,18 @@ variable name.
 
 ## 7. Runtime-observation guidance
 
-Use narrow runtime observation to validate identities, values, call counts,
-state transitions, units, and source discrimination before writing memory.
+Useful YYC observation points include native script/event entry, `RValue`
+reads/writes, timer refresh/expiry paths, and distinct callers of shared
+state-transition functions. Apply the core rules for deciding when runtime
+validation is required.
 
-When the game can be observed safely at runtime, normally validate before
-confirming YYC claims that depend on:
+For a Frida write or hook, guard on the strongest available combination of
+module identity/size, exact target hash when available, expected original
+bytes/value, plausible argument count and runtime-value kind, stable
+`module + RVA` or validated signature, and a reversible restore path.
 
-- converting Step/event counts or timer fields into seconds or other wall-clock
-  units;
-- distinguishing which of several callers/events refreshes or consumes shared
-  state in the reproduced gameplay path;
-- state persistence/reset behavior across pause, death, room transitions,
-  loading, cutscenes, or save/reload;
-- the causal scope of a static `RValue`, instance/global variable, or shared
-  refresh/transition function selected as a modification point.
-
-Apply the evidence-independence definition from `SKILL.md` §5; do not count
-alternate renderings or metadata wrappers as separate checks.
-
-For a Frida write or hook, guard on the strongest available combination of:
-
-- module name and image size;
-- exact game/build hash documented with the analysis when in-process hashing is
-  impractical;
-- expected original bytes or value;
-- plausible argument count and runtime-value kind;
-- stable `module + RVA` or a validated signature;
-- a reversible restore path.
-
-Detaching an instrumentation script does not necessarily undo a raw memory
-write. State restoration limitations should be stated explicitly.
+Detaching instrumentation does not necessarily undo a raw memory write; state
+restoration limitations must be explicit.
 
 ## 8. Modification-point selection
 
@@ -281,6 +261,8 @@ facts.
 ## 10. Common failure modes
 
 - Searching only UI text and stopping at a draw function.
+- Treating a Step/Alarm/script function as the whole mechanic without mapping
+  its trigger, authoritative mutation, and reset/lifetime path.
 - Treating every xref to a `gml_*` string as the implementation function.
 - Broad-scanning huge instruction ranges before following metadata xrefs.
 - Assuming one observed variable-table layout applies to every YYC runtime.
@@ -294,19 +276,17 @@ facts.
 
 ## 11. Evidence checklist
 
-Before claiming a YYC mechanic is understood, record as applicable:
+Record YYC-specific evidence as applicable:
 
-- script/event identity and how it was established;
-- relevant variable names and metadata-field evidence;
-- read/write/expiry functions and call paths;
-- raw constant bytes plus interpreted value and type/tag evidence;
-- relevant constant/function xrefs and shared-use audit;
-- timer/formula units and update-rate evidence;
-- stable `module + RVA` locations;
-- exact game/build/module hash;
-- runtime test procedure and result when performed;
-- special paths and known limitations;
-- whether a proposed change affects one source or shared behavior.
+- `gml_*` or registration identity and the relation that establishes it;
+- validated variable-metadata layout and `RValue` kind/interpretation when used;
+- stable `module + RVA` plus exact module/build hash for native locators;
+- shared-call-site/source discrimination when one generated path serves multiple
+  gameplay sources;
+- the actual YYC time domain when a timer/counter is interpreted.
+
+All generic mechanic, validation, and provenance evidence follows the core
+workflow.
 
 ## 12. Bundled tools
 
