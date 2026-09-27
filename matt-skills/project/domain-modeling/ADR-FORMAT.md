@@ -4,8 +4,7 @@ ADRs live in `docs/adr/` and use sequential numbering: `0001-slug.md`, `0002-slu
 
 Create the `docs/adr/` directory lazily: only when the first ADR is needed.
 
-ADRs describe the **current durable constraints** of the project. They are not an immutable decision log. Git history already preserves how a decision changed over time.
-
+ADRs describe the project's **current architectural decisions**. They are mutable current-state documents, not an immutable decision log. Git history preserves how a decision changed over time.
 
 ## Template
 
@@ -15,15 +14,16 @@ ADRs describe the **current durable constraints** of the project. They are not a
 {1-3 sentences: what's the context, what did we decide, and why.}
 ```
 
-That's it. An ADR can be a single paragraph. The value is in making a durable constraint and its rationale visible to future work, not in preserving every intermediate decision.
+That's it. An ADR can be a single paragraph. The value is in making the current architectural choice and its rationale visible to future work, not in preserving every intermediate decision.
 
 ## Optional sections
 
 Only include these when they add genuine value. Most ADRs won't need them.
 
-- **Status** frontmatter (`proposed | accepted | deprecated | superseded by ADR-NNNN`): useful when the current state cannot be expressed cleanly by editing or deleting the ADR
 - **Considered Options**: only when the rejected alternatives are worth remembering
 - **Consequences**: only when non-obvious downstream effects need to be called out
+
+Do not add lifecycle status. An ADR file exists only while the decision is current. Keep proposals in the task/spec; delete stale ADRs.
 
 ## Numbering
 
@@ -31,27 +31,27 @@ Scan `docs/adr/` for the highest existing number and increment by one.
 
 ## Updating an ADR
 
-Prefer the smallest representation of the **current** decision:
+Keep `docs/adr/` as a view of the **current** architecture:
 
-- **Edit in place** when the same underlying constraint evolves.
-- **Delete** the ADR when the decision is no longer a durable constraint and preserving it would only mislead future agents.
-- **Deprecate** it when readers still need to know that the old constraint existed, but must not treat it as current.
-- **Supersede** it with a new ADR only when keeping the old and new decisions as separate named concepts is genuinely useful.
-- Do not append amendment history inside the ADR just to preserve chronology. Use Git history for that.
+- **Edit in place** when the same architectural decision evolves.
+- **Delete** the ADR when it no longer describes the current architecture.
+- **Create a new ADR** when a genuinely different architectural concern deserves its own decision record.
+- Do not keep deprecated, superseded, or amendment-only ADR files for chronology. Use Git history for that.
 
 ## When to offer an ADR
 
-An ADR qualifies when either the user explicitly declares a decision to be a durable project constraint, or all three of these are true:
+Offer an ADR when both are true:
 
-1. **Future implementations must obey it** beyond the current task.
-2. **Changing it is meaningfully expensive or externally observable** — compatibility, persisted data, users, integrations, or coordinated migration are good signals.
-3. **Its rationale is not obvious from the code** and records a real trade-off a future reader would otherwise re-litigate.
+1. **The decision reaches beyond the current task**: future work in this area should know or normally follow it.
+2. **Its rationale is worth preserving**: it captures a meaningful architectural trade-off, convention, boundary, or direction that is not obvious from the code alone.
 
-If a choice is easy to replace, local to one feature, or merely reflects today's implementation, keep it in the task/spec/code instead of promoting it into architecture.
+Reversibility is not a filter. ADRs record the project's current architecture, not only decisions that are expensive to undo.
+
+If a choice is local to one feature, incidental to today's implementation, or obvious from the code, keep it in the task/spec/code instead of promoting it into architecture.
 
 ### What qualifies
 
-- **Architectural shape only when it is load-bearing.** "The write model is event-sourced because external consumers depend on the event contract." A monorepo layout by itself is not enough if it can be changed without broader consequences.
+- **Architectural shape.** "We use a monorepo so package boundaries stay explicit while changes can move together." "The write model is event-sourced and the read model is projected into Postgres." Record the rationale when the shape should guide future work.
 - **Integration patterns between contexts.** "Ordering and Billing communicate via domain events, not synchronous HTTP."
 - **Technology choices that carry lock-in.** Database, message bus, auth provider, deployment target. Not every library: just the ones that would take a quarter to swap out.
 - **Boundary and scope decisions.** "Customer data is owned by the Customer context; other contexts reference it by ID only." The explicit no-s are as valuable as the yes-s.
