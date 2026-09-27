@@ -60,32 +60,22 @@ logic is native.
 
 ### Gameplay semantic mapping
 
-Use these YYC conventions as search guidance and validate them against the target
-runner/game version:
+Validate these YYC search mappings against the target runner/game version:
 
-- **Update and lifecycle:** Begin Step, Step, and End Step commonly drive
-  per-step simulation. Create establishes instance state; Destroy, Clean Up, and
-  room/game lifecycle events participate in teardown, reset, or controller/global
-  replacement.
-- **Events and time:** object events, scripts, alarms, collision events, async
-  callbacks, and explicit script calls can trigger mechanics. Time may use room
-  steps, alarms, `delta_time`, wall-clock helpers, animation/image progression,
-  or custom accumulators.
-- **State ownership:** gameplay state may live on instances, globals,
-  structs/arrays/data structures, controller objects, or resource/config values
-  surfaced through generated `RValue` operations and variable metadata.
-- **Physics and presentation:** collision callbacks, built-in physics, and
-  custom movement/query scripts may represent different simulation domains.
-  Draw/GUI, sprite/image state, particles, audio, camera, and HUD paths are
-  normally presentation unless data flow proves they own gameplay mutation.
-- **Persistence and authority:** save/checkpoint behavior is game-specific;
-  determine what is serialized versus reconstructed or reset by death, room
-  transitions, or new-game flows. For an authorized offline build, the relevant
-  local simulation path is normally authoritative, while networking extensions
-  or local-coop code may introduce distinct actors/sources.
-
-Use the canonical semantic model to decide which of these mappings are material
-to the target mechanic.
+- **Update/lifecycle:** Begin Step, Step, End Step; Create, Destroy, Clean Up,
+  and room/game lifecycle events.
+- **Triggers/time:** object events, scripts, alarms, collisions, async callbacks,
+  and explicit calls; room steps, alarms, `delta_time`, wall-clock helpers,
+  animation/image progression, or custom accumulators.
+- **State owners:** instances, globals, structs/arrays/data structures,
+  controller objects, and resource/config values surfaced through `RValue`
+  operations and variable metadata.
+- **Physics/presentation:** collision callbacks, built-in physics, custom
+  movement/query code; Draw/GUI, sprite/image, particles, audio, camera, and HUD
+  are observers unless data flow shows they own gameplay mutation.
+- **Persistence/authority:** save/checkpoint/reset behavior is game-specific;
+  local simulation is normally the source of truth for an offline build, while
+  networking extensions or local co-op can introduce distinct actors/sources.
 
 ## 3. Semantic anchors
 
@@ -198,11 +188,7 @@ require retain/release behavior; never overwrite them speculatively.
 
 ## 5. Recommended tracing workflow
 
-Keep pure identity/location questions narrow: use only the YYC anchors, metadata,
-ABI, and xrefs needed to close the requested claim.
-
-For gameplay behavior or causality analysis, use the canonical semantic model to
-decide what must be resolved, then follow this YYC-specific path:
+When mechanic reconstruction applies, follow this YYC-specific path:
 
 ```text
 semantic anchor / gml_* identity
@@ -326,8 +312,6 @@ facts.
 
 Before claiming a YYC mechanic is understood, record as applicable:
 
-- mechanic trigger/event/source, authoritative state owner, and relevant
-  lifetime/reset path;
 - script/event identity and how it was established;
 - relevant variable names and metadata-field evidence;
 - read/write/expiry functions and call paths;

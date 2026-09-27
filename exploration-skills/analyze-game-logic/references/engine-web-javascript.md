@@ -76,33 +76,22 @@ Typical logic-bearing artifacts include:
 
 ### Gameplay semantic mapping
 
-Map the canonical model onto Web/JS runtime constructs using these
-engine/runtime-specific anchors:
+Use these Web/JS mappings as runtime anchors:
 
-- **Simulation and time:** identify the actual simulation owner and scheduler:
-  `requestAnimationFrame`, fixed-step accumulators, browser timers, engine
-  callbacks, worker loops, or local server ticks. Rendering cadence does not prove
-  simulation cadence.
-- **State ownership and lifecycle:** state may live in objects/classes, an ECS,
-  reducer/store, scene/world singleton, worker, or local server module. Locate
-  creation/activation, update, death/disable/despawn, pooling/reuse, and teardown
-  only when they affect the target state.
-- **Events and dispatch:** distinguish DOM/device input, engine abstractions,
-  event buses, reducer/actions, worker messages, timers, and direct calls; record
-  queued/deferred ordering when material.
-- **Persistence:** locate localStorage/IndexedDB/files/config/save modules or
-  supplied server-side persistence, and separate serialized state from runtime
-  defaults/reconstruction.
-- **Authority:** distinguish local simulation, prediction, serialized outbound
-  values, received state, and remote authority. Client artifacts cannot prove
-  unavailable server internals.
-- **Presentation and physics:** React/UI state, DOM/canvas rendering,
-  Pixi/Phaser/Cocos draw paths, animation/audio/effects, renderer interpolation,
-  and engine/custom physics may expose a mechanic without owning its gameplay
-  mutation.
-
-Use the canonical semantic model to decide which mappings are material before
-spending effort on generic bundle structure.
+- **Simulation/time:** `requestAnimationFrame`, fixed-step accumulators,
+  browser timers, engine callbacks, worker loops, or local server ticks; render
+  cadence does not prove simulation cadence.
+- **State/lifecycle:** objects/classes, ECS, reducer/store, scene/world
+  singletons, workers, or local server modules and their creation/update/teardown
+  paths.
+- **Events/dispatch:** DOM/device input, engine abstractions, event buses,
+  actions/reducers, worker messages, timers, direct calls, and queued ordering.
+- **Persistence/authority:** localStorage/IndexedDB/files/config/save modules;
+  local simulation, prediction, serialized outbound values, received state, and
+  remote authority. Client artifacts cannot prove unavailable server internals.
+- **Presentation/physics:** React/UI state, DOM/canvas, Pixi/Phaser/Cocos draw
+  paths, animation/audio/effects, interpolation, and engine/custom physics may
+  expose a mechanic without owning its gameplay mutation.
 
 ### Electron / NW.js container discovery
 
@@ -180,11 +169,7 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
-Keep pure identity/location questions narrow: obtain only the
-container/module/readability context and implementation evidence needed to close
-the claim.
-
-For gameplay behavior or causality analysis:
+When mechanic reconstruction applies, use this Web/JS-specific progression:
 
 1. Identify the container/bootstrap and the JavaScript, worker, WebAssembly, or
    native boundaries material to the target.
@@ -202,10 +187,9 @@ For gameplay behavior or causality analysis:
    then perform the independent consistency check and dynamic validation required
    by the core workflow.
 
-Bundle recovery is a supporting capability, not the analysis goal. A successful
-source-map extraction, Wakaru split, webcrack transform, or formatting pass does
-not establish mechanic ownership. For a narrow identity/location question,
-recovery may stop once the requested claim is closed with sufficient evidence.
+Bundle recovery is a supporting capability; a successful source-map extraction,
+Wakaru split, webcrack transform, or formatting pass does not establish mechanic
+ownership.
 
 ### Tool roles and ordering
 
@@ -390,8 +374,6 @@ used for each analysis.
   support.
 - Searching one giant bundle repeatedly instead of unpacking and narrowing to a
   module cluster.
-- Spending analysis effort on bundle/tool recovery without establishing the
-  simulation owner, authoritative mutation, or mechanic lifetime.
 - Mistaking UI rendering or client prediction for authoritative state mutation.
 - Ignoring worker code, lazy chunks, or a WebAssembly boundary.
 - Assuming a failed unpack means the file is not bundled; wrappers and new
@@ -408,15 +390,10 @@ Before considering a Web/JS mechanic understood, record:
 - original source-map provenance and bundle/map association status when used;
 - tool names, versions, commands/options, and which generated tree supplied the
   cited locator;
-- mechanic trigger/event/source, simulation/state owner, time domain, and
-  relevant lifetime/reset behavior;
 - module path/ID and function/structural locator for the state-changing logic;
 - relevant callers/consumers and data-flow into/out of the mutation;
 - whether the value is local, predicted, persisted, sent, received, or
   server-authoritative;
-- an independent consistency check required by the core workflow;
-- runtime validation status when timing, causality, lifetime, randomness, or a
-  modification point makes it material.
 
 ## 12. Bundled tools
 
@@ -478,6 +455,5 @@ python scripts/web_js_triage.py game.bundle.js --out <analysis-root>/artifacts/j
 python scripts/web_js_triage.py --self-test
 ```
 
-The helper is mechanical only. A successful transform does not establish which
-module owns the mechanic, whether a network value is authoritative, or whether
-a recovered rewrite is semantically exact.
+The helper is mechanical only; generated output remains recovered working
+evidence rather than semantic proof.

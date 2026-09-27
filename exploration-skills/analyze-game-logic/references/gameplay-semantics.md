@@ -120,17 +120,13 @@ implemented in engine callbacks or custom simulation code.
 
 ## 4. Trace and close the mechanic
 
-1. Define the observable behavior or controlled scenario.
-2. Select only the semantic primitives material to the question.
-3. Find the trigger/source and likely state owner; trace forward toward the
-   authoritative mutation and backward from consumers when useful.
-4. Recover the relevant gate, inputs/modifiers/RNG, rule/transition, and exact
-   mutation.
-5. Audit materially distinct callers/sources so one event is not mistaken for
-   the whole mechanic.
-6. Resolve time, lifetime, reset/persistence, authority, event ordering, and
-   presentation only where they can change the result or the interpretation.
-7. Express the result as concise gameplay pseudocode plus implementation
+1. Define the observable behavior or controlled scenario and select only the
+   semantic primitives material to the question.
+2. Find the trigger/source and likely state owner, then trace the material path
+   to the authoritative mutation; audit distinct callers/sources when needed.
+3. Resolve cross-cutting dimensions only where they can change the result or
+   interpretation.
+4. Express the result as concise gameplay pseudocode plus implementation
    locators, then apply the evidence and validation protocol from `SKILL.md`.
 
 A mechanic is complete enough for the claim when the material trigger reaches

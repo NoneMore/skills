@@ -2,8 +2,9 @@
 
 Engine adapters map the gameplay semantic model and evidence protocol in
 `SKILL.md` onto one specific engine, backend, compilation mode, or runtime
-boundary. They should contain version-sensitive implementation knowledge and
-engine-specific gameplay mappings, not duplicate the core workflow.
+boundary. They contribute version-sensitive implementation knowledge and
+engine-specific mappings; they inherit core scope, permission, and mechanic
+closure rules instead of restating them.
 
 ## Contents
 
@@ -84,35 +85,22 @@ public ABI. Include how to validate them before applying types or writes.
 
 ## 5. Recommended tracing workflow
 
-Preserve the scope established by the core workflow. Pure identity/location
-questions should stay narrow.
-
-For gameplay behavior or causality analysis, describe the shortest
-engine-specific progression from a semantic anchor to the concrete state-changing
-implementation, relevant ownership/lifetime paths, and validation points. Refer
-to the canonical gameplay model for the semantic stages rather than repeating
-them here.
-
-Prefer a short ordered flow over a second generic reverse-engineering tutorial.
+Describe the shortest engine-specific progression from a strong anchor to the
+state-changing implementation and any engine-specific ownership, lifetime, or
+validation pivots. Do not restate the canonical semantic stages or generic scope
+rules.
 
 ## 6. Static-analysis guidance
 
 Document engine-specific tactics for IDA/Ghidra/metadata tools, including noisy
-patterns to collapse, decisive instruction/data-flow evidence, how to distinguish
-presentation from gameplay ownership, and when broad scanning is counterproductive.
+patterns to collapse, decisive instruction/data-flow evidence, engine-specific
+false positives, and when broad scanning is counterproductive.
 
 ## 7. Runtime-observation guidance
 
-Document useful engine/runtime observation points, safe guards, value/type
-checks, and version checks. Distinguish read-only observation from behavior
-changes and call out detach/restore limitations where relevant. Identify any
-engine-specific claims for which runtime observation should normally precede a
-Confirmed conclusion, especially timing/unit behavior, source discrimination,
-state lifetime, causality, or intervention scope.
-
-Do not weaken the core runtime-action boundary in `SKILL.md`: adapter guidance
-may recommend what to observe, but it must not imply permission to launch,
-attach, instrument, or write memory outside the user's established scope.
+Document engine-specific observation points, guards, value/type and version
+checks, detach/restore limitations, and claims for which runtime observation
+materially changes confidence. Runtime-action permissions come from `SKILL.md`.
 
 ## 8. Modification-point selection
 
@@ -134,9 +122,8 @@ shared behavior that can cause overly broad changes.
 
 ## 11. Evidence checklist
 
-Specify the minimum engine-specific evidence to record before a mechanic is
-considered understood. The checklist supplements, rather than replaces, the
-core evidence states and the evidence-independence definition in `SKILL.md` §5.
+Specify only the engine-specific evidence that supplements the core mechanic
+record, evidence states, and independence rules.
 
 ## 12. Bundled tools
 

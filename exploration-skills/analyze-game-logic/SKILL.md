@@ -144,19 +144,11 @@ should all be loaded:
 
 ## 5. Reconstruct the gameplay mechanic
 
-For gameplay behavior or causality questions, analyze the mechanic rather than
-treating an individual function, address, script, or decompiler view as the
-answer. Keep pure identity/location questions narrow.
-
-Use [references/gameplay-semantics.md](references/gameplay-semantics.md) as the
-canonical semantic model. Connect the material trigger/source to the
-authoritative state mutation, and resolve time, ownership/lifecycle,
-persistence/reset, authority, event ordering, and presentation only when they can
-change the interpretation.
-
-Prefer a small complete mechanic slice over a broad call graph that never closes
-the material causal loop. Use the selected engine adapter to map the canonical
-model onto concrete runtime constructs.
+For gameplay behavior or causality questions, use
+[references/gameplay-semantics.md](references/gameplay-semantics.md) as the
+canonical model and the selected engine adapter for concrete runtime mappings.
+Close the smallest material mechanic slice needed for the claim; keep pure
+identity/location questions narrow.
 
 ### Trace the implementation
 
@@ -330,9 +322,8 @@ navigation entry point rather than the sole knowledge store. Include:
 - research question and reproduction steps;
 - implementation boundary and engine/runtime overview;
 - conclusions and concise gameplay pseudocode with finding/evidence references;
-- the mechanic model as applicable: trigger, eligibility, inputs, computation/RNG,
-  authoritative mutation, secondary effects, presentation, time domain,
-  state/entity owner, persistence/reset, and authority;
+- the applicable compact mechanic record and closure criteria from
+  [references/gameplay-semantics.md](references/gameplay-semantics.md);
 - dynamic procedure and results when used;
 - material functions, types, fields, call paths, signatures, and source-level
   locators or `module + RVA` when applicable;
@@ -356,9 +347,9 @@ Before finishing a focused/full analysis:
   are valid;
 - confirm no destructive modification occurred without explicit authorization;
 - separate observed behavior from inferred behavior;
-- verify that presentation-only paths are not being treated as the authoritative
-  gameplay mutation and that the mechanic's trigger, state owner, and lifetime
-  are explicit where material;
+- for gameplay/causality claims, verify the closure criteria in
+  [references/gameplay-semantics.md](references/gameplay-semantics.md) and leave
+  material unknowns explicit;
 - state whether dynamic validation was performed, unavailable, outside scope,
   unsafe/prohibited, or unnecessary, and do not mark dynamically material claims
   Confirmed when the required runtime check was available but omitted;
