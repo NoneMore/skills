@@ -218,8 +218,8 @@ mechanic with the core gameplay semantic model, then use this YYC-specific
 progression to map each material stage to implementation:
 
 ```text
-player-visible behavior and reproduction
-  -> trigger/event and likely state owner
+gameplay behavior or controlled scenario
+  -> trigger/event/source and likely state owner
   -> semantic strings, variable names, or gml_* identities
   -> metadata/registration entries
   -> runtime ID or function-pointer xrefs
@@ -351,7 +351,7 @@ facts.
 
 Before claiming a YYC mechanic is understood, record as applicable:
 
-- player-visible mechanic trigger, authoritative state owner, and relevant
+- mechanic trigger/event/source, authoritative state owner, and relevant
   lifetime/reset path;
 - script/event identity and how it was established;
 - relevant variable names and metadata-field evidence;
