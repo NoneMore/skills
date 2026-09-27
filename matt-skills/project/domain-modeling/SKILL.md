@@ -5,7 +5,7 @@ description: Build and sharpen a project's domain model. Use when discussing cod
 
 # Domain Modeling
 
-Actively build and sharpen the project's domain model as you design. This is the *active* discipline: challenging terms, inventing edge-case scenarios, and writing the glossary and decisions down the moment they crystallise. (Merely *reading* `CONTEXT.md` for vocabulary is not this skill: that's a one-line habit any skill can do. This skill is for when you're changing the model, not just consuming it.)
+Actively build and sharpen the project's domain model as you design. This is the *active* discipline: challenging terms, inventing edge-case scenarios, and writing down current architectural decisions when they become useful to future work. Task-local implementation choices stay task-local unless they grow into a broader architectural decision. (Merely *reading* `CONTEXT.md` for vocabulary is not this skill: that's a one-line habit any skill can do. This skill is for when you're changing the model, not just consuming it.)
 
 ## File structure
 
@@ -63,12 +63,25 @@ When a term is resolved, update `CONTEXT.md` right there. Don't batch these up: 
 
 `CONTEXT.md` should be totally devoid of implementation details. Do not treat `CONTEXT.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
 
+### Keep task decisions ephemeral
+
+Do not promote a choice into persistent architecture merely because it was made during design or implementation. Specs, issues, and code may contain provisional choices that are valid only for the current task.
+
+Treat existing implementation patterns as evidence of local conventions, not automatically as project-wide constraints. Preserve local consistency by default, but diverge when there is a concrete reason to do so.
+
 ### Offer ADRs sparingly
 
-Only offer to create an ADR when all three are true:
+An ADR records a **current architectural decision** that future work should know about. It is not a permanent log and it does not make the decision immutable.
 
-1. **Hard to reverse**: the cost of changing your mind later is meaningful
-2. **Surprising without context**: a future reader will wonder "why did they do it this way?"
-3. **The result of a real trade-off**: there were genuine alternatives and you picked one for specific reasons
+Offer an ADR when both are true:
 
-If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
+1. **The decision reaches beyond the current task**: future work in this area should know or normally follow it.
+2. **The rationale is worth preserving**: the choice reflects a meaningful architectural trade-off, convention, boundary, or direction that is not obvious from the code alone.
+
+Reversibility does not disqualify a decision. A useful current architecture choice may be easy to change later; the ADR records what the project has decided *now* and why.
+
+If the choice is local to one task, incidental to today's implementation, or obvious from the code, keep it in the task/spec/code and skip the ADR.
+
+Every ADR present in `docs/adr/` is current. Do not create proposed ADRs; keep unresolved proposals in the task or spec. When a decision evolves, edit its ADR in place. When an ADR no longer describes the current architecture, delete it. Git history is the historical record.
+
+Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).

@@ -4,6 +4,8 @@ ADRs live in `docs/adr/` and use sequential numbering: `0001-slug.md`, `0002-slu
 
 Create the `docs/adr/` directory lazily: only when the first ADR is needed.
 
+ADRs describe the project's **current architectural decisions**. They are mutable current-state documents, not an immutable decision log. Git history preserves how a decision changed over time.
+
 ## Template
 
 ```md
@@ -12,35 +14,46 @@ Create the `docs/adr/` directory lazily: only when the first ADR is needed.
 {1-3 sentences: what's the context, what did we decide, and why.}
 ```
 
-That's it. An ADR can be a single paragraph. The value is in recording *that* a decision was made and *why*, not in filling out sections.
+That's it. An ADR can be a single paragraph. The value is in making the current architectural choice and its rationale visible to future work, not in preserving every intermediate decision.
 
 ## Optional sections
 
 Only include these when they add genuine value. Most ADRs won't need them.
 
-- **Status** frontmatter (`proposed | accepted | deprecated | superseded by ADR-NNNN`): useful when decisions are revisited
 - **Considered Options**: only when the rejected alternatives are worth remembering
 - **Consequences**: only when non-obvious downstream effects need to be called out
 
+Do not add lifecycle status. An ADR file exists only while the decision is current. Keep proposals in the task/spec; delete stale ADRs.
+
 ## Numbering
 
-Scan `docs/adr/` for the highest existing number and increment by one.
+Never reuse an ADR number, even after its file is deleted. Find the highest number that has **ever** existed in this ADR directory and increment by one. Use Git history as well as current files; for example, inspect historical paths with `git log --all --name-only --pretty=format: -- docs/adr/` (or the context-scoped ADR directory) before choosing the next number.
+
+## Updating an ADR
+
+Keep `docs/adr/` as a view of the **current** architecture:
+
+- **Edit in place** when the same architectural decision evolves.
+- **Delete** the ADR when it no longer describes the current architecture.
+- **Create a new ADR** when a genuinely different architectural concern deserves its own decision record.
+- Do not keep deprecated, superseded, or amendment-only ADR files for chronology. Use Git history for that.
 
 ## When to offer an ADR
 
-All three of these must be true:
+Offer an ADR when both are true:
 
-1. **Hard to reverse**: the cost of changing your mind later is meaningful
-2. **Surprising without context**: a future reader will look at the code and wonder "why on earth did they do it this way?"
-3. **The result of a real trade-off**: there were genuine alternatives and you picked one for specific reasons
+1. **The decision reaches beyond the current task**: future work in this area should know or normally follow it.
+2. **Its rationale is worth preserving**: it captures a meaningful architectural trade-off, convention, boundary, or direction that is not obvious from the code alone.
 
-If a decision is easy to reverse, skip it: you'll just reverse it. If it's not surprising, nobody will wonder why. If there was no real alternative, there's nothing to record beyond "we did the obvious thing."
+Reversibility is not a filter. ADRs record the project's current architecture, not only decisions that are expensive to undo.
+
+If a choice is local to one feature, incidental to today's implementation, or obvious from the code, keep it in the task/spec/code instead of promoting it into architecture.
 
 ### What qualifies
 
-- **Architectural shape.** "We're using a monorepo." "The write model is event-sourced, the read model is projected into Postgres."
+- **Architectural shape.** "We use a monorepo so package boundaries stay explicit while changes can move together." "The write model is event-sourced and the read model is projected into Postgres." Record the rationale when the shape should guide future work.
 - **Integration patterns between contexts.** "Ordering and Billing communicate via domain events, not synchronous HTTP."
-- **Technology choices that carry lock-in.** Database, message bus, auth provider, deployment target. Not every library: just the ones that would take a quarter to swap out.
+- **Technology choices that shape future work.** Database, message bus, auth provider, deployment target, or a library/framework choice that establishes a convention future work should normally follow. Easy reversibility does not exclude it; trivial one-off dependencies do.
 - **Boundary and scope decisions.** "Customer data is owned by the Customer context; other contexts reference it by ID only." The explicit no-s are as valuable as the yes-s.
 - **Deliberate deviations from the obvious path.** "We're using manual SQL instead of an ORM because X." Anything where a reasonable reader would assume the opposite. These stop the next engineer from "fixing" something that was deliberate.
 - **Constraints not visible in the code.** "We can't use AWS because of compliance requirements." "Response times must be under 200ms because of the partner API contract."

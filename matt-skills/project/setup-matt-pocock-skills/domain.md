@@ -6,9 +6,9 @@ How the engineering skills should consume this repo's domain documentation when 
 
 - **`CONTEXT.md`** at the repo root, or
 - **`CONTEXT-MAP.md`** at the repo root if it exists: it points at one `CONTEXT.md` per context. Read each one relevant to the topic.
-- **`docs/adr/`**: read ADRs that touch the area you're about to work in. In multi-context repos, also check `src/<context>/docs/adr/` for context-scoped decisions.
+- **`docs/adr/`**: read ADRs that touch the area you're about to work in. Every ADR file present should describe a current architectural decision. In multi-context repos, also check `src/<context>/docs/adr/` for context-scoped decisions.
 
-If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. Call the Skill tool with "domain-modeling" the moment a term or decision actually gets resolved: that skill creates them lazily, and it is what the `grill-with-docs` and `improve-codebase-architecture` skills reach for.
+If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. Call the Skill tool with "domain-modeling" when a domain term is resolved or a broader architectural decision becomes useful to future work. Task-local implementation choices do not trigger ADR creation.
 
 ## File structure
 
@@ -46,6 +46,8 @@ If the concept you need isn't in the glossary yet, that's a signal: either you'r
 
 ## Flag ADR conflicts
 
-If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
+If your output contradicts an ADR, surface it explicitly rather than silently overriding:
 
-> _Contradicts ADR-0007 (event-sourced orders), but worth reopening because…_
+> _Conflicts with ADR-0007 (event-sourced orders); this would require revisiting that decision because…_
+
+ADRs are mutable current-state documents. If the decision changes, update the ADR in place. If an ADR no longer describes the current architecture, delete it rather than leaving a deprecated or superseded record for agents to misread. Git history is the historical record.
