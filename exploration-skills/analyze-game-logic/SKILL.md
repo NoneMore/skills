@@ -1,8 +1,8 @@
 ---
 name: analyze-game-logic
-description: Analyze authorized offline/single-player game logic, including Windows PC and Web/JavaScript builds, with reproducible, evidence-backed static and dynamic reverse engineering. Use to identify how gameplay behavior is implemented; trace timers, formulas, state, scripts, and native or managed call paths; inspect binaries or IDA databases; design controlled runtime observations; assess reversible runtime changes; or produce a versioned report. Detect the engine and compilation boundary first, then load matching engine-specific guidance when available. Excludes multiplayer cheating, online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Analyze authorized offline/single-player game logic, including Windows PC and Web/JavaScript builds, with reproducible, evidence-backed static and dynamic reverse engineering. Use to identify how gameplay behavior is implemented; trace timers, formulas, state, scripts, and native or managed call paths; inspect binaries or IDA databases; design controlled runtime observations; assess reversible runtime changes; or produce a versioned report. Detect the engine and relevant implementation layers or compilation boundaries first, then load matching engine-specific guidance when available. Excludes multiplayer cheating, online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v4.4.0"
+  version: "v4.5.0"
 ---
 
 # Analyze Game Logic
@@ -75,8 +75,10 @@ Record the information material to the conclusion:
 - executable or source path, relevant modules/files, architecture when applicable,
   and material file metadata;
 - SHA-256 of every analyzed binary, source, or data file material to the claim;
-- detected engine, scripting backend, and compilation boundary;
-- existing IDA databases, symbols, source maps, or prior analysis artifacts.
+- detected engine, scripting backend, and relevant implementation layers or
+  compilation boundaries;
+- existing analysis databases/projects, symbols, source maps, structured tool
+  integrations, or prior analysis artifacts.
 
 Treat original read-only targets and generated analysis outputs as different
 classes of evidence. Register original files that remain outside the analysis
@@ -94,28 +96,56 @@ schemas, lifecycle, integrity, cross-linking rules, and the deterministic
 Distinguish runner/file versions from actual game content versions. Preserve
 conflicting version indicators instead of silently choosing one.
 
-## 4. Detect and route the implementation boundary
+## 4. Discover and route implementation layers
 
 Triage imports, strings, RTTI, symbols, resources, file layout, metadata, and
-loaded modules before decompiling large functions. Determine the actual
-implementation boundary, for example:
+loaded modules before decompiling large functions. Determine the implementation
+layers material to the target mechanic instead of assuming one global boundary.
+A single mechanic may span, for example:
 
-- native custom code;
-- GameMaker VM or YYC;
-- Unity Mono or IL2CPP;
-- Unreal native code;
-- an embedded scripting runtime;
-- a Web/JavaScript bundle, browser runtime, or locally supplied Node.js logic;
-- another engine or middleware boundary.
+- declarative configuration or data;
+- directly readable scripts or source;
+- managed, VM, generated, or native game code;
+- engine or middleware APIs;
+- runtime objects, state, or event dispatch.
+
+The underlying runtime may still be native custom code, GameMaker VM or YYC,
+Unity Mono or IL2CPP, Unreal native code, an embedded scripting runtime, a
+Web/JavaScript bundle/browser/Node.js runtime, or another engine boundary.
 
 Do not infer an engine from one filename alone. Require at least two mutually
 supporting indicators when practical.
 
+### Layer escalation
+
+Treat implementation layers as a search progression, not as parallel defaults.
+Do not cross from a directly inspectable layer into a more opaque or expensive
+boundary merely because that boundary exists.
+
+Before escalating from readable source, scripts, or declarative data into
+compiled/native decompilation, record:
+
+- which relevant readable/configuration layers were inspected;
+- the related semantic anchors searched as a batch;
+- what those layers demonstrably own or configure;
+- the exact mechanic relation that remains unresolved; and
+- the evidence that the unresolved relation crosses into an opaque boundary.
+
+Escalation is justified when readable evidence terminates at an opaque API/call,
+the required behavior is absent after a bounded semantic search, or competing
+hypotheses cannot otherwise be distinguished. Use the heavier layer to close a
+named semantic unknown, not as a default second phase.
+
+If the user explicitly requests a starting layer or analysis order, preserve that
+ordering until the corresponding layer has been characterized enough to justify
+an escalation.
+
 ### Source-available fast path
 
 When the gameplay implementation is directly readable source (for example
-JavaScript/TypeScript, Python, Lua, C#, or unpacked scripts), prefer source-level
-dependency analysis over binary-style reverse-engineering ceremony:
+JavaScript/TypeScript, Python, Lua, C#, or unpacked scripts), stay at source level
+while it can close the material mechanic relation instead of introducing
+binary-style reverse-engineering ceremony:
 
 - establish the executable/source entry points and state-owning modules;
 - batch related semantic anchors before iterative reads (for example RNG/roll/
@@ -128,9 +158,26 @@ Do not manufacture binary-style artifacts or copy readable source into the
 analysis root merely to satisfy the evidence store. Register the original file
 as a source and retain only generated evidence that is useful independently.
 
-After detection, consult
+### Tooling economy
+
+Prefer the least costly tooling path that preserves the required evidence. Before
+building task-specific analysis infrastructure, check for:
+
+1. an existing reusable analysis database/project;
+2. an available persistent, structured integration with the analysis tool;
+3. existing workspace helpers or bridges;
+4. a bounded one-shot API/CLI query; then
+5. new task-specific tooling only when the preceding options cannot close the
+   material unknown or the new tooling has clear reuse value.
+
+Do not let tool-integration work become a parallel engineering project. Prefer
+batched queries and persistent structured sessions over repeatedly reopening a
+large analysis database from short-lived helpers when both are available.
+
+After identifying the material implementation layers, consult
 [references/engine-registry.md](references/engine-registry.md). Load only the
-adapter matching the confirmed boundary. Do not load unrelated engine adapters.
+adapter or adapters material to the unresolved implementation path. Do not load
+unrelated engine adapters merely because the game contains those technologies.
 If no adapter is bundled, continue with this core workflow and document the
 version-sensitive conventions you establish from evidence.
 
@@ -181,6 +228,10 @@ identity/location questions narrow.
    `module + RVA` locations and treat raw virtual addresses as supplementary
    evidence. For directly readable source, use source/module/function locators
    instead.
+7. When converting among database virtual addresses, module RVAs, file offsets,
+   and runtime addresses, record the image/module base used for the conversion.
+   Before using an address for a hook, patch, or runtime observation, independently
+   verify the conversion against the original binary or the loaded module.
 
 Prefer targeted function/basic-block analysis over broad decompilation of large
 runtime dispatchers.
@@ -294,9 +345,15 @@ or would require a prohibited bypass, provide the validation procedure, state
 why it was not run, and mark the result as not dynamically confirmed where
 dynamic validation is material.
 
-## 9. Choose the least invasive change
+## 9. Choose the narrowest-scope, least invasive change
 
-Prefer, in order:
+Establish behavioral scope before optimizing for implementation convenience. If a
+change is intended to affect only one actor, side, event source, or gameplay
+context, determine whether the candidate value, object, definition, field, or
+call path is shared. Treat unresolved ownership or fan-out as **Unknown** rather
+than assuming that a reversible change is narrowly scoped.
+
+Among changes with acceptable scope, prefer, in order:
 
 1. an existing game configuration or supported mod interface;
 2. a reversible runtime data change with version/value guards;
@@ -321,7 +378,7 @@ navigation entry point rather than the sole knowledge store. Include:
 
 - baseline metadata and hashes;
 - research question and reproduction steps;
-- implementation boundary and engine/runtime overview;
+- relevant implementation layers/boundaries and engine/runtime overview;
 - conclusions and concise gameplay pseudocode with finding/evidence references;
 - the applicable compact mechanic record and closure criteria from
   [references/gameplay-semantics.md](references/gameplay-semantics.md);
@@ -347,6 +404,10 @@ Before finishing a focused/full analysis:
 - verify reusable conclusions have finding records and source/artifact cross-links
   are valid;
 - confirm no destructive modification occurred without explicit authorization;
+- for targeted modifications, verify that ownership/fan-out supports the claimed
+  behavioral scope or leave it explicitly Unknown;
+- for native intervention addresses, verify any VA/RVA/file-offset/runtime-address
+  conversion against the original binary or loaded module;
 - separate observed behavior from inferred behavior;
 - for gameplay/causality claims, verify the closure criteria in
   [references/gameplay-semantics.md](references/gameplay-semantics.md) and leave
