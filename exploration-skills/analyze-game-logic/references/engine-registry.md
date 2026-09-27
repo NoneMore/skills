@@ -1,11 +1,12 @@
 # Engine Adapter Registry
 
-Use this registry only after the implementation boundary has been detected from
-evidence. The core gameplay semantic model still applies across boundaries; load
-a single matching adapter to map that model onto the confirmed engine/runtime.
-Do not preload unrelated engine references.
+Use this registry only after the implementation layers and material cross-layer
+transitions relevant to the mechanic have been mapped from evidence. The core
+gameplay semantic model still applies across boundaries; load one or more matching
+adapters only when they are material to the unresolved implementation path. Do
+not preload unrelated engine references.
 
-| Detected boundary | Adapter | Optional bundled tooling | Status |
+| Material boundary | Adapter | Optional bundled tooling | Status |
 | --- | --- | --- | --- |
 | GameMaker YYC | [engine-gamemaker-yyc.md](engine-gamemaker-yyc.md) | `scripts/yyc_triage.py` | bundled |
 | GameMaker VM | none | none | core workflow only |
@@ -24,7 +25,7 @@ To add support for another engine/runtime boundary:
    [engine-adapter-contract.md](engine-adapter-contract.md) into a new focused
    file named `engine-<engine-or-boundary>.md`, including an explicit mapping of
    the gameplay semantic model onto the engine/runtime lifecycle.
-2. Add one row to this registry describing the detection boundary, adapter, and
+2. Add one row to this registry describing the material boundary, adapter, and
    optional bundled tool.
 3. Add deterministic helper scripts under `scripts/` only when they automate
    repeatable mechanical triage or artifact recovery. Treat those helpers as

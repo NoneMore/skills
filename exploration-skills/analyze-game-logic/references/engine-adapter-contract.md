@@ -17,9 +17,9 @@ positives. Do not rely on one filename when stronger corroboration is available.
 
 ## 2. Implementation model
 
-Explain where gameplay logic, resources, metadata/registrations, scripts, and
-runtime state live. Distinguish primary logic targets from supporting
-metadata/resource containers.
+Explain the implementation layers material to a mechanic, distinguishing primary
+logic owners from supporting metadata/resource containers and identifying
+engine-specific cross-layer transitions or opaque calls.
 
 ### Gameplay semantic mapping
 
@@ -47,8 +47,9 @@ writes.
 ## 5. Recommended tracing workflow
 
 Give the shortest engine-specific progression from a strong anchor to the
-state-changing implementation, including only engine-specific ownership,
-lifetime, shared-use, or validation pivots. Do not restate core scope or the
+state-changing implementation. Include only engine-specific ownership, lifetime,
+shared-use, validation pivots, and transition evidence relevant to the core
+layer-escalation rule; do not restate generic escalation policy, scope, or the
 canonical semantic stages.
 
 ## 6. Static-analysis guidance
@@ -89,7 +90,8 @@ evidence states, and independence rules.
 
 For bundled helpers, state what they automate, where they run, whether they
 modify source/runtime state, their material version/heuristic assumptions, and
-what still requires manual interpretation. Keep helpers mechanical.
+what still requires manual interpretation. Note preferred persistent or
+structured interfaces only as optional optimizations. Keep helpers mechanical.
 
 If third-party-tool recipes or volatile CLI/version details become lengthy, put
 them in a focused support reference and load it only when that recovery/tooling
