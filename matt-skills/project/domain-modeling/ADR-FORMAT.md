@@ -27,7 +27,7 @@ Do not add lifecycle status. An ADR file exists only while the decision is curre
 
 ## Numbering
 
-Scan `docs/adr/` for the highest existing number and increment by one.
+Never reuse an ADR number, even after its file is deleted. Find the highest number that has **ever** existed in this ADR directory and increment by one. Use Git history as well as current files; for example, inspect historical paths with `git log --all --name-only --pretty=format: -- docs/adr/` (or the context-scoped ADR directory) before choosing the next number.
 
 ## Updating an ADR
 
@@ -53,7 +53,7 @@ If a choice is local to one feature, incidental to today's implementation, or ob
 
 - **Architectural shape.** "We use a monorepo so package boundaries stay explicit while changes can move together." "The write model is event-sourced and the read model is projected into Postgres." Record the rationale when the shape should guide future work.
 - **Integration patterns between contexts.** "Ordering and Billing communicate via domain events, not synchronous HTTP."
-- **Technology choices that carry lock-in.** Database, message bus, auth provider, deployment target. Not every library: just the ones that would take a quarter to swap out.
+- **Technology choices that shape future work.** Database, message bus, auth provider, deployment target, or a library/framework choice that establishes a convention future work should normally follow. Easy reversibility does not exclude it; trivial one-off dependencies do.
 - **Boundary and scope decisions.** "Customer data is owned by the Customer context; other contexts reference it by ID only." The explicit no-s are as valuable as the yes-s.
 - **Deliberate deviations from the obvious path.** "We're using manual SQL instead of an ORM because X." Anything where a reasonable reader would assume the opposite. These stop the next engineer from "fixing" something that was deliberate.
 - **Constraints not visible in the code.** "We can't use AWS because of compliance requirements." "Response times must be under 200ms because of the partner API contract."
