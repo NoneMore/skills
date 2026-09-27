@@ -91,6 +91,12 @@ public ABI. Include how to validate them before applying types or writes.
 
 ## 5. Recommended tracing workflow
 
+Preserve the analysis scope established by the core workflow. For pure
+identity/location questions, keep the engine-specific workflow narrow and skip
+mechanic stages that are not material to the question. The mechanic-first
+progression below applies when analyzing gameplay behavior or causality, or when
+an implementation site is being used to support such a claim.
+
 Translate the core mechanic-reconstruction and trace procedure into the most
 efficient engine-specific progression from player-visible behavior and semantic
 anchor to authoritative state mutation, lifetime, implementation, and validation.
