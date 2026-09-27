@@ -9,6 +9,7 @@ tracing tactics.
 
 1. [Applicability and detection](#1-applicability-and-detection)
 2. [Implementation model](#2-implementation-model)
+   - [Gameplay semantic mapping](#gameplay-semantic-mapping)
 3. [Semantic anchors](#3-semantic-anchors)
 4. [ABI, runtime values, and object model](#4-abi-runtime-values-and-object-model)
 5. [Recommended tracing workflow](#5-recommended-tracing-workflow)
@@ -56,6 +57,46 @@ script/event/variable registration metadata
 
 Do not treat the resource container as the primary bytecode target when the
 logic is native.
+
+### Gameplay semantic mapping
+
+Use these YYC conventions to map the cross-engine gameplay model onto likely
+implementation sites. Treat them as search guidance and validate them against
+the target runner/game version.
+
+- **Simulation/update:** object Begin Step, Step, and End Step events commonly
+  own per-step gameplay updates. Draw/GUI events are normally presentation paths
+  unless data flow proves they also mutate authoritative gameplay state.
+- **Entity/object lifecycle:** object Create establishes instance state; Destroy
+  and Clean Up participate in teardown; room/game lifecycle events can create,
+  reset, or replace controller/global state.
+- **Time:** mechanics may use room steps, alarms, `delta_time`, wall-clock
+  helpers, animation/image progression, or custom accumulators. Establish which
+  domain advances during pause, slow motion, loading, and room transitions.
+- **Events and dispatch:** generated object event functions, scripts, alarms,
+  collision events, async callbacks, and explicit script calls can all trigger a
+  mechanic. Trace shared scripts back to the concrete event/caller that supplies
+  the source-specific context.
+- **Gameplay state:** state may live on instances, globals, structs/arrays/data
+  structures, controller objects, or resource/config values surfaced through
+  generated `RValue` operations and variable metadata.
+- **Persistence/reset:** save/checkpoint formats are game-specific. Determine
+  which runtime values are serialized, reconstructed from defaults, or reset by
+  death, room restart/change, and new-game flows rather than assuming all global
+  or controller state persists.
+- **Physics/spatial rules:** collision events, built-in physics integration, and
+  custom movement/query scripts can represent different simulation domains; do
+  not infer one from the presence of the other.
+- **Presentation:** Draw/GUI, sprite/image state, particles, audio, camera, and
+  HUD updates can expose the mechanic without owning its mutation.
+- **Authority:** for an authorized offline build, the relevant local simulation
+  path is normally the authority for the analyzed mechanic. Networking
+  extensions or local-coop code can still create multiple sources/actors that
+  must be discriminated.
+
+Map the recovered implementation back to the mechanic chain from
+`gameplay-semantics.md`: trigger, eligibility, inputs, computation/RNG,
+authoritative mutation, secondary effects, presentation, and lifetime/reset.
 
 ## 3. Semantic anchors
 
@@ -168,20 +209,26 @@ require retain/release behavior; never overwrite them speculatively.
 
 ## 5. Recommended tracing workflow
 
-Use this YYC-specific progression:
+Start by sketching the target mechanic with the core gameplay semantic model,
+then use this YYC-specific progression to map each stage to implementation:
 
 ```text
-behavioral question and reproduction
-  -> semantic strings or variable names
+player-visible behavior and reproduction
+  -> trigger/event and likely state owner
+  -> semantic strings, variable names, or gml_* identities
   -> metadata/registration entries
   -> runtime ID or function-pointer xrefs
-  -> native function with gml_* identity evidence
-  -> callers and callees
-  -> input arguments and state fields
-  -> static RValue or immediate constants
-  -> uniqueness/shared-use audit
+  -> native event/script implementation
+  -> eligibility, inputs, formula/transition/RNG
+  -> authoritative state write
+  -> callers, secondary sources, and shared-use audit
+  -> expiry/reset/persistence and presentation paths
   -> controlled runtime validation
 ```
+
+Do not stop after recovering a plausible script body. Close the mechanic loop:
+show which event triggers it, which state it owns or mutates, which other sources
+share the path, and how the state expires or survives lifecycle transitions.
 
 When registration xrefs dominate, inspect adjacent parallel tables and function
 pointers before scanning the entire text segment.
@@ -281,6 +328,8 @@ facts.
 ## 10. Common failure modes
 
 - Searching only UI text and stopping at a draw function.
+- Treating a Step/Alarm/script function as the whole mechanic without mapping
+  its trigger, authoritative mutation, and reset/lifetime path.
 - Treating every xref to a `gml_*` string as the implementation function.
 - Broad-scanning huge instruction ranges before following metadata xrefs.
 - Assuming one observed variable-table layout applies to every YYC runtime.
@@ -296,6 +345,8 @@ facts.
 
 Before claiming a YYC mechanic is understood, record as applicable:
 
+- player-visible mechanic trigger, authoritative state owner, and relevant
+  lifetime/reset path;
 - script/event identity and how it was established;
 - relevant variable names and metadata-field evidence;
 - read/write/expiry functions and call paths;
