@@ -9,37 +9,60 @@ Do not force every mechanic through every stage. Mark a stage `not applicable`
 when evidence shows it is absent, and `unknown` when it has not yet been
 resolved.
 
-## 1. Define the mechanic in player-observable terms
+## 1. Define the mechanic from gameplay behavior or a controlled scenario
 
-Start from the behavior the player can reproduce or observe, for example:
+Prefer a player-observable behavior and reproduction path when one exists. Do
+not require a player-facing trigger or immediately visible effect. Hidden or
+background gameplay systems are still mechanics when they can be bounded by a
+reproducible/controlled scenario, system event, state transition, or other
+evidence-backed condition.
+
+Examples include:
 
 - taking damage grants temporary invulnerability;
 - an attack sometimes becomes a critical hit;
 - a cooldown advances while playing but stops while paused;
-- an item modifies a derived stat until unequipped;
+- an AI director changes spawn pressure after a hidden threshold;
+- a background economy tick updates resources without direct input;
+- procedural generation chooses content from hidden state;
 - a checkpoint preserves some state but resets other state.
 
-Record the reproduction path and the observable outcome before collapsing the
-question into implementation details. A function name such as `Update`,
-`Tick`, or `Step` is not a mechanic definition.
+Record the observable behavior when available; otherwise record the controlled
+scenario, trigger/event/source, relevant state conditions, and expected evidence.
+Do this before collapsing the question into implementation details. A function
+name such as `Update`, `Tick`, or `Step` is not a mechanic definition.
 
-## 2. Reconstruct the semantic chain
+## 2. Reconstruct the semantic model
 
-Use this chain as the default mechanic skeleton:
+Use this as a **semantic coverage/decomposition model, not a presumed execution
+order**. Real mechanics may branch, interleave, repeat, short-circuit, or run
+asynchronously.
+
+Recover the causal spine when material:
 
 ```text
-Trigger
+Trigger / Event / Source
   -> Eligibility / Preconditions
   -> Input state
   -> Computation / Rule
   -> Randomness (when applicable)
   -> Authoritative state mutation
   -> Secondary gameplay effects
-  -> Presentation
-  -> Persistence / Reset / Lifetime
 ```
 
-For each material stage, record:
+Then resolve the cross-cutting dimensions that can change the interpretation:
+
+- time domain and scheduling;
+- entity/state ownership and lifecycle;
+- persistence, reset, and reload behavior;
+- authority, prediction, and serialization boundaries;
+- presentation paths and other observers/consumers.
+
+These dimensions are not terminal stages. Presentation may occur before, during,
+or after mutation; persistence/lifetime constrain state across many parts of the
+mechanic rather than executing after presentation.
+
+For each material element or dimension, record:
 
 - the owning object/module/system;
 - the event, function, script, table, or call path that implements it;
@@ -148,7 +171,8 @@ implemented in engine physics callbacks or custom simulation code.
 
 ## 4. Mechanic-first tracing procedure
 
-1. State the mechanic and reproduction path in gameplay terms.
+1. State the gameplay behavior when observable; otherwise define the
+   reproducible/controlled scenario, trigger/event/source, and state conditions.
 2. Select the relevant primitives above; do not investigate unrelated engine
    subsystems.
 3. Find the trigger and likely state owner. Trace forward toward authoritative
