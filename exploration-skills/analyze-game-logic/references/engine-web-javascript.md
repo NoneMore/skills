@@ -188,6 +188,12 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 ## 5. Recommended tracing workflow
 
+Preserve narrow core scope for pure identity/location questions: obtain only the
+container/module/readability context and implementation evidence needed to answer
+the question, and skip mechanic stages that are not material.
+
+For gameplay behavior or causality analysis:
+
 1. Define the player-visible mechanic and reproduction path without inferring
    implementation ownership that has not yet been established.
 2. Identify the container/bootstrap, entry module, chunk/worker, source-map, and
@@ -215,7 +221,9 @@ symbol evidence unless a source map or other independent artifact supports it.
 
 Bundle recovery is a supporting capability, not the analysis goal. A successful
 source-map extraction, Wakaru split, webcrack transform, or formatting pass does
-not establish which code owns the gameplay mechanic.
+not establish which code owns the gameplay mechanic. For a narrow identity or
+location question, however, recovery may legitimately stop once the requested
+identity/location claim is closed with sufficient evidence.
 
 ### Tool roles and ordering
 
