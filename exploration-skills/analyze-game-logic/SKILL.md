@@ -144,46 +144,30 @@ should all be loaded:
 
 ## 5. Reconstruct the gameplay mechanic
 
-When the research question is a gameplay mechanic/behavior, or when a function,
-formula, field, or call path is being used to support a gameplay-semantic or
-causality claim, reconstruct the mechanic before treating any one implementation
-site as the answer. For a pure identity/location question, resolve only the
-semantic stages material to that question and do not expand scope merely to fill
-this model. Use
-[references/gameplay-semantics.md](references/gameplay-semantics.md) as a
-semantic coverage/decomposition model, not as a presumed execution pipeline.
-When material, recover the causal spine:
+For gameplay behavior or causality questions, analyze the mechanic rather than
+treating an individual function, address, script, or decompiler view as the
+answer. Keep pure identity/location questions narrow.
 
-```text
-Trigger / Event / Source
-  -> Eligibility / Preconditions
-  -> Input state
-  -> Computation / Rule
-  -> Randomness (when applicable)
-  -> Authoritative state mutation
-  -> Secondary gameplay effects
-```
+Use [references/gameplay-semantics.md](references/gameplay-semantics.md) as the
+canonical semantic model. Connect the material trigger/source to the
+authoritative state mutation, and resolve time, ownership/lifecycle,
+persistence/reset, authority, event ordering, and presentation only when they can
+change the interpretation.
 
-Then resolve the cross-cutting dimensions that can materially change the
-interpretation: time domain and scheduling, state/entity ownership and lifecycle,
-event ordering, persistence/reset behavior, authority/prediction, and
-presentation/other consumers. These dimensions may branch, interleave, repeat,
-or apply across the whole mechanic rather than execute after the mutation.
-
-Do not force irrelevant elements into the model. Prefer a small complete
-mechanic slice over a broad call graph that never closes the material loop from
-trigger/event/source to authoritative mutation and lifetime.
+Prefer a small complete mechanic slice over a broad call graph that never closes
+the material causal loop. Use the selected engine adapter to map the canonical
+model onto concrete runtime constructs.
 
 ### Trace the implementation
 
 1. Start from strong semantic anchors: internal variable names, script/event
    names, diagnostic text, configuration keys, symbols, registrations, or
    distinctive resources.
-2. Separate UI/localization references from state-changing code.
+2. Separate presentation/localization references from state-changing code.
 3. Follow cross-references into candidate functions and recover types, calling
    conventions, object layouts, or runtime value formats from evidence.
 4. Trace callers, callees, field accesses, constants, and return values until
-   the behavior can be expressed as concise pseudocode.
+   the relevant mechanic can be expressed as concise pseudocode.
 5. Verify material claims with an independent consistency check. Independence
    is about the underlying evidence relation, not the number of tools, views, or
    renderings. A second view of the same instructions or metadata relation is
