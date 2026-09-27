@@ -60,45 +60,32 @@ logic is native.
 
 ### Gameplay semantic mapping
 
-Use these YYC conventions to map the cross-engine gameplay model onto likely
-implementation sites. Treat them as search guidance and validate them against
-the target runner/game version.
+Use these YYC conventions as search guidance and validate them against the target
+runner/game version:
 
-- **Simulation/update:** object Begin Step, Step, and End Step events commonly
-  own per-step gameplay updates. Draw/GUI events are normally presentation paths
-  unless data flow proves they also mutate authoritative gameplay state.
-- **Entity/object lifecycle:** object Create establishes instance state; Destroy
-  and Clean Up participate in teardown; room/game lifecycle events can create,
-  reset, or replace controller/global state.
-- **Time:** mechanics may use room steps, alarms, `delta_time`, wall-clock
-  helpers, animation/image progression, or custom accumulators. Establish which
-  domain advances during pause, slow motion, loading, and room transitions.
-- **Events and dispatch:** generated object event functions, scripts, alarms,
-  collision events, async callbacks, and explicit script calls can all trigger a
-  mechanic. Trace shared scripts back to the concrete event/caller that supplies
-  the source-specific context.
-- **Gameplay state:** state may live on instances, globals, structs/arrays/data
-  structures, controller objects, or resource/config values surfaced through
-  generated `RValue` operations and variable metadata.
-- **Persistence/reset:** save/checkpoint formats are game-specific. Determine
-  which runtime values are serialized, reconstructed from defaults, or reset by
-  death, room restart/change, and new-game flows rather than assuming all global
-  or controller state persists.
-- **Physics/spatial rules:** collision events, built-in physics integration, and
-  custom movement/query scripts can represent different simulation domains; do
-  not infer one from the presence of the other.
-- **Presentation:** Draw/GUI, sprite/image state, particles, audio, camera, and
-  HUD updates can expose the mechanic without owning its mutation.
-- **Authority:** for an authorized offline build, the relevant local simulation
-  path is normally the authority for the analyzed mechanic. Networking
-  extensions or local-coop code can still create multiple sources/actors that
-  must be discriminated.
+- **Update and lifecycle:** Begin Step, Step, and End Step commonly drive
+  per-step simulation. Create establishes instance state; Destroy, Clean Up, and
+  room/game lifecycle events participate in teardown, reset, or controller/global
+  replacement.
+- **Events and time:** object events, scripts, alarms, collision events, async
+  callbacks, and explicit script calls can trigger mechanics. Time may use room
+  steps, alarms, `delta_time`, wall-clock helpers, animation/image progression,
+  or custom accumulators.
+- **State ownership:** gameplay state may live on instances, globals,
+  structs/arrays/data structures, controller objects, or resource/config values
+  surfaced through generated `RValue` operations and variable metadata.
+- **Physics and presentation:** collision callbacks, built-in physics, and
+  custom movement/query scripts may represent different simulation domains.
+  Draw/GUI, sprite/image state, particles, audio, camera, and HUD paths are
+  normally presentation unless data flow proves they own gameplay mutation.
+- **Persistence and authority:** save/checkpoint behavior is game-specific;
+  determine what is serialized versus reconstructed or reset by death, room
+  transitions, or new-game flows. For an authorized offline build, the relevant
+  local simulation path is normally authoritative, while networking extensions
+  or local-coop code may introduce distinct actors/sources.
 
-Map the recovered implementation back to the semantic model from
-`gameplay-semantics.md`: recover the material causal spine
-(trigger/event/source, eligibility, inputs, computation/RNG, authoritative
-mutation, and secondary gameplay effects), then resolve time, lifecycle,
-persistence/reset, authority, and presentation as cross-cutting dimensions.
+Use the canonical semantic model to decide which of these mappings are material
+to the target mechanic.
 
 ## 3. Semantic anchors
 
@@ -211,46 +198,32 @@ require retain/release behavior; never overwrite them speculatively.
 
 ## 5. Recommended tracing workflow
 
-Preserve narrow core scope for pure identity/location questions: use the YYC
-anchors, metadata, ABI, and xrefs needed to answer the question without expanding
-into unrelated mechanic stages.
+Keep pure identity/location questions narrow: use only the YYC anchors, metadata,
+ABI, and xrefs needed to close the requested claim.
 
-For gameplay behavior or causality analysis, start by sketching the target
-mechanic with the core gameplay semantic model, then use this YYC-specific
-progression to map each material stage to implementation:
+For gameplay behavior or causality analysis, use the canonical semantic model to
+decide what must be resolved, then follow this YYC-specific path:
 
 ```text
-gameplay behavior or controlled scenario
-  -> trigger/event/source and likely state owner
-  -> semantic strings, variable names, or gml_* identities
-  -> metadata/registration entries
+semantic anchor / gml_* identity
+  -> metadata / registration
   -> runtime ID or function-pointer xrefs
   -> native event/script implementation
-  -> eligibility, inputs, formula/transition/RNG
-  -> authoritative state write
-  -> callers, secondary sources, and shared-use audit
-  -> expiry/reset/persistence and presentation paths
-  -> controlled runtime validation
+  -> decisive state reads/writes
+  -> callers, shared-use, and lifecycle paths
+  -> controlled runtime validation when material
 ```
 
-For gameplay-semantic claims, do not stop after recovering a plausible script
-body. Close the material mechanic loop: show which event triggers it, which state
-it owns or mutates, which other sources share the path, and how the state expires
-or survives lifecycle transitions when those facts affect the claim.
+Do not stop at a plausible script body when the claim depends on trigger/source,
+state ownership, or lifetime. When registration xrefs dominate, inspect adjacent
+parallel tables and function pointers before scanning the entire text segment.
 
-When registration xrefs dominate, inspect adjacent parallel tables and function
-pointers before scanning the entire text segment.
+For timers/state machines, trace both refresh/write and decrement/expiry paths,
+then establish the actual YYC time domain before converting counters to seconds.
 
-For timers/state machines, trace both the refresh/write path and the
-decrement/expiry path. Determine whether time is expressed in room steps, Step
-events, milliseconds, `delta_time` microseconds, alarms, real-time clocks,
-animation frames, or a paused/scaled clock.
-
-Search for special sources that may share the same refresh/transition function,
-including damage, death, cutscenes, pause/loading transitions, damage-over-time,
-reflected damage, local-coop slots, difficulty, skills, equipment, artifacts,
-or stats. Convert steps to seconds only after the effective update rate is
-established.
+Search for materially distinct sources that may share the same path, such as
+damage, death, cutscenes, pause/loading transitions, damage-over-time, reflected
+damage, local-coop slots, difficulty, skills, equipment, artifacts, or stats.
 
 ## 6. Static-analysis guidance
 
