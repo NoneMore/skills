@@ -1,14 +1,15 @@
 # Engine Adapter Contract
 
-Engine adapters map the generic analysis protocol in `SKILL.md` onto one
-specific engine, backend, compilation mode, or runtime boundary. They should
-contain version-sensitive implementation knowledge, not duplicate the core
-workflow.
+Engine adapters map the gameplay semantic model and evidence protocol in
+`SKILL.md` onto one specific engine, backend, compilation mode, or runtime
+boundary. They should contain version-sensitive implementation knowledge and
+engine-specific gameplay mappings, not duplicate the core workflow.
 
 ## Contents
 
 1. [Applicability and detection](#1-applicability-and-detection)
 2. [Implementation model](#2-implementation-model)
+   - [Gameplay semantic mapping](#gameplay-semantic-mapping)
 3. [Semantic anchors](#3-semantic-anchors)
 4. [ABI, runtime values, and object model](#4-abi-runtime-values-and-object-model)
 5. [Recommended tracing workflow](#5-recommended-tracing-workflow)
@@ -42,6 +43,27 @@ Explain where gameplay logic, resources, metadata, registrations, scripts, and
 runtime state live for this boundary. Clarify which files/modules are primary
 logic targets and which are only metadata/resource containers.
 
+### Gameplay semantic mapping
+
+Map the cross-engine model in
+[gameplay-semantics.md](gameplay-semantics.md) onto this boundary. Document the
+engine/runtime constructs that normally own:
+
+- simulation/update loops and fixed versus variable time;
+- entity/object/component creation, update, disable/death, and destruction;
+- events, input, messages, coroutines/tasks, alarms, or timer callbacks;
+- gameplay state, configuration/data assets, and common modifier sources;
+- save/checkpoint persistence and reset/reload behavior;
+- physics/spatial callbacks when material;
+- presentation-only paths such as draw/render, HUD/UI, VFX, SFX, and animation;
+- local authority, prediction, serialization, or remote authority boundaries
+  when the runtime can participate in networked play.
+
+State which mappings are strong conventions and which are only search heuristics.
+The goal is to help the analyst reconstruct a complete mechanic
+(trigger -> eligibility -> computation/RNG -> authoritative mutation ->
+lifetime/persistence), not merely locate engine-generated functions.
+
 ## 3. Semantic anchors
 
 List the highest-value engine-specific entry points, such as:
@@ -69,15 +91,16 @@ public ABI. Include how to validate them before applying types or writes.
 
 ## 5. Recommended tracing workflow
 
-Translate the core trace procedure into the most efficient engine-specific
-progression from semantic anchor to implementation and validation. Prefer a
-short ordered flow over a second generic reverse-engineering tutorial.
+Translate the core mechanic-reconstruction and trace procedure into the most
+efficient engine-specific progression from player-visible behavior and semantic
+anchor to authoritative state mutation, lifetime, implementation, and validation.
+Prefer a short ordered flow over a second generic reverse-engineering tutorial.
 
 ## 6. Static-analysis guidance
 
 Document engine-specific tactics for IDA/Ghidra/metadata tools, including noisy
-patterns to collapse, decisive instruction/data-flow evidence, and when broad
-scanning is counterproductive.
+patterns to collapse, decisive instruction/data-flow evidence, how to distinguish
+presentation from gameplay ownership, and when broad scanning is counterproductive.
 
 ## 7. Runtime-observation guidance
 
