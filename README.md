@@ -81,7 +81,7 @@ Tailored for mathematical document processing, rigorous literature analysis, and
 
 A disciplined protocol for authorized binary analysis and execution tracing.
 
-- `analyze-game-logic`: Reproducible, evidence-backed static and dynamic reverse engineering of offline/single-player game logic (Windows PC, Web/JavaScript). Traces formulas, timers, internal state, and native/managed call stacks while generating verifiable audit reports. Strictly excludes multiplayer cheating, DRM bypass, or proprietary asset extraction.
+- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, and engine-specific implementation paths while retaining verifiable evidence. Strictly excludes multiplayer cheating, DRM bypass, or proprietary asset extraction.
 
 ### 5. Meta Skills (Agent Instruction Governance)
 > **Directory**: [`meta-skills/`](meta-skills/) | Detailed guide: [README](meta-skills/agents-md-wizard/README.md)
