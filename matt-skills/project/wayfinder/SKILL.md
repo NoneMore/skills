@@ -39,9 +39,9 @@ The whole map at low resolution, loaded once per session. Open tickets are **not
 
 ## Decisions so far
 
-<!-- the index: one line per closed ticket, enough to judge relevance, then zoom the link for the detail the ticket holds -->
+<!-- the index: one line per resolved ticket, enough to judge relevance, then zoom the link for the detail the ticket holds -->
 
-- [<closed ticket title>](link): <one-line gist of the answer>
+- [<resolved ticket title>](link): <one-line gist of the answer>
 
 ## Not yet specified
 
@@ -98,7 +98,7 @@ Fog only ever gathers _toward_ the destination. The destination fixes the scope,
 
 Out-of-scope work never graduates (the frontier stops at the destination), so it returns only if the destination is redrawn, and then as a fresh effort, not a resumption.
 
-Ruling something out of scope is a scoping act, not a step on the route. When a ticket that already exists turns out to sit past the destination (mis-scoped in while charting, or exposed by a resolution), **close it** (a closed ticket is unambiguously off the frontier) and leave one line in the **Out of scope** section: the gist plus why it's out of scope, linking the closed ticket. It stays out of **Decisions so far**, which records the route actually walked; a scope boundary isn't a step on it.
+Ruling something out of scope is a scoping act, not a step on the route. When an existing ticket turns out to sit past the destination, move it to the configured tracker's terminal state so it leaves the frontier, then leave one line in **Out of scope** with the gist and reason, linking the ticket. It stays out of **Decisions so far**: a scope boundary isn't a decision on the route.
 
 ## Invocation
 
@@ -123,7 +123,7 @@ User invokes with a map reference. A ticket is **optional**: without one, you pi
 
 1. Load the **map**: the low-res view, not every ticket body.
 2. Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. **Claim it before any work** using the configured tracker's Wayfinding operations.
-3. Resolve it. **Zoom as needed**: fetch the full body of any related or closed ticket on demand. For skills named in the `## Notes` block, call the Skill tool only when that skill is **model-invoked**. If Notes names a **user-invoked** workflow, do not call or read it; tell the user to invoke it explicitly when its phase is reached. If in doubt about the decision work itself, call the Skill tool twice, for "grilling" and "domain-modeling".
+3. Resolve it. **Zoom as needed**: fetch the full body of any related or resolved ticket on demand. For skills named in the `## Notes` block, call the Skill tool only when that skill is **model-invoked**. If Notes names a **user-invoked** workflow, do not call or read it; tell the user to invoke it explicitly when its phase is reached. If in doubt about the decision work itself, call the Skill tool twice, for "grilling" and "domain-modeling".
 4. Record the resolution using the configured tracker's Wayfinding operations, then **append a context pointer** to the map's Decisions-so-far.
 5. Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals that a ticket (this one or another) sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
 
