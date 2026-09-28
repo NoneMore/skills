@@ -1,8 +1,9 @@
 # Runtime Validation
 
-Load this reference only when the core dynamic-validation gate fires. Its purpose
-is to distinguish runtime behavior or causality that static evidence cannot close
-reliably; it is not a mandatory second phase for every analysis.
+Load this reference whenever the core dynamic-validation gate marks runtime
+validation as material. This file provides the branch-specific validation
+procedure; it does not redefine the core gate or make runtime validation a
+mandatory second phase for every analysis.
 
 ## Authorization and validation boundary
 
