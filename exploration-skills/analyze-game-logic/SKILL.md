@@ -51,7 +51,8 @@ Match overhead to the requested result:
 Promote triage when conclusions will be reused, large artifacts are generated,
 multiple sessions are likely, or a modification is being designed.
 
-For focused/full work, follow
+For focused/full work—and before persisting retained evidence or a reusable
+finding from triage—follow
 [references/project-knowledge.md](references/project-knowledge.md) for project
 layout, source/artifact classification, hashes, schemas, persistence cadence,
 findings, integrity checks, and report storage. Before repeating work, search
