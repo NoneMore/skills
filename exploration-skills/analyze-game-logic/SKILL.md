@@ -115,8 +115,8 @@ evidence.
 
 ## 4. Reconstruct the smallest material mechanic slice
 
-For gameplay behavior or causality questions,or when a function, formula, field,
-or call path supports such a claim,load
+For gameplay behavior or causality questions, or when a function, formula, field,
+or call path supports such a claim, load
 [references/gameplay-semantics.md](references/gameplay-semantics.md). Use its
 canonical mechanic model and the selected engine adapter for concrete runtime
 mappings.
