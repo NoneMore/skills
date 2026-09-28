@@ -127,6 +127,13 @@ Trace from strong semantic anchors toward authoritative state mutation:
 4. Stop when the smallest slice needed for the claim can be expressed as concise
    gameplay pseudocode and material unknowns are explicit.
 
+When analysis is performed in a writable disassembler/decompiler project and
+recovered static semantics will materially improve continued work, load
+[references/static-analysis-refinement.md](references/static-analysis-refinement.md).
+Treat meaningful function/variable names, recovered partial types/structures,
+key-branch annotations, and cleaned C++-like pseudocode as first-class derived
+analysis outputs rather than leaving the same understanding only in a report.
+
 Prefer targeted function/basic-block analysis over broad decompilation of large
 runtime dispatchers. If a generated artifact is too large for context, retain it
 on disk as authoritative working evidence: record producer and target
@@ -198,7 +205,10 @@ Match the output to analysis depth. A triage answer may be concise. Focused/full
 analysis should give the user a navigable synthesis of the concrete question and
 reproduction path when known, relevant implementation layers, conclusion and
 compact pseudocode, stable source/function or `module + RVA` locators, and links
-to reusable findings/evidence where the project-store branch applies.
+to reusable findings/evidence where the project-store branch applies. When
+static-analysis refinement applies, also summarize the semantic annotations made
+or proposed: function purpose/names, material variable and field names, recovered
+partial types/structures, decisive branches, and clean C++-like reconstruction.
 
 ## 8. Completion criteria
 
@@ -215,6 +225,9 @@ Before finishing focused/full analysis, verify that:
   validation was omitted;
 - reusable sources/artifacts/findings are registered and integrity-valid when the
   project-store branch applies;
+- when semantic database refinement applies, derived names/types/comments and
+  cleaned pseudocode remain distinguishable from raw evidence and preserve
+  uncertainty instead of laundering hypotheses into facts;
 - no destructive modification occurred without explicit authorization, and any
   deployed reversible instrumentation retains its authoritative source/provenance
   in the analysis project and has a documented cleanup/restoration path;
