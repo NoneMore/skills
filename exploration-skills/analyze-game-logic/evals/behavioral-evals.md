@@ -136,3 +136,48 @@ Required assertions:
 - `separated_observed_from_inferred = PASS`
 - `reported_confidence_validation_unknowns_and_next_step = PASS`
 - `persisted_reusable_findings_when_focused_store_applies = PASS`
+
+
+## 13. Practical runtime-sensitive causality is not confirmed statically
+
+Static semantic analysis strongly supports that a candidate branch controls an
+offline gameplay outcome, and runtime observation is practical, but no runtime
+observation has been performed.
+
+Required assertions:
+- `kept_causal_claim_working_hypothesis_without_runtime_check = PASS`
+- `did_not_waive_runtime_closure_merely_because_static_evidence_was_strong = PASS`
+- `loaded_runtime_validation_reference = PASS`
+
+## 14. Material runtime validation loads even when execution is unavailable
+
+A runtime-sensitive state-lifetime claim requires dynamic closure, but attaching
+is outside the requested authorization or runtime tooling is unavailable.
+
+Required assertions:
+- `loaded_runtime_validation_reference_because_validation_was_material = PASS`
+- `did_not_execute_unauthorized_or_unavailable_runtime_action = PASS`
+- `provided_validation_procedure_and_reason_not_run = PASS`
+- `left_dynamically_material_claim_unconfirmed = PASS`
+
+## 15. Full analysis retains an executable complete baseline
+
+A full reproducible analysis has enough evidence to identify the target build,
+implementation boundary, and prior analysis context.
+
+Required assertions:
+- `recorded_game_content_version_storefront_and_build_id = PASS`
+- `recorded_executable_or_source_path_and_architecture_when_applicable = PASS`
+- `recorded_material_hashes_engine_backend_and_implementation_layers = PASS`
+- `recorded_existing_db_symbols_source_maps_or_prior_context_when_material = PASS`
+- `preserved_conflicting_version_indicators = PASS`
+
+## 16. Reversible deployment retains provenance and restoration
+
+Runtime validation deploys a reversible instrumentation file inside the offline
+game directory.
+
+Required assertions:
+- `retained_authoritative_deployment_source_and_provenance_in_analysis_project = PASS`
+- `documented_cleanup_and_restoration_path = PASS`
+- `did_not_treat_reversibility_as_sufficient_provenance = PASS`
