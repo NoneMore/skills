@@ -7,12 +7,13 @@ throwaway location/identity question with no durable output.
 ## Contents
 
 1. [Store layout](#store-layout)
-2. [Sources and artifacts](#sources-and-artifacts)
-3. [Manifest schema](#manifest-schema)
-4. [Reusable finding records](#reusable-finding-records)
-5. [Deterministic project-store helper](#deterministic-project-store-helper)
-6. [Persistence cadence](#persistence-cadence)
-7. [Durable evidence chain](#durable-evidence-chain)
+2. [Complete baseline](#complete-baseline)
+3. [Sources and artifacts](#sources-and-artifacts)
+4. [Manifest schema](#manifest-schema)
+5. [Reusable finding records](#reusable-finding-records)
+6. [Deterministic project-store helper](#deterministic-project-store-helper)
+7. [Persistence cadence](#persistence-cadence)
+8. [Durable evidence chain](#durable-evidence-chain)
 
 ## Store layout
 
@@ -32,6 +33,24 @@ mutable confidence state in an ID.
 
 `project_store.py init` creates all three directories, a schema-v2 manifest, and
 a starter `reports/analysis.md`. It does not overwrite an existing report.
+
+## Complete baseline
+
+For focused/full analysis, record the baseline information material to the
+conclusion so the target can be identified and the evidence can be reproduced:
+
+- game/content version, storefront, and build identifier;
+- executable or source path, relevant modules/files, architecture when
+  applicable, and material file metadata;
+- SHA-256 of every analyzed binary, source, or data file material to the claim;
+- detected engine, scripting backend, and relevant implementation layers or
+  compilation boundaries;
+- existing analysis databases/projects, symbols, source maps, structured tool
+  integrations, and prior analysis artifacts when material.
+
+Distinguish runner/file versions from actual game-content versions. Preserve
+conflicting version indicators instead of silently choosing one. Use explicit
+`unknown` values when a material baseline field genuinely cannot be established.
 
 ## Sources and artifacts
 
