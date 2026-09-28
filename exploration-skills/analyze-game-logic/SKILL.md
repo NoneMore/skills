@@ -53,11 +53,10 @@ multiple sessions are likely, or a modification is being designed.
 
 For focused/full work—and before persisting retained evidence or a reusable
 finding from triage—follow
-[references/project-knowledge.md](references/project-knowledge.md) for project
-layout, source/artifact classification, hashes, schemas, persistence cadence,
-findings, integrity checks, and report storage. Before repeating work, search
-retained findings/evidence for the target version, module, function, type, or
-behavior and verify it before reuse. Keep durable analysis outputs outside the
+[references/project-knowledge.md](references/project-knowledge.md) for durable
+project-store and reporting rules. Before repeating work, search retained
+findings/evidence for the target version, module, function, type, or behavior and
+verify it before reuse. Keep durable analysis outputs outside the
 installed game tree. Distinguish runner/file versions from actual game-content
 versions and preserve conflicting indicators instead of silently choosing one.
 
@@ -101,11 +100,9 @@ analysis root merely to satisfy the evidence store.
 
 ### Tooling economy
 
-Prefer the lowest total setup and execution cost that preserves the evidence
-needed for the claim: reuse an existing analysis project or structured
-integration when available, otherwise prefer bounded existing helpers or
-one-shot queries before building task-specific infrastructure. Do not let tool
-integration become a parallel engineering project.
+Use the lowest-cost evidence-preserving path. Reuse existing analysis projects,
+structured integrations, helpers, or bounded one-shot queries; build
+task-specific infrastructure only when those cannot close the material unknown.
 
 After mapping the material path, consult
 [references/engine-registry.md](references/engine-registry.md) and load only the
@@ -150,13 +147,10 @@ Classify conclusions consistently:
 - **Unknown:** a material version, unit, type, field, owner, lifetime, authority,
   runtime condition, or other fact remains unresolved.
 
-An independent check must constrain the claim through a genuinely distinct
-evidence relation. Multiple renderings of the same underlying relation are
-corroboration, not independence: pseudocode and disassembly of the same
-instructions, wrappers around one registration entry, or many xrefs from one
-shared table/data-flow chain do not become independent by quantity. A distinct
-caller/use path or controlled runtime observation can qualify when it constrains
-the claim separately.
+An independent check must constrain the claim through a distinct evidence
+relation, not another rendering of the same relation. The same instructions,
+registration, or table/data-flow remain one relation; a distinct caller/use path
+or controlled runtime observation can qualify.
 
 For compiled/native boundaries, record ASLR-stable `module + RVA` locators. When
 converting database VAs, RVAs, file offsets, or runtime addresses, record the
@@ -201,17 +195,10 @@ explicit authorization.
 ## 7. Deliver the result
 
 Match the output to analysis depth. A triage answer may be concise. Focused/full
-analysis should give the user a navigable synthesis containing the material
-version/build/hash, the concrete question and reproduction path when known, the
-relevant implementation layers, the conclusion and compact pseudocode, stable
-source/function or `module + RVA` locators, confidence state, validation status,
-material unknowns, and the highest-value unresolved next step.
-
-For focused/full work, keep reusable evidence and findings in the project stores
-and the report as a synthesis/navigation layer according to
-[references/project-knowledge.md](references/project-knowledge.md). Separate
-observed behavior from inferred behavior and keep version-specific findings
-separate.
+analysis should give the user a navigable synthesis of the concrete question and
+reproduction path when known, relevant implementation layers, conclusion and
+compact pseudocode, stable source/function or `module + RVA` locators, and links
+to reusable findings/evidence where the project-store branch applies.
 
 ## 8. Completion criteria
 
