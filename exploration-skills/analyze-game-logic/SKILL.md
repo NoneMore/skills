@@ -219,5 +219,6 @@ Before finishing focused/full analysis, verify that:
   deployed reversible instrumentation retains its authoritative source/provenance
   in the analysis project and has a documented cleanup/restoration path;
 - targeted modifications have evidence for the claimed ownership/fan-out scope;
-- the final answer/report states what was observed, inferred, validated, left
-  unknown, and what should be investigated next.
+- the final answer/report states the evidence/confidence state, dynamic-validation
+  status, material unknowns, observed-vs-inferred distinction, and highest-value
+  next step.
