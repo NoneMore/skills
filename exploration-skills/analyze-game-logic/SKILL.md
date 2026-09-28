@@ -171,15 +171,20 @@ units and update rates are established.
 ### Dynamic validation gate
 
 Dynamic validation is optional for narrow identity/location claims when static
-semantic evidence is sufficient. It is normally required before confirming
-runtime-sensitive claims about timing/units, causal control, caller/source
-discrimination, state lifetime, intervention scope/side effects, or effective
-probabilistic behavior when static evidence alone cannot establish them.
+semantic evidence is sufficient. When runtime observation is practical, it
+should normally be performed before treating runtime-sensitive claims as settled,
+including timing/units, causal control, caller/source discrimination, state
+lifetime, and intervention scope/side effects. For random/probabilistic behavior,
+dynamic validation is normally required when a static formula alone does not
+establish the effective runtime distribution or source conditions.
 
-If such validation is practical but has not been performed, keep the affected
-claim as **Working hypothesis**. If runtime work is permitted and material, load
-[references/runtime-validation.md](references/runtime-validation.md). Otherwise
-provide the validation procedure and state why it was not run.
+For those categories, if runtime observation is practical but has not been
+performed, keep the affected claim as **Working hypothesis**. Whenever dynamic
+validation is material to the claim, load
+[references/runtime-validation.md](references/runtime-validation.md). Use
+authorization and tool availability only to decide whether to execute runtime
+actions or instead provide the validation procedure, state why it was not run,
+and leave the dynamically material claim unconfirmed.
 
 ### Modification gate
 
@@ -223,7 +228,8 @@ Before finishing focused/full analysis, verify that:
 - reusable sources/artifacts/findings are registered and integrity-valid when the
   project-store branch applies;
 - no destructive modification occurred without explicit authorization, and any
-  deployed reversible instrumentation has a cleanup/restoration path;
+  deployed reversible instrumentation retains its authoritative source/provenance
+  in the analysis project and has a documented cleanup/restoration path;
 - targeted modifications have evidence for the claimed ownership/fan-out scope;
 - the final answer/report states what was observed, inferred, validated, left
   unknown, and what should be investigated next.
