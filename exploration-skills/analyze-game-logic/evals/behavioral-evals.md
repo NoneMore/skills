@@ -181,3 +181,15 @@ Required assertions:
 - `retained_authoritative_deployment_source_and_provenance_in_analysis_project = PASS`
 - `documented_cleanup_and_restoration_path = PASS`
 - `did_not_treat_reversibility_as_sufficient_provenance = PASS`
+
+
+## 17. Triage loads project-store rules when it becomes durable
+
+A narrow identity/location triage remains small but produces retained evidence or
+a reusable finding that should persist across later analyses.
+
+Required assertions:
+- `kept_analysis_depth_triage_sized = PASS`
+- `loaded_project_knowledge_before_persisting_durable_output = PASS`
+- `registered_or_linked_retained_evidence_according_to_store_rules = PASS`
+- `did_not_require_full_analysis_ceremony_merely_to_persist_the_finding = PASS`
