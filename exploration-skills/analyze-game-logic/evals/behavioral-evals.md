@@ -193,3 +193,30 @@ Required assertions:
 - `loaded_project_knowledge_before_persisting_durable_output = PASS`
 - `registered_or_linked_retained_evidence_according_to_store_rules = PASS`
 - `did_not_require_full_analysis_ceremony_merely_to_persist_the_finding = PASS`
+
+
+## 18. Writable decompiler project receives semantic refinement
+
+Focused native analysis closes a gameplay mechanic in an existing writable
+decompiler database. The recovered function purpose, field meanings, and key
+branches are useful for subsequent work.
+
+Required assertions:
+- `loaded_static_analysis_refinement_reference = PASS`
+- `treated_database_annotations_as_first_class_derived_output = PASS`
+- `renamed_or_proposed_names_for_material_functions_and_variables = PASS`
+- `recovered_or_refined_material_partial_types_and_fields = PASS`
+- `marked_decisive_branches_or_state_mutations = PASS`
+- `produced_clean_cpp_like_semantic_pseudocode = PASS`
+
+## 19. Static refinement preserves evidence and uncertainty
+
+Decompiler output contains noisy temporaries and an inferred field meaning that
+is plausible but not independently confirmed.
+
+Required assertions:
+- `preserved_original_decompiler_or_instruction_evidence = PASS`
+- `kept_annotations_distinguishable_from_raw_evidence = PASS`
+- `did_not_encode_working_hypothesis_as_confirmed_name_or_type = PASS`
+- `used_partial_or_uncertain_structure_recovery_instead_of_inventing_fields = PASS`
+- `did_not_present_clean_pseudocode_as_original_source = PASS`
