@@ -80,29 +80,52 @@ and evidence must remain version-scoped and reproducible.
 Prefer a small complete slice over a broad call graph that does not explain the
 behavior.
 
-## 4. Compact mechanic record
+## 4. Canonical mechanic handoff v1
 
-Use only the applicable fields:
+This is the single application-facing interchange format for recovered game
+logic. The semantic model above and reusable finding records are upstream
+representations; when downstream application is requested, normalize the
+material result into this exact versioned handoff before invoking
+`$apply-game-logic`.
 
-```text
-Mechanic:
-Reproduction / controlled scenario:
-Source / trigger:
-Eligibility / gate:
-Inputs / modifiers / RNG:
-Rule / transition:
-Authoritative mutation:
-Secondary effects / consumers:
-Time / scheduling:
-Entity/state owner, lifetime, and fan-out:
-Persistence / reset:
-Authority / serialization:
-Presentation:
-Implementation locators:
-Validation:
-Unknowns / version sensitivity:
+Use the literal schema identifier `game-logic-mechanic-handoff/v1`. Keep every
+top-level key. Use `not-applicable` for genuinely irrelevant dimensions and
+`unknown` when an unresolved value could affect interpretation or downstream
+scope.
+
+```yaml
+schema: game-logic-mechanic-handoff/v1
+mechanic: <behavior/mechanic name>
+target:
+  game_version: <version or unknown>
+  build_id: <build id or unknown>
+  material_hashes: [<path/module=sha256>, ...]
+status: confirmed | working-hypothesis | unknown
+reproduction_or_scenario: <steps/condition or not-applicable>
+source_or_trigger: <source/trigger or unknown>
+eligibility_or_gate: <gate or not-applicable>
+inputs_modifiers_rng: <ordered inputs/modifiers/RNG detail or not-applicable>
+rule_or_transition: <concise mechanic pseudocode / transition>
+authoritative_mutation: <state mutation or unknown>
+secondary_effects_or_consumers: <effects/consumers or not-applicable>
+time_units_scheduling: <units/scheduler/pause behavior or not-applicable>
+state_owner_lifetime_fanout: <owner/lifetime/sharing or unknown>
+persistence_or_reset: <reset/persistence behavior or not-applicable>
+authority_or_serialization: <authority/serialization or not-applicable>
+presentation: <presentation-only relation or not-applicable>
+implementation_locators: [<source/function or module + RVA>, ...]
+evidence:
+  finding_ids: [<finding-id>, ...]
+  source_or_artifact_refs: [<source/artifact id + locator>, ...]
+validation:
+  performed: <yes/no/partial>
+  summary: <independent check / runtime observation / reason omitted>
+unknowns: [<material unknown>, ...]
+version_sensitivity: <known sensitivity or unknown>
 ```
 
-Do not silently omit an unresolved field that could change the interpretation.
-This model complements, rather than replaces, the core evidence/provenance,
-independent-validation, and version/hash rules.
+The handoff status is the status of the application-relevant claim, not a summary
+of how confident the analyst feels overall. Do not silently omit a material
+unknown by replacing it with `not-applicable`. Do not add application-specific
+fields to this schema; application provenance belongs in its own durable
+application record.
