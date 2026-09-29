@@ -1,22 +1,39 @@
 # Skill mechanics
 
-The skill-specific branch of [`writing-for-agents`](SKILL.md): what changes when the document is a skill (frontmatter, the invocation choice, and router skills). Everything else about writing it is the universal reference in `SKILL.md`.
+Skill-specific mechanics for [`writing-for-agents`](SKILL.md). Use the main skill for general document design; this file only covers invocation and routing.
 
 ## Invocation
 
-Two choices, trading the two loads:
+Choose between two modes.
 
-- A **model-invoked** skill keeps a `description`, so the agent can fire it autonomously, and other skills can reach it. You can still type its name: model-invocation always _includes_ user reach; a description only ever adds agent discovery, never removes the human's. The description is the skill's top-level context pointer, forced to stay loaded at all times: permanent context load in exchange for discoverability. A model-invoked skill whose content is all reference is also one home for shared reference: another skill can invoke it, so reference needed by several skills lives in one place. Mechanics: omit `disable-model-invocation`, and write a model-facing description carrying the trigger branches (the pointer-writing rules in `SKILL.md` apply in full).
-- A **user-invoked** skill strips the description from the agent's reach: only the human typing its name can invoke it, and no other skill can. Zero context load, but it spends cognitive load: you are the index that must remember it exists. Mechanics: set `disable-model-invocation: true`; the `description` becomes human-facing: a one-line summary, trigger lists stripped.
+### Model-invoked
 
-Pick model-invocation only when the agent must reach the skill on its own, or another skill must. If it only ever fires by hand, make it user-invoked and pay no context load.
+Use when the agent must discover the skill on its own, or another skill must be able to reach it.
 
-Shared reference that two user-invoked skills both need can live in neither: with no descriptions, neither can fire the other. Push it to a plain file outside the skill system: external reference any skill can point at.
+- Omit `disable-model-invocation`.
+- Write a model-facing `description` that names the capability and the distinct cases that should trigger it.
+- Remember that the description is always-loaded context.
+
+Model invocation still allows explicit user invocation.
+
+### User-invoked
+
+Use when the skill should run only when the human chooses it.
+
+- Set `disable-model-invocation: true`.
+- Keep the `description` as a concise human-facing summary rather than a trigger list.
+- The skill adds no model-discovery context, but the human must remember when to invoke it.
+
+If two user-invoked skills need the same reference, put that reference in a plain shared file rather than duplicating it.
 
 ## Splitting by invocation
 
-The invocation cut of splitting (the sequence cut lives in `SKILL.md`): split off a model-invoked skill when you have a distinct capability or task branch that should be independently discoverable, or another skill must reach it. Use shared domain vocabulary in the description when it sharpens routing, but do not make the split depend on a leading-word theory alone. Treat any wording effect as a hypothesis and validate it empirically when the routing difference or added context cost matters. You pay context load for the new always-loaded description, so that independent reach has to be worth it.
+Create a separate model-invoked skill only when a distinct capability or branch needs independent discovery, or another skill must invoke it.
+
+A new model-invoked skill adds another always-loaded description, so independent reach should justify that cost. Do not split merely because a prompting theory suggests it; validate routing changes when the tradeoff matters.
 
 ## Router skills
 
-When user-invoked skills multiply past what you can remember, that piled-up cognitive load is cured by a **router skill**: one user-invoked skill that names the others and when to reach for each, so the human has one skill to remember instead of many. It can only hint, never fire them: user-invoked skills have no description, so nothing but the human can reach them.
+When many user-invoked skills become hard to remember, use one user-invoked **router skill** that lists them and explains when the human should choose each one.
+
+A router reduces human indexing cost; it does not make user-invoked skills model-discoverable.
