@@ -1,4 +1,4 @@
 interface:
   display_name: "Game Logic Analysis"
-  short_description: "Recover authorized offline game mechanics with reproducible evidence"
-  default_prompt: "Use $analyze-game-logic on this authorized offline/local target. Define the concrete question and analysis depth, map only the implementation layers material to it, and load supporting references only when their branch fires. Reconstruct the smallest material mechanic slice and close it with version-scoped semantic evidence. Name the material unknown before escalating to a more opaque layer. Keep identity/location questions narrow, default to read-only static analysis, and use reversible runtime instrumentation only when needed for validation. If the user wants to operationalize the recovered logic, produce a mechanic handoff record and continue with $apply-game-logic rather than designing the change here."
+  short_description: "Recover offline game mechanics with reproducible evidence"
+  default_prompt: "Use $analyze-game-logic to recover and verify the requested offline game mechanic, then emit the canonical handoff when downstream application is requested."
