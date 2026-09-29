@@ -1,4 +1,4 @@
 interface:
   display_name: "Game Logic Analysis"
   short_description: "Recover offline game mechanics with reproducible evidence"
-  default_prompt: "Use $analyze-game-logic to recover and verify the requested offline game mechanic, then emit the canonical handoff when downstream application is requested."
+  default_prompt: "Use $analyze-game-logic to recover and verify the requested offline mechanic with the smallest evidence-preserving path; when downstream use is requested, provide the material version-scoped mechanic facts."
