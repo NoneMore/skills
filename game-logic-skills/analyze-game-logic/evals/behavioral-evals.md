@@ -75,13 +75,13 @@ Required assertions:
 
 ## 8. Established analysis workspace receives bounded refinement
 
-Focused native analysis is already taking place in an established project-scoped writable decompiler workspace, and code-local refinement would materially reduce re-analysis.
+Focused native analysis is already taking place in an established project-scoped writable decompiler workspace.
 
 Required assertions:
 - treated the project-scoped working database as mutable analysis state without per-annotation confirmation unless marked read-only or archival
 - refined only the material mechanic slice
 - used evidence-backed names/types/comments and kept uncertain fields or meanings neutral
-- preserved stronger analyst-authored semantics unless material new evidence justified revision
+- preserved analyst-authored semantics unless recovered evidence contradicted the existing annotation or directly supported a more precise replacement
 - wrote only to the analysis workspace or its recoverable project copy, not installed/source binaries
 - did not invoke apply-game-logic solely for workspace refinement
 
