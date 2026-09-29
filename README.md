@@ -82,7 +82,7 @@ Tailored for mathematical document processing, rigorous literature analysis, and
 A two-stage protocol for recovering authorized offline game mechanics and then consuming that verified knowledge without mixing reverse engineering with downstream application.
 
 - `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, ownership/authority, and engine-specific implementation paths while retaining verifiable evidence. Produces a version-scoped mechanic handoff for downstream use.
-- `apply-game-logic`: Consumes recovered mechanic records/findings to build calculators, simulators, instrumentation, mods, or scoped local gameplay changes. Enforces confidence, version, ownership/fan-out, stable-locator, validation, provenance, and rollback guards instead of silently re-analyzing or guessing missing mechanic facts.
+- `apply-game-logic`: Consumes canonical mechanic handoffs to build calculators, simulators, instrumentation, mods, or scoped local gameplay changes. Finding-only/cold-start requests compose `analyze-game-logic` by canonical skill name first; durable application artifacts also use that companion's shared project-store capability.
 
 Both skills strictly exclude multiplayer/service manipulation, DRM or payment bypass, credential theft, piracy, and proprietary asset distribution.
 
@@ -132,7 +132,7 @@ Meta-level capabilities for authoring and optimizing how agents behave across di
 
 ## Installation & Usage
 
-Each skill folder is designed to be self-contained and modular. You can install individual skills or complete bundles depending on your harness and needs.
+Each skill folder packages its own local instructions, references, scripts, and metadata; skills must not treat sibling filesystem paths as runtime APIs. Some workflows intentionally compose other installed skills by canonical skill name (for example Matt project flows and the two-stage game-logic workflow). Install individual standalone skills when their task is self-contained, or install the dependency-complete bundle when you want a composed workflow.
 
 ### 1. Pi Agent (`~/.agents/skills/` or project `.agents/skills/`)
 
