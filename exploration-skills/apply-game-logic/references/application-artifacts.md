@@ -50,13 +50,20 @@ project store as kind `gameplay-mechanic-handoff`. The manifested SHA-256 is
 the immutable input snapshot even when the handoff came from outside the project
 and has no reusable finding.
 
-If the handoff was emitted from reusable findings, ask the companion to record
-those as one-way `consumes_finding_refs`. This must not populate
-`finding_refs` or modify any finding's `## Evidence` section.
+If the handoff was emitted from reusable findings, first distinguish local
+finding IDs from external provenance. Only finding IDs that resolve in the
+current project store become one-way `consumes_finding_refs`. Finding IDs that
+came from another project/store remain only inside the immutable hashed handoff
+snapshot; they must not block durable registration merely because they are
+non-local.
+
+For local consumed findings, ask the companion to record
+`consumes_finding_refs`. This must not populate `finding_refs` or modify any
+finding's `## Evidence` section.
 
 `finding_refs` means an artifact/source is evidence *for* a finding.
-`consumes_finding_refs` means an artifact was derived *from* a finding. These
-relations must never be conflated.
+`consumes_finding_refs` means an artifact was derived *from* a locally
+resolvable finding. These relations must never be conflated.
 
 ### 2. Persist the application record and implementation
 
@@ -74,7 +81,8 @@ reconstructing application intent:
 - producer/tool metadata;
 - `derived_from` artifact IDs;
 - source references when applicable;
-- one-way consumed finding IDs when applicable.
+- one-way consumed finding IDs only when they resolve in the current project
+  store; keep non-local finding IDs solely in the handoff snapshot.
 
 Do not request reciprocal `finding_refs` merely because an application consumed
 a finding.
