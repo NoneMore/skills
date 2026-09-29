@@ -1,7 +1,8 @@
 # Project Knowledge Stores
 
-Use these stores for focused/full analysis and whenever triage produces retained
-evidence or a conclusion worth reusing. Do not create them merely to answer a
+Use these stores for focused/full analysis, whenever triage produces retained
+evidence or a conclusion worth reusing, and for durable downstream application
+artifacts derived from those findings. Do not create them merely to answer a
 throwaway location/identity question with no durable output.
 
 ## Contents
@@ -59,9 +60,11 @@ Keep these concepts separate:
 - **Source:** an original read-only target that analysis is about, such as a game
   executable, DLL, data file, directly readable JavaScript/Python/Lua/C# source,
   or another original file. A source may live outside the analysis root.
-- **Artifact:** an analysis-generated or retained output, such as a decompilation,
-  extracted function set, runtime log, trace, benchmark, reconstructed table, or
-  script output. Artifacts live under the analysis root.
+- **Artifact:** an analysis- or application-generated retained output, such as a
+  decompilation, extracted function set, runtime log, trace, benchmark,
+  reconstructed table, derived tool, patch/mod source, application record, or
+  script output. Artifacts live under the project root. Deployed copies inside
+  the installed game tree are never authoritative artifacts.
 
 Do not copy an original readable source into `artifacts/` merely so findings can
 cite it. Register the original source directly with its path, byte size, and
@@ -208,12 +211,22 @@ Keep findings atomic enough to reuse without reading an entire topic report, but
 large enough to preserve the reasoning and evidence needed to assess them. A
 finding is not a chronological diary or a copy of raw decompiler output.
 
-A reusable finding may be consumed directly by `$apply-game-logic` when it
-contains every material dependency for the requested application. Downstream use
-must preserve the recorded status and version scope; it must not silently promote
-a working hypothesis or unknown to confirmed. If ownership/fan-out, units,
-authority, lifecycle, or another application-critical relation is missing, recover
-that relation here before application proceeds.
+A reusable finding is durable upstream evidence, not a second application
+interface. When downstream use is requested, adapt the material finding content
+into the canonical `game-logic-mechanic-handoff/v1` defined by
+`gameplay-semantics.md`. Preserve the finding's status and version scope during
+that normalization; never silently promote a working hypothesis or unknown to
+confirmed. If ownership/fan-out, units, authority, lifecycle, or another
+application-critical relation is missing, recover that relation before the
+handoff is emitted.
+
+Durable application outputs reuse this same manifest/store rather than creating a
+parallel application store. Register the authoritative application record and its
+source/config/backup/validation artifacts under `artifacts/applications/` with
+finding links. The companion `apply-game-logic` reference
+`references/application-artifacts.md` defines the application-record content
+and later-session rollback requirements; the existing schema-v2 manifest remains
+the inventory and integrity authority.
 
 ## Deterministic project-store helper
 
