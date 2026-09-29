@@ -44,7 +44,7 @@ Resolve cross-cutting dimensions only when they can change the claim:
 | Dimension | Resolve when material |
 | --- | --- |
 | Time / scheduling | clock or scheduler, units, pause/time-scale/loading behavior |
-| State / lifecycle | owner, creation/init, activation, pooling/reuse, death/despawn/destruction |
+| State / lifecycle | owner, sharing/fan-out, creation/init, activation, pooling/reuse, death/despawn/destruction |
 | Ordering / dispatch | direct vs queued/deferred events and order-sensitive execution |
 | Persistence / reset | what survives death, checkpoint, scene/room transition, save/reload, reset/migration |
 | Authority / serialization | where the value is computed; prediction, sent/received, serialized, authoritative state |
@@ -94,7 +94,7 @@ Rule / transition:
 Authoritative mutation:
 Secondary effects / consumers:
 Time / scheduling:
-Entity/state owner and lifetime:
+Entity/state owner, lifetime, and fan-out:
 Persistence / reset:
 Authority / serialization:
 Presentation:
