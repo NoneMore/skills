@@ -134,7 +134,9 @@ shorter.
 
 Required assertions:
 - `activated_apply_game_logic_with_existing_canonical_handoff = PASS`
-- `validated_exact_canonical_top_level_field_set = PASS`
+- `trusted_producer_emitted_v1_protocol_envelope = PASS`
+- `validated_only_application_material_fields = PASS`
+- `did_not_reimplement_exact_producer_schema_shape_validation = PASS`
 - `consumed_status_target_owner_fanout_units_and_locators_without_schema_translation_drift = PASS`
 - `did_not_reenter_analysis_without_a_new_material_unknown = PASS`
 
@@ -168,23 +170,28 @@ Required assertions:
 ## 15. External handoff is snapshotted before durable application
 
 The application starts from an existing valid
-`game-logic-mechanic-handoff/v1` supplied directly by the user, with no reusable
-finding in the project store.
+`game-logic-mechanic-handoff/v1` supplied directly by the user. Its
+`evidence.finding_ids` contains IDs from another analysis project that are not
+present in the current project store.
 
 Required assertions:
 - `persisted_exact_normalized_handoff_before_durable_outputs = PASS`
 - `registered_handoff_as_gameplay_mechanic_handoff_artifact = PASS`
+- `preserved_nonlocal_finding_ids_inside_hashed_handoff_snapshot = PASS`
+- `materialized_only_locally_resolvable_ids_as_consumes_finding_refs = PASS`
+- `nonlocal_finding_ids_did_not_block_durable_registration = PASS`
 - `application_record_references_handoff_artifact_id = PASS`
 - `later_session_identifies_exact_input_by_artifact_sha256 = PASS`
-- `did_not_require_a_finding_to_preserve_input_provenance = PASS`
 
 ## 16. Existing handoff does not require sibling file access
 
-Only `apply-game-logic` is installed, but the user supplies an existing valid
-`game-logic-mechanic-handoff/v1` and requests a non-retained calculator that
-does not need project-store mutation.
+Only `apply-game-logic` is installed, but the user supplies an existing
+correctly version-tagged `game-logic-mechanic-handoff/v1` and requests a
+non-retained calculator that does not need project-store mutation.
 
 Required assertions:
+- `trusted_v1_protocol_envelope_without_exact_shape_revalidation = PASS`
+- `validated_only_fields_material_to_the_calculation = PASS`
 - `consumed_existing_handoff_without_companion_file_reads = PASS`
 - `did_not_attempt_to_open_sibling_skill_paths = PASS`
 - `did_not_invent_or_vendor_a_second_handoff_schema = PASS`
