@@ -1,4 +1,4 @@
-"""Deterministic helper for analyze-game-logic project knowledge stores.
+"""Deterministic helper for game-logic project knowledge stores.
 
 The helper manages source registrations, retained artifacts, finding files, and
 reciprocal evidence links. It never interprets game semantics and never modifies
@@ -793,7 +793,7 @@ def add_target_args(parser: argparse.ArgumentParser) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Manage analyze-game-logic project knowledge stores")
+    parser = argparse.ArgumentParser(description="Manage game-logic project knowledge stores")
     parser.add_argument("--self-test", action="store_true", help="run pure-Python integrity tests")
     sub = parser.add_subparsers(dest="command")
 
