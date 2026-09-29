@@ -14,10 +14,11 @@ into that canonical handoff without new reverse engineering. A cold-start reques
 to change or operationalize an unanalyzed mechanic belongs in
 `$analyze-game-logic` first.
 
-The canonical handoff is defined by the companion analysis reference
-`../analyze-game-logic/references/gameplay-semantics.md#4-canonical-mechanic-handoff-v1`.
+The canonical handoff format is bundled locally in
+[references/mechanic-handoff-v1.md](references/mechanic-handoff-v1.md).
 Normalize complete findings into that shape before application; do not treat
-findings as a competing application interface.
+findings as a competing application interface. This skill must remain executable
+when installed without the sibling analysis skill.
 
 ## 1. Establish the application boundary
 
@@ -62,6 +63,12 @@ A **Working hypothesis** may support a clearly labeled experiment, prototype, or
 validation harness, but must not be silently treated as a safe production
 assumption. An **Unknown** that can change correctness, target scope, or safety is
 a stop condition for that application path.
+
+A reusable finding marked **superseded** is non-consumable. Follow its
+`Superseded by` relation, verify the successor exists and matches the material
+target/version, and normalize only that active successor. If no valid successor
+is available, return the narrow dependency to `$analyze-game-logic`. Never map
+`superseded` into an active handoff status.
 
 When a material fact is missing, invoke or hand back to `$analyze-game-logic`
 with the narrow unresolved question. Do not restart broad reverse engineering and
@@ -151,13 +158,19 @@ session, load
 reuse the existing game-logic project store. Do not create a second application
 manifest.
 
-Persist a registered `gameplay-application-record` plus every authoritative
-source/config/backup/validation artifact required to reproduce or undo the
-application. For runtime hooks, writes, injected instrumentation, mods, or
-patches, the record must capture:
+Persist the exact normalized handoff first as a registered immutable
+`gameplay-mechanic-handoff` artifact, then persist a registered
+`gameplay-application-record` derived from that snapshot plus every
+authoritative source/config/backup/validation artifact required to reproduce or
+undo the application. Use the bundled `scripts/project_store.py`; finding
+dependencies are recorded with `--consumes-finding-ref`, never
+`--finding-ref`.
+
+For runtime hooks, writes, injected instrumentation, mods, or patches, the record
+must capture:
 
 - exact target version/build/hash and stable locator;
-- canonical handoff schema plus consumed finding IDs;
+- the exact handoff artifact ID/hash consumed;
 - authoritative source for the generated change or instrumentation;
 - original/control value, bytes, file content, behavior, or registered backup;
 - applied value, bytes, file content, or behavior;
@@ -196,8 +209,9 @@ Before finishing, verify that:
 - native writes/hooks use verified stable locators rather than raw launch-specific
   addresses;
 - destructive local modification occurred only with explicit authorization;
-- reusable/deployed changes or tools have a verified durable application record,
-  authoritative retained source, and documented cleanup/restoration path;
+- reusable/deployed changes or tools retain the exact normalized handoff as an
+  immutable verified artifact plus a durable application record, authoritative
+  retained source, and documented cleanup/restoration path;
 - validation tests the claimed application scope rather than only the happy path;
 - any contradiction in the underlying mechanic model is returned to
   `$analyze-game-logic` instead of patched around by guesswork.
