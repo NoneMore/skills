@@ -84,6 +84,8 @@ A two-stage protocol for recovering authorized offline game mechanics and then c
 - `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, ownership/authority, and engine-specific implementation paths while retaining verifiable evidence. Produces a version-scoped mechanic handoff for downstream use.
 - `apply-game-logic`: Consumes canonical mechanic handoffs to build calculators, simulators, instrumentation, mods, or scoped local gameplay changes. Finding-only/cold-start requests compose `analyze-game-logic` by canonical skill name first; durable application artifacts also use that companion's shared project-store capability.
 
+For the complete two-stage game-logic workflow, install both skills; `apply-game-logic` composes `analyze-game-logic` when handoff production or durable project-store operations are required.
+
 Both skills strictly exclude multiplayer/service manipulation, DRM or payment bypass, credential theft, piracy, and proprietary asset distribution.
 
 ### 5. Meta Skills (Agent Instruction Governance)
