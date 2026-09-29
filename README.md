@@ -2,7 +2,7 @@
 
 A modular, evidence-driven, and composable collection of Agent Skills designed for modern AI coding harnesses and agentic workflows (e.g., [Pi](https://github.com/earendil-works/pi-coding-agent), [Codex](https://github.com/openai/codex), Claude Code, and compatible agent environments).
 
-This repository provides production-grade capabilities covering the **full software engineering lifecycle**, **game logic analysis and reverse engineering**, **mathematics research and formalization**, **pragmatic engineering mental models**, and **meta-governance for agent instructions**.
+This repository provides production-grade capabilities covering the **full software engineering lifecycle**, **game logic analysis, reverse engineering, and evidence-backed application**, **mathematics research and formalization**, **pragmatic engineering mental models**, and **meta-governance for agent instructions**.
 
 ---
 
