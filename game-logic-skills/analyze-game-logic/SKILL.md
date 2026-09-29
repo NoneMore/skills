@@ -46,7 +46,7 @@ If a tool explicitly reports truncated output or only a partial range was inspec
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
-For focused/full compiled/native analysis already using an established project-scoped editable disassembler/decompiler workspace, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md) when code-local semantic refinement would materially reduce re-analysis. Do not introduce refinement work for triage.
+For focused/full compiled/native analysis already using an established project-scoped editable disassembler/decompiler workspace, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Do not introduce refinement work for triage.
 
 ## 4. Reconstruct the mechanic, not just the address
 
