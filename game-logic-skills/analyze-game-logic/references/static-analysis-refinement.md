@@ -2,7 +2,7 @@
 
 Use this reference only for focused/full compiled/native analysis already using an established project-scoped disassembler/decompiler workspace where code-local semantic write-back would materially reduce re-analysis. Do not create refinement work for narrow triage. Workspace refinement remains analysis work; it does not by itself require `$apply-game-logic`.
 
-## Store semantics once
+## Keep semantic stores distinct
 
 Keep three layers distinct:
 
@@ -18,9 +18,9 @@ Do not retain an annotated dump or rewritten pseudocode solely to duplicate sema
 
 Refine only the material mechanic slice. Useful write-back includes evidence-backed names, signatures, enums, partial structures/fields, function-purpose comments, and annotations for decisive guards, state transitions, resets, caller/source discrimination, timing/RNG branches, and authoritative mutations.
 
-Use the strongest name or type justified by the evidence, not the most specific plausible interpretation. Keep uncertain members neutral or offset-based, recover structures incrementally, and keep build-sensitive layouts version-scoped. A rename, type, or comment cannot independently confirm the interpretation that produced it.
+Use the strongest name or type justified by the evidence, not the most specific plausible interpretation. Keep uncertain members neutral or offset-based, recover structures incrementally, and keep build-sensitive layouts version-scoped. A rename, type, or comment cannot independently confirm the interpretation that produced it. Keep stable locators and enough reproducible evidence to audit material refinements.
 
-When explanation benefits from clean C++-like pseudocode, generate the smallest useful reconstruction. Treat it as derived explanation, never original source or another canonical semantic store.
+When explanation benefits from clean pseudocode, generate the smallest useful reconstruction. Treat it as derived explanation, never original source or another canonical semantic store.
 
 ## Write back non-destructively
 
