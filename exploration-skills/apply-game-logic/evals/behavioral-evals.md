@@ -167,19 +167,21 @@ Required assertions:
 - `accepted_only_the_active_successor_handoff_emitted_by_analysis = PASS`
 - `did_not_map_superseded_status_locally = PASS`
 
-## 15. External handoff is snapshotted before durable application
+## 15. External handoff does not alias a same-named local finding
 
 The application starts from an existing valid
 `game-logic-mechanic-handoff/v1` supplied directly by the user. Its
-`evidence.finding_ids` contains IDs from another analysis project that are not
-present in the current project store.
+`evidence.finding_ids` contains `player-cooldown` from another analysis
+project. The current project store independently contains a different finding
+with the same `player-cooldown` ID.
 
 Required assertions:
 - `persisted_exact_normalized_handoff_before_durable_outputs = PASS`
 - `registered_handoff_as_gameplay_mechanic_handoff_artifact = PASS`
-- `preserved_nonlocal_finding_ids_inside_hashed_handoff_snapshot = PASS`
-- `materialized_only_locally_resolvable_ids_as_consumes_finding_refs = PASS`
-- `nonlocal_finding_ids_did_not_block_durable_registration = PASS`
+- `preserved_external_finding_id_inside_hashed_handoff_snapshot = PASS`
+- `did_not_treat_same_name_local_finding_as_origin_proof = PASS`
+- `did_not_materialize_colliding_external_id_as_consumes_finding_ref = PASS`
+- `external_finding_collision_did_not_block_durable_registration = PASS`
 - `application_record_references_handoff_artifact_id = PASS`
 - `later_session_identifies_exact_input_by_artifact_sha256 = PASS`
 
