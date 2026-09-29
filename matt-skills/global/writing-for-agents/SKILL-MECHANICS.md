@@ -15,7 +15,7 @@ Shared reference that two user-invoked skills both need can live in neither: wit
 
 ## Splitting by invocation
 
-The invocation cut of splitting (the sequence cut lives in `SKILL.md`): split off a model-invoked skill when you have a distinct leading word that should trigger it on its own (a trigger word you actually use in your prompts), or another skill must reach it. You pay context load for the new always-loaded description, so that independent reach has to be worth it.
+The invocation cut of splitting (the sequence cut lives in `SKILL.md`): split off a model-invoked skill when you have a distinct capability or task branch that should be independently discoverable, or another skill must reach it. Use shared domain vocabulary in the description when it sharpens routing, but do not make the split depend on a leading-word theory unless evals show that wording reliably improves invocation. You pay context load for the new always-loaded description, so that independent reach has to be worth it.
 
 ## Router skills
 
