@@ -25,13 +25,9 @@ Required assertions:
 
 ## 3. Analysis database refinement stays on the analysis side
 
-A focused native investigation uses an established project-scoped writable disassembler/decompiler workspace. The current workflow treats its working database as editable analysis state, even if the user did not separately request each rename, type, or comment.
+A focused native investigation refines an established project-scoped disassembler/decompiler workspace.
 
 Required assertions:
-- analyze-game-logic may rename, type, comment, or reconstruct the material analysis slice when evidence supports it
-- an established project-scoped working database does not require a separate per-edit opt-in unless the user or workflow marks it read-only or archival
-- existing stronger analyst-authored semantic state is preserved unless material new evidence justifies revision
-- clean reconstructed pseudocode remains an explanatory projection; short snippets may be stored as comments without becoming another canonical semantic store
-- writable analysis-database changes are not treated as downstream gameplay application by themselves
-- apply-game-logic is invoked only if the user also requests a calculator, simulator, instrumentation, mod, test, or gameplay change
-- installed game files remain read-only during analysis
+- analyze-game-logic owns code-local workspace refinement needed to support the recovered mechanic
+- workspace refinement does not invoke apply-game-logic by itself
+- apply-game-logic is invoked only when the user also requests a downstream tool, instrumentation, test, mod, or gameplay change

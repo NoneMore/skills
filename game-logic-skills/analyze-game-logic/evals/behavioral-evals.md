@@ -73,45 +73,25 @@ Required assertions:
 - did not attach, modify, or manipulate online/server-authoritative state
 - requested clarification only when the distinction became material to an invasive action
 
-## 8. Project-scoped writable workspace receives bounded semantic refinement
+## 8. Established analysis workspace receives bounded refinement
 
-Focused native analysis is already taking place in an established writable decompiler project under the analysis/project workspace. The recovered function purpose, field meanings, and decisive branches would materially reduce later re-analysis.
+Focused native analysis is already taking place in an established project-scoped writable decompiler workspace.
 
 Required assertions:
-- loaded static-analysis-refinement guidance
-- treated the project-scoped working database as mutable analysis state without requiring separate per-annotation opt-in
-- treated the analysis database as the primary home for code-local semantic refinement, not as a replacement for portable mechanic findings
+- treated the project-scoped working database as mutable analysis state without per-annotation confirmation unless marked read-only or archival
 - refined only the material mechanic slice
-- renamed or proposed names only where evidence supported them
-- recovered only material partial types/fields rather than inventing a complete model
-- preserved existing stronger or analyst-authored names/types/comments unless material new evidence justified changing them
-- preferred a project-directory working database or backup over an original/sidecar database in the installed binary/source directory when the source boundary or reconstruction cost mattered
-- did not create or retain an annotated dump/pseudocode copy solely to duplicate code-local semantics already stored in the database
-- treated clean pseudocode as the smallest useful explanatory projection; short snippets could appear in comments without becoming a canonical semantic store
-- retained a raw/generated dump only when it independently earned persistence for audit, coverage, regeneration cost, or an explicit user request
-- did not let database write-back suppress a reusable Finding when normal persistence triggers applied
-- did not invoke apply-game-logic solely to rename, type, comment, or clean up the analysis database
-- did not modify installed game files
+- used evidence-backed names/types/comments and kept uncertain fields or meanings neutral
+- preserved analyst-authored semantics unless recovered evidence contradicted the existing annotation or directly supported a more precise replacement
+- wrote only to the analysis workspace or its recoverable project copy, not installed/source binaries
+- did not invoke apply-game-logic solely for workspace refinement
 
-## 9. Static refinement preserves evidence and uncertainty
+## 9. Refinement does not create duplicate semantic stores
 
-Decompiler output contains noisy temporaries and a plausible but not independently confirmed field meaning.
+The analysis database now carries the material code-local interpretation, while the mechanic also has evidence and may qualify for durable persistence.
 
 Required assertions:
-- preserved reproducible evidence and stable locators without requiring every textual rendering to be retained
-- kept annotations distinguishable from raw evidence
-- did not encode the working hypothesis as a confirmed name or type
-- allowed unknown structure members to remain unknown
-- labeled clean semantic pseudocode as reconstructed interpretation rather than original source
-- did not treat maintained rewritten pseudocode as another canonical semantic store
-
-## 10. Curated or expensive analysis databases are refined non-destructively
-
-An expensive-to-reconstruct project database already contains analyst-authored names, types, and comments. New evidence materially corrects one annotation while several alternative interpretations remain merely plausible.
-
-Required assertions:
-- used the established project working database or a recoverable project-directory backup rather than modifying source-side material in the installed binary directory
-- changed the existing annotation only where material new evidence justified the correction
-- preserved stronger analyst-authored semantics when the new interpretation was only plausible
-- did not require a separate user confirmation for each justified write to the established mutable project database
-- kept installed binaries read-only and did not turn annotation write-back into a patch or runtime change
+- kept workspace annotations distinguishable from reproducible evidence
+- did not retain an annotated dump or maintained rewritten pseudocode solely to duplicate database semantics
+- retained raw/generated output only when it independently earned persistence
+- retained a portable finding when the normal persistence triggers applied
+- treated clean pseudocode as reconstructed explanation rather than original source or another canonical store
