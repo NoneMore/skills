@@ -2,7 +2,7 @@
 name: apply-game-logic
 description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v1.1.0"
+  version: "v1.2.0"
 ---
 
 # Apply Game Logic
@@ -47,6 +47,10 @@ For observation-only instrumentation, use the smallest stable boundary and avoid
 
 For gameplay changes, load [references/change-design.md](references/change-design.md). Establish behavioral scope before choosing the mechanism; reversibility alone does not prove narrow scope.
 
+Treat research instrumentation and the reusable deployed modification as separate decisions. A Frida/debugger hook or temporary runtime write may be the right way to validate a mechanic without being the best final artifact. Once the relevant mechanic and scope are established, choose the deployment mechanism independently and prefer lower runtime mediation when it preserves the required filtering, lifecycle behavior, reversibility, and version safety.
+
+When a native PC gameplay change is being delivered through Cheat Engine, or a Cheat Engine table/Auto Assembler artifact is the material deployment option, also load [references/cheat-engine-deployment.md](references/cheat-engine-deployment.md).
+
 ## 4. Bind implementation to evidence
 
 Every application should state which mechanic record/finding and target version it consumes.
@@ -77,4 +81,4 @@ Before a destructive change, capture the original bytes/content or an integrity-
 
 ## Completion
 
-Before finishing, verify that all material mechanic dependencies are present, uncertainty was not promoted silently, the target still matches the evidence, the application preserves or intentionally changes the mechanic as requested, validation covers the claimed scope, and any retained/deployed change can be traced and rolled back without conversational memory.
+Before finishing, verify that all material mechanic dependencies are present, uncertainty was not promoted silently, the target still matches the evidence, the application preserves or intentionally changes the mechanic as requested, the final delivery mechanism was selected independently from any research instrumentation, validation covers the claimed scope, and any retained/deployed change can be traced and rolled back without conversational memory.
