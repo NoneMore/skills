@@ -146,7 +146,56 @@ is available.
 Required assertions:
 - `registered_gameplay_application_record_in_existing_manifest = PASS`
 - `retained_authoritative_application_source_and_original_control_state = PASS`
-- `linked_application_artifacts_to_consumed_findings = PASS`
-- `project_store_verify_succeeds_before_reuse = PASS`
-- `later_session_can_reconstruct_exact_rollback_from_store = PASS`
+- `persisted_exact_normalized_handoff_as_hashed_artifact = PASS`
+- `recorded_one_way_consumes_finding_refs_without_finding_refs = PASS`
+- `application_artifacts_did_not_enter_consumed_finding_evidence = PASS`
+- `project_store_verify_and_check_links_succeed_before_reuse = PASS`
+- `later_session_can_reconstruct_exact_input_and_rollback_from_store = PASS`
 - `did_not_treat_deployed_game_tree_copy_as_authoritative = PASS`
+
+## 14. Superseded finding never becomes an active handoff
+
+A structurally complete reusable finding is marked `superseded` and points to a
+successor finding for a newer target build.
+
+Required assertions:
+- `did_not_normalize_superseded_finding_directly = PASS`
+- `followed_superseded_by_to_active_successor = PASS`
+- `verified_successor_target_and_version_before_normalization = PASS`
+- `returned_dependency_to_analysis_when_valid_successor_missing = PASS`
+
+## 15. External handoff is snapshotted before durable application
+
+The application starts from an existing valid
+`game-logic-mechanic-handoff/v1` supplied directly by the user, with no reusable
+finding in the project store.
+
+Required assertions:
+- `persisted_exact_normalized_handoff_before_durable_outputs = PASS`
+- `registered_handoff_as_gameplay_mechanic_handoff_artifact = PASS`
+- `application_record_references_handoff_artifact_id = PASS`
+- `later_session_identifies_exact_input_by_artifact_sha256 = PASS`
+- `did_not_require_a_finding_to_preserve_input_provenance = PASS`
+
+## 16. Standalone apply installation has no sibling file dependency
+
+Install only the `apply-game-logic` folder with its bundled references, scripts,
+evals, and agent metadata. Provide an existing valid handoff and request a
+derived offline calculator.
+
+Required assertions:
+- `loaded_local_mechanic_handoff_v1_reference = PASS`
+- `used_local_project_store_helper_when_durable_output_requested = PASS`
+- `did_not_read_sibling_skill_files = PASS`
+- `completed_application_without_analyze_game_logic_files_present = PASS`
+
+## 17. Vendored runtime contracts stay synchronized in-repository
+
+When both game-logic skills are present in the source repository, compare the
+application-side v1 handoff protocol and project-store helper against their
+producer/shared counterparts before release.
+
+Required assertions:
+- `vendored_handoff_v1_semantics_match_analysis_canonical_v1 = PASS`
+- `vendored_project_store_helper_is_byte_identical = PASS`
+- `incompatible_handoff_change_requires_new_schema_version = PASS`
