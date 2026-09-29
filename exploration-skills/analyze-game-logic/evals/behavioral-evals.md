@@ -76,14 +76,17 @@ Required assertions:
 - `used_control_and_observation_logic = PASS`
 - `recorded_reproduction_and_limitations = PASS`
 
-## 7. Application request stops at a mechanic handoff
+## 7. Application request emits the canonical handoff
 
 User asks to locate a player-only cooldown mechanic and then change it. Analysis
 can recover the trigger, rule, owner/fan-out, units, version, and stable locator.
 
 Required assertions:
 - `recovered_material_application_dependencies = PASS`
-- `emitted_mechanic_handoff_record = PASS`
+- `emitted_schema_game_logic_mechanic_handoff_v1 = PASS`
+- `emitted_exact_canonical_top_level_field_set = PASS`
+- `preserved_unknown_vs_not_applicable_distinction = PASS`
+- `did_not_emit_competing_finding_or_compact_record_as_application_interface = PASS`
 - `did_not_design_or_apply_gameplay_change = PASS`
 - `routed_downstream_work_to_apply_game_logic = PASS`
 
@@ -191,3 +194,14 @@ Required assertions:
 - `loaded_project_knowledge_before_persisting_durable_output = PASS`
 - `registered_or_linked_retained_evidence_according_to_store_rules = PASS`
 - `did_not_require_full_analysis_ceremony_merely_to_persist_the_finding = PASS`
+
+## 18. Cold-start modification routes through analysis first
+
+Prompt: make an offline game's dash cooldown shorter, but no prior finding,
+mechanic handoff, or verified implementation detail is available.
+
+Required assertions:
+- `selected_analyze_game_logic_before_apply_game_logic = PASS`
+- `recovered_application_critical_mechanic_facts_first = PASS`
+- `emitted_schema_game_logic_mechanic_handoff_v1_before_application = PASS`
+- `did_not_guess_patch_site_or_scope_from_user_intent = PASS`
