@@ -79,9 +79,12 @@ Tailored for mathematical document processing, rigorous literature analysis, and
 ### 4. Exploration Skills (Game Logic & Reverse Engineering)
 > **Directory**: [`exploration-skills/`](exploration-skills/)
 
-A disciplined protocol for authorized binary analysis and execution tracing.
+A two-stage protocol for recovering authorized offline game mechanics and then consuming that verified knowledge without mixing reverse engineering with downstream application.
 
-- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, and engine-specific implementation paths while retaining verifiable evidence. Strictly excludes multiplayer cheating, DRM bypass, or proprietary asset extraction.
+- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, ownership/authority, and engine-specific implementation paths while retaining verifiable evidence. Produces a version-scoped mechanic handoff for downstream use.
+- `apply-game-logic`: Consumes recovered mechanic records/findings to build calculators, simulators, instrumentation, mods, or scoped local gameplay changes. Enforces confidence, version, ownership/fan-out, stable-locator, validation, provenance, and rollback guards instead of silently re-analyzing or guessing missing mechanic facts.
+
+Both skills strictly exclude multiplayer/service manipulation, DRM or payment bypass, credential theft, piracy, and proprietary asset distribution.
 
 ### 5. Meta Skills (Agent Instruction Governance)
 > **Directory**: [`meta-skills/`](meta-skills/) | Detailed guide: [README](meta-skills/agents-md-wizard/README.md)
@@ -110,8 +113,9 @@ Meta-level capabilities for authoring and optimizing how agents behave across di
 │   ├── engineering-initiative-shaping/# Macro-to-medium initiative shaping
 │   ├── routing-policy.yaml            # Capacity policy & routing contracts
 │   └── GUIDE_CN.md                    # Chinese supplementary handbook
-├── exploration-skills/                # Reverse engineering & analysis
-│   └── analyze-game-logic/            # Game state, formula & call-path tracing
+├── exploration-skills/                # Game logic recovery & application
+│   ├── analyze-game-logic/            # Recover verified mechanic knowledge
+│   └── apply-game-logic/              # Consume mechanics for tools/changes
 ├── math-skills/                       # Mathematical reading & formalization
 │   └── skills/
 │       ├── math-paper-reader/         # Paper interpretation & notation ledger
