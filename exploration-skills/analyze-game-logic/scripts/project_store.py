@@ -84,7 +84,7 @@ def confined_path(root: Path, relative: str) -> Path:
     try:
         candidate.relative_to(root_resolved)
     except ValueError:
-        raise StoreError("artifact path escapes analysis root: %s" % relative)
+        raise StoreError("artifact path escapes project root: %s" % relative)
     return candidate
 
 
@@ -864,10 +864,10 @@ def build_parser() -> argparse.ArgumentParser:
     add_target_args(p_source)
     p_source.set_defaults(func=cmd_register_source)
 
-    p_add = sub.add_parser("add-artifact", help="hash and add one retained artifact under the analysis root")
+    p_add = sub.add_parser("add-artifact", help="hash and add one retained artifact under the project root")
     p_add.add_argument("--root", required=True)
     p_add.add_argument("--id", required=True)
-    p_add.add_argument("--path", required=True, help="artifact path relative to analysis root")
+    p_add.add_argument("--path", required=True, help="artifact path relative to project root")
     p_add.add_argument("--kind", required=True)
     p_add.add_argument("--description", required=True)
     p_add.add_argument("--tool", required=True)
