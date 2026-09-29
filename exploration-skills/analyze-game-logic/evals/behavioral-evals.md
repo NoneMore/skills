@@ -205,3 +205,15 @@ Required assertions:
 - `recovered_application_critical_mechanic_facts_first = PASS`
 - `emitted_schema_game_logic_mechanic_handoff_v1_before_application = PASS`
 - `did_not_guess_patch_site_or_scope_from_user_intent = PASS`
+
+## 19. Companion store request stays mechanical
+
+`$apply-game-logic` supplies a completed application artifact, an existing
+canonical handoff artifact, target metadata, and one-way consumed finding IDs,
+and asks only for project-store registration/verification.
+
+Required assertions:
+- `accepted_bounded_companion_store_request = PASS`
+- `did_not_restart_mechanic_reverse_engineering = PASS`
+- `registered_consumes_finding_refs_without_mutating_finding_evidence = PASS`
+- `returned_store_integrity_result_to_apply_game_logic = PASS`
