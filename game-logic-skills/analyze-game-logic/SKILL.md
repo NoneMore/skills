@@ -46,7 +46,7 @@ If a tool explicitly reports truncated output or only a partial range was inspec
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
-When a compiled/native investigation is already using a writable disassembler/decompiler project and reusable semantic annotations would materially reduce later re-analysis, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Refine only the material slice. Prefer writing names, types, comments, and reconstructed semantics into that structured analysis database instead of creating annotated dump/pseudocode files solely to carry the same derived knowledge. Do not create database-refinement work for narrow triage, and do not route analysis-workspace renames/types/comments to $apply-game-logic merely because they are writable changes.
+When a compiled/native investigation is already using an established project-scoped writable disassembler/decompiler project and reusable semantic annotations would materially reduce later re-analysis, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Within that analysis project, treat the working database as mutable analysis state by default; do not require a separate per-annotation opt-in unless the user or workflow marks it read-only or archival. Prefer a project-directory working copy or backup over an original or sidecar database in the installed binary/source directory, especially when the database is expensive to reconstruct. Refine only the material slice. Prefer writing code-local names, types, structures, comments, and branch annotations into the structured analysis database instead of creating annotated dumps solely to carry the same semantic state. Generate clean reconstructed pseudocode only when it helps explain the mechanic; short snippets may live in comments, but do not maintain rewritten pseudocode as a second canonical semantic store. Do not create database-refinement work for narrow triage, and do not route analysis-workspace renames/types/comments to $apply-game-logic merely because they are writable changes.
 
 ## 4. Reconstruct the mechanic, not just the address
 
@@ -80,7 +80,9 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 Do not create a project store for throwaway lookups. Preserve evidence when the user asks to retain it, cross-session continuation is already required, or the evidence is expensive or lossy to reconstruct.
 
-When a writable analysis database already carries the derived semantic refinement, do not also retain an annotated decompiler/dump copy solely as a second semantic store. Retain raw/generated dumps only when they independently earn persistence—for example because regeneration is expensive or lossy, a coverage/audit trail is material, or the user asked to keep them.
+When a writable analysis database already carries the code-local semantic refinement, do not also retain an annotated decompiler/dump copy solely as a second semantic store. Retain raw/generated dumps only when they independently earn persistence—for example because regeneration is expensive or lossy, a coverage/audit trail is material, or the user asked to keep them.
+
+Database write-back does not suppress a reusable Finding when the normal persistence triggers apply. The analysis database carries workspace-local interpretation; the Finding remains the portable mechanic record when durable storage is warranted.
 
 When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) is authoritative for what to retain. Prefer the bundled helper for mechanical hashing/integrity operations, and use its current --help instead of copying its command surface into this skill.
 
@@ -93,10 +95,10 @@ Match output size to the analysis depth. For focused/full analysis, include:
 - stable source/function or module + RVA locators;
 - evidence and validation state;
 - material unknowns and observed-versus-inferred distinctions;
-- when static-analysis refinement applied, the material names/types/branch annotations or clean pseudocode written or proposed, clearly identified as derived interpretation.
+- when static-analysis refinement applied, the material code-local names/types/branch annotations written or proposed, plus any clean pseudocode generated for explanation, clearly identified as derived interpretation.
 
 When downstream application is requested, provide a compact version-scoped mechanic record containing the facts material to that application. A reusable finding with sufficient facts is valid input to $apply-game-logic; do not normalize it through an extra protocol step solely for ceremony. Existing game-logic-mechanic-handoff/v1 records remain valid compatibility inputs.
 
 ## Completion
 
-Before finishing focused/full work, verify that the claimed behavior is version-scoped, material unknowns are explicit, confidence matches the evidence, required practical runtime validation was not silently skipped, and the output contains enough mechanic detail for the user's next step without unrelated workflow machinery. When static-analysis refinement applied, ensure derived names/types/comments and reconstructed pseudocode remain distinguishable from raw evidence and preserve uncertainty rather than laundering hypotheses into facts. Do not retain a redundant annotated dump when the writable analysis database already carries the same derived semantics unless that dump independently qualifies as evidence worth preserving.
+Before finishing focused/full work, verify that the claimed behavior is version-scoped, material unknowns are explicit, confidence matches the evidence, required practical runtime validation was not silently skipped, and the output contains enough mechanic detail for the user's next step without unrelated workflow machinery. When static-analysis refinement applied, ensure code-local database semantics remain distinguishable from raw evidence, existing stronger analyst-authored state was not silently overwritten, and reconstructed pseudocode remains a bounded explanatory projection rather than another canonical store. Preserve uncertainty rather than laundering hypotheses into facts. Do not retain a redundant annotated dump when the writable analysis database already carries the same code-local semantics unless that dump independently qualifies as evidence worth preserving.
