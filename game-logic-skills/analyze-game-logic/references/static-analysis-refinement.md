@@ -1,6 +1,6 @@
 # Static Analysis Refinement
 
-Use this reference only for focused/full compiled/native analysis already using an established project-scoped disassembler/decompiler workspace where code-local semantic write-back would materially reduce re-analysis. Do not create refinement work for narrow triage. Workspace refinement remains analysis work; it does not by itself require `$apply-game-logic`.
+Use this reference only for focused/full compiled/native analysis already using an established project-scoped editable disassembler/decompiler workspace. Do not create refinement work for narrow triage. Workspace refinement remains analysis work; it does not by itself require `$apply-game-logic`.
 
 ## Keep semantic stores distinct
 
@@ -26,9 +26,9 @@ When explanation benefits from clean pseudocode, generate the smallest useful re
 
 Treat an established project-scoped analysis database as mutable working state when write-back tooling is available; do not require per-annotation confirmation. A merely writable arbitrary file does not qualify, and explicit read-only or archival state wins.
 
-Prefer a recoverable working database or backup under the analysis/project directory over an original or sidecar database in the installed binary/source directory when source boundaries or reconstruction cost matter.
+Prefer a recoverable working database or backup under the analysis/project directory over an original or sidecar database in the installed binary/source directory.
 
-Preserve stronger or analyst-authored semantic state by default. Revise it only when material new evidence justifies the change; otherwise add a non-destructive note or report the proposed alternative inline.
+Preserve analyst-authored semantic state by default. Revise it only when recovered evidence contradicts the existing annotation or directly supports a more precise replacement; otherwise add a non-destructive note or report the proposed alternative inline.
 
 Treat installed game files and source binaries as read-only during analysis. Database refinement must not silently become a binary patch, runtime hook, or gameplay change.
 
