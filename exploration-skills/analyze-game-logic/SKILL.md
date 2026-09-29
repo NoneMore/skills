@@ -1,6 +1,6 @@
 ---
 name: analyze-game-logic
-description: Recover and verify authorized offline/single-player game logic with reproducible static or dynamic reverse engineering. Use for mechanic analysis and for cold-start gameplay change/tooling requests when no version-scoped mechanic handoff or complete finding already exists. Produces verified mechanic knowledge for downstream $apply-game-logic use. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Recover and verify authorized offline/single-player game logic with reproducible static or dynamic reverse engineering. Use for mechanic analysis and whenever a downstream gameplay change/tooling request does not yet have a canonical version-scoped mechanic handoff, including finding-only inputs. Produces verified mechanic knowledge for downstream $apply-game-logic use and owns the shared game-logic project-store capability. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
   version: "v5.0.0"
 ---
@@ -208,9 +208,28 @@ scope. A downstream application must not silently upgrade a working hypothesis
 or unknown into a confirmed fact.
 
 If the user's request also asks to modify, instrument for a changed outcome,
-simulate, calculate from, or otherwise operationalize this mechanic, stop this
-skill after the required mechanic knowledge is closed and continue with
+simulate, calculate from, or otherwise operationalize this mechanic, stop
+mechanic recovery after the required knowledge is closed and continue with
 `$apply-game-logic`.
+
+### Companion project-store service
+
+This skill also owns the mechanical game-logic project-store capability used by
+downstream companion skills. When `$apply-game-logic` asks only to register,
+verify, link, or supersede durable artifacts in an existing game-logic project
+store, perform that bounded store operation under
+[references/project-knowledge.md](references/project-knowledge.md) without
+restarting mechanic analysis.
+
+Treat the request as data/provenance maintenance, not semantic recovery. Preserve
+the distinction between reciprocal evidence `finding_refs` and one-way
+`consumes_finding_refs`. Do not interpret an application artifact as evidence
+for the mechanic merely because it consumes a finding.
+
+This is a Skill-level composition interface. Companion skills invoke
+`$analyze-game-logic` by canonical name and provide the intended store
+operation plus metadata; they must not depend on this skill's filesystem layout
+or directly locate its bundled helper.
 
 ## 8. Completion criteria
 
