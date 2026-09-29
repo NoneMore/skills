@@ -59,9 +59,16 @@ Before any destructive patch, record:
 - expected behavioral effect and known shared-use risks;
 - restoration procedure.
 
-Keep the authoritative patch/mod source and provenance with the application
-artifacts. Installed game files remain read-only unless destructive modification
-was explicitly authorized.
+For every retained or deployed change, follow
+[application-artifacts.md](application-artifacts.md): store the authoritative
+patch/mod source and a `gameplay-application-record` in the existing game-logic
+project store, register them in `artifacts/manifest.json`, and link them to the
+consumed finding IDs. Record the original/control state or a registered backup
+before destructive modification so a later session can reconstruct rollback
+without conversational memory.
+
+Installed game files remain read-only unless destructive modification was
+explicitly authorized.
 
 ## Validate the intended scope
 
