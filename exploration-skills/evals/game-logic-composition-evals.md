@@ -40,6 +40,8 @@ Required assertions:
 - `apply_requests_bounded_store_operation_from_analyze_by_skill_name = PASS`
 - `analyze_does_not_restart_mechanic_recovery_for_store_only_request = PASS`
 - `exact_handoff_snapshot_is_registered_before_application_record = PASS`
+- `only_locally_resolvable_findings_become_consumes_finding_refs = PASS`
+- `external_finding_ids_remain_in_hashed_handoff_provenance = PASS`
 - `consumes_finding_refs_remains_one_way = PASS`
 - `application_artifact_never_becomes_mechanic_evidence = PASS`
 - `later_session_can_verify_input_and_rollback = PASS`
@@ -58,10 +60,13 @@ Required assertions:
 ## 5. Existing handoff supports bounded non-durable use without companion work
 
 Only `apply-game-logic` is active for the current step, but the user supplies a
-valid canonical handoff and asks for a non-retained calculation that requires no
-new mechanic fact and no durable project-store mutation.
+correctly version-tagged `game-logic-mechanic-handoff/v1` and asks for a
+non-retained calculation that requires no new mechanic fact and no durable
+project-store mutation.
 
 Required assertions:
+- `trusts_v1_protocol_envelope_without_reimplementing_exact_shape_validation = PASS`
+- `validates_only_application_material_fields = PASS`
 - `consumes_existing_handoff_directly = PASS`
 - `does_not_invoke_companion_without_a_material_dependency = PASS`
 - `does_not_require_sibling_files = PASS`
