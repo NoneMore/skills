@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Logic Application"
+  short_description: "Apply verified offline game mechanics to mods and derived tooling"
+  default_prompt: "Use $apply-game-logic to consume an existing version-scoped mechanic record or finding for this authorized offline/local target. Validate the material confidence, version, units, ownership/fan-out, authority, and stable locators before implementation. Preserve recovered semantics in calculators/simulators and choose the least invasive acceptable mechanism for gameplay changes. If a material mechanic fact is missing or stale, ask $analyze-game-logic only for that narrow dependency instead of guessing. Validate the resulting application against its claimed scope and always document provenance and rollback for deployed changes."
