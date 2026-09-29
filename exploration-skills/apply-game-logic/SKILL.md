@@ -1,23 +1,31 @@
 ---
 name: apply-game-logic
-description: Apply previously recovered, version-scoped gameplay logic to authorized offline/single-player targets. Use to design or validate local gameplay changes, mods, runtime instrumentation, calculators, simulators, reference implementations, or other tooling that consumes known mechanic logic. Requires explicit handling of confidence, ownership/fan-out, units, authority, version guards, and rollback. Use $analyze-game-logic when material mechanic facts are missing. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Apply an already-recovered, version-scoped gameplay mechanic to an authorized offline/single-player target. Use only when a canonical mechanic handoff or complete reusable finding already exists; otherwise route the cold-start request to $analyze-game-logic first. Supports derived tooling, instrumentation, mods, and scoped local changes while preserving confidence, version, ownership/fan-out, provenance, and rollback. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
   version: "v1.0.0"
 ---
 
 # Apply Game Logic
 
-Consume recovered gameplay knowledge instead of rediscovering it. Treat a
-version-scoped mechanic record or reusable finding as the input contract and the
-requested application as the output. Re-enter `$analyze-game-logic` only for a
-specific material fact that the application cannot safely or correctly proceed
-without.
+Consume recovered gameplay knowledge instead of rediscovering it. This skill
+should activate only when a version-scoped `game-logic-mechanic-handoff/v1`
+record already exists, or when a reusable finding is complete enough to normalize
+into that canonical handoff without new reverse engineering. A cold-start request
+to change or operationalize an unanalyzed mechanic belongs in
+`$analyze-game-logic` first.
+
+The canonical handoff is defined by the companion analysis reference
+`../analyze-game-logic/references/gameplay-semantics.md#4-canonical-mechanic-handoff-v1`.
+Normalize complete findings into that shape before application; do not treat
+findings as a competing application interface.
 
 ## 1. Establish the application boundary
 
 Expected input is an authorized offline/local target, a concrete downstream goal,
-and either a mechanic handoff record, reusable finding, or enough verified
-implementation detail to construct one.
+and either an existing canonical handoff or a complete reusable finding that can
+be normalized into one without recovering any new mechanic fact. If neither is
+available, route the request to `$analyze-game-logic` before entering this
+workflow.
 
 Supported application classes include:
 
@@ -35,8 +43,9 @@ authorizes a destructive, version-specific local modification.
 
 ## 2. Validate the mechanic input before use
 
-Before implementing anything, identify which mechanic facts are material to the
-requested result. Check the supplied record/finding for:
+Before implementing anything, normalize the supplied input into the canonical
+`game-logic-mechanic-handoff/v1` and identify which fields are material to the
+requested result. Check the handoff for:
 
 - target game/content version, build identity, and material file/module hashes;
 - claim status and evidence/validation state;
@@ -135,20 +144,30 @@ the discrepancy to `$analyze-game-logic`.
 
 ## 6. Preserve provenance and rollback
 
-For generated tools or derived models, record the mechanic finding/version they
-were derived from and the assumptions added by the application.
+For non-retained explanations or calculations, report provenance in the answer.
+For any reusable or deployed output whose provenance/rollback must survive the
+session, load
+[references/application-artifacts.md](references/application-artifacts.md) and
+reuse the existing game-logic project store. Do not create a second application
+manifest.
 
-For runtime hooks, writes, injected instrumentation, mods, or patches, record:
+Persist a registered `gameplay-application-record` plus every authoritative
+source/config/backup/validation artifact required to reproduce or undo the
+application. For runtime hooks, writes, injected instrumentation, mods, or
+patches, the record must capture:
 
 - exact target version/build/hash and stable locator;
+- canonical handoff schema plus consumed finding IDs;
 - authoritative source for the generated change or instrumentation;
-- original/control value, bytes, file content, or behavior when applicable;
+- original/control value, bytes, file content, behavior, or registered backup;
 - applied value, bytes, file content, or behavior;
 - expected scope and known shared-use risks;
+- validation results;
 - cleanup, disable, or restoration procedure.
 
 Reversibility is necessary for many local interventions but does not establish
-narrow scope or correctness by itself.
+narrow scope or correctness by itself. The installed/deployed copy is never the
+authoritative source.
 
 ## 7. Deliver the application
 
@@ -177,8 +196,8 @@ Before finishing, verify that:
 - native writes/hooks use verified stable locators rather than raw launch-specific
   addresses;
 - destructive local modification occurred only with explicit authorization;
-- deployed changes/instrumentation have authoritative provenance and a documented
-  cleanup/restoration path;
+- reusable/deployed changes or tools have a verified durable application record,
+  authoritative retained source, and documented cleanup/restoration path;
 - validation tests the claimed application scope rather than only the happy path;
 - any contradiction in the underlying mechanic model is returned to
   `$analyze-game-logic` instead of patched around by guesswork.
