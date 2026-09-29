@@ -1,6 +1,6 @@
 ---
 name: apply-game-logic
-description: Apply an already-recovered, version-scoped gameplay mechanic to an authorized offline/single-player target. Use only when a canonical mechanic handoff or complete reusable finding already exists; otherwise route the cold-start request to $analyze-game-logic first. Supports derived tooling, instrumentation, mods, and scoped local changes while preserving confidence, version, ownership/fan-out, provenance, and rollback. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Apply an already-recovered, version-scoped gameplay mechanic to an authorized offline/single-player target. Use when a canonical mechanic handoff already exists; route cold-start or finding-only requests through companion $analyze-game-logic first. Supports derived tooling, instrumentation, mods, and scoped local changes while preserving confidence, version, ownership/fan-out, provenance, and rollback. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
   version: "v1.0.0"
 ---
@@ -8,24 +8,24 @@ metadata:
 # Apply Game Logic
 
 Consume recovered gameplay knowledge instead of rediscovering it. This skill
-should activate only when a version-scoped `game-logic-mechanic-handoff/v1`
-record already exists, or when a reusable finding is complete enough to normalize
-into that canonical handoff without new reverse engineering. A cold-start request
-to change or operationalize an unanalyzed mechanic belongs in
-`$analyze-game-logic` first.
+activates on an existing version-scoped `game-logic-mechanic-handoff/v1`.
+A cold-start request, or a request that supplies only reusable findings, routes
+through companion `$analyze-game-logic` first so that one canonical handoff is
+emitted before application begins.
 
-The canonical handoff format is bundled locally in
-[references/mechanic-handoff-v1.md](references/mechanic-handoff-v1.md).
-Normalize complete findings into that shape before application; do not treat
-findings as a competing application interface. This skill must remain executable
-when installed without the sibling analysis skill.
+This is an explicit Skill-level composition dependency, not a filesystem
+dependency. Invoke the companion by canonical skill name; never read, shell out
+to, or otherwise depend on a sibling skill's directory layout. If the companion
+is unavailable when normalization, missing mechanic knowledge, or durable
+project-store registration is required, report that dependency instead of
+emulating it from sibling files.
 
 ## 1. Establish the application boundary
 
 Expected input is an authorized offline/local target, a concrete downstream goal,
-and either an existing canonical handoff or a complete reusable finding that can
-be normalized into one without recovering any new mechanic fact. If neither is
-available, route the request to `$analyze-game-logic` before entering this
+and an existing canonical `game-logic-mechanic-handoff/v1`. A reusable finding
+is upstream evidence, not direct application input: ask `$analyze-game-logic`
+to normalize the active finding(s) and emit the handoff before entering this
 workflow.
 
 Supported application classes include:
@@ -44,9 +44,10 @@ authorizes a destructive, version-specific local modification.
 
 ## 2. Validate the mechanic input before use
 
-Before implementing anything, normalize the supplied input into the canonical
+Before implementing anything, require the supplied input to identify itself as
 `game-logic-mechanic-handoff/v1` and identify which fields are material to the
-requested result. Check the handoff for:
+requested result. Unknown or unsupported schema versions return to the companion
+producer rather than being guessed or locally migrated. Check the handoff for:
 
 - target game/content version, build identity, and material file/module hashes;
 - claim status and evidence/validation state;
@@ -64,11 +65,10 @@ validation harness, but must not be silently treated as a safe production
 assumption. An **Unknown** that can change correctness, target scope, or safety is
 a stop condition for that application path.
 
-A reusable finding marked **superseded** is non-consumable. Follow its
-`Superseded by` relation, verify the successor exists and matches the material
-target/version, and normalize only that active successor. If no valid successor
-is available, return the narrow dependency to `$analyze-game-logic`. Never map
-`superseded` into an active handoff status.
+A reusable finding marked **superseded** is never direct input to this skill.
+When a finding-only request is received, companion `$analyze-game-logic` owns
+successor resolution and handoff emission. Apply never maps finding lifecycle
+states into handoff status itself.
 
 When a material fact is missing, invoke or hand back to `$analyze-game-logic`
 with the narrow unresolved question. Do not restart broad reverse engineering and
@@ -162,9 +162,12 @@ Persist the exact normalized handoff first as a registered immutable
 `gameplay-mechanic-handoff` artifact, then persist a registered
 `gameplay-application-record` derived from that snapshot plus every
 authoritative source/config/backup/validation artifact required to reproduce or
-undo the application. Use the bundled `scripts/project_store.py`; finding
-dependencies are recorded with `--consumes-finding-ref`, never
-`--finding-ref`.
+undo the application.
+
+Project-store mutation is a companion capability owned by
+`$analyze-game-logic`. Ask that skill to perform the mechanical registration in
+the existing game-logic store, including one-way consumed-finding dependencies;
+do not locate or invoke its helper by sibling filesystem path.
 
 For runtime hooks, writes, injected instrumentation, mods, or patches, the record
 must capture:
