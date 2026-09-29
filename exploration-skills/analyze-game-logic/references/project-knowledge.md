@@ -1,7 +1,8 @@
 # Project Knowledge Stores
 
-Use these stores for focused/full analysis and whenever triage produces retained
-evidence or a conclusion worth reusing. Do not create them merely to answer a
+Use these stores for focused/full analysis, whenever triage produces retained
+evidence or a conclusion worth reusing, and for durable downstream application
+artifacts derived from those findings. Do not create them merely to answer a
 throwaway location/identity question with no durable output.
 
 ## Contents
@@ -59,9 +60,11 @@ Keep these concepts separate:
 - **Source:** an original read-only target that analysis is about, such as a game
   executable, DLL, data file, directly readable JavaScript/Python/Lua/C# source,
   or another original file. A source may live outside the analysis root.
-- **Artifact:** an analysis-generated or retained output, such as a decompilation,
-  extracted function set, runtime log, trace, benchmark, reconstructed table, or
-  script output. Artifacts live under the analysis root.
+- **Artifact:** an analysis- or application-generated retained output, such as a
+  decompilation, extracted function set, runtime log, trace, benchmark,
+  reconstructed table, derived tool, patch/mod source, application record, or
+  script output. Artifacts live under the project root. Deployed copies inside
+  the installed game tree are never authoritative artifacts.
 
 Do not copy an original readable source into `artifacts/` merely so findings can
 cite it. Register the original source directly with its path, byte size, and
@@ -139,13 +142,20 @@ Each retained artifact uses this shape:
   "derived_from": [],
   "source_refs": ["game-exe"],
   "finding_refs": ["player-update-contract"],
+  "consumes_finding_refs": [],
   "status": "active",
   "superseded_by": null
 }
 ```
 
 `derived_from` contains artifact IDs. `source_refs` contains registered source
-IDs. Use explicit `unknown` or `not-applicable` values when metadata genuinely
+IDs. `finding_refs` is strictly a reciprocal **evidence-for-finding** relation:
+the referenced finding must cite the artifact/source in its `## Evidence`
+section. `consumes_finding_refs` is a distinct optional one-way dependency for
+derived application artifacts; referenced findings must exist, but the dependency
+must not mutate or appear in their Evidence sections.
+
+Use explicit `unknown` or `not-applicable` values when metadata genuinely
 cannot be established. Do not omit uncertainty. Valid artifact lifecycle states
 are `active`, `superseded`, and `missing`.
 
@@ -208,6 +218,27 @@ Keep findings atomic enough to reuse without reading an entire topic report, but
 large enough to preserve the reasoning and evidence needed to assess them. A
 finding is not a chronological diary or a copy of raw decompiler output.
 
+A reusable finding is durable upstream evidence, not a second application
+interface. When downstream use is requested, adapt the material finding content
+into the canonical `game-logic-mechanic-handoff/v1` defined by
+`gameplay-semantics.md`. Preserve the finding's status and version scope during
+that normalization; never silently promote a working hypothesis or unknown to
+confirmed. If ownership/fan-out, units, authority, lifecycle, or another
+application-critical relation is missing, recover that relation before the
+handoff is emitted.
+
+Durable downstream application outputs may reuse this same manifest/store rather
+than creating a parallel store. Application dependencies on findings must use
+`consumes_finding_refs`, not `finding_refs`: derived outputs are consumers of
+the mechanic evidence, not evidence for the mechanic. The existing schema-v2
+manifest remains the inventory/integrity authority and the helper validates that
+one-way consumed findings exist without requiring reciprocal Evidence links.
+
+When a companion skill needs these mechanical store operations, it should invoke
+`$analyze-game-logic` by canonical skill name with the artifact metadata and
+requested operation. Do not expose this helper's repository path as a cross-skill
+runtime API.
+
 ## Deterministic project-store helper
 
 Use `scripts/project_store.py` for mechanical store authoring and integrity
@@ -225,6 +256,12 @@ python scripts/project_store.py register-source --root <analysis-root> \
 python scripts/project_store.py add-artifact --root <analysis-root> \
   --id <artifact-id> --path artifacts/<file> --kind <kind> \
   --description <description> --tool <tool> --source-ref <source-id> ...
+
+# One-way dependency for an application/derived artifact:
+python scripts/project_store.py add-artifact --root <analysis-root> \
+  --id <artifact-id> --path artifacts/<file> --kind <kind> \
+  --description <description> --tool <tool> \
+  --consumes-finding-ref <finding-id> ...
 
 python scripts/project_store.py add-finding --root <analysis-root> \
   --id <finding-id> --title <title> --status confirmed --claim <claim> \
@@ -253,10 +290,11 @@ root.
 
 `verify` checks schema shape, stable IDs, unique paths, source/artifact file
 existence, byte size, SHA-256, lifecycle values, artifact provenance references,
-and supersession targets. `check-links` checks reciprocal references between
-sources/artifacts and finding Evidence sections. These are mechanical integrity
-checks; they do not decide whether a gameplay interpretation is semantically
-correct.
+and supersession targets. `check-links` checks reciprocal `finding_refs`
+against finding Evidence sections and separately checks that
+`consumes_finding_refs` point to existing findings without leaking the derived
+artifact into those findings' Evidence. These are mechanical integrity checks;
+they do not decide whether a gameplay interpretation is semantically correct.
 
 ## Persistence cadence
 

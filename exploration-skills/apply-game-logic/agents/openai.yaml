@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Logic Application"
+  short_description: "Apply recovered offline game mechanics and tooling"
+  default_prompt: "Use $apply-game-logic only with an existing canonical mechanic handoff; route finding-only or cold-start requests through companion $analyze-game-logic first."

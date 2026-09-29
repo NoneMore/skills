@@ -1,8 +1,9 @@
-"""Deterministic helper for analyze-game-logic project knowledge stores.
+"""Deterministic helper for game-logic project knowledge stores.
 
-The helper manages source registrations, retained artifacts, finding files, and
-reciprocal evidence links. It never interprets game semantics and never modifies
-analyzed source/binary targets. Python 3.8+; standard library only.
+The helper manages source registrations, retained artifacts, finding files,
+reciprocal evidence links, and one-way finding-consumption dependencies. It
+never interprets game semantics and never modifies analyzed source/binary
+targets. Python 3.8+; standard library only.
 """
 
 import argparse
@@ -84,7 +85,7 @@ def confined_path(root: Path, relative: str) -> Path:
     try:
         candidate.relative_to(root_resolved)
     except ValueError:
-        raise StoreError("artifact path escapes analysis root: %s" % relative)
+        raise StoreError("artifact path escapes project root: %s" % relative)
     return candidate
 
 
@@ -139,6 +140,18 @@ def validate_finding_refs(item: Dict[str, object], label: str, errors: List[str]
         errors.append("%s finding_refs must be an array of strings" % label)
     elif len(refs) != len(set(refs)):
         errors.append("%s finding_refs contains duplicates" % label)
+
+
+def validate_consumes_finding_refs(item: Dict[str, object], label: str, errors: List[str]) -> None:
+    refs = item.get("consumes_finding_refs", [])
+    if not isinstance(refs, list) or any(not isinstance(x, str) for x in refs):
+        errors.append("%s consumes_finding_refs must be an array of strings" % label)
+    elif len(refs) != len(set(refs)):
+        errors.append("%s consumes_finding_refs contains duplicates" % label)
+    else:
+        for ref in refs:
+            if not ID_RE.fullmatch(ref):
+                errors.append("%s has invalid consumes_finding_ref: %r" % (label, ref))
 
 
 def validate_manifest_shape(root: Path, manifest: Dict[str, object], verify_files: bool) -> List[str]:
@@ -239,6 +252,7 @@ def validate_manifest_shape(root: Path, manifest: Dict[str, object], verify_file
             errors.append("%s has superseded_by but status is %r" % (label, status))
 
         validate_finding_refs(item, label, errors)
+        validate_consumes_finding_refs(item, label, errors)
         validate_target(item.get("target"), label, errors)
 
         derived = item.get("derived_from")
@@ -387,6 +401,21 @@ def check_links(root: Path, manifest: Dict[str, object]) -> List[str]:
                 errors.append(
                     "finding %s -> %s %s is not reciprocated in manifest finding_refs"
                     % (finding_id, kind, evidence_id)
+                )
+
+    for artifact_id, item in artifact_map.items():
+        refs = item.get("consumes_finding_refs", [])
+        if not isinstance(refs, list):
+            continue
+        for finding_id in refs:
+            if finding_id not in finding_ids:
+                errors.append(
+                    "artifact %s consumes missing finding %s" % (artifact_id, finding_id)
+                )
+            elif ("artifact", artifact_id) in evidence.get(finding_id, set()):
+                errors.append(
+                    "artifact %s consumes finding %s but also appears in its Evidence section"
+                    % (artifact_id, finding_id)
                 )
     return errors
 
@@ -584,6 +613,9 @@ def cmd_add_artifact(args: argparse.Namespace) -> int:
         require_id(ref, "source ref")
         if ref not in source_ids:
             raise StoreError("source ref not found: %s" % ref)
+    for finding_id in args.consumes_finding_ref:
+        require_id(finding_id, "consumes finding ref")
+        find_finding_path(root, finding_id)
 
     entry: Dict[str, object] = {
         "id": args.id,
@@ -597,6 +629,7 @@ def cmd_add_artifact(args: argparse.Namespace) -> int:
         "derived_from": list(args.derived_from),
         "source_refs": list(args.source_ref),
         "finding_refs": [],
+        "consumes_finding_refs": list(args.consumes_finding_ref),
         "status": "active",
         "superseded_by": None,
     }
@@ -761,7 +794,7 @@ def run_self_test() -> None:
                 "module_sha256": sha256_file(source), "rva_or_range": "not-applicable",
             },
             "derived_from": [], "source_refs": ["game-source"], "finding_refs": [],
-            "status": "active", "superseded_by": None,
+            "consumes_finding_refs": [], "status": "active", "superseded_by": None,
         }
         artifacts_list(manifest).append(artifact_entry)
         atomic_write_json(manifest_path(root), manifest)
@@ -776,9 +809,28 @@ def run_self_test() -> None:
         )
         link_evidence(root, manifest, "sample-finding", "source", "game-source", "roll() definition")
         link_evidence(root, manifest, "sample-finding", "artifact", "sample-artifact", "line 1")
+
+        dependency_file = root / "artifacts" / "application.txt"
+        dependency_file.write_text("derived application\n", encoding="utf-8")
+        dependency_entry: Dict[str, object] = {
+            "id": "application-artifact", "path": "artifacts/application.txt",
+            "kind": "test-application", "description": "self-test one-way finding dependency",
+            "size": dependency_file.stat().st_size, "sha256": sha256_file(dependency_file),
+            "producer": {"tool": "self-test", "version": "1"},
+            "target": {
+                "game_version": "unknown", "build_id": "unknown", "module": "source.js",
+                "module_sha256": sha256_file(source), "rva_or_range": "not-applicable",
+            },
+            "derived_from": [], "source_refs": [], "finding_refs": [],
+            "consumes_finding_refs": ["sample-finding"],
+            "status": "active", "superseded_by": None,
+        }
+        artifacts_list(manifest).append(dependency_entry)
         atomic_write_json(manifest_path(root), manifest)
         errors = validate_manifest_shape(root, manifest, verify_files=True)
         errors.extend(check_links(root, manifest))
+        if ("artifact", "application-artifact") in parse_findings(root)[1].get("sample-finding", set()):
+            errors.append("one-way application dependency leaked into finding Evidence")
         if errors:
             raise AssertionError("; ".join(errors))
     print("project_store self-test: OK")
@@ -793,7 +845,7 @@ def add_target_args(parser: argparse.ArgumentParser) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Manage analyze-game-logic project knowledge stores")
+    parser = argparse.ArgumentParser(description="Manage game-logic project knowledge stores")
     parser.add_argument("--self-test", action="store_true", help="run pure-Python integrity tests")
     sub = parser.add_subparsers(dest="command")
 
@@ -813,10 +865,10 @@ def build_parser() -> argparse.ArgumentParser:
     add_target_args(p_source)
     p_source.set_defaults(func=cmd_register_source)
 
-    p_add = sub.add_parser("add-artifact", help="hash and add one retained artifact under the analysis root")
+    p_add = sub.add_parser("add-artifact", help="hash and add one retained artifact under the project root")
     p_add.add_argument("--root", required=True)
     p_add.add_argument("--id", required=True)
-    p_add.add_argument("--path", required=True, help="artifact path relative to analysis root")
+    p_add.add_argument("--path", required=True, help="artifact path relative to project root")
     p_add.add_argument("--kind", required=True)
     p_add.add_argument("--description", required=True)
     p_add.add_argument("--tool", required=True)
@@ -824,7 +876,11 @@ def build_parser() -> argparse.ArgumentParser:
     add_target_args(p_add)
     p_add.add_argument("--derived-from", action="append", default=[], help="artifact ID")
     p_add.add_argument("--source-ref", action="append", default=[], help="registered source ID")
-    p_add.add_argument("--finding-ref", action="append", default=[], help="existing finding ID; reciprocal link is added")
+    p_add.add_argument("--finding-ref", action="append", default=[], help="existing finding ID; reciprocal evidence link is added")
+    p_add.add_argument(
+        "--consumes-finding-ref", action="append", default=[],
+        help="existing finding ID consumed as a one-way dependency; does not alter finding Evidence",
+    )
     p_add.set_defaults(func=cmd_add_artifact)
 
     p_finding = sub.add_parser("add-finding", help="create a reusable finding and optionally link evidence atomically")
