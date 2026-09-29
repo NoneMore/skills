@@ -1,8 +1,9 @@
 """Deterministic helper for game-logic project knowledge stores.
 
-The helper manages source registrations, retained artifacts, finding files, and
-reciprocal evidence links. It never interprets game semantics and never modifies
-analyzed source/binary targets. Python 3.8+; standard library only.
+The helper manages source registrations, retained artifacts, finding files,
+reciprocal evidence links, and one-way finding-consumption dependencies. It
+never interprets game semantics and never modifies analyzed source/binary
+targets. Python 3.8+; standard library only.
 """
 
 import argparse
