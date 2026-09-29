@@ -43,7 +43,7 @@ A reusable finding should state:
 
 Keep findings small enough to reuse independently but large enough to assess their evidence. Do not turn them into chronological diaries or copies of raw tool output.
 
-A sufficiently complete finding may be consumed directly by downstream application work. Do not create a second representation merely to satisfy workflow ceremony.
+A sufficiently complete current finding may be consumed directly by downstream application work. Do not create a second representation merely to satisfy workflow ceremony.
 
 ## Artifact integrity
 

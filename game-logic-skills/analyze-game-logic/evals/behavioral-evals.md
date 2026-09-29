@@ -50,6 +50,7 @@ A focused analysis produces a reusable finding and one expensive generated artif
 Required assertions:
 - retained target version/hash, the reusable finding, and the expensive artifact
 - did not create artifacts for every cheap grep/read result
+- used an observable current trigger for persistence rather than speculative future reuse
 - used project-store tooling as a mechanical helper rather than reproducing its full schema in the reasoning
 - a later session can identify the target, evidence, confidence, and limitations
 

@@ -37,7 +37,7 @@ Prefer concise gameplay pseudocode plus stable implementation locators over a br
 
 ## Downstream mechanic record
 
-When another task will consume the result, pass only the facts material to that task. A reusable finding is sufficient when it already contains them.
+When another task will consume the result, pass only the facts material to that task. A current reusable finding is sufficient when it already contains them.
 
 A compact record usually contains:
 
