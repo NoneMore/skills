@@ -1,8 +1,8 @@
 ---
 name: analyze-game-logic
-description: Analyze authorized offline/single-player game logic with reproducible static or dynamic reverse engineering. Use to locate or explain gameplay mechanics, formulas, timers, RNG, state, scripts, call paths, implementation layers, or reversible local modifications in PC and Web/JavaScript builds. Load engine-specific guidance only when material. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Recover and verify authorized offline/single-player game logic with reproducible static or dynamic reverse engineering. Use to locate or explain gameplay mechanics, formulas, timers, RNG, state, scripts, call paths, implementation layers, ownership, lifecycle, or authority in PC and Web/JavaScript builds. Produces version-scoped mechanic knowledge for downstream use; use $apply-game-logic to turn recovered knowledge into modifications or derived tooling. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v4.6.0"
+  version: "v5.0.0"
 ---
 
 # Analyze Game Logic
@@ -11,6 +11,11 @@ Treat the gameplay mechanic as the primary semantic unit for behavior or causali
 questions. Keep narrow identity/location questions narrow. Use the smallest
 analysis path that can close the user's actual question with version-scoped,
 reproducible evidence.
+
+This skill **produces mechanic knowledge**. It may use reversible instrumentation
+when required to validate a claim, but it does not design gameplay modifications
+or downstream tools. When the user wants to consume recovered logic, finish the
+material recovery work and hand the result to `$apply-game-logic`.
 
 ## 1. Establish the task boundary
 
@@ -22,8 +27,8 @@ are not all required before static triage begins.
 - Infer authorization from the request and available context when it is already
   clear; do not ask for redundant confirmation.
 - If authorization or online impact is genuinely unclear, limit work to safe,
-  non-invasive static triage. Ask before launching, attaching to, modifying, or
-  otherwise interfering with a process when the answer changes whether that
+  non-invasive static triage. Ask before launching, attaching to, instrumenting,
+  or otherwise interfering with a process when the answer changes whether that
   action is permitted.
 - Do not manipulate multiplayer state, matchmaking, leaderboards,
   server-authoritative state, another player's experience, accounts,
@@ -32,8 +37,9 @@ are not all required before static triage begins.
   reporting do not by themselves make local gameplay analysis out of scope.
 - If instrumentation would require bypassing DRM or anti-cheat, use permitted
   static or observational analysis instead.
-- Treat installed game files as read-only unless the user explicitly authorizes
-  a version-specific destructive modification.
+- Treat installed game files as read-only. Gameplay changes belong to
+  `$apply-game-logic`; analysis-only instrumentation must be reversible and
+  provenance-preserving.
 - Do not infer units, probabilities, ownership, lifetime, authority, or causal
   control from names, xrefs, constants, or presentation evidence alone.
 
@@ -49,16 +55,17 @@ Match overhead to the requested result:
   knowledge stores, dynamic validation record when material, and per-game report.
 
 Promote triage when conclusions will be reused, large artifacts are generated,
-multiple sessions are likely, or a modification is being designed.
+multiple sessions are likely, or downstream application will depend on the
+finding.
 
 For focused/full work—and before persisting retained evidence or a reusable
 finding from triage—follow
 [references/project-knowledge.md](references/project-knowledge.md) for durable
 project-store and reporting rules. Before repeating work, search retained
 findings/evidence for the target version, module, function, type, or behavior and
-verify it before reuse. Keep durable analysis outputs outside the
-installed game tree. Distinguish runner/file versions from actual game-content
-versions and preserve conflicting indicators instead of silently choosing one.
+verify it before reuse. Keep durable analysis outputs outside the installed game
+tree. Distinguish runner/file versions from actual game-content versions and
+preserve conflicting indicators instead of silently choosing one.
 
 ## 3. Discover the material implementation path
 
@@ -132,8 +139,8 @@ runtime dispatchers. If a generated artifact is too large for context, retain it
 on disk as authoritative working evidence: record producer and target
 version/hash, verify coverage, use explicit non-overlapping ranges when chunking,
 and preserve enough raw output to distinguish tool output from later annotation.
-Use indexes, targeted searches, and bounded reads rather than loading it wholesale;
-register retained artifacts when the project-store branch applies.
+Use indexes, targeted searches, and bounded reads rather than loading it
+wholesale; register retained artifacts when the project-store branch applies.
 
 ## 5. Close the evidence loop
 
@@ -152,26 +159,23 @@ relation, not another rendering of the same relation. The same instructions,
 registration, or table/data-flow remain one relation; a distinct caller/use path
 or controlled runtime observation can qualify.
 
-For compiled/native boundaries, record ASLR-stable `module + RVA` locators. When
-converting database VAs, RVAs, file offsets, or runtime addresses, record the
-image/module base and independently verify any intervention address against the
-original binary or loaded module before using it.
+For compiled/native boundaries, record ASLR-stable `module + RVA` locators.
+When converting database VAs, RVAs, file offsets, or runtime addresses, record
+the image/module base and independently verify any locator against the original
+binary or loaded module before relying on it.
 
 Cross-references establish association/reachability, not gameplay semantics. Do
 not convert values into seconds, percentages, world units, or probabilities until
 units and update rates are established.
 
-## 6. Apply branch-specific procedures only when they fire
-
-### Dynamic validation gate
+## 6. Apply validation only when it is material
 
 Dynamic validation is optional for narrow identity/location claims when static
 semantic evidence is sufficient. When runtime observation is practical, it
 should normally be performed before treating runtime-sensitive claims as settled,
 including timing/units, causal control, caller/source discrimination, state
-lifetime, and intervention scope/side effects. For random/probabilistic behavior,
-dynamic validation is normally required when a static formula alone does not
-establish the effective runtime distribution or source conditions.
+lifetime, persistence/reset behavior, authority, and effective random
+distributions.
 
 For those categories, if runtime observation is practical but has not been
 performed, keep the affected claim as **Working hypothesis**. Whenever dynamic
@@ -181,24 +185,48 @@ authorization and tool availability only to decide whether to execute runtime
 actions or instead provide the validation procedure, state why it was not run,
 and leave the dynamically material claim unconfirmed.
 
-### Modification gate
+Analysis-only runtime instrumentation must remain reversible, narrowly scoped to
+the observation, and traceable to its authoritative source/provenance.
 
-When the user asks to design, apply, or validate a gameplay change, first resolve
-whether the candidate value/object/definition/field/call path is shared across
-actors, sides, event sources, or contexts. Unresolved ownership/fan-out remains
-**Unknown**; do not claim narrow scope from reversibility alone.
-
-Load [references/change-design.md](references/change-design.md) only for this
-branch. Destructive modification of original installed files still requires
-explicit authorization.
-
-## 7. Deliver the result
+## 7. Deliver a reusable mechanic handoff
 
 Match the output to analysis depth. A triage answer may be concise. Focused/full
 analysis should give the user a navigable synthesis of the concrete question and
 reproduction path when known, relevant implementation layers, conclusion and
-compact pseudocode, stable source/function or `module + RVA` locators, and links
-to reusable findings/evidence where the project-store branch applies.
+compact pseudocode, stable source/function or `module + RVA` locators, and
+links to reusable findings/evidence where the project-store branch applies.
+
+When another task will consume the recovered logic, provide the smallest
+applicable **mechanic handoff record**:
+
+~~~text
+Mechanic:
+Target version / build / hashes:
+Claim status: confirmed | working-hypothesis | unknown
+Reproduction / controlled scenario:
+Source / trigger:
+Eligibility / gate:
+Inputs / modifiers / RNG:
+Rule / transition:
+Authoritative mutation:
+Entity/state owner and fan-out:
+Time / units / scheduling:
+Persistence / reset:
+Authority / serialization:
+Implementation locators:
+Evidence / finding IDs:
+Validation performed:
+Unknowns / version sensitivity:
+~~~
+
+Do not fill irrelevant fields merely for completeness. Do not omit an unresolved
+field when it could change downstream behavior or scope. A downstream application
+must not silently upgrade a working hypothesis or unknown into a confirmed fact.
+
+If the user's request also asks to modify, instrument for a changed outcome,
+simulate, calculate from, or otherwise operationalize this mechanic, stop this
+skill after the required mechanic knowledge is closed and continue with
+`$apply-game-logic`.
 
 ## 8. Completion criteria
 
@@ -215,10 +243,11 @@ Before finishing focused/full analysis, verify that:
   validation was omitted;
 - reusable sources/artifacts/findings are registered and integrity-valid when the
   project-store branch applies;
-- no destructive modification occurred without explicit authorization, and any
-  deployed reversible instrumentation retains its authoritative source/provenance
-  in the analysis project and has a documented cleanup/restoration path;
-- targeted modifications have evidence for the claimed ownership/fan-out scope;
-- the final answer/report states the evidence/confidence state, dynamic-validation
-  status, material unknowns, observed-vs-inferred distinction, and highest-value
-  next step.
+- any deployed analysis-only instrumentation retains authoritative
+  source/provenance and a documented cleanup/restoration path;
+- the final answer/report states the evidence/confidence state,
+  dynamic-validation status, material unknowns, observed-vs-inferred distinction,
+  and highest-value next step;
+- when downstream use is requested, the mechanic handoff exposes every material
+  dependency needed by `$apply-game-logic` without performing the application
+  itself.
