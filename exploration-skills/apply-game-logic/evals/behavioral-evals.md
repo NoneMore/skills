@@ -6,15 +6,16 @@ knowledge without silently redoing reverse engineering or promoting uncertainty.
 Record every required assertion as `PASS` or `FAIL`. A scenario passes only
 when all required assertions pass.
 
-## 1. Confirmed mechanic is consumed without reanalysis
+## 1. Finding-only input routes through the producer before application
 
 A confirmed finding supplies target version/hash, formula, units, owner, stable
-locator, and validation evidence. The user asks for an offline calculator.
+locator, and validation evidence, but no canonical handoff exists. The user asks
+for an offline calculator.
 
 Required assertions:
-- `normalized_complete_finding_to_canonical_handoff_v1 = PASS`
-- `consumed_canonical_handoff_as_application_interface = PASS`
-- `did_not_restart_reverse_engineering = PASS`
+- `routed_finding_only_input_to_analyze_game_logic = PASS`
+- `received_canonical_handoff_v1_before_application = PASS`
+- `did_not_locally_reimplement_finding_to_handoff_normalization = PASS`
 - `preserved_formula_order_units_and_rounding = PASS`
 - `recorded_source_finding_and_version_provenance = PASS`
 
@@ -153,16 +154,16 @@ Required assertions:
 - `later_session_can_reconstruct_exact_input_and_rollback_from_store = PASS`
 - `did_not_treat_deployed_game_tree_copy_as_authoritative = PASS`
 
-## 14. Superseded finding never becomes an active handoff
+## 14. Superseded finding remains a producer concern
 
 A structurally complete reusable finding is marked `superseded` and points to a
-successor finding for a newer target build.
+successor finding for a newer target build, but no canonical handoff is supplied.
 
 Required assertions:
-- `did_not_normalize_superseded_finding_directly = PASS`
-- `followed_superseded_by_to_active_successor = PASS`
-- `verified_successor_target_and_version_before_normalization = PASS`
-- `returned_dependency_to_analysis_when_valid_successor_missing = PASS`
+- `did_not_accept_superseded_finding_as_application_input = PASS`
+- `routed_finding_lifecycle_resolution_to_analyze_game_logic = PASS`
+- `accepted_only_the_active_successor_handoff_emitted_by_analysis = PASS`
+- `did_not_map_superseded_status_locally = PASS`
 
 ## 15. External handoff is snapshotted before durable application
 
@@ -177,25 +178,37 @@ Required assertions:
 - `later_session_identifies_exact_input_by_artifact_sha256 = PASS`
 - `did_not_require_a_finding_to_preserve_input_provenance = PASS`
 
-## 16. Standalone apply installation has no sibling file dependency
+## 16. Existing handoff does not require sibling file access
 
-Install only the `apply-game-logic` folder with its bundled references, scripts,
-evals, and agent metadata. Provide an existing valid handoff and request a
-derived offline calculator.
-
-Required assertions:
-- `loaded_local_mechanic_handoff_v1_reference = PASS`
-- `used_local_project_store_helper_when_durable_output_requested = PASS`
-- `did_not_read_sibling_skill_files = PASS`
-- `completed_application_without_analyze_game_logic_files_present = PASS`
-
-## 17. Vendored runtime contracts stay synchronized in-repository
-
-When both game-logic skills are present in the source repository, compare the
-application-side v1 handoff protocol and project-store helper against their
-producer/shared counterparts before release.
+Only `apply-game-logic` is installed, but the user supplies an existing valid
+`game-logic-mechanic-handoff/v1` and requests a non-retained calculator that
+does not need project-store mutation.
 
 Required assertions:
-- `vendored_handoff_v1_semantics_match_analysis_canonical_v1 = PASS`
-- `vendored_project_store_helper_is_byte_identical = PASS`
-- `incompatible_handoff_change_requires_new_schema_version = PASS`
+- `consumed_existing_handoff_without_companion_file_reads = PASS`
+- `did_not_attempt_to_open_sibling_skill_paths = PASS`
+- `did_not_invent_or_vendor_a_second_handoff_schema = PASS`
+- `completed_non_durable_application_from_the_supplied_contract = PASS`
+
+## 17. Durable application composes the companion by canonical name
+
+An existing valid handoff is supplied and the user requests a retained simulator
+whose provenance must survive the session. `$analyze-game-logic` is installed.
+
+Required assertions:
+- `invoked_analyze_game_logic_for_bounded_project_store_operation = PASS`
+- `provided_store_metadata_without_restarting_mechanic_analysis = PASS`
+- `registered_handoff_snapshot_and_application_record = PASS`
+- `used_one_way_consumes_finding_refs_when_applicable = PASS`
+- `did_not_read_or_execute_sibling_files_by_path = PASS`
+
+## 18. Missing companion is reported at a required composition boundary
+
+A canonical handoff is available, but a durable application requires project-store
+registration and `$analyze-game-logic` is not installed.
+
+Required assertions:
+- `reported_missing_companion_capability = PASS`
+- `did_not_claim_durable_provenance_or_rollback = PASS`
+- `did_not_shell_out_to_or_read_a_sibling_skill_directory = PASS`
+- `preserved_completed_non_store_application_work_when_safe = PASS`
