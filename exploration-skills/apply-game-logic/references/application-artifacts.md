@@ -1,8 +1,11 @@
 # Durable Application Artifacts
 
-Use one game-logic project store for durable application work. This skill ships
-its own `scripts/project_store.py`; it must not require a sibling skill directory
-at runtime.
+Use the existing game-logic project store for durable application work. The store
+capability is owned by companion `$analyze-game-logic`; this skill defines the
+application-side records and asks the companion to perform mechanical
+registration/verification by canonical Skill invocation.
+
+Do not locate, read, or invoke a helper through a sibling filesystem path.
 
 The store layout remains:
 
@@ -23,6 +26,9 @@ later.
 A throwaway explanation or non-retained calculation does not require a durable
 application record.
 
+If the companion store capability is unavailable when durable retention is
+required, report that dependency and do not claim durable provenance/rollback.
+
 ## Storage convention
 
 Use:
@@ -36,32 +42,42 @@ artifacts/applications/<application-id>/<validation or backup artifacts>
 
 ### 1. Persist the normalized handoff snapshot first
 
-Persist the exact normalized `game-logic-mechanic-handoff/v1` input as
+Persist the exact `game-logic-mechanic-handoff/v1` input as
 `mechanic-handoff-v1.yaml` before producing durable application outputs.
-Register it with `scripts/project_store.py add-artifact` using kind
-`gameplay-mechanic-handoff`. The manifest's SHA-256 makes this the immutable
-input snapshot for the application even when the handoff came from outside the
-project and has no reusable finding.
 
-If the handoff was normalized from reusable findings, register those as one-way
-dependencies with `--consumes-finding-ref <finding-id>`. This populates
-`consumes_finding_refs`; it **must not** populate `finding_refs` or modify the
-finding's `## Evidence` section.
+Ask companion `$analyze-game-logic` to register that file in the existing
+project store as kind `gameplay-mechanic-handoff`. The manifested SHA-256 is
+the immutable input snapshot even when the handoff came from outside the project
+and has no reusable finding.
 
-`finding_refs` keeps its existing meaning: an artifact/source is evidence *for*
-a finding and therefore participates in reciprocal Evidence links.
-`consumes_finding_refs` means the artifact was derived *from* a finding and is
-one-way only.
+If the handoff was emitted from reusable findings, ask the companion to record
+those as one-way `consumes_finding_refs`. This must not populate
+`finding_refs` or modify any finding's `## Evidence` section.
+
+`finding_refs` means an artifact/source is evidence *for* a finding.
+`consumes_finding_refs` means an artifact was derived *from* a finding. These
+relations must never be conflated.
 
 ### 2. Persist the application record and implementation
 
-Register `record.md` as kind `gameplay-application-record` with
-`--derived-from <handoff-artifact-id>`. Register every authoritative generated
-source, configuration, patch description, backup, or validation artifact required
-to reproduce or undo the application. Use `derived_from` to link generated
-artifacts to the handoff/application record as appropriate.
+Ask companion `$analyze-game-logic` to register `record.md` as kind
+`gameplay-application-record`, derived from the handoff artifact. Register every
+authoritative generated source, configuration, patch description, backup, or
+validation artifact required to reproduce or undo the application.
 
-Do not use `--finding-ref` merely because an application consumed a finding.
+Provide the companion enough metadata to perform the operation without
+reconstructing application intent:
+
+- artifact path and stable ID;
+- artifact kind and description;
+- target version/build/module/hash/range metadata;
+- producer/tool metadata;
+- `derived_from` artifact IDs;
+- source references when applicable;
+- one-way consumed finding IDs when applicable.
+
+Do not request reciprocal `finding_refs` merely because an application consumed
+a finding.
 
 ## Application record
 
@@ -112,33 +128,28 @@ above.>
 For destructive changes, persist the original bytes/content or an
 integrity-verified backup artifact **before** modifying the installed target.
 
-## Helper integrity rules
+## Integrity rules
 
-The bundled `scripts/project_store.py` validates file size/hash, artifact/source
-references, and the two distinct finding relations:
+Before later reuse or rollback, ask companion `$analyze-game-logic` to perform
+the project store's integrity verification and evidence/dependency link checks.
+
+The companion store must enforce:
 
 - `finding_refs`: reciprocal evidence relation;
-- `consumes_finding_refs`: one-way dependency whose finding must exist and whose
-  artifact must not appear in that finding's Evidence section.
-
-Run both:
-
-```text
-python scripts/project_store.py verify --root <project-root>
-python scripts/project_store.py check-links --root <project-root>
-```
-
-before later reuse or rollback.
+- `consumes_finding_refs`: one-way dependency whose finding exists and whose
+  consuming artifact does not appear in that finding's Evidence section;
+- registered file size/hash and provenance references;
+- artifact/source/supersession references.
 
 ## Later-session recovery check
 
 A later session must be able to:
 
-1. verify the project store;
+1. verify the project store through the companion capability;
 2. locate the active `gameplay-application-record`;
 3. resolve its exact immutable `gameplay-mechanic-handoff` artifact and SHA-256;
-4. follow any one-way `consumes_finding_refs` without treating application
-   artifacts as evidence for those findings;
+4. follow one-way `consumes_finding_refs` without treating application artifacts
+   as mechanic evidence;
 5. identify the exact target build plus authoritative implementation and
    original/control artifacts; and
 6. execute the documented rollback without relying on conversational memory.
