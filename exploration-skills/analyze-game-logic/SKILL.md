@@ -1,6 +1,6 @@
 ---
 name: analyze-game-logic
-description: Recover and verify authorized offline/single-player game logic with reproducible static or dynamic reverse engineering. Use to locate or explain gameplay mechanics, formulas, timers, RNG, state, scripts, call paths, implementation layers, ownership, lifecycle, or authority in PC and Web/JavaScript builds. Produces version-scoped mechanic knowledge for downstream use; use $apply-game-logic to turn recovered knowledge into modifications or derived tooling. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Recover and verify authorized offline/single-player game logic with reproducible static or dynamic reverse engineering. Use for mechanic analysis and for cold-start gameplay change/tooling requests when no version-scoped mechanic handoff or complete finding already exists. Produces verified mechanic knowledge for downstream $apply-game-logic use. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
   version: "v5.0.0"
 ---
@@ -196,32 +196,16 @@ reproduction path when known, relevant implementation layers, conclusion and
 compact pseudocode, stable source/function or `module + RVA` locators, and
 links to reusable findings/evidence where the project-store branch applies.
 
-When another task will consume the recovered logic, provide the smallest
-applicable **mechanic handoff record**:
+When another task will consume the recovered logic, emit the exact
+`game-logic-mechanic-handoff/v1` record defined in
+[references/gameplay-semantics.md](references/gameplay-semantics.md#4-canonical-mechanic-handoff-v1).
+That reference is the only application-facing mechanic schema. Reusable findings
+and the semantic reconstruction record are evidence/upstream representations,
+not alternate application interfaces.
 
-~~~text
-Mechanic:
-Target version / build / hashes:
-Claim status: confirmed | working-hypothesis | unknown
-Reproduction / controlled scenario:
-Source / trigger:
-Eligibility / gate:
-Inputs / modifiers / RNG:
-Rule / transition:
-Authoritative mutation:
-Entity/state owner and fan-out:
-Time / units / scheduling:
-Persistence / reset:
-Authority / serialization:
-Implementation locators:
-Evidence / finding IDs:
-Validation performed:
-Unknowns / version sensitivity:
-~~~
-
-Do not fill irrelevant fields merely for completeness. Do not omit an unresolved
-field when it could change downstream behavior or scope. A downstream application
-must not silently upgrade a working hypothesis or unknown into a confirmed fact.
+Do not omit an unresolved field when it could change downstream behavior or
+scope. A downstream application must not silently upgrade a working hypothesis
+or unknown into a confirmed fact.
 
 If the user's request also asks to modify, instrument for a changed outcome,
 simulate, calculate from, or otherwise operationalize this mechanic, stop this
