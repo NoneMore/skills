@@ -12,7 +12,7 @@ This repository provides production-grade capabilities covering the **full softw
   - [1. Execution Skills (Engineering Lifecycle)](#1-execution-skills-engineering-lifecycle)
   - [2. Matt Skills (Pragmatic Engineering & Mental Models)](#2-matt-skills-pragmatic-engineering--mental-models)
   - [3. Math Skills (Mathematical Research & Lean Formalization)](#3-math-skills-mathematical-research--lean-formalization)
-  - [4. Exploration Skills (Game Logic & Reverse Engineering)](#4-exploration-skills-game-logic--reverse-engineering)
+  - [4. Game Logic Skills (Game Logic & Reverse Engineering)](#4-game-logic-skills-game-logic--reverse-engineering)
   - [5. Meta Skills (Agent Instruction Governance)](#5-meta-skills-agent-instruction-governance)
 - [Repository Structure](#repository-structure)
 - [Installation & Usage](#installation--usage)
@@ -76,15 +76,15 @@ Tailored for mathematical document processing, rigorous literature analysis, and
 - `math-writing-editor`: Restructuring, copyediting, and polishing for mathematical `.tex` and `.md` documents with variable autonomy levels.
 - `lean-blueprint-author`: Generates insertion-ready `leanblueprint` LaTeX architectures, proof routes, and formalization roadmaps targeting Lean 4.
 
-### 4. Exploration Skills (Game Logic & Reverse Engineering)
-> **Directory**: [`exploration-skills/`](exploration-skills/)
+### 4. Game Logic Skills (Game Logic & Reverse Engineering)
+> **Directory**: [`game-logic-skills/`](game-logic-skills/)
 
-A two-stage protocol for recovering authorized offline game mechanics and then consuming that verified knowledge without mixing reverse engineering with downstream application.
+Two focused skills separate mechanic recovery from downstream use without requiring a heavyweight handoff protocol.
 
-- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, ownership/authority, and engine-specific implementation paths while retaining verifiable evidence. Produces a version-scoped mechanic handoff for downstream use.
-- `apply-game-logic`: Consumes canonical mechanic handoffs to build calculators, simulators, instrumentation, mods, or scoped local gameplay changes. Finding-only/cold-start requests compose `analyze-game-logic` by canonical skill name first; durable application artifacts also use that companion's shared project-store capability.
+- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic. It recovers only the version-scoped facts needed to answer the question or support a downstream application.
+- `apply-game-logic`: Builds calculators, simulators, instrumentation, mods, tests, or scoped local gameplay changes from an existing finding, mechanic record, or compatible legacy handoff. It returns to analysis only for material facts that are missing or stale.
 
-For the complete two-stage game-logic workflow, install both skills; `apply-game-logic` composes `analyze-game-logic` when handoff production or durable project-store operations are required.
+Install both for cold-start analyze → apply workflows. `apply-game-logic` can also operate independently when the supplied mechanic knowledge is already sufficient.
 
 Both skills strictly exclude multiplayer/service manipulation, DRM or payment bypass, credential theft, piracy, and proprietary asset distribution.
 
@@ -115,7 +115,7 @@ Meta-level capabilities for authoring and optimizing how agents behave across di
 │   ├── engineering-initiative-shaping/# Macro-to-medium initiative shaping
 │   ├── routing-policy.yaml            # Capacity policy & routing contracts
 │   └── GUIDE_CN.md                    # Chinese supplementary handbook
-├── exploration-skills/                # Game logic recovery & application
+├── game-logic-skills/                # Game logic recovery & application
 │   ├── analyze-game-logic/            # Recover verified mechanic knowledge
 │   └── apply-game-logic/              # Consume mechanics for tools/changes
 ├── math-skills/                       # Mathematical reading & formalization
