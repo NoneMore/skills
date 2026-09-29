@@ -46,8 +46,13 @@ authorizes a destructive, version-specific local modification.
 
 Before implementing anything, require the supplied input to identify itself as
 `game-logic-mechanic-handoff/v1` and identify which fields are material to the
-requested result. Unknown or unsupported schema versions return to the companion
-producer rather than being guessed or locally migrated. Check the handoff for:
+requested result. When the companion producer is not involved in the current
+step, trust a correctly version-tagged supplied v1 handoff as the protocol
+envelope and validate only the fields material to this application; do not try to
+reconstruct or enforce the producer's exact top-level field set locally. Exact v1
+schema-shape validation belongs to the producer. Unknown or unsupported schema
+versions return to the companion producer rather than being guessed or locally
+migrated. Check the handoff for:
 
 - target game/content version, build identity, and material file/module hashes;
 - claim status and evidence/validation state;
