@@ -62,10 +62,12 @@ Before any destructive patch, record:
 For every retained or deployed change, follow
 [application-artifacts.md](application-artifacts.md): store the authoritative
 patch/mod source and a `gameplay-application-record` in the existing game-logic
-project store, register them in `artifacts/manifest.json`, and link them to the
-consumed finding IDs. Record the original/control state or a registered backup
-before destructive modification so a later session can reconstruct rollback
-without conversational memory.
+project store and register them in `artifacts/manifest.json`. When a retained
+artifact consumes a finding that exists in the current project store, record that
+dependency through `consumes_finding_refs`, never `finding_refs`; application
+artifacts are not evidence for the mechanic they consume. Record the
+original/control state or a registered backup before destructive modification so
+a later session can reconstruct rollback without conversational memory.
 
 Installed game files remain read-only unless destructive modification was
 explicitly authorized.
