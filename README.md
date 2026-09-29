@@ -2,7 +2,7 @@
 
 A modular, evidence-driven, and composable collection of Agent Skills designed for modern AI coding harnesses and agentic workflows (e.g., [Pi](https://github.com/earendil-works/pi-coding-agent), [Codex](https://github.com/openai/codex), Claude Code, and compatible agent environments).
 
-This repository provides production-grade capabilities covering the **full software engineering lifecycle**, **game logic analysis and reverse engineering**, **mathematics research and formalization**, **pragmatic engineering mental models**, and **meta-governance for agent instructions**.
+This repository provides production-grade capabilities covering the **full software engineering lifecycle**, **game logic analysis, reverse engineering, and evidence-backed application**, **mathematics research and formalization**, **pragmatic engineering mental models**, and **meta-governance for agent instructions**.
 
 ---
 
@@ -12,7 +12,7 @@ This repository provides production-grade capabilities covering the **full softw
   - [1. Execution Skills (Engineering Lifecycle)](#1-execution-skills-engineering-lifecycle)
   - [2. Matt Skills (Pragmatic Engineering & Mental Models)](#2-matt-skills-pragmatic-engineering--mental-models)
   - [3. Math Skills (Mathematical Research & Lean Formalization)](#3-math-skills-mathematical-research--lean-formalization)
-  - [4. Exploration Skills (Game Logic & Reverse Engineering)](#4-exploration-skills-game-logic--reverse-engineering)
+  - [4. Game Logic Skills (Game Logic & Reverse Engineering)](#4-game-logic-skills-game-logic--reverse-engineering)
   - [5. Meta Skills (Agent Instruction Governance)](#5-meta-skills-agent-instruction-governance)
 - [Repository Structure](#repository-structure)
 - [Installation & Usage](#installation--usage)
@@ -76,12 +76,17 @@ Tailored for mathematical document processing, rigorous literature analysis, and
 - `math-writing-editor`: Restructuring, copyediting, and polishing for mathematical `.tex` and `.md` documents with variable autonomy levels.
 - `lean-blueprint-author`: Generates insertion-ready `leanblueprint` LaTeX architectures, proof routes, and formalization roadmaps targeting Lean 4.
 
-### 4. Exploration Skills (Game Logic & Reverse Engineering)
-> **Directory**: [`exploration-skills/`](exploration-skills/)
+### 4. Game Logic Skills (Game Logic & Reverse Engineering)
+> **Directory**: [`game-logic-skills/`](game-logic-skills/)
 
-A disciplined protocol for authorized binary analysis and execution tracing.
+Two focused skills separate mechanic recovery from downstream use without requiring a heavyweight handoff protocol.
 
-- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic (Windows PC, Web/JavaScript). Reconstructs gameplay triggers, eligibility, formulas/RNG, authoritative state mutation, lifecycle/persistence, and engine-specific implementation paths while retaining verifiable evidence. Strictly excludes multiplayer cheating, DRM bypass, or proprietary asset extraction.
+- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic. It recovers only the version-scoped facts needed to answer the question or support a downstream application.
+- `apply-game-logic`: Builds calculators, simulators, instrumentation, mods, tests, or scoped local gameplay changes from an existing finding, mechanic record, or compatible legacy handoff. It returns to analysis only for material facts that are missing or stale.
+
+Install both for cold-start analyze → apply workflows. `apply-game-logic` can also operate independently when the supplied mechanic knowledge is already sufficient.
+
+Both skills strictly exclude multiplayer/service manipulation, DRM or payment bypass, credential theft, piracy, and proprietary asset distribution.
 
 ### 5. Meta Skills (Agent Instruction Governance)
 > **Directory**: [`meta-skills/`](meta-skills/) | Detailed guide: [README](meta-skills/agents-md-wizard/README.md)
@@ -110,8 +115,9 @@ Meta-level capabilities for authoring and optimizing how agents behave across di
 │   ├── engineering-initiative-shaping/# Macro-to-medium initiative shaping
 │   ├── routing-policy.yaml            # Capacity policy & routing contracts
 │   └── GUIDE_CN.md                    # Chinese supplementary handbook
-├── exploration-skills/                # Reverse engineering & analysis
-│   └── analyze-game-logic/            # Game state, formula & call-path tracing
+├── game-logic-skills/                # Game logic recovery & application
+│   ├── analyze-game-logic/            # Recover verified mechanic knowledge
+│   └── apply-game-logic/              # Consume mechanics for tools/changes
 ├── math-skills/                       # Mathematical reading & formalization
 │   └── skills/
 │       ├── math-paper-reader/         # Paper interpretation & notation ledger
@@ -128,7 +134,7 @@ Meta-level capabilities for authoring and optimizing how agents behave across di
 
 ## Installation & Usage
 
-Each skill folder is designed to be self-contained and modular. You can install individual skills or complete bundles depending on your harness and needs.
+Each skill folder packages its own local instructions, references, scripts, and metadata; skills must not treat sibling filesystem paths as runtime APIs. Some workflows intentionally compose other installed skills by canonical skill name (for example Matt project flows and the two-stage game-logic workflow). Install individual standalone skills when their task is self-contained, or install the dependency-complete bundle when you want a composed workflow.
 
 ### 1. Pi Agent (`~/.agents/skills/` or project `.agents/skills/`)
 
