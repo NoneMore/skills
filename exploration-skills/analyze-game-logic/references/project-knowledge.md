@@ -234,6 +234,11 @@ the mechanic evidence, not evidence for the mechanic. The existing schema-v2
 manifest remains the inventory/integrity authority and the helper validates that
 one-way consumed findings exist without requiring reciprocal Evidence links.
 
+When a companion skill needs these mechanical store operations, it should invoke
+`$analyze-game-logic` by canonical skill name with the artifact metadata and
+requested operation. Do not expose this helper's repository path as a cross-skill
+runtime API.
+
 ## Deterministic project-store helper
 
 Use `scripts/project_store.py` for mechanical store authoring and integrity
