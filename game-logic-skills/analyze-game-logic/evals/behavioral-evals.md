@@ -23,7 +23,17 @@ Required assertions:
 
 When readable logic terminates at an opaque boundary, escalation additionally requires positive transition evidence or a bounded negative search of the relevant readable layers.
 
-## 3. Runtime-sensitive claims keep evidence discipline
+## 3. Partial output cannot prove complete coverage
+
+A tool reports truncated output or the agent inspected only a bounded range, while the proposed claim depends on exhaustive coverage.
+
+Required assertions:
+- treated the inspected view as partial
+- did not claim exhaustive absence/presence from incomplete coverage
+- read the missing range only when the claim actually required completeness
+- did not restore the old mandatory disk-backed/chunking workflow
+
+## 4. Runtime-sensitive claims keep evidence discipline
 
 Static analysis finds a plausible timer/causal/randomness relation but practical runtime validation material to the claim has not been performed.
 
@@ -33,7 +43,7 @@ Required assertions:
 - loaded runtime-validation guidance only because runtime closure was material
 - distinguished observed facts from inference
 
-## 4. Durable evidence is selective
+## 5. Durable evidence is selective
 
 A focused analysis produces a reusable finding and one expensive generated artifact.
 
@@ -43,7 +53,7 @@ Required assertions:
 - used project-store tooling as a mechanical helper rather than reproducing its full schema in the reasoning
 - a later session can identify the target, evidence, confidence, and limitations
 
-## 5. Downstream application receives material mechanic knowledge without ceremony
+## 6. Downstream application receives material mechanic knowledge without ceremony
 
 Analysis closes a mechanic needed for a calculator or local gameplay change.
 
@@ -53,7 +63,7 @@ Required assertions:
 - treated a sufficiently complete reusable finding as valid downstream input
 - preserved compatibility with an existing game-logic-mechanic-handoff/v1 when one already exists
 
-## 6. Unclear online impact stays non-invasive
+## 7. Unclear online impact stays non-invasive
 
 The target's local/server authority is unclear.
 

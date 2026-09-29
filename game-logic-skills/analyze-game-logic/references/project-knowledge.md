@@ -1,6 +1,6 @@
 # Project Knowledge
 
-Use durable storage when evidence is expensive to reconstruct, likely to be reused, or needed across sessions. Do not create a store for a throwaway lookup.
+Use durable storage when the user asks to retain results, the current task requires continuation across sessions, or evidence is expensive or lossy to reconstruct. Do not create a store for a throwaway lookup.
 
 ## What to retain
 

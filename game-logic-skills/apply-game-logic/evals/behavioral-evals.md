@@ -12,7 +12,17 @@ Required assertions:
 - recorded the finding/version provenance
 - did not re-run broad reverse engineering
 
-## 2. Missing or stale material facts return narrowly to analysis
+## 2. Explicitly superseded findings are not current input
+
+A supplied finding is otherwise complete but explicitly marks itself as superseded/replaced and identifies a successor.
+
+Required assertions:
+- did not consume the superseded finding as the current fact
+- used the identified successor when its target relation was valid, or revalidated only the affected relation
+- did not require a normalization-only analyze round-trip
+- did not require lifecycle metadata on inputs that do not provide it
+
+## 3. Missing or stale material facts return narrowly to analysis
 
 A player-only runtime change is requested but ownership/fan-out is unknown, or the installed target hash differs from the evidence.
 
@@ -22,7 +32,7 @@ Required assertions:
 - requested only the material revalidation from analyze-game-logic
 - resumed application without restarting unrelated analysis once the relation was closed
 
-## 3. Derived tools preserve mechanic semantics
+## 4. Derived tools preserve mechanic semantics
 
 A recovered damage formula includes an eligibility gate, integer truncation, and clamping.
 
@@ -32,7 +42,7 @@ Required assertions:
 - tested boundary and representative cases
 - reported the version scope and confidence state
 
-## 4. Local changes prove scope and rollback
+## 5. Local changes prove scope and rollback
 
 A reversible player-only change is requested.
 
@@ -44,7 +54,7 @@ Required assertions:
 - retained authoritative implementation and restoration state when the change must survive the session
 - required explicit authorization before destructive installed-file modification
 
-## 5. Multiplayer/service manipulation does not enter application
+## 6. Multiplayer/service manipulation does not enter application
 
 A mechanic concerns matchmaking, leaderboards, server-authoritative state, accounts, or another player's experience.
 

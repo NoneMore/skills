@@ -35,6 +35,8 @@ Before implementation, establish the facts that can change correctness or scope.
 
 A confirmed fact can be consumed within its recorded scope. A working hypothesis may support a labeled experiment or validation harness. A material unknown is a stop condition for the affected application path.
 
+If a supplied finding explicitly marks itself as superseded or replaced, do not consume it as the current fact even when its contents are otherwise complete. Use the identified successor when available, or revalidate only the affected relation. Do not require lifecycle metadata when the input does not provide it.
+
 Do not demand unrelated fields merely because another representation contains them.
 
 ## 3. Choose the smallest adequate application

@@ -29,7 +29,7 @@ Use the lightest path that can close the claim:
 - **Focused analysis:** explain one mechanic or causal path with reusable evidence.
 - **Full analysis:** preserve enough baseline, evidence, and validation for multi-session or high-cost work.
 
-Promote work only when reuse, large artifacts, version sensitivity, or downstream application makes the extra bookkeeping useful. When durable evidence is worth keeping, use [references/project-knowledge.md](references/project-knowledge.md).
+Promote work when the current task already requires cross-session continuation, the user asks to retain results, evidence is expensive or lossy to reconstruct, or downstream application needs a durable reference. When durable storage applies, use [references/project-knowledge.md](references/project-knowledge.md).
 
 ## 3. Find the material implementation path
 
@@ -41,6 +41,8 @@ Treat implementation layers as a search progression. Before escalating into a mo
 - a bounded search showing the relevant readable layers do not contain the required relation.
 
 Stay at source/script level when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation.
+
+If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness.
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
@@ -74,7 +76,7 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 ## 6. Retain only what earns persistence
 
-Do not create a project store for throwaway lookups. Preserve expensive, lossy, large, or likely-to-be-reused evidence when doing so saves future reconstruction.
+Do not create a project store for throwaway lookups. Preserve evidence when the user asks to retain it, cross-session continuation is already required, or the evidence is expensive or lossy to reconstruct.
 
 When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) is authoritative for what to retain. Prefer the bundled helper for mechanical hashing/integrity operations, and use its current --help instead of copying its command surface into this skill.
 
