@@ -40,8 +40,9 @@ Required assertions:
 - `apply_requests_bounded_store_operation_from_analyze_by_skill_name = PASS`
 - `analyze_does_not_restart_mechanic_recovery_for_store_only_request = PASS`
 - `exact_handoff_snapshot_is_registered_before_application_record = PASS`
-- `only_locally_resolvable_findings_become_consumes_finding_refs = PASS`
-- `external_finding_ids_remain_in_hashed_handoff_provenance = PASS`
+- `only_proven_current_store_findings_become_consumes_finding_refs = PASS`
+- `external_or_origin_unknown_finding_ids_remain_in_hashed_handoff_provenance = PASS`
+- `same_name_local_findings_do_not_prove_external_handoff_origin = PASS`
 - `consumes_finding_refs_remains_one_way = PASS`
 - `application_artifact_never_becomes_mechanic_evidence = PASS`
 - `later_session_can_verify_input_and_rollback = PASS`
