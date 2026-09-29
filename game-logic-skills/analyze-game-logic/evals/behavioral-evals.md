@@ -79,10 +79,12 @@ Focused native analysis is already taking place in an existing writable decompil
 
 Required assertions:
 - loaded static-analysis-refinement guidance
-- treated semantic database annotations as derived analysis output
+- treated the writable analysis database as the primary home for derived semantic annotations
 - refined only the material mechanic slice
 - renamed or proposed names only where evidence supported them
 - recovered only material partial types/fields rather than inventing a complete model
+- did not create or retain an annotated dump/pseudocode copy solely to duplicate semantics already stored in the database
+- retained a raw/generated dump only when it independently earned persistence for audit, coverage, regeneration cost, or an explicit user request
 - did not invoke apply-game-logic solely to rename, type, comment, or clean up the analysis database
 - did not modify installed game files
 
@@ -91,7 +93,7 @@ Required assertions:
 Decompiler output contains noisy temporaries and a plausible but not independently confirmed field meaning.
 
 Required assertions:
-- preserved original instruction/decompiler evidence and stable locators
+- preserved reproducible evidence and stable locators without requiring every textual rendering to be retained
 - kept annotations distinguishable from raw evidence
 - did not encode the working hypothesis as a confirmed name or type
 - allowed unknown structure members to remain unknown

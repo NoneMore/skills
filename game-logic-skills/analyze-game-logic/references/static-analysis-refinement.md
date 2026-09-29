@@ -4,6 +4,16 @@ Load this reference only when a compiled/native investigation is already using a
 
 Do not create or expand a database-refinement workflow for narrow triage merely because the workspace is writable. These changes improve the analysis workspace; they are not downstream gameplay application and do not by themselves require `$apply-game-logic`.
 
+## Prefer the analysis database over annotated dumps
+
+When the workspace can store names, types, comments, structures, and decompiler annotations directly, treat that database as the primary home for derived static-analysis semantics.
+
+Do not export or retain an annotated binary dump or pseudocode file merely to preserve information that can live in the structured analysis database. This avoids duplicating the same semantic state and reduces large dump artifacts.
+
+Raw/generated dumps still have value when they independently serve as evidence—for example when regeneration is expensive or lossy, exact tool output must be audited, coverage of a large/partial analysis must be demonstrated, or the user explicitly wants the dump retained. In those cases keep the raw rendering as evidence and keep analyst interpretation in the database rather than producing a second annotated copy.
+
+Preserving the evidence boundary does not require preserving every textual rendering. Stable locators, the target binary/build identity, the analysis project, and selectively retained raw evidence should be sufficient to reproduce or audit material conclusions.
+
 ## Refine the material slice
 
 Useful derived outputs include:
@@ -18,11 +28,11 @@ Apply only the subset that helps navigate or continue the current mechanic analy
 
 ## Preserve the evidence boundary
 
-Instructions, original decompiler output, symbols/RTTI, strings, xrefs, source artifacts, and runtime observations are evidence.
+Instructions, original decompiler output, symbols/RTTI, strings, xrefs, source artifacts, and runtime observations are evidence whether observed directly or selectively retained under the normal persistence rules.
 
 Renames, comments, reconstructed types, inferred field meanings, and clean pseudocode are derived interpretations. A rename or reconstructed type cannot become an independent confirmation of the claim that motivated it.
 
-Keep stable source/function or module + RVA locators and enough original evidence to audit or reverse each material annotation.
+Keep stable source/function or module + RVA locators and enough reproducible or retained evidence to audit or reverse each material annotation.
 
 ## Keep uncertainty visible
 
@@ -40,7 +50,7 @@ Semantic pseudocode should express the recovered mechanic, not reproduce compile
 
 Collapse redundant temporaries, generated lifetime machinery, and other noise only when no material side effect is lost. Preserve or call out material casts, ownership/lifetime behavior, exception behavior, or unknowns that were intentionally abstracted.
 
-Never present reconstructed pseudocode as original source.
+Never present reconstructed pseudocode as original source. Prefer database comments/types/names and the smallest useful reconstructed snippet over maintaining a separate fully annotated pseudocode dump.
 
 ## Write-back discipline
 

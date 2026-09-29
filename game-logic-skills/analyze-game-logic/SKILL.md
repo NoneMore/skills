@@ -46,7 +46,7 @@ If a tool explicitly reports truncated output or only a partial range was inspec
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
-When a compiled/native investigation is already using a writable disassembler/decompiler project and reusable semantic annotations would materially reduce later re-analysis, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Refine only the material slice. Do not create database-refinement work for narrow triage, and do not route analysis-workspace renames/types/comments to $apply-game-logic merely because they are writable changes.
+When a compiled/native investigation is already using a writable disassembler/decompiler project and reusable semantic annotations would materially reduce later re-analysis, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Refine only the material slice. Prefer writing names, types, comments, and reconstructed semantics into that structured analysis database instead of creating annotated dump/pseudocode files solely to carry the same derived knowledge. Do not create database-refinement work for narrow triage, and do not route analysis-workspace renames/types/comments to $apply-game-logic merely because they are writable changes.
 
 ## 4. Reconstruct the mechanic, not just the address
 
@@ -80,6 +80,8 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 Do not create a project store for throwaway lookups. Preserve evidence when the user asks to retain it, cross-session continuation is already required, or the evidence is expensive or lossy to reconstruct.
 
+When a writable analysis database already carries the derived semantic refinement, do not also retain an annotated decompiler/dump copy solely as a second semantic store. Retain raw/generated dumps only when they independently earn persistence—for example because regeneration is expensive or lossy, a coverage/audit trail is material, or the user asked to keep them.
+
 When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) is authoritative for what to retain. Prefer the bundled helper for mechanical hashing/integrity operations, and use its current --help instead of copying its command surface into this skill.
 
 ## 7. Deliver the result
@@ -97,4 +99,4 @@ When downstream application is requested, provide a compact version-scoped mecha
 
 ## Completion
 
-Before finishing focused/full work, verify that the claimed behavior is version-scoped, material unknowns are explicit, confidence matches the evidence, required practical runtime validation was not silently skipped, and the output contains enough mechanic detail for the user's next step without unrelated workflow machinery. When static-analysis refinement applied, ensure derived names/types/comments and reconstructed pseudocode remain distinguishable from raw evidence and preserve uncertainty rather than laundering hypotheses into facts.
+Before finishing focused/full work, verify that the claimed behavior is version-scoped, material unknowns are explicit, confidence matches the evidence, required practical runtime validation was not silently skipped, and the output contains enough mechanic detail for the user's next step without unrelated workflow machinery. When static-analysis refinement applied, ensure derived names/types/comments and reconstructed pseudocode remain distinguishable from raw evidence and preserve uncertainty rather than laundering hypotheses into facts. Do not retain a redundant annotated dump when the writable analysis database already carries the same derived semantics unless that dump independently qualifies as evidence worth preserving.
