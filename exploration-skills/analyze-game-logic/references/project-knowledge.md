@@ -208,6 +208,13 @@ Keep findings atomic enough to reuse without reading an entire topic report, but
 large enough to preserve the reasoning and evidence needed to assess them. A
 finding is not a chronological diary or a copy of raw decompiler output.
 
+A reusable finding may be consumed directly by `$apply-game-logic` when it
+contains every material dependency for the requested application. Downstream use
+must preserve the recorded status and version scope; it must not silently promote
+a working hypothesis or unknown to confirmed. If ownership/fan-out, units,
+authority, lifecycle, or another application-critical relation is missing, recover
+that relation here before application proceeds.
+
 ## Deterministic project-store helper
 
 Use `scripts/project_store.py` for mechanical store authoring and integrity
