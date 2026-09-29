@@ -66,6 +66,8 @@ Good criteria are:
 - **checkable** — the agent can verify whether the condition holds;
 - **appropriately exhaustive** — they state the scope that must be covered.
 
+Use exhaustiveness criteria for reference work when the required set is enumerable.
+
 For example, "produce a change list" leaves scope open; "account for every modified model" sets an exhaustiveness bar.
 
 When work ends too early, improve the completion condition first. Add workflow machinery only when the simpler bound does not produce reliable behaviour.
