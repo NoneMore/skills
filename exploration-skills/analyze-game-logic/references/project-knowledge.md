@@ -142,13 +142,20 @@ Each retained artifact uses this shape:
   "derived_from": [],
   "source_refs": ["game-exe"],
   "finding_refs": ["player-update-contract"],
+  "consumes_finding_refs": [],
   "status": "active",
   "superseded_by": null
 }
 ```
 
 `derived_from` contains artifact IDs. `source_refs` contains registered source
-IDs. Use explicit `unknown` or `not-applicable` values when metadata genuinely
+IDs. `finding_refs` is strictly a reciprocal **evidence-for-finding** relation:
+the referenced finding must cite the artifact/source in its `## Evidence`
+section. `consumes_finding_refs` is a distinct optional one-way dependency for
+derived application artifacts; referenced findings must exist, but the dependency
+must not mutate or appear in their Evidence sections.
+
+Use explicit `unknown` or `not-applicable` values when metadata genuinely
 cannot be established. Do not omit uncertainty. Valid artifact lifecycle states
 are `active`, `superseded`, and `missing`.
 
@@ -220,13 +227,12 @@ confirmed. If ownership/fan-out, units, authority, lifecycle, or another
 application-critical relation is missing, recover that relation before the
 handoff is emitted.
 
-Durable application outputs reuse this same manifest/store rather than creating a
-parallel application store. Register the authoritative application record and its
-source/config/backup/validation artifacts under `artifacts/applications/` with
-finding links. The companion `apply-game-logic` reference
-`references/application-artifacts.md` defines the application-record content
-and later-session rollback requirements; the existing schema-v2 manifest remains
-the inventory and integrity authority.
+Durable downstream application outputs may reuse this same manifest/store rather
+than creating a parallel store. Application dependencies on findings must use
+`consumes_finding_refs`, not `finding_refs`: derived outputs are consumers of
+the mechanic evidence, not evidence for the mechanic. The existing schema-v2
+manifest remains the inventory/integrity authority and the helper validates that
+one-way consumed findings exist without requiring reciprocal Evidence links.
 
 ## Deterministic project-store helper
 
@@ -245,6 +251,12 @@ python scripts/project_store.py register-source --root <analysis-root> \
 python scripts/project_store.py add-artifact --root <analysis-root> \
   --id <artifact-id> --path artifacts/<file> --kind <kind> \
   --description <description> --tool <tool> --source-ref <source-id> ...
+
+# One-way dependency for an application/derived artifact:
+python scripts/project_store.py add-artifact --root <analysis-root> \
+  --id <artifact-id> --path artifacts/<file> --kind <kind> \
+  --description <description> --tool <tool> \
+  --consumes-finding-ref <finding-id> ...
 
 python scripts/project_store.py add-finding --root <analysis-root> \
   --id <finding-id> --title <title> --status confirmed --claim <claim> \
@@ -273,10 +285,11 @@ root.
 
 `verify` checks schema shape, stable IDs, unique paths, source/artifact file
 existence, byte size, SHA-256, lifecycle values, artifact provenance references,
-and supersession targets. `check-links` checks reciprocal references between
-sources/artifacts and finding Evidence sections. These are mechanical integrity
-checks; they do not decide whether a gameplay interpretation is semantically
-correct.
+and supersession targets. `check-links` checks reciprocal `finding_refs`
+against finding Evidence sections and separately checks that
+`consumes_finding_refs` point to existing findings without leaking the derived
+artifact into those findings' Evidence. These are mechanical integrity checks;
+they do not decide whether a gameplay interpretation is semantically correct.
 
 ## Persistence cadence
 
