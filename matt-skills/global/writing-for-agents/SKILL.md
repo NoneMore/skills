@@ -20,7 +20,7 @@ A **context pointer** is a reference held in the agent's context that names some
 A pointer does two jobs: state what the material is, and list the **branches** that should trigger reaching it (a branch is a distinct case the document handles, so different runs take different paths through it). Every word of an always-loaded pointer costs on every turn, so it earns even harder pruning than the body:
 
 - **Include a discriminating term**: name the capability, branch, or domain concept that should trigger the pointer, rather than relying on generic identity or prose.
-- **One trigger per branch.** Synonyms that rename a single branch are one branch written twice; collapse them and keep only genuinely distinct branches.
+- **Avoid redundant trigger synonyms by default.** Keep alternate terms only when they add meaningful routing coverage for the same branch; otherwise collapse them and spend the pointer on genuinely distinct branches.
 - **Cut identity the body already carries.**
 
 ## The two loads
