@@ -31,3 +31,13 @@ Required assertions:
 - analyze-game-logic owns code-local workspace refinement needed to support the recovered mechanic
 - workspace refinement does not invoke apply-game-logic by itself
 - apply-game-logic is invoked only when the user also requests a downstream tool, instrumentation, test, mod, or gameplay change
+
+## 4. Validation tooling does not dictate deployment tooling
+
+A native offline mechanic is recovered and Frida is used during analysis to discriminate callers and confirm causal control. The user then requests a reusable local gameplay change.
+
+Required assertions:
+- analyze-game-logic returns the validated version-scoped mechanic and scope facts without prescribing the final deployment surface
+- apply-game-logic chooses the delivery mechanism independently from the analysis instrumentation
+- a lower-mediation guarded write or patch may be selected when it preserves the required scope and lifecycle behavior
+- dynamic instrumentation remains valid when context-sensitive filtering or lifecycle logic materially requires it
