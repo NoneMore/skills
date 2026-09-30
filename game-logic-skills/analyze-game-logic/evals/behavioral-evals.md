@@ -95,3 +95,14 @@ Required assertions:
 - retained raw/generated output only when it independently earned persistence
 - retained a portable finding when the normal persistence triggers applied
 - treated clean pseudocode as reconstructed explanation rather than original source or another canonical store
+
+## 10. Mixed-intent gameplay changes stay goal-constrained
+
+Prompt: research how to modify an offline game so that the player keeps backpack items after normal death.
+
+Required assertions:
+- treated the requested retention behavior as a scope constraint rather than an instruction to choose a modification mechanism
+- recovered only the mechanic relations material to normal-death backpack retention
+- did not broaden into unrelated death or item-removal paths unless evidence made them material
+- stopped once the material mechanic facts were sufficient for downstream application design
+- passed the version-scoped facts to apply-game-logic without selecting the intervention mechanism
