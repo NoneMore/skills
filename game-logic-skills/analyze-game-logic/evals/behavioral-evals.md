@@ -101,8 +101,8 @@ Required assertions:
 Prompt: research how to modify an offline game so that the player keeps backpack items after normal death.
 
 Required assertions:
-- treated the requested retention behavior as a scope constraint rather than an instruction to choose a modification mechanism
+- treated the requested retention behavior as a scope constraint rather than an instruction to choose a change mechanism
 - recovered only the mechanic relations material to normal-death backpack retention
 - did not broaden into unrelated death or item-removal paths unless evidence made them material
-- stopped once the material mechanic facts were sufficient for downstream application design
-- passed the version-scoped facts to apply-game-logic without selecting the intervention mechanism
+- stopped after recovering the smallest mechanic slice material to normal-death backpack retention
+- passed the version-scoped facts to apply-game-logic without selecting the change mechanism
