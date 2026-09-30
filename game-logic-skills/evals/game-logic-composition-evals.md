@@ -10,7 +10,7 @@ Required assertions:
 - the user's desired behavior is preserved as an analysis scope constraint
 - analyze-game-logic recovers only the mechanic facts material to that behavior
 - application does not guess patch sites, units, or ownership from intent
-- analysis stops once those facts are sufficient and does not select the modification mechanism
+- analysis stops at the smallest mechanic slice material to that behavior and does not select the change mechanism
 - apply-game-logic consumes the recovered version-scoped mechanic knowledge
 - application does not repeat broad reverse engineering
 
