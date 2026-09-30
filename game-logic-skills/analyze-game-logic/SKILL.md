@@ -2,7 +2,7 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.2.1"
+  version: "v5.2.2"
 ---
 
 # Analyze Game Logic
@@ -29,18 +29,28 @@ Use the lightest path that can close the claim:
 - **Focused analysis:** explain one mechanic or causal path with reusable evidence.
 - **Full analysis:** preserve enough baseline, evidence, and validation for multi-session or high-cost work.
 
+Analysis depth and material depth are independent. Full analysis may close entirely from readable data, while a narrow triage question may occasionally require native code. Do not use the requested analysis depth as justification to escalate into a more opaque representation.
+
 Promote work when the current task already requires cross-session continuation, the user asks to retain results, evidence is expensive or lossy to reconstruct, or downstream application needs a durable reference. When durable storage applies, use [references/project-knowledge.md](references/project-knowledge.md).
 
 ## 3. Find the material implementation path
 
-Start with cheap semantic evidence: readable configuration/source, strings, symbols, RTTI/reflection, imports, resources, file layout, metadata, and existing analysis projects.
+First classify the representations that could answer the question, then use the least opaque one that preserves the required semantics. A useful progression is:
 
-Treat implementation layers as a search progression. Before escalating into a more opaque boundary, identify the unresolved fact and establish either:
+1. **Declarative/readable data:** configuration, tables, manifests, serialized values, resource metadata, and other directly readable game data.
+2. **Structured assets/containers:** engine resources, databases, packaged metadata, and other formats that can be parsed without recovering executable logic.
+3. **Recoverable program representations:** source/scripts, JavaScript, managed assemblies, VM bytecode, source maps, symbols, reflection/RTTI, and similar higher-level executable forms.
+4. **Native compiled code:** machine-code implementations and native-generated engine boundaries.
+5. **Runtime observation:** instrumentation needed to resolve facts that static material cannot practically establish.
 
-- positive transition evidence showing the readable path terminates at that boundary; or
-- a bounded search showing the relevant readable layers do not contain the required relation.
+This progression is a search order, not a requirement to exhaust every layer. Start from the representations actually present and relevant to the claim. Source unavailable does not by itself justify native analysis: first check whether data, assets, bytecode, managed code, metadata, symbols, or another recoverable higher-level representation can close the question.
 
-Stay at source/script level when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation.
+Before escalating into a more opaque boundary, identify the unresolved fact and establish either:
+
+- positive transition evidence showing the current representation terminates at that boundary; or
+- a bounded search showing the relevant less-opaque representations do not contain the required relation.
+
+Stay at the current data/source/recoverable layer when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation, and do not open the native binary solely because an engine or build type is known to contain native code.
 
 If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness.
 
