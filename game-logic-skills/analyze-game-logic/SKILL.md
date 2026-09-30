@@ -9,7 +9,7 @@ metadata:
 
 Recover the smallest version-scoped mechanic slice that answers the user's question. Keep narrow lookup questions narrow. Do not add persistence, runtime work, or binary analysis unless the question needs them.
 
-This skill produces mechanic knowledge. A requested downstream behavior change is a scope constraint: use the desired outcome to determine which mechanic facts are material. Stop once those facts are established; do not choose the intervention mechanism. If the user also wants a calculator, simulator, instrumentation, mod, or gameplay change, pass the recovered facts to $apply-game-logic for downstream design and implementation.
+This skill produces mechanic knowledge. For downstream requests, use the desired outcome only to determine which mechanic facts are material. Pass the recovered version-scoped facts to $apply-game-logic; do not choose the change mechanism here.
 
 ## 1. Bound the task
 
