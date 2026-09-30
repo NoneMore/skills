@@ -7,10 +7,11 @@ These scenarios validate the useful boundary between analysis and application wi
 The user asks to change a local/offline mechanic and no verified mechanic knowledge exists.
 
 Required assertions:
-- analyze-game-logic recovers the material mechanic facts first
+- the user's desired behavior is preserved as an analysis scope constraint
+- analyze-game-logic recovers only the mechanic facts material to that behavior
 - application does not guess patch sites, units, or ownership from intent
+- analysis stops at the smallest mechanic slice material to that behavior and does not select the change mechanism
 - apply-game-logic consumes the recovered version-scoped mechanic knowledge
-- analysis does not design the downstream change
 - application does not repeat broad reverse engineering
 
 ## 2. Existing knowledge avoids unnecessary composition

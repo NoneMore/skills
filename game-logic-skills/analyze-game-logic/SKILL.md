@@ -2,14 +2,14 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.2.1"
+  version: "v5.2.2"
 ---
 
 # Analyze Game Logic
 
 Recover the smallest version-scoped mechanic slice that answers the user's question. Keep narrow lookup questions narrow. Do not add persistence, runtime work, or binary analysis unless the question needs them.
 
-This skill produces mechanic knowledge. If the user also wants a calculator, simulator, instrumentation, mod, or gameplay change, finish the material recovery first and pass the recovered facts to $apply-game-logic.
+This skill produces mechanic knowledge. For downstream requests, use the desired outcome only to determine which mechanic facts are material. Pass the recovered version-scoped facts to $apply-game-logic; do not choose the change mechanism here.
 
 ## 1. Bound the task
 
