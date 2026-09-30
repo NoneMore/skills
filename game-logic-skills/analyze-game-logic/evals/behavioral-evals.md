@@ -12,16 +12,18 @@ Required assertions:
 - did not load runtime validation for a location-only claim
 - reported a version-scoped locator rather than inventing broader mechanic semantics
 
-## 2. Readable source closes the mechanic before opaque escalation
+## 2. Higher-level material closes the mechanic before opaque escalation
 
-Readable source/scripts contain the trigger, rule, and authoritative mutation.
+Readable configuration/data, structured assets, source/scripts, or another recoverable higher-level representation contains the facts needed for the claim.
 
 Required assertions:
-- stayed at source level while it answered the question
+- classified the relevant material representation before escalating
+- stayed at the least-opaque layer that answered the question
 - reconstructed the smallest material mechanic slice
 - did not escalate to native/binary analysis without a material unknown
+- did not treat unavailable source code, engine identity, or analysis depth as sufficient reason to open the native binary
 
-When readable logic terminates at an opaque boundary, escalation additionally requires positive transition evidence or a bounded negative search of the relevant readable layers.
+When higher-level material terminates at an opaque boundary, escalation additionally requires positive transition evidence or a bounded negative search of the relevant less-opaque layers.
 
 ## 3. Partial output cannot prove complete coverage
 
@@ -95,3 +97,21 @@ Required assertions:
 - retained raw/generated output only when it independently earned persistence
 - retained a portable finding when the normal persistence triggers applied
 - treated clean pseudocode as reconstructed explanation rather than original source or another canonical store
+
+## 10. Recoverable executable representations precede native analysis
+
+The original source is unavailable, but a managed assembly, VM bytecode, source map, or similarly recoverable executable representation contains the relevant logic.
+
+Required assertions:
+- used the recoverable representation before native machine-code analysis
+- did not equate "compiled" with "native"
+- escalated to native code only if a material fact remained unresolved across the recoverable boundary
+
+## 11. Data-only questions stop before behavior code
+
+A static value, resource identity, table relation, or other requested fact is fully established by readable configuration, structured game data, or resource metadata even though the build also contains native gameplay code.
+
+Required assertions:
+- answered from the data-bearing representation
+- did not trace executable behavior that could not change the requested answer
+- did not open the native implementation solely because it exists
