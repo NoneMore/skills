@@ -68,7 +68,7 @@ Next action: <the next lifecycle action, or None>
 
 If delivery evidence is complete, upsert `Outcome: delivered`, then run the configured terminal finalization.
 
-If delivery is pending, upsert `Outcome: awaiting-delivery`, suspend the item using the configured execution-coordination operation, and release the active claim. End the session.
+If delivery is pending, upsert `Outcome: awaiting-delivery`, then use the configured suspension operation to release the active claim while keeping the item outside the execution frontier. End the session.
 
 **Completion condition:** the canonical result and tracker state durably represent either delivered terminal work or open, unclaimed work awaiting delivery.
 
@@ -76,8 +76,8 @@ If delivery is pending, upsert `Outcome: awaiting-delivery`, suspend the item us
 
 If claimed work cannot continue, do not leave an active claim:
 
-- **Blocked:** upsert `Outcome: blocked` with the blocker and concrete `Next action`; record a real blocking relationship when one exists, suspend the item, and release the claim.
-- **Abandoned:** upsert `Outcome: abandoned` with the reason and material partial work, then run the configured terminal-abandon operation.
+- **Blocked:** upsert `Outcome: blocked` with the blocker and concrete `Next action`; record a real blocking relationship when one exists, then use the configured suspension operation to release the claim while keeping the item outside the execution frontier.
+- **Abandoned:** upsert `Outcome: abandoned` with the reason and material partial work, then run the configured terminal operation.
 
 A failure before a tracker-backed item was successfully claimed is read-only from the tracker's perspective.
 
