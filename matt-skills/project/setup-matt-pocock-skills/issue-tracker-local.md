@@ -8,11 +8,11 @@ Issues and specs for this repo live as markdown files in `.scratch/`.
 - The spec is `.scratch/<feature-slug>/spec.md`
 - Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`, never a single combined tickets file
 - Work-item role is `Work-Item-Role: <request|decision-map|decision-ticket|spec|implementation-ticket>` near the top of each participating file.
-- Immediate provenance is `Derived-From: <path>, <path>` on the derived file; missing or `Derived-From: None` means no sources.
+- Provenance is `Derived-From: <path>, <path>` on the derived file; missing or `Derived-From: None` means no sources.
 - Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings). When a publishing skill applies a triage role to the spec, record the same `Status:` line near the top of `spec.md`. This field is reserved for canonical triage roles; Wayfinder lifecycle uses a separate field.
 - Comments and conversation history append to the bottom of the file under a `## Comments` heading
 
-Work-item role and provenance are independent from hierarchy, blocking, triage state, `Type:`, and `Wayfinder-State:`. After changing work-item metadata, re-read the file and verify the persisted fields.
+Work-item role and provenance are independent from hierarchy, blocking, triage state, `Type:`, and `Wayfinder-State:`.
 
 ## When a skill says "publish to the issue tracker"
 
