@@ -41,7 +41,7 @@ Run typechecking regularly, single test files regularly, and the full test suite
 
 Once implementation and tests are complete, call the Skill tool with "code-review" exactly once. Pass the review fixed point and known originating execution contract explicitly. Address the review before committing.
 
-For tracker-backed work, commit and publish according to the configured delivery policy. For standalone work, commit to the current branch after review unless the user supplied different delivery instructions.
+Commit the verified work after review. For standalone work, use the current branch unless the user supplied different delivery instructions; tracker-backed publication belongs to Step 3.
 
 **Completion condition:** implementation is verified, review findings are addressed, and the resulting commit SHA(s) are known.
 
