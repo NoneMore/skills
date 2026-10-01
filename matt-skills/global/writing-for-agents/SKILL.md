@@ -26,7 +26,7 @@ A good pointer does two jobs:
 
 Prefer discriminating capability, branch, or domain terms over generic prose. Avoid redundant trigger synonyms unless they materially improve routing. Do not spend pointer text repeating identity already obvious from the target.
 
-If required material is routinely missed, sharpen the pointer before inlining the whole target.
+If required material is routinely missed, sharpen the pointer before inlining the whole target. When adding or changing a mechanically resolvable local pointer, verify that its target resolves.
 
 ### Two costs
 
@@ -96,7 +96,7 @@ Review instructions for three failure modes:
 
 Delete no-ops instead of polishing them. Shorter documents make important instructions easier to notice and easier to keep current.
 
-For model-dependent wording choices, compare behaviour with and without the instruction when the distinction matters. Use representative evals when the cost or impact justifies a stable harness; otherwise rely on direct observation and keep claims tentative.
+For model-dependent wording choices, compare behaviour with and without the instruction when the distinction matters. When testing routing, include cases where the material should be loaded and cases where it should not. Use representative evals when the cost or impact justifies a stable harness; otherwise rely on direct observation and keep claims tentative.
 
 ## Optional tuning
 
