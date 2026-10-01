@@ -59,13 +59,15 @@ Publish one tracker item per approved ticket, blockers first so relationship tar
 
 If the source is a persisted tracker spec, make every generated ticket its child; otherwise do not invent a parent. Keep parentage, blocking, and provenance independent: do not add `derived-from` merely to mirror the spec parent. Apply the configured `ready-for-agent` state unless instructed otherwise.
 
-Use `<local-ticket-template>` for local Markdown; otherwise use `<issue-template>` unless the configured tracker requires another body shape. Do not close, relabel, or rewrite the parent merely because tickets were published.
+Use `<local-ticket-template>` for local Markdown; when a local spec is the source, insert `Parent: ../spec.md` immediately after the work-item role and omit it otherwise. For other trackers, use `<issue-template>` unless the configured tracker requires another body shape. Do not close, relabel, or rewrite the parent merely because tickets were published.
 
-After publishing, re-read every created ticket and verify its role, expected parent, blockers, and triage state. Then tell the user that the user-invoked `implement` skill is the normal next step for any frontier ticket (all blockers done), and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
+After publishing, use the configured post-mutation readback (or its fallback) to verify every created ticket's role, expected parent, blockers, and triage state. Then tell the user that the user-invoked `implement` skill is the normal next step for any frontier ticket (all blockers done), and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
 
 <local-ticket-template>
 
 # <NN>: <Ticket title>
+
+Work-Item-Role: implementation-ticket
 
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
