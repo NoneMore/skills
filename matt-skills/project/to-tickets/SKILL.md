@@ -67,8 +67,6 @@ After publishing, re-read every created ticket and verify its role, expected par
 
 # <NN>: <Ticket title>
 
-Work-Item-Role: implementation-ticket
-
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
 Blocked by: the numbers/titles of the tickets that gate this one, or "None (can start immediately)".
