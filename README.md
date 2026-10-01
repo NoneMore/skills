@@ -58,6 +58,7 @@ A comprehensive collection of agentic workflows inspired by Matt Pocock's softwa
   - `grill-with-docs`: Document-grounded critical interrogation of proposals and specs.
   - `handoff`: Context packaging and next-step capture for seamless handoffs.
   - `implement`: Focused, disciplined implementation conforming strictly to established specs.
+  - `reconcile`: Verifies terminal implementation outcomes against parent specs and reconciles satisfied specs to originating artifacts.
   - `improve-codebase-architecture`: Incremental refactoring and technical debt remediation.
   - `prototype`: Rapid proof-of-concept exploration while isolating experimental code.
   - `research`: Structured technology evaluations and tradeoff analyses.
