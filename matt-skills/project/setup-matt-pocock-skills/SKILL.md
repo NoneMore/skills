@@ -59,7 +59,7 @@ Consumers should never have to invent missing tracker behavior.
 
 The defaults are the five canonical roles, each label string equal to its name: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. On **yes**, write them as-is. Only if the user says no, usually because their tracker already uses other names (e.g. `bug:triage` for `needs-triage`), collect the overrides so `triage` applies existing labels instead of creating duplicates.
 
-**Section C: Domain docs.** If an existing `docs/agents/domain.md` declares a layout, preserve it unless the user asked to change it. Otherwise, use **multi-context** only when `CONTEXT-MAP.md` already exists or the user explicitly requests multi-context. In every other case, write the **single-context** layout without asking.
+**Section C: Domain docs.** If an existing `docs/agents/domain.md` declares a layout, preserve it unless the user asked to change it. Otherwise ask the user to choose **single-context** (one root `CONTEXT.md` + `docs/adr/`) or **multi-context** (a root `CONTEXT-MAP.md` pointing to per-context docs).
 
 ### 3. Resolve the instruction target and confirm the draft
 
