@@ -25,7 +25,7 @@ Read the supplied artifact's full body/comments, work-item role, tracker state, 
 
 ### 2. Verify satisfaction
 
-For a request/spec, use required implementation-ticket children when present; otherwise use its own canonical Implementation Result. When this contract is an immediate provenance source of a satisfied downstream spec, that downstream result and material delivery evidence are additional evidence.
+For a request/spec, use required implementation-ticket children when present. Otherwise use its terminal canonical Implementation Result when present; when reached as an immediate provenance source of a satisfied downstream spec, use that downstream result and material delivery evidence as execution evidence too. If none of these provide terminal execution evidence, record `waiting`.
 
 Required children must be terminal before satisfaction is checked. Terminal children, including blocked/abandoned/partial outcomes, trigger verification but do not prove satisfaction. For a directly executed request/spec with `Outcome: delivered`, re-check configured delivery evidence before recording satisfaction.
 
