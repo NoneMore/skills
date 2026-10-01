@@ -55,21 +55,26 @@ Iterate until the user approves the breakdown.
 
 ### 5. Publish the tickets to the configured tracker
 
-Publish one tracker item per approved ticket, blockers first so relationship targets already exist. Use the configured tracker's hierarchy, blocking, and triage-state representations rather than inventing platform behavior.
+Publish one tracker item per approved ticket, blockers first so relationship targets already exist. Give every published item work-item role `implementation-ticket`. Use the configured tracker's hierarchy, blocking, and triage-state representations rather than inventing platform behavior.
 
-When the configured tracker defines hierarchy for this publishing workflow and the source is an existing tracker issue/spec, make every generated ticket its child. If there is no source tracker item, do not invent a parent. Wire blocking edges independently and apply the configured `ready-for-agent` state unless instructed otherwise.
+When the source is an existing tracker spec, make every generated ticket its child. If there is no source spec tracker item, do not invent a parent. Wire blocking edges independently and apply the configured `ready-for-agent` state unless instructed otherwise. Do not add `derived-from` merely to mirror the spec parent, and never copy the spec's upstream provenance chain onto implementation tickets.
 
-**Hierarchy and blocking are orthogonal.** Parent/child says what larger work a ticket belongs to; blocking says what must finish first. Never infer one from the other.
+**Hierarchy, blocking, and provenance are orthogonal.** Parent/child says what larger work a ticket belongs to; blocking says what must finish first; provenance says which earlier artifact directly informed a newly derived artifact. Never infer one from another.
 
 Use `<local-ticket-template>` for local Markdown; otherwise use `<issue-template>` unless the configured tracker requires another body shape.
 
 Do not close, relabel, or rewrite the parent merely because tickets were published; adding the configured child relationship is expected.
 
-After publishing, tell the user that the user-invoked `implement` skill is the normal next step for any frontier ticket (all blockers done), and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
+After publishing, re-read every created ticket when the tracker supports it and verify its work-item role, parent, blockers, and triage state. The persisted graph, not the intended write, is the completion condition.
+
+Then tell the user that the user-invoked `implement` skill is the normal next step for any frontier ticket (all blockers done), and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
 
 <local-ticket-template>
 
 # <NN>: <Ticket title>
+
+Work-Item-Role: implementation-ticket
+Parent: ../spec.md
 
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
