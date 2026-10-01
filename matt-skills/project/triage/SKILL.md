@@ -92,7 +92,7 @@ Read the complete tracker item, including prior triage notes; for a PR/MR, read 
 Check both:
 
 - **Redundancy:** search by domain concept for an existing implementation of the requested behavior.
-- **Prior rejection:** if `.out-of-scope/` exists, account for every existing `.out-of-scope/*.md` record before concluding that no prior rejection applies.
+- **Prior rejection:** follow [OUT-OF-SCOPE.md](OUT-OF-SCOPE.md) to check existing scope-decision records.
 
 **Completion condition:** you can state what was requested, what prior triage already established, where you checked the current code, whether equivalent behavior already exists, and whether a prior rejection is relevant.
 
