@@ -35,7 +35,7 @@ Break the work into **tracer bullet** tickets.
 
 Give each ticket its **blocking edges**: the other tickets that must complete before it can start. A ticket with no blockers can start immediately.
 
-**Wide refactors are the exception to vertical slicing.** Treat a mechanical change as wide only when no affected subset can land green independently. Sequence it as **expand–contract**: first add the new form beside the old; then migrate independently green subsets as separate tickets blocked by the expand; finally remove the old form in a ticket blocked by every migration. If no migration subset can land green independently, use an integration branch and make those migrations block one final integrate-and-verify ticket.
+A mechanical refactor does not need to be forced into vertical slices when affected subsets cannot land green independently. Represent whatever sequencing or integration work is required explicitly in the ticket graph.
 
 ### 4. Quiz the user
 
@@ -103,4 +103,4 @@ The end-to-end behaviour this ticket makes work, from the user's perspective, no
 
 </issue-template>
 
-In either form, do not include specific file paths or code snippets; they go stale fast.
+
