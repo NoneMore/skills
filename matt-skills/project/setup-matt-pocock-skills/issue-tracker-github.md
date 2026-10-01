@@ -40,7 +40,7 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 - **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`; release with `--remove-assignee @me`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
 - **Implementation Result:** store exactly one issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
 - **Delivery evidence:** for direct-commit mode, run `gh api "repos/<owner>/<repo>/compare/<commit>...<target-branch>" --jq .status`; `ahead` or `identical` means the target contains the commit. For pull-request mode, inspect the recorded PR with `gh pr view <pr> -R <owner>/<repo> --json state,mergedAt,baseRefName,url,mergeCommit`; require merged state and the configured target branch.
-- **Terminal operation:** close the issue first, then remove `execution:suspended` and any active assignee. Repeating this on an already-closed item is a no-op.
+- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
 
 ## Pull requests as a triage surface
 
