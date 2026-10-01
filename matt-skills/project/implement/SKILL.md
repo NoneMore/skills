@@ -49,7 +49,7 @@ Commit the verified work after review. For standalone work, use the current bran
 
 For standalone work, report the commit plus verification/review outcome and stop.
 
-For tracker-backed work, use the configured delivery operation and inspect its evidence. Do not wait indefinitely for external PR/MR review or merge.
+For tracker-backed work, follow the configured delivery policy. Publish a PR/MR when that policy defines a publication operation, then inspect the configured delivery evidence. Do not wait indefinitely for external PR/MR review or merge.
 
 Maintain exactly one canonical Implementation Result; update it on re-entry rather than appending duplicates:
 
