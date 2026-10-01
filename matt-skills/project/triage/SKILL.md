@@ -23,6 +23,8 @@ Use these sources authoritatively:
 
 Do not duplicate tracker commands here, guess label strings, or create a canonical label merely because the configured tracker uses another name.
 
+Before any triage-state mutation, persist work-item role `request`. Work-item role is independent from category and triage state.
+
 Every AI-authored tracker note created during triage must start with:
 
 ```markdown
@@ -149,7 +151,7 @@ Use the configured tracker operations and mapped state string:
 
 After mutation, re-read the tracker item.
 
-**Completion condition:** the item has exactly one intended state role, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
+**Completion condition:** the item has work-item role `request`, exactly one intended state role, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
 
 ### 6. Stop at the phase boundary
 
@@ -157,11 +159,11 @@ Triage prepares work; it does not implement it. If the user asks to continue fro
 
 ## Quick state override
 
-When the maintainer explicitly requests a state move, trust the override. State the exact mutation first: target canonical role, mapped tracker value, conflicting states to remove, comment/brief behavior, and whether the item becomes terminal.
+When the maintainer explicitly requests a state move, trust the override. State the exact mutation first: target canonical triage role, mapped tracker value, conflicting triage states to remove, comment/brief behavior, and whether the item becomes terminal.
 
 Skip grilling. If `ready-for-agent` would be applied without a durable brief, ask whether the maintainer wants one written first.
 
-After mutation, re-read the item and verify the requested state is the only triage state present.
+After mutation, re-read the item and verify work-item role `request` and that the requested triage state is the only triage state present.
 
 ## Needs-info note
 

@@ -7,8 +7,12 @@ Issues and specs for this repo live as markdown files in `.scratch/`.
 - One feature per directory: `.scratch/<feature-slug>/`
 - The spec is `.scratch/<feature-slug>/spec.md`
 - Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`, never a single combined tickets file
+- Work-item role is `Work-Item-Role: <request|decision-map|decision-ticket|spec|implementation-ticket>` near the top of each participating file.
+- Provenance is `Derived-From: <path>, <path>` on the derived file; missing or `Derived-From: None` means no sources.
 - Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings). When a publishing skill applies a triage role to the spec, record the same `Status:` line near the top of `spec.md`. This field is reserved for canonical triage roles; Wayfinder lifecycle uses a separate field.
 - Comments and conversation history append to the bottom of the file under a `## Comments` heading
+
+Work-item role and provenance are independent from hierarchy, blocking, triage state, `Type:`, and `Wayfinder-State:`.
 
 ## When a skill says "publish to the issue tracker"
 
@@ -17,6 +21,10 @@ Create a new file under `.scratch/<feature-slug>/` (creating the directory if ne
 ## When a skill says "fetch the relevant ticket"
 
 Read the referenced path. For a bare issue number, search `.scratch/*/issues/` and use it only if exactly one file has that number; otherwise ask for the feature or path.
+
+## Hierarchy
+
+Record `Parent: <path>` near the top of a child file. Implementation tickets produced from a local spec use `Parent: ../spec.md`; Wayfinder decision tickets use `Parent: ../map.md`.
 
 ## Wayfinding operations
 

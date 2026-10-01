@@ -14,7 +14,7 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 ### 1. Gather context
 
-Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
+Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body, comments, persisted work-item role, and relationships.
 
 ### 2. Use codebase context
 
@@ -55,21 +55,19 @@ Iterate until the user approves the breakdown.
 
 ### 5. Publish the tickets to the configured tracker
 
-Publish one tracker item per approved ticket, blockers first so relationship targets already exist. Use the configured tracker's hierarchy, blocking, and triage-state representations rather than inventing platform behavior.
+Publish one tracker item per approved ticket, blockers first so relationship targets already exist. Give each item work-item role `implementation-ticket` and use the configured tracker representations for hierarchy, blocking, and triage state.
 
-When the configured tracker defines hierarchy for this publishing workflow and the source is an existing tracker issue/spec, make every generated ticket its child. If there is no source tracker item, do not invent a parent. Wire blocking edges independently and apply the configured `ready-for-agent` state unless instructed otherwise.
+If the source is a persisted tracker spec, make every generated ticket its child; otherwise do not invent a parent. Keep parentage, blocking, and provenance independent: do not add `derived-from` merely to mirror the spec parent. Apply the configured `ready-for-agent` state unless instructed otherwise.
 
-**Hierarchy and blocking are orthogonal.** Parent/child says what larger work a ticket belongs to; blocking says what must finish first. Never infer one from the other.
+Use `<local-ticket-template>` for local Markdown; when a local spec is the source, insert `Parent: ../spec.md` immediately after the work-item role and omit it otherwise. For other trackers, use `<issue-template>` unless the configured tracker requires another body shape. Do not close, relabel, or rewrite the parent merely because tickets were published.
 
-Use `<local-ticket-template>` for local Markdown; otherwise use `<issue-template>` unless the configured tracker requires another body shape.
-
-Do not close, relabel, or rewrite the parent merely because tickets were published; adding the configured child relationship is expected.
-
-After publishing, tell the user that the user-invoked `implement` skill is the normal next step for any frontier ticket (all blockers done), and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
+After publishing, use the configured verification operation to confirm every created ticket's role, expected parent, blockers, and triage state. Then tell the user that the user-invoked `implement` skill is the normal next step for any frontier ticket (all blockers done), and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
 
 <local-ticket-template>
 
 # <NN>: <Ticket title>
+
+Work-Item-Role: implementation-ticket
 
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 

@@ -22,6 +22,8 @@ Once published, the map is the configured tracker's canonical artifact, with tic
 
 The map is an **index**, not a store. It lists the decisions made and points at the tickets that hold their detail; a decision lives in exactly one place, its ticket, so the map never restates it, only gists it and links.
 
+A published map has work-item role `decision-map`; record its direct tracker sources as `derived-from` provenance.
+
 **Where the map, its child tickets, blocking, and frontier queries physically live is tracker-specific.** The issue tracker should have been provided to you. Consult its "Wayfinding operations" section for how _this_ repo expresses them. If no tracker has been configured, the draft may remain in the conversation, but do not publish it; tell the user to invoke the user-invoked `setup-matt-pocock-skills` skill explicitly before publication.
 
 ### The map body
@@ -54,7 +56,7 @@ The whole map at low resolution, loaded once per session. Open tickets are **not
 
 ### Tickets
 
-Each ticket is a **child** of the map; the tracker's ticket identity is its identity. Its body is the question, sized to one 100K token agent session:
+Each ticket has work-item role `decision-ticket` and is a **child** of the map; the tracker's ticket identity is its identity. Its body is the question, sized to one 100K token agent session:
 
 ```markdown
 ## Question
@@ -62,7 +64,7 @@ Each ticket is a **child** of the map; the tracker's ticket identity is its iden
 <the decision or investigation this ticket resolves>
 ```
 
-Each ticket records one type: `research`, `prototype`, `grilling`, or `task` (see [Ticket Types](#ticket-types)); the configured tracker defines how that type is represented.
+Each ticket records one Wayfinder type: `research`, `prototype`, `grilling`, or `task` (see [Ticket Types](#ticket-types)); the configured tracker defines how that type is represented separately from work-item role.
 
 A session **claims** a ticket **first**, before any work, using the configured tracker's claim mechanism so concurrent sessions skip it.
 
@@ -112,8 +114,8 @@ User invokes with a loose idea.
 2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** (the way to the destination is already clear, the whole journey small enough for one session), you don't need a map. Stop and ask the user how they'd like to proceed.
 3. **Draft the map in conversation.** Show the proposed Destination, Notes, fog, ticket titles/questions/types, and blocking relationships, plus the configured tracker if one exists. This is the candidate decision graph, not yet canonical.
 4. **Review the draft with the human.** They may mark tickets already decided, change a type, add/remove/reword tickets, change dependencies, or move something to fog or out of scope. Do not write to the tracker or start research until they approve the graph. Publication is either to the repo's configured tracker or nowhere; changing trackers is a repo-level setup change, not a per-map choice.
-5. **Publish the approved map.** If the human keeps it conversation-only, publish nothing and stop after the reviewed draft. Otherwise use the configured tracker's Wayfinding operations to create the canonical map with Destination and Notes filled in and the approved fog in **Not yet specified**.
-6. **Create the approved tickets** as children of the map, including tickets the human marked already decided. Wire blocking edges in a **second pass** where the tracker requires created identities before relationships. Immediately resolve each already-decided ticket with its existing answer and append its context pointer to **Decisions so far**; every decision still has exactly one ticket as its canonical home.
+5. **Publish the approved map.** If the human keeps it conversation-only, publish nothing and stop after the reviewed draft. Otherwise use the configured tracker's Wayfinding operations to create the canonical map with its work-item role, direct-source provenance, Destination and Notes filled in, and the approved fog in **Not yet specified**.
+6. **Create the approved tickets** as children of the map using the ticket contract above, including tickets the human marked already decided. Wire blocking edges in a **second pass** where the tracker requires created identities before relationships; do not copy the map's provenance onto its children. Immediately resolve each already-decided ticket with its existing answer and append its context pointer to **Decisions so far**. Use the configured verification operation to confirm the map and created tickets' work-item metadata and relationships before proceeding.
 7. **Fire the research subagents.** Draft approval also authorizes launching approved `research` tickets that are on the frontier. Spin those up in parallel, each calling the Skill tool with "research" and capturing its findings on a throwaway `research/<name>` branch with a context pointer from the ticket. Blocked research waits for its prerequisites like any other ticket.
 8. Stop: charting is one session's work; it hand-resolves nothing beyond recording decisions the human had already settled before publication.
 
@@ -125,7 +127,7 @@ User invokes with a map reference. A ticket is **optional**: without one, you pi
 2. Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. **Claim it before any work** using the configured tracker's Wayfinding operations.
 3. Resolve it. **Zoom as needed**: fetch the full body of any related or resolved ticket on demand. For skills named in the `## Notes` block, call the Skill tool only when that skill is **model-invoked**. If Notes names a **user-invoked** workflow, do not call or read it; tell the user to invoke it explicitly when its phase is reached. If in doubt about the decision work itself, call the Skill tool twice, for "grilling" and "domain-modeling".
 4. Record the resolution using the configured tracker's Wayfinding operations, then **append a context pointer** to the map's Decisions-so-far.
-5. Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals that a ticket (this one or another) sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
+5. Add newly-surfaced tickets using the same ticket contract (create-then-wire) and verify their persisted work-item metadata and relationships; graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals that a ticket (this one or another) sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
 
 The user may run unblocked tickets in parallel, so expect other sessions to be editing the tracker concurrently.
 

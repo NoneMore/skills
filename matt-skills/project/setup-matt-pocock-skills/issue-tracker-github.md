@@ -17,6 +17,13 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 Do not rediscover the repository from `git remote -v` after setup; the configured repository above is the source of truth.
 
+## Work-item metadata
+
+- **Role:** read `work-item:<role>` labels. To write a role, remove any other `work-item:*` role labels, add the target label with `gh issue edit <n> -R <owner>/<repo> --add-label "work-item:<role>"` (or `gh pr edit` for a configured PR request surface), and create the target first when missing with `gh label create "work-item:<role>" -R <owner>/<repo> --description "Work item role: <role>"`.
+- **Derived from:** read source references from one reserved body line near the top: `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the body when updating this line.
+
+Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
+
 ## Relationships
 
 - **Hierarchy**: native sub-issues are canonical. Create a child with `gh issue create -R <owner>/<repo> --parent <parent> ...`, attach an existing issue with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`, and read with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary` or `--json parent` on the child. If unsupported, fall back to `Parent: #<n>` in the child body.

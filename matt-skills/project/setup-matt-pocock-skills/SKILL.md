@@ -47,13 +47,17 @@ For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract,
 
 - exact project/workspace identity;
 - ticket create/read/list-search/comment, apply/remove triage state, and terminal close/reject;
+- read/write work-item role for `request`, `decision-map`, `decision-ticket`, `spec`, and `implementation-ticket`;
+- read/write `derived-from` as zero or more direct tracker sources stored on the derived artifact; a direct source is an artifact used as input to create the current artifact, without following that source's own provenance;
 - create/read parent-child and blocking relationships;
 - claiming and the Wayfinder frontier (open + unblocked + unclaimed children);
-- post-mutation readback so consumers can verify persisted state.
+- a post-mutation verification operation so consumers can confirm persisted state.
+
+Work-item role, `derived-from`, hierarchy, blocking, triage state, Wayfinder lifecycle, and tracker open/closed state are independent; do not infer one from another.
 
 Consumers should never have to invent missing tracker behavior.
 
-**Section B: Triage label vocabulary.** Always configure this vocabulary. `triage` consumes it when installed, and `to-spec` / `to-tickets` consume the `ready-for-agent` role even when `triage` itself is absent. Ask exactly one question:
+**Section B: Triage label vocabulary.** These are triage-state roles, not work-item roles. Always configure this vocabulary. `triage` consumes it when installed, and `to-spec` / `to-tickets` consume the `ready-for-agent` role even when `triage` itself is absent. Ask exactly one question:
 
 > Do you want to keep the default triage labels? (recommended: **yes**)
 

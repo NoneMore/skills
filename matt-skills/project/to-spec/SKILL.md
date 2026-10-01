@@ -16,7 +16,7 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 3. Check that the conversation is **decision-complete enough to implement**. Material architectural branches, unresolved product choices, or unverified assumptions that would force the implementing agent to make a design decision are blockers. Do not invent answers just to finish the spec, and do not mark a blocked spec `ready-for-agent`. Instead, tell the user which unresolved decisions remain and suggest the appropriate **user-invoked** workflow by canonical skill name (normally `grill-with-docs`, or `wayfinder` for a multi-session decision space). Tell the human to invoke it explicitly using their harness's user-invocation mechanism; do not invoke, read, shell out to, or emulate those workflows yourself.
 
-4. Write the spec using the template below, then publish it to the project issue tracker. Apply the configured `ready-for-agent` triage role - no need for additional triage. For a local-markdown tracker, record the configured role string as `Status: <role>` near the top of the spec.
+4. Write the spec using the template below, then publish it with work-item role `spec`, `derived-from` set to its direct tracker sources, and the configured `ready-for-agent` triage state. Use the configured tracker representations and verification operation to confirm all three persisted values.
 
 5. After publishing, tell the user that the user-invoked `to-tickets` skill is the normal next workflow when they want implementation tickets, and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate it yourself.
 
