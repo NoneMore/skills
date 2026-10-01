@@ -57,14 +57,16 @@ Iterate until the user approves the breakdown.
 
 ### 5. Publish the tickets to the configured tracker
 
-Publish the approved tickets. **How** depends on the tracker configured by `setup-matt-pocock-skills`; the tickets are the same either way, only the shape of the blocking edges changes:
+Publish the approved tickets. **How** depends on the tracker configured by `setup-matt-pocock-skills`; the tickets are the same either way, while hierarchy and blocking use the tracker's configured representations:
 
 - **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-ticket file template below: one ticket per file, never a single combined file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the configured label for the canonical `ready-for-agent` triage role unless instructed otherwise; the tickets are agent-grabbable by construction.
+- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so relationships can reference real identifiers. If the source is an existing tracker issue/spec, make every generated ticket a child of that source using the tracker's native parent/child relationship when available; otherwise use the configured parent fallback. Independently, represent execution ordering with the tracker's native blocking relationship when available, otherwise the configured blocking fallback. Apply the configured label for the canonical `ready-for-agent` triage role unless instructed otherwise; the tickets are agent-grabbable by construction.
+
+**Hierarchy and blocking are orthogonal.** Parent/child answers "what larger work does this ticket belong to?"; blocking answers "what must finish before this ticket can start?". Sibling tickets under one parent may be independent, or may block one another. Never infer a blocking edge merely from the parent/child relationship.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
 
-Do NOT close or modify any parent issue.
+Do NOT close, relabel, or rewrite the parent issue merely because tickets were published. Adding the configured native child relationship is expected and is not a parent-content/state mutation.
 
 After publishing, tell the user that the user-invoked `implement` skill is the normal next step for a frontier ticket they want built, and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate `implement` yourself.
 
@@ -87,7 +89,7 @@ Status: <configured ready-for-agent role string>
 
 ## Parent
 
-A reference to the parent issue on the tracker (if the source was an existing issue, otherwise omit this section).
+A reference to the parent issue on the tracker when native parent/child relationships are unavailable or the configured tracker requires the reference in the body. When the tracker has a native parent relationship (for example GitHub sub-issues), use that relationship as the canonical hierarchy and omit this section unless the configured tracker also wants a textual pointer.
 
 ## What to build
 
