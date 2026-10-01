@@ -159,11 +159,11 @@ Triage prepares work; it does not implement it. If the user asks to continue fro
 
 ## Quick state override
 
-When the maintainer explicitly requests a state move, trust the override. State the exact mutation first: target canonical role, mapped tracker value, conflicting states to remove, comment/brief behavior, and whether the item becomes terminal.
+When the maintainer explicitly requests a state move, trust the override. State the exact mutation first: target canonical triage role, mapped tracker value, conflicting triage states to remove, comment/brief behavior, and whether the item becomes terminal.
 
 Skip grilling. If `ready-for-agent` would be applied without a durable brief, ask whether the maintainer wants one written first.
 
-After mutation, re-read the item and verify work-item role `request` plus the requested triage state.
+After mutation, re-read the item and verify work-item role `request` and that the requested triage state is the only triage state present.
 
 ## Needs-info note
 
