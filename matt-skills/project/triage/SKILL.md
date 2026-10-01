@@ -135,6 +135,8 @@ These are model-invoked supporting skills. If a required supporting skill is una
 
 ### 5. Apply one outcome
 
+Before changing triage state, persist work-item role `request` through the configured tracker operation. If the item already has a different work-item role, stop instead of silently reclassifying it. Work-item role is independent of category and triage state.
+
 Use the configured tracker operations and mapped state string:
 
 - **`ready-for-agent`** — publish an agent brief from [AGENT-BRIEF.md](AGENT-BRIEF.md), then apply the mapped state and persist the category only if the tracker defines category representation.
@@ -149,7 +151,7 @@ Use the configured tracker operations and mapped state string:
 
 After mutation, re-read the tracker item.
 
-**Completion condition:** the item has exactly one intended state role, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
+**Completion condition:** the item has work-item role `request`, exactly one intended triage state role, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
 
 ### 6. Stop at the phase boundary
 
@@ -161,7 +163,7 @@ When the maintainer explicitly requests a state move, trust the override. State 
 
 Skip grilling. If `ready-for-agent` would be applied without a durable brief, ask whether the maintainer wants one written first.
 
-After mutation, re-read the item and verify the requested state is the only triage state present.
+After mutation, re-read the item and verify work-item role `request` is persisted and the requested state is the only triage state present.
 
 ## Needs-info note
 
