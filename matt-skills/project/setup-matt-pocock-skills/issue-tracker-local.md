@@ -36,16 +36,14 @@ Used by `implement`. Triage `Status:`, execution coordination, delivery result, 
 - **Claim / release / suspend:** claim with `Execution-State: claimed`. Release by removing `Execution-State:`; suspend with `Execution-State: suspended`, which also releases the active claim. A real blocker should also be recorded in `Blocked by`.
 - **Implementation Result:** maintain exactly one `## Implementation Result` section using the semantic result required by `implement`; create it when absent and replace its contents on re-entry.
 - **Delivery evidence:** for direct-commit mode, refresh the configured target ref and require `git merge-base --is-ancestor <implementation-sha> <target-ref>` to succeed. For `pr-mr`, use the publication/inspection operation written by setup and require merged/target-branch evidence.
-- **Terminal operation:** set `Tracker-State: closed` and clear `Execution-State:`. The operation is safe to repeat. `reconcile` decides when a terminal Implementation Result should invoke it according to work-item role.
+- **Terminal operation:** set `Tracker-State: closed` and clear `Execution-State:`. The operation is safe to repeat.
 
 ## Upstream reconciliation
 
 Used by `reconcile`. The workflow decides requirement satisfaction; this adapter only persists and verifies its inputs/results.
 
-- **Terminal children/results:** enumerate files whose `Parent:` resolves to the subject, read each child's `Tracker-State:`, and read its canonical Implementation Result when present.
 - **Reconciliation Result:** maintain exactly one `## Reconciliation Result` section using the semantic record defined by `reconcile`; create it when absent and replace its contents on rerun.
 - **Source-keyed upstream note:** under one `## Reconciliation` section on each direct provenance source, maintain one `### From <spec-path>` subsection per satisfied spec. Replace the matching subsection on rerun rather than appending a duplicate.
-- **Verification/finalization:** re-read the affected files after mutation. Reuse the terminal operation above only when `reconcile` has verified that artifact's own completion semantics.
 
 ## Wayfinding operations
 
