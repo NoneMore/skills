@@ -24,12 +24,14 @@ Before going further, confirm the fixed point resolves (`git rev-parse <fixed-po
 
 ### 2. Identify the spec source
 
-Look for the originating spec, in this order:
+Use the originating execution contract supplied explicitly by an enclosing workflow when one is available. Otherwise look for the source in this order:
 
 1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.), fetched via the workflow in `docs/agents/issue-tracker.md`.
 2. A path the user passed as an argument.
 3. A spec file under `docs/`, `specs/`, or `.scratch/` matching the branch name or feature.
 4. If nothing is found, ask the user where the spec is. If they say there isn't one, the **Spec** sub-agent will skip and report "no spec available".
+
+Do not replace an explicitly supplied execution contract with a heuristic source merely because commits or branch names also contain references.
 
 ### 3. Identify the standards sources
 
@@ -66,7 +68,7 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 **Spec sub-agent prompt** should include:
 
 - The diff command and commit list.
-- The path or fetched contents of the spec.
+- The explicitly supplied execution contract, or otherwise the path/fetched contents of the spec.
 - The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words."
 
 If the spec is missing, skip the Spec sub-agent and note this in the final report.

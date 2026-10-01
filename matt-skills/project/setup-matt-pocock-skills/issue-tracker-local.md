@@ -26,6 +26,20 @@ Read the referenced path. For a bare issue number, search `.scratch/*/issues/` a
 
 Record `Parent: <path>` near the top of a child file. Implementation tickets produced from a local spec use `Parent: ../spec.md`; Wayfinder decision tickets use `Parent: ../map.md`.
 
+## Implementation execution and delivery
+
+Used by `implement`. Triage `Status:`, implementation execution, repository delivery, and terminal tracker state are separate fields/sections.
+
+- **Delivery policy:** setup writes `Delivery-Mode: <direct-commit|pr-mr>` and `Delivery-Target: <branch>` into this section of the generated tracker config, plus a concrete PR/MR publication/inspection operation when `pr-mr` is selected. If no remote delivery surface exists, `pr-mr` is unsupported rather than guessed.
+- **Tracker terminal state:** missing `Tracker-State:` means `open` for backward compatibility. Finalization writes `Tracker-State: closed`; do not reuse triage `Status:` for terminal state.
+- **Execution frontier:** scan participating request/spec/implementation-ticket files whose tracker state is open and whose mapped triage `Status:` is `ready-for-agent`. Exclude files with unresolved `Blocked by`, or `Execution-State: claimed|blocked|awaiting-delivery|finalized`. Missing `Execution-State:` means unclaimed/open. A spec with any child carrying `Work-Item-Role: implementation-ticket` is not an execution leaf; its children own execution.
+- **Claim:** set `Execution-State: claimed` and save before any code/test mutation. Re-read the file and frontier to verify the claim persisted and the item disappeared from normal discovery.
+- **Blocked / awaiting delivery:** replace the execution field with `Execution-State: blocked` or `Execution-State: awaiting-delivery`. This transition releases the active claim while keeping the item outside the frontier. A real blocker should also be recorded in `Blocked by`.
+- **Implementation Result:** maintain exactly one `## Implementation Result` section using the semantic result shape required by `implement`; create it when absent and replace its contents on re-entry.
+- **Delivery evidence:** for direct-commit mode, refresh the configured target ref and require `git merge-base --is-ancestor <implementation-sha> <target-ref>` to succeed. For `pr-mr`, use the concrete publication/inspection operation written here by setup and require merged/target-branch evidence; do not infer completion from an open request or local commit.
+- **Finalize delivered:** upsert `Outcome: delivered`, set `Execution-State: finalized` and `Tracker-State: closed`, then re-read the file. Seeing those same values with one canonical result is an idempotent no-op.
+- **Abandon:** upsert `Outcome: abandoned`, set `Execution-State: finalized` and `Tracker-State: closed`, then re-read the terminal file.
+
 ## Wayfinding operations
 
 Used by the `wayfinder` skill. The **map** is a file with one **child** file per ticket.

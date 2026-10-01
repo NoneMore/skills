@@ -27,6 +27,19 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 
 Store `Part of #<parent>` near the top of a child description. Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
 
+## Implementation execution and delivery
+
+Used by `implement`. Triage readiness, execution coordination, delivery state, and GitLab open/closed state remain independent even when labels or assignment represent some of them.
+
+- **Delivery policy:** `Mode: <direct-commit|merge-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For merge-request mode, publish from the implementation branch with `glab mr create -R <group/project> --target-branch <branch> --fill --yes` when no delivery MR already exists.
+- **Execution frontier:** start from open issues carrying work-item role `request`, `spec`, or `implementation-ticket` plus the configured `ready-for-agent` triage label. Exclude any issue with an assignee, an open blocker, `execution:blocked`, or `execution:awaiting-delivery`. Also exclude a `spec` once it has any child whose role is `implementation-ticket`; those children own execution. Use `glab issue list -R <group/project> --output json` for candidates, then inspect hierarchy/blocking using the configured representations. An explicitly named item may still be read outside the frontier for resume/finalization.
+- **Claim:** `glab issue update <n> -R <group/project> --assignee @me`, and make this the implementation session's first tracker mutation. Re-read the item and confirm the assignee plus frontier exclusion before code/test mutation. When resuming a suspended item, assign first and remove its execution label only afterward.
+- **Blocked / awaiting delivery:** use labels `execution:blocked` and `execution:awaiting-delivery`, creating them with the project labels API when missing. Add the appropriate label before releasing the active claim with `glab issue update <n> -R <group/project> --unassign`, so the item never re-enters the normal frontier between writes. A real blocker should also use the configured blocking relationship.
+- **Implementation Result:** store exactly one canonical issue note containing `<!-- skills:implementation-result -->` followed by the semantic result body required by `implement`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the note when the marker is absent, otherwise update that note with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`. Re-entry updates this record instead of appending another.
+- **Delivery evidence:** for direct-commit mode, verify the implementation SHA is reachable from the configured target branch using the repository's current Git refs (refresh the target ref before checking). For merge-request mode, inspect the recorded MR with `glab api projects/<url-encoded-project-path>/merge_requests/<iid>`; delivery is complete only when `state` is `merged` and `target_branch` equals the configured target branch.
+- **Finalize delivered:** first upsert the Implementation Result to `Outcome: delivered`; then remove any execution coordination label, close the issue, and release the active assignee. Re-read the issue and canonical result; a closed issue with the same delivered result is an idempotent no-op on later entry.
+- **Abandon:** upsert `Outcome: abandoned`, close the issue, remove execution labels/active assignee, and re-read both the terminal issue and canonical result.
+
 ## Merge requests as a triage surface
 
 **MRs as a request surface: no.** _(Set to `yes` if this repo treats external merge requests as feature requests; `triage` reads this flag.)_

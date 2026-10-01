@@ -31,6 +31,19 @@ Role and provenance are independent from hierarchy, blocking, triage state, Wayf
 
 Hierarchy says what work a ticket belongs to; blocking says what must finish first. Do not infer one from the other.
 
+## Implementation execution and delivery
+
+Used by `implement`. Triage readiness, execution coordination, delivery state, and GitHub open/closed state remain independent even when labels or assignment represent some of them.
+
+- **Delivery policy:** `Mode: <direct-commit|pull-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For pull-request mode, publish from the implementation branch with `gh pr create -R <owner>/<repo> --base <branch> --fill` when no delivery PR already exists.
+- **Execution frontier:** start from open issues carrying work-item role `request`, `spec`, or `implementation-ticket` plus the configured `ready-for-agent` triage label. Exclude any issue with an assignee, an open blocker, `execution:blocked`, or `execution:awaiting-delivery`. Also exclude a `spec` once it has any child whose role is `implementation-ticket`; those children own execution. Read candidates with `gh issue list ... --json number,title,body,labels,assignees`, then inspect blockers/children with `gh issue view` as needed. An explicitly named item may still be read outside the frontier for resume/finalization.
+- **Claim:** `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`, and make this the implementation session's first tracker mutation. Re-read the item and confirm the assignee plus frontier exclusion before code/test mutation. When resuming a suspended item, add the assignee before removing its execution label.
+- **Blocked / awaiting delivery:** use labels `execution:blocked` and `execution:awaiting-delivery`, creating either with `gh label create ... -R <owner>/<repo>` if missing. Add the appropriate label before releasing the active assignee with `gh issue edit <n> -R <owner>/<repo> --remove-assignee @me`, so the item never re-enters the normal frontier between writes. A real blocker should also use the configured blocking relationship.
+- **Implementation Result:** store exactly one canonical issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result body required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; if the marker is absent, create the comment, otherwise update that comment with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`. Re-entry updates this record instead of appending another.
+- **Delivery evidence:** for direct-commit mode, the implementation commit is delivered only when GitHub's compare result for `<commit>...<target-branch>` is `ahead` or `identical`, meaning the target contains the commit. For pull-request mode, inspect the recorded PR with `gh pr view <pr> -R <owner>/<repo> --json state,mergedAt,baseRefName,url,mergeCommit`; delivery is complete only when it is merged and `baseRefName` equals the configured target branch.
+- **Finalize delivered:** first upsert the Implementation Result to `Outcome: delivered`; then remove any execution coordination label, close the issue, and remove the active assignee. Re-read the issue and canonical result; a closed issue with the same delivered result is an idempotent no-op on later entry.
+- **Abandon:** upsert `Outcome: abandoned`, close the issue, remove execution labels/active assignee, and re-read both the terminal issue and canonical result.
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `triage` reads this flag.)_
