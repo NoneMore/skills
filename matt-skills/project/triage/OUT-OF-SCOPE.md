@@ -46,15 +46,15 @@ Use the configured tracker's normal reference form for prior requests.
 
 ## During triage
 
-Compare the incoming request to existing files by **domain concept**, not only by wording.
+Compare the incoming request to every existing `.out-of-scope/*.md` record by **domain concept**, not only by wording.
 
 When a likely match exists, surface the prior decision and its reason to the maintainer. The maintainer chooses one of three outcomes:
 
 - **Confirm:** keep the decision, append the new request reference, then move the item to the configured `wontfix` state.
-- **Reconsider:** update or delete the stale scope record, then continue normal triage.
+- **Reconsider:** update or delete the stale scope record, then continue normal triage for the current item.
 - **Different concept:** leave the prior record unchanged and continue normal triage.
 
-Do not silently treat semantic similarity as a maintainer decision.
+Do not silently treat semantic similarity as a maintainer decision. Do not reopen historical tracker items unless the maintainer explicitly requests it.
 
 ## When writing or updating a record
 
