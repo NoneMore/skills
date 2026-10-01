@@ -26,7 +26,6 @@ Look at the current repo to understand its starting state. Read whatever exists;
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
 - `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
-- Is the `triage` skill installed? Record this only to explain which workflows will consume the vocabulary; Section B still runs because `to-spec` and `to-tickets` also depend on the `ready-for-agent` role.
 - Monorepo / multi-context signals: workspace manifests and tooling (`pnpm-workspace.yaml`, package-manager `workspaces`, Cargo workspaces, `go.work`, Nx/Turborepo/Bazel configuration), multiple independently owned packages/apps, or existing bounded-context docs. Treat these as evidence, not a JS-specific gate: absence of any one signal does not prove the repo is single-context.
 
 ### 2. Present findings and ask
@@ -37,7 +36,7 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **Section A: Issue tracker.**
 
-> Explainer: The "issue tracker" is where issues live for this repo. Skills like `to-tickets`, `triage`, and `to-spec` read from and write to it. They need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
+> Choose where this repo tracks work; downstream engineering skills read and write through this configuration.
 
 Default posture: these skills were designed for GitHub. If a `git remote` points at GitHub, propose that. If a `git remote` points at GitLab (`gitlab.com` or a self-hosted host), propose GitLab. Otherwise (or if the user prefers), offer:
 
@@ -48,17 +47,15 @@ Default posture: these skills were designed for GitHub. If a `git remote` points
 
 Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. The GitHub and GitLab templates carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
 
-For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. It must say how to perform, or explicitly mark unsupported and give a fallback for:
+For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported with a durable fallback:
 
-- identify the exact project/workspace;
-- create, read, list/search, and comment on a ticket;
-- apply/remove the configured triage state and terminally close/reject an item;
-- create parent/child relationships or the fallback representation;
-- add/read blocking relationships or the fallback representation;
-- claim work and query the Wayfinder frontier (open + unblocked + unclaimed children);
-- re-read an item after mutation so consumers can verify persisted state.
+- exact project/workspace identity;
+- ticket create/read/list-search/comment plus triage-state and terminal-state mutation;
+- parent/child hierarchy and blocking relationships;
+- claiming and the Wayfinder frontier (open + unblocked + unclaimed children);
+- post-mutation readback so consumers can verify persisted state.
 
-If the tracker cannot support one of these operations, write the limitation and durable fallback into the document so consumers never have to invent tracker behavior.
+Consumers should never have to invent missing tracker behavior.
 
 **Section B: Triage label vocabulary.** Always configure this vocabulary. `triage` consumes it when installed, and `to-spec` / `to-tickets` consume the `ready-for-agent` role even when `triage` itself is absent. Ask exactly one question:
 
