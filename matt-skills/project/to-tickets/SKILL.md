@@ -59,7 +59,7 @@ Iterate until the user approves the breakdown.
 
 Publish one tracker item per approved ticket, blockers first so relationship targets already exist. Use the configured tracker's hierarchy, blocking, and triage-state representations rather than inventing platform behavior.
 
-If the source is an existing tracker issue/spec, make every generated ticket its child using the configured hierarchy. If there is no source tracker item, do not invent a parent. Wire blocking edges independently and apply the configured `ready-for-agent` state unless instructed otherwise.
+When the configured tracker defines hierarchy for this publishing workflow and the source is an existing tracker issue/spec, make every generated ticket its child. If there is no source tracker item, do not invent a parent. Wire blocking edges independently and apply the configured `ready-for-agent` state unless instructed otherwise.
 
 **Hierarchy and blocking are orthogonal.** Parent/child says what larger work a ticket belongs to; blocking says what must finish first. Never infer one from the other.
 
