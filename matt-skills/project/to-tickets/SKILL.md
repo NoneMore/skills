@@ -14,7 +14,7 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 ### 1. Gather context
 
-Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
+Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments plus its persisted work-item role and relationships.
 
 ### 2. Use codebase context
 
@@ -74,11 +74,12 @@ Then tell the user that the user-invoked `implement` skill is the normal next st
 # <NN>: <Ticket title>
 
 Work-Item-Role: implementation-ticket
-Parent: ../spec.md
+
+<include `Parent: ../spec.md` here only when this ticket is being published from the local tracker spec>
 
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
-Blocked by: the numbers/titles of the tickets that gate this one, or "None (can start immediately)".
+Blocked by: the relative paths of the local ticket files that gate this one, or "None (can start immediately)".
 
 Status: <configured ready-for-agent role string>
 
