@@ -1,6 +1,6 @@
 ---
 name: triage
-description: Triage incoming issues and external PRs/MRs into actionable tracker states, with verification and durable briefs when needed.
+description: Triage incoming issues and external PRs/MRs into actionable tracker states, with verification and durable briefs for ready states.
 disable-model-invocation: true
 ---
 
