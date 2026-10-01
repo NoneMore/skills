@@ -56,8 +56,8 @@ Run `gh issue view <number> -R <owner>/<repo> --comments`.
 
 Used by the `wayfinder` skill. The **map** is a single issue with **child** issues as tickets.
 
-- **Map**: a single issue labelled `wayfinder:map` with work-item role `decision-map`, holding the Notes / Decisions-so-far / Fog body and any immediate `Derived-From` sources. `gh issue create -R <owner>/<repo> --label wayfinder:map ...`.
-- **Child ticket**: give it work-item role `decision-ticket` and link it to the map using the hierarchy above; with the hierarchy fallback, maintain the map task list so the frontier can enumerate children. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
+- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `gh issue create -R <owner>/<repo> --label wayfinder:map ...`.
+- **Child ticket**: link it to the map using the hierarchy above; with the hierarchy fallback, maintain the map task list so the frontier can enumerate children. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
 - **Blocking**: use the blocking representation above.
 - **Frontier query**: get child identities from `gh issue view <map> -R <owner>/<repo> --json subIssues`; for open children, inspect `state,assignees,blockedBy` with `gh issue view`. Drop any child with an open blocker or an assignee; first in map order wins. If using the task-list fallback, derive children from that list and resolve `Blocked by` references explicitly.
 - **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`, the session's first write.
