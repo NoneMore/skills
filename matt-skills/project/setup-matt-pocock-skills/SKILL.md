@@ -33,7 +33,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 Summarise what's present and what's missing. Then take the sections in order. One section, one answer, then the next.
 
-Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip a section only when exploration already settled it (for example, Section C when there's no monorepo).
+Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip a section only when exploration already settled it (for example, Section C when there is no meaningful multi-context evidence).
 
 **Section A: Issue tracker.**
 
@@ -70,26 +70,27 @@ The defaults are the five canonical roles, each label string equal to its name: 
 
 Offer **multi-context** (a root `CONTEXT-MAP.md` pointing to per-context `CONTEXT.md` files) when exploration found credible multi-context evidence, whether or not the repo uses a JavaScript workspace tool. Then confirm which layout they want.
 
-### 3. Confirm and edit
+### 3. Resolve the instruction target and confirm the draft
 
-Show the user a draft of:
-
-- The `## Agent skills` block to add to the effective instruction artifact selected in step 4
-- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md`
-
-Let them edit before writing.
-
-### 4. Write
-
-**Pick the instruction artifact to edit:**
+Resolve the instruction artifact **before** asking the user to approve the draft:
 
 - Honor an explicitly requested artifact first.
 - Otherwise use the active harness's effective project-instruction loader semantics discovered in step 1. Edit an existing artifact only if that harness will actually load it at the intended scope.
-- Do **not** hard-code `CLAUDE.md` over `AGENTS.md`, or vice versa. For example, Codex normally selects `AGENTS.override.md` then `AGENTS.md` then configured fallback names; Pi normally selects `AGENTS.override.md`, `AGENTS.md`, `AGENTS.MD`, `CLAUDE.md`, then `CLAUDE.MD` within a directory.
+- If an installed harness-authoring/reference skill (such as `agents-md-wizard`) is available, use its maintained loader profile rather than copying harness-specific filename ordering into this skill.
 - If exact loader behavior is unavailable and multiple plausible artifacts exist, ask which runtime/artifact should receive the block. If none exists, propose the active harness's normal project artifact; fall back to `AGENTS.md` only when no better loader evidence exists.
-- If an installed harness-authoring/reference skill (such as `agents-md-wizard`) is available, use its maintained loader profile instead of duplicating stale assumptions here.
 
-Never create or edit a file merely because its name looks familiar; the goal is for the `## Agent skills` block to be loaded by the runtime that will consume it.
+Never choose a file merely because its name looks familiar; the target is the artifact the runtime will actually load.
+
+Then show the user the selected instruction artifact and a draft of:
+
+- The `## Agent skills` block to write there
+- The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md`
+
+Let them edit before writing. Do not proceed until the write target and draft are both settled.
+
+### 4. Write
+
+Write the approved `## Agent skills` block to the instruction artifact selected in step 3.
 
 If an `## Agent skills` block already exists in the chosen file, update its contents in-place rather than appending a duplicate. Don't overwrite user edits to the surrounding sections.
 
