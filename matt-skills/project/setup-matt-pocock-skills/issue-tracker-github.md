@@ -40,16 +40,14 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 - **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`; release with `--remove-assignee @me`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
 - **Implementation Result:** store exactly one issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
 - **Delivery evidence:** for direct-commit mode, run `gh api "repos/<owner>/<repo>/compare/<commit>...<target-branch>" --jq .status`; `ahead` or `identical` means the target contains the commit. For pull-request mode, inspect the recorded PR with `gh pr view <pr> -R <owner>/<repo> --json state,mergedAt,baseRefName,url,mergeCommit`; require merged state and the configured target branch.
-- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat. `reconcile` decides when a terminal Implementation Result should invoke it according to work-item role.
+- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
 
 ## Upstream reconciliation
 
 Used by `reconcile`. The workflow decides requirement satisfaction; this adapter only persists and verifies its inputs/results.
 
-- **Terminal children/results:** enumerate children through the hierarchy representation above, read each child's tracker state, and read its canonical Implementation Result when present.
 - **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
 - **Source-keyed upstream note:** on each direct provenance source, store one comment keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same comment on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
-- **Verification/finalization:** re-read the marked records and issue state after mutation. Reuse the terminal operation above only when `reconcile` has verified that artifact's own completion semantics.
 
 ## Pull requests as a triage surface
 
