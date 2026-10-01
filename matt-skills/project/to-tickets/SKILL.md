@@ -61,7 +61,7 @@ When the source is an existing tracker spec, make every generated ticket its chi
 
 **Hierarchy, blocking, and provenance are orthogonal.** Parent/child says what larger work a ticket belongs to; blocking says what must finish first; provenance says which earlier artifact directly informed a newly derived artifact. Never infer one from another.
 
-Use `<local-ticket-template>` for local Markdown; otherwise use `<issue-template>` unless the configured tracker requires another body shape.
+Use `<local-ticket-template>` for local Markdown; when a local spec is the source, insert `Parent: ../spec.md` immediately after the work-item role, and omit that line when there is no source spec. Otherwise use `<issue-template>` unless the configured tracker requires another body shape.
 
 Do not close, relabel, or rewrite the parent merely because tickets were published; adding the configured child relationship is expected.
 
@@ -74,8 +74,6 @@ Then tell the user that the user-invoked `implement` skill is the normal next st
 # <NN>: <Ticket title>
 
 Work-Item-Role: implementation-ticket
-
-<include `Parent: ../spec.md` here only when this ticket is being published from the local tracker spec>
 
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's perspective, not a layer-by-layer implementation list.
 
