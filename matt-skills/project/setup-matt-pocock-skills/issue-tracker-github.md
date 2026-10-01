@@ -19,8 +19,8 @@ Do not rediscover the repository from `git remote -v` after setup; the configure
 
 ## Work-item metadata
 
-- **Role:** use exactly one `work-item:<role>` label. Multiple canonical role labels are inconsistent. Write with `gh issue edit <n> -R <owner>/<repo> --add-label "work-item:<role>"` (or `gh pr edit` for a configured PR request surface), removing a conflicting canonical role first; create a missing role label with `gh label create`.
-- **Derived from:** store immediate sources near the top of the body as `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the body when updating this line.
+- **Role:** read the single `work-item:<role>` label; more than one is inconsistent. Write with `gh issue edit <n> -R <owner>/<repo> --add-label "work-item:<role>"` (or `gh pr edit` for a configured PR request surface), removing a conflicting role first. Create a missing label with `gh label create "work-item:<role>" -R <owner>/<repo> --description "Work item role: <role>"`.
+- **Derived from:** read immediate sources from one reserved body line near the top: `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the body when updating this line.
 - **Verify:** after writing either field, re-read the item and confirm the persisted value.
 
 Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
