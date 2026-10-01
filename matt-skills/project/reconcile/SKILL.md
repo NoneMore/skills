@@ -9,7 +9,7 @@ Reconcile from persisted tracker and delivery state, not from the implementation
 
 If the configured tracker cannot read roles, provenance, hierarchy, terminal state, Implementation Results, Reconciliation Results, source-keyed upstream notes, or the coordination/finalization operations required below, stop before mutation and tell the user to invoke the user-invoked `setup-matt-pocock-skills` workflow explicitly.
 
-After each mutation sequence, re-read the affected item and verify the intended durable state. While following spec-to-spec provenance, carry a visited set of spec identities so malformed provenance cannot recurse forever.
+After each mutation sequence, re-read the affected item and verify the intended durable state. While following spec-to-spec provenance, carry both the active ancestry path and a processed-spec set. A spec already on the active path is a provenance cycle; a spec already processed outside that path is a converging path and reuses its persisted result instead of traversing its provenance again.
 
 ## Process
 
@@ -60,21 +60,21 @@ Blocked, abandoned, rejected, or partial implementation outcomes may be terminal
 
 ### 3. Reconcile a satisfied spec to direct provenance
 
-Only propagate from a spec whose persisted Reconciliation Result is `satisfied`. Add the current spec to the visited set, read every immediate `derived-from` source, and dispatch each independently by its persisted work-item role. Support more than one source.
+Only propagate from a spec whose persisted Reconciliation Result is `satisfied`. Add the current spec to the active ancestry path and processed-spec set, read every immediate `derived-from` source, and dispatch each independently by its persisted work-item role. Support more than one source. Remove the current spec from the active path after its sources are reconciled; keep it in the processed set for the rest of this invocation.
 
 For each source, first use the configured source-keyed upstream note operation so reruns update the same record rather than append duplicates.
 
 - **request:** publish a durable delivery summary linking the spec and material delivery evidence. Then verify the original requested outcome against delivered scope and current behavior. Close/finalize the request only when that request is actually satisfied. Otherwise keep an open request open and make the remaining requested scope explicit. If it was already terminal, do not reopen it merely to repair history; report any conflict with the satisfaction check.
 - **decision-map / decision-ticket:** publish a realization/backlink or delivery summary. Do not change Wayfinder lifecycle state because implementation was delivered.
-- **spec:** if the source spec is already in the visited set, report the provenance cycle and skip lifecycle mutation on that edge. Otherwise apply Step 2 to that upstream spec, supplying this satisfied downstream spec and its material delivery evidence as explicit additional evidence. If the upstream spec becomes satisfied, apply this step to its own immediate provenance.
+- **spec:** if the source spec is already on the active ancestry path, report the provenance cycle and skip lifecycle mutation on that edge. If it is already in the processed-spec set outside the active path, keep the edge's keyed note but skip duplicate traversal of that spec's own provenance. Otherwise apply Step 2 to that upstream spec, supplying this satisfied downstream spec and its material delivery evidence as explicit additional evidence. If the upstream spec becomes satisfied, apply this step to its own immediate provenance.
 - **unknown/custom role:** publish only a conservative backlink/summary unless the role's configured semantics explicitly define stronger reconciliation behavior.
 
 Do not reopen an upstream source merely to repair history. Publish any missing idempotent summary that is still valid and report persisted state that conflicts with the satisfaction check.
 
-**Completion condition:** every immediate provenance source has a durable, role-appropriate reconciliation record, every recursively satisfied upstream spec has reconciled its own direct provenance exactly once per path, and no source was finalized without verifying its own completion semantics.
+**Completion condition:** every immediate provenance edge has a durable, role-appropriate keyed record, each reachable satisfied upstream spec's own provenance is traversed at most once in this invocation, and no source was finalized without verifying its own completion semantics.
 
 ### 4. Finish idempotently
 
-Re-read the subject, contract, and every mutated provenance source. A rerun from the same persisted state must update canonical/keyed records rather than duplicate them, must not repeat terminal mutations already reflected by the tracker, and must terminate even if persisted spec provenance contains a cycle.
+Re-read the subject, contract, and every mutated provenance source. A rerun from the same persisted state must update canonical/keyed records rather than duplicate them, must not repeat terminal mutations already reflected by the tracker, and must terminate even if persisted spec provenance contains cycles or converging paths.
 
 **Completion condition:** another session can resume reconciliation using only tracker/repository state and reach the same lifecycle decisions without the prior conversation.
