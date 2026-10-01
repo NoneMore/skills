@@ -22,17 +22,16 @@ Create a new file under `.scratch/<feature-slug>/` (creating the directory if ne
 
 Read the referenced path. For a bare issue number, search `.scratch/*/issues/` and use it only if exactly one file has that number; otherwise ask for the feature or path.
 
-## Relationships
+## Hierarchy
 
-- **Hierarchy:** record `Parent: <path>` near the top of a child file. Implementation tickets produced from a local spec use `Parent: ../spec.md`; Wayfinder decision tickets use `Parent: ../map.md`.
-- **Blocking:** keep the existing `Blocked by:` convention used by the publishing workflow; hierarchy and blocking remain independent.
+Record `Parent: <path>` near the top of a child file. Implementation tickets produced from a local spec use `Parent: ../spec.md`; Wayfinder decision tickets use `Parent: ../map.md`.
 
 ## Wayfinding operations
 
 Used by the `wayfinder` skill. The **map** is a file with one **child** file per ticket.
 
-- **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body), with `Work-Item-Role: decision-map` and any immediate `Derived-From:` sources.
-- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with `Work-Item-Role: decision-ticket`, `Parent: ../map.md`, and the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a separate `Wayfinder-State:` line records `open`/`claimed`/`resolved`/`closed`. Do not reuse the triage `Status:` field for this lifecycle.
+- **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body).
+- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a separate `Wayfinder-State:` line records `open`/`claimed`/`resolved`/`closed`. Do not reuse the triage `Status:` field for this lifecycle.
 - **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists has `Wayfinder-State: resolved` or `Wayfinder-State: closed`.
 - **Frontier**: scan `.scratch/<effort>/issues/` for files with `Wayfinder-State: open` that are unblocked and unclaimed; first by number wins.
 - **Claim**: set `Wayfinder-State: claimed` and save before any work.
