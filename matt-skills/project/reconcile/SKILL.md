@@ -1,48 +1,35 @@
 ---
 name: reconcile
-description: "Reconcile persisted terminal implementation outcomes to their contracts and satisfied specs to direct provenance sources. Use after a terminal Implementation Result is persisted, or when resuming reconciliation whose durable upstream state may be incomplete."
+description: "Reconcile persisted terminal implementation outcomes with request/spec contracts, then reconcile satisfied specs to their immediate provenance sources. Use after a terminal Implementation Result is persisted, or when resuming incomplete reconciliation."
 ---
 
 # Reconcile
 
-Reconcile from persisted tracker and delivery state, not from the implementation conversation. Requirement satisfaction is a workflow decision; tracker adapters only provide the configured read, upsert, relationship, coordination, verification, and terminal operations.
+Reconcile from persisted tracker and delivery state, not from the implementation conversation. Requirement satisfaction belongs here; tracker adapters only provide configured storage, relationship, delivery, verification, and terminal operations.
 
-If the configured tracker cannot read roles, provenance, hierarchy, terminal state, Implementation Results, Reconciliation Results, source-keyed upstream notes, or the coordination/finalization operations required below, stop before mutation and tell the user to invoke the user-invoked `setup-matt-pocock-skills` workflow explicitly.
+If the configured tracker lacks the required role/provenance reads, Implementation/Reconciliation Result storage, source-keyed upstream notes, delivery evidence, or terminal operation, stop before mutation and tell the user to invoke the user-invoked `setup-matt-pocock-skills` workflow explicitly.
 
-After each mutation sequence, re-read the affected item and verify the intended durable state. While following spec-to-spec provenance, carry both the active ancestry path and a propagated-spec set. A spec already on the active path is a provenance cycle. A satisfied spec already in the propagated set may still be re-verified with new downstream evidence, but its own provenance need not be traversed again in the same invocation.
+After each mutation sequence, re-read the affected item and verify the intended durable state. Never infer provenance from hierarchy or hierarchy from provenance.
 
 ## Process
 
-### 1. Load and normalize the reconciliation subject
+### 1. Resolve the contract
 
-Read the supplied artifact's full body/comments, work-item role, tracker state, parent/children, direct `derived-from` sources, canonical Implementation Result when applicable, and canonical Reconciliation Result when present.
+Read the supplied artifact's full body/comments, work-item role, tracker state, hierarchy, direct `derived-from` sources, canonical Implementation Result when applicable, and canonical Reconciliation Result when present.
 
-Never infer provenance from hierarchy or hierarchy from provenance.
+- **implementation-ticket:** require a terminal Implementation Result (`delivered` or `abandoned`). For `delivered`, re-check configured delivery evidence before mutation; if it conflicts with the persisted result, report the inconsistency and stop. Finalize the ticket if needed, verify it, then use its parent spec as the contract. If there is no parent spec, stop after the ticket is durably terminal.
+- **request / spec:** use the subject itself as the contract. Its terminal implementation outcome is evidence, not permission to close the contract before satisfaction is checked.
+- **other role:** stop; reconciliation only changes delivery contracts and records delivery on their provenance sources.
 
-- For an `implementation-ticket`, require a terminal Implementation Result (`delivered` or `abandoned`). For `delivered`, re-check configured delivery evidence before any terminal mutation; if the persisted result conflicts with delivery evidence, report the inconsistency and stop. If the ticket is not already terminal, run the configured terminal operation and verify it. Then use its parent spec as the contract to reconcile. If it has no parent spec, stop after the ticket's own terminal state is durable; do not invent a parent.
-- For a `spec` or `request`, use the subject itself as the contract. Do not close it merely because its own implementation attempt reached a terminal outcome; contract satisfaction decides its tracker finalization.
-- For any other role, stop unless an enclosing reconciliation step supplied a spec whose upstream sources are being reconciled.
+**Completion condition:** the contract and all immediate persisted evidence needed to evaluate it are explicit.
 
-**Completion condition:** the subject role and immediate relationships come from persisted state, any implementation-ticket terminalization is verified, and the contract to check is explicit.
+### 2. Verify satisfaction
 
-### 2. Reconcile the contract
+For a request/spec, use required implementation-ticket children when present; otherwise use its own canonical Implementation Result. When this contract is an immediate provenance source of a satisfied downstream spec, that downstream result and material delivery evidence are additional evidence.
 
-A terminal contract with a persisted `Status: satisfied` Reconciliation Result is already reconciled: a request finishes, while a spec is eligible for Step 3 when its provenance still needs propagation. A terminal contract without that result is not proof of satisfaction. Verify from available persisted evidence, but do not reopen an already-terminal artifact merely to repair history.
+Required children must be terminal before satisfaction is checked. Terminal children, including blocked/abandoned/partial outcomes, trigger verification but do not prove satisfaction. For a directly executed request/spec with `Outcome: delivered`, re-check configured delivery evidence before recording satisfaction.
 
-Determine the execution evidence for the contract:
-
-- **Direct request:** use its canonical Implementation Result, configured delivery evidence when applicable, and current repository behavior. A missing or non-terminal direct result is waiting, not satisfied.
-- **Spec with implementation-ticket children:** treat those children as required unless the spec explicitly says otherwise. If any required child is non-terminal, the spec is waiting. Terminality only decides when the spec is ready to verify; it is never evidence that the spec is satisfied.
-- **Direct spec:** when there are no implementation-ticket children, use its own canonical Implementation Result and delivery evidence. A missing or non-terminal direct result is waiting.
-- **Upstream spec reached from Step 3:** the satisfied downstream spec and its material delivery evidence are explicit additional persisted evidence. Absence of the upstream spec's own Implementation Result or implementation children does not by itself make it waiting.
-
-For a directly executed request/spec whose Implementation Result says `delivered`, re-check configured delivery evidence before any satisfaction mutation. If the persisted result conflicts with delivery evidence, report the inconsistency and stop that branch without downgrading the Implementation Result.
-
-When waiting, upsert the contract's canonical Reconciliation Result with the missing/non-terminal work, material delivered/blocked/abandoned progress, and a concrete next action, then stop that reconciliation branch.
-
-Once the relevant execution evidence is terminal, verify the contract's actual requested/acceptance behavior against its body and acceptance criteria, every relevant Implementation/Reconciliation Result, material delivery evidence, and resulting repository behavior where needed.
-
-Use this semantic record; the tracker configuration defines how it is stored:
+Use one canonical record:
 
 ```markdown
 ## Reconciliation Result
@@ -53,30 +40,24 @@ Remaining: <explicit unmet scope, or None>
 Next action: <concrete next action, or None>
 ```
 
-- **Satisfied:** upsert `Status: satisfied`, finalize the contract only if it is not already terminal, and verify both persisted state and result. A satisfied request finishes here; a satisfied spec is eligible for Step 3.
-- **Unsatisfied:** upsert `Status: unsatisfied` with explicit remaining scope and a concrete next action. If the contract is open, keep it open. If the contract itself has a terminal Implementation Result, use the configured suspension operation to release any active claim and keep that completed attempt outside the normal execution frontier. If the contract was already terminal before this check, do not reopen it solely for repair; report the persisted lifecycle conflict instead.
+- **Waiting:** upsert `waiting` with the non-terminal or missing evidence and stop.
+- **Satisfied:** verify the contract's requested/acceptance behavior against persisted evidence and current repository behavior where needed; upsert `satisfied`, finalize only if not already terminal, and verify both result and tracker state.
+- **Unsatisfied:** upsert `unsatisfied` with explicit remaining scope and a concrete next action. Keep an open contract open and release/suspend any stale active claim. If it was already terminal before this check, do not reopen it merely to repair history; report the lifecycle conflict.
 
-Blocked, abandoned, rejected, or partial implementation outcomes may be terminal inputs to verification; they do not by themselves satisfy the contract.
+A terminal contract with a persisted `satisfied` result does not need re-verification unless new material evidence requires it.
 
-**Completion condition:** the contract is open with a durable waiting/unsatisfied explanation and no stale active claim, terminal with a verified `Status: satisfied` result, or a pre-existing terminal lifecycle conflict has been durably recorded and reported without reopening history.
+**Completion condition:** the contract is durably waiting/unsatisfied and open without a stale claim, or terminal with a verified `satisfied` result.
 
-### 3. Reconcile a satisfied spec to direct provenance
+### 3. Reconcile immediate provenance
 
-Only propagate from a spec whose persisted Reconciliation Result is `satisfied`. Add the current spec to the active ancestry path and propagated-spec set, read every immediate `derived-from` source, and dispatch each independently by its persisted work-item role. Support more than one source. Remove the current spec from the active path after its sources are reconciled; keep it in the propagated set for the rest of this invocation.
+Only continue for a satisfied spec. Read every immediate `derived-from` source and use the configured source-keyed upstream note so reruns update rather than duplicate the record.
 
-For each source, first use the configured source-keyed upstream note operation so reruns update the same record rather than append duplicates.
+- **request:** publish the delivery summary, verify the original requested outcome against delivered scope/current behavior, and persist its Reconciliation Result using Step 2 semantics. Finalize only if satisfied.
+- **spec:** publish the delivery summary and verify that spec as a separate contract using Step 2 semantics. Do not follow that source spec's own provenance in this invocation.
+- **decision-map / decision-ticket:** publish a realization/backlink or delivery summary; do not change Wayfinder lifecycle state because implementation was delivered.
 
-- **request:** publish a durable delivery summary linking the spec and material delivery evidence. Then verify the original requested outcome against delivered scope and current behavior. Close/finalize the request only when that request is actually satisfied. Otherwise keep an open request open and make the remaining requested scope explicit. If it was already terminal, do not reopen it merely to repair history; report any conflict with the satisfaction check.
-- **decision-map / decision-ticket:** publish a realization/backlink or delivery summary. Do not change Wayfinder lifecycle state because implementation was delivered.
-- **spec:** if the source spec is already on the active ancestry path, report the provenance cycle and skip lifecycle mutation on that edge. Otherwise reconcile that source spec using Step 2, supplying this satisfied downstream spec and its material delivery evidence as explicit additional evidence. If the upstream spec becomes satisfied and is not yet in the propagated-spec set, apply this step to its own immediate provenance; if it is already propagated, keep the newly verified result and edge note but skip duplicate traversal.
-- **unknown/custom role:** publish only a conservative backlink/summary unless the role's configured semantics explicitly define stronger reconciliation behavior.
+If an upstream source is already terminal, do not reopen it merely to repair history; record/report any conflict instead.
 
-Do not reopen an upstream source merely to repair history. Publish any missing idempotent summary that is still valid and report persisted state that conflicts with the satisfaction check.
+**Completion condition:** every immediate provenance source has one durable role-appropriate keyed record, and no request/spec source was finalized without verifying its own contract.
 
-**Completion condition:** every immediate provenance edge has a durable, role-appropriate keyed record, each reachable satisfied upstream spec's own provenance is traversed at most once in this invocation, and no source was finalized without verifying its own completion semantics.
-
-### 4. Finish idempotently
-
-Re-read the subject, contract, and every mutated provenance source. A rerun from the same persisted state must update canonical/keyed records rather than duplicate them, must not repeat terminal mutations already reflected by the tracker, and must terminate even if persisted spec provenance contains cycles or converging paths.
-
-**Completion condition:** another session can resume reconciliation using only tracker/repository state and reach the same lifecycle decisions without the prior conversation.
+A rerun from the same persisted state must update canonical/keyed records rather than duplicate them or repeat terminal mutations.
