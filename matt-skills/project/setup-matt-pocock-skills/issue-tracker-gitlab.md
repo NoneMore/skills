@@ -20,9 +20,8 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 
 ## Work-item metadata
 
-- **Role:** read the single `work-item:<role>` project label; more than one is inconsistent. Write with `glab issue update <n> -R <group/project> --label "work-item:<role>"` (or the `glab mr` equivalent for a configured MR request surface), removing a conflicting role first. Create a missing label with `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="work-item:<role>" -f color="#6E7781" -f description="Work item role: <role>"`.
-- **Derived from:** read immediate sources from one reserved description line near the top: `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the description when updating this line.
-- **Verify:** after writing either field, re-read the item and confirm the persisted value.
+- **Role:** read `work-item:<role>` project labels. To write a role, remove any other `work-item:*` role labels, add the target with `glab issue update <n> -R <group/project> --label "work-item:<role>"` (or `glab mr update` for a configured MR request surface), and create the target first when missing with `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="work-item:<role>" -f color="#6E7781" -f description="Work item role: <role>"`.
+- **Derived from:** read source references from one reserved description line near the top: `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the description when updating this line.
 
 ## Hierarchy
 
