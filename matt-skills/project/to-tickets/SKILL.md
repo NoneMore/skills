@@ -20,7 +20,7 @@ Work from whatever is already in the conversation context. If the user passes a 
 
 If you have not already explored the codebase, do so to understand the current state of the code. Ticket titles and descriptions should use the project's domain glossary vocabulary, and respect ADRs in the area you're touching. Every ADR file present should describe a current architectural decision.
 
-Look for opportunities to prefactor the code to make the implementation easier. "Make the change easy, then make the easy change."
+If a prerequisite refactor is required before an independently verifiable slice can land, model that refactor as a blocking ticket.
 
 ### 3. Draft vertical slices
 
@@ -28,16 +28,14 @@ Break the work into **tracer bullet** tickets.
 
 <vertical-slice-rules>
 
-- Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, tests): vertical, NOT a horizontal slice of one layer
+- Each slice cuts a narrow but complete path through every layer required by the behaviour, rather than isolating one implementation layer
 - A completed slice is demoable or verifiable on its own
-- Each slice is sized to fit in a single fresh context window
-- Any prefactoring should be done first
 
 </vertical-slice-rules>
 
 Give each ticket its **blocking edges**: the other tickets that must complete before it can start. A ticket with no blockers can start immediately.
 
-**Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change (rename a column, retype a shared symbol) whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket; green is promised only there.
+**Wide refactors are the exception to vertical slicing.** Treat a mechanical change as wide only when no affected subset can land green independently. Sequence it as **expand–contract**: first add the new form beside the old; then migrate independently green subsets as separate tickets blocked by the expand; finally remove the old form in a ticket blocked by every migration. If no migration subset can land green independently, use an integration branch and make those migrations block one final integrate-and-verify ticket.
 
 ### 4. Quiz the user
 
