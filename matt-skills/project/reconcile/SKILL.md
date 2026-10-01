@@ -9,7 +9,7 @@ Reconcile from persisted tracker and delivery state, not from the implementation
 
 If the configured tracker cannot read roles, provenance, hierarchy, terminal state, Implementation Results, Reconciliation Results, source-keyed upstream notes, or the coordination/finalization operations required below, stop before mutation and tell the user to invoke the user-invoked `setup-matt-pocock-skills` workflow explicitly.
 
-After each mutation sequence, re-read the affected item and verify the intended durable state. While following spec-to-spec provenance, carry both the active ancestry path and a processed-spec set. A spec already on the active path is a provenance cycle; a spec already processed outside that path is a converging path and reuses its persisted result instead of traversing its provenance again.
+After each mutation sequence, re-read the affected item and verify the intended durable state. While following spec-to-spec provenance, carry both the active ancestry path and a propagated-spec set. A spec already on the active path is a provenance cycle. A satisfied spec already in the propagated set may still be re-verified with new downstream evidence, but its own provenance need not be traversed again in the same invocation.
 
 ## Process
 
@@ -27,7 +27,7 @@ Never infer provenance from hierarchy or hierarchy from provenance.
 
 ### 2. Reconcile the contract
 
-A terminal contract with a persisted `Status: satisfied` Reconciliation Result is already reconciled: for a spec continue to Step 3; for a request finish. A terminal contract without that result is not proof of satisfaction. Verify from available persisted evidence, but do not reopen an already-terminal artifact merely to repair history.
+A terminal contract with a persisted `Status: satisfied` Reconciliation Result is already reconciled: a request finishes, while a spec is eligible for Step 3 when its provenance still needs propagation. A terminal contract without that result is not proof of satisfaction. Verify from available persisted evidence, but do not reopen an already-terminal artifact merely to repair history.
 
 Determine the execution evidence for the contract:
 
@@ -35,6 +35,8 @@ Determine the execution evidence for the contract:
 - **Spec with implementation-ticket children:** treat those children as required unless the spec explicitly says otherwise. If any required child is non-terminal, the spec is waiting. Terminality only decides when the spec is ready to verify; it is never evidence that the spec is satisfied.
 - **Direct spec:** when there are no implementation-ticket children, use its own canonical Implementation Result and delivery evidence. A missing or non-terminal direct result is waiting.
 - **Upstream spec reached from Step 3:** the satisfied downstream spec and its material delivery evidence are explicit additional persisted evidence. Absence of the upstream spec's own Implementation Result or implementation children does not by itself make it waiting.
+
+For a directly executed request/spec whose Implementation Result says `delivered`, re-check configured delivery evidence before any satisfaction mutation. If the persisted result conflicts with delivery evidence, report the inconsistency and stop that branch without downgrading the Implementation Result.
 
 When waiting, upsert the contract's canonical Reconciliation Result with the missing/non-terminal work, material delivered/blocked/abandoned progress, and a concrete next action, then stop that reconciliation branch.
 
@@ -51,7 +53,7 @@ Remaining: <explicit unmet scope, or None>
 Next action: <concrete next action, or None>
 ```
 
-- **Satisfied:** upsert `Status: satisfied`, finalize the contract only if it is not already terminal, and verify both persisted state and result. A satisfied request finishes here; a satisfied spec continues to Step 3.
+- **Satisfied:** upsert `Status: satisfied`, finalize the contract only if it is not already terminal, and verify both persisted state and result. A satisfied request finishes here; a satisfied spec is eligible for Step 3.
 - **Unsatisfied:** upsert `Status: unsatisfied` with explicit remaining scope and a concrete next action. If the contract is open, keep it open. If the contract itself has a terminal Implementation Result, use the configured suspension operation to release any active claim and keep that completed attempt outside the normal execution frontier. If the contract was already terminal before this check, do not reopen it solely for repair; report the persisted lifecycle conflict instead.
 
 Blocked, abandoned, rejected, or partial implementation outcomes may be terminal inputs to verification; they do not by themselves satisfy the contract.
@@ -60,13 +62,13 @@ Blocked, abandoned, rejected, or partial implementation outcomes may be terminal
 
 ### 3. Reconcile a satisfied spec to direct provenance
 
-Only propagate from a spec whose persisted Reconciliation Result is `satisfied`. Add the current spec to the active ancestry path and processed-spec set, read every immediate `derived-from` source, and dispatch each independently by its persisted work-item role. Support more than one source. Remove the current spec from the active path after its sources are reconciled; keep it in the processed set for the rest of this invocation.
+Only propagate from a spec whose persisted Reconciliation Result is `satisfied`. Add the current spec to the active ancestry path and propagated-spec set, read every immediate `derived-from` source, and dispatch each independently by its persisted work-item role. Support more than one source. Remove the current spec from the active path after its sources are reconciled; keep it in the propagated set for the rest of this invocation.
 
 For each source, first use the configured source-keyed upstream note operation so reruns update the same record rather than append duplicates.
 
 - **request:** publish a durable delivery summary linking the spec and material delivery evidence. Then verify the original requested outcome against delivered scope and current behavior. Close/finalize the request only when that request is actually satisfied. Otherwise keep an open request open and make the remaining requested scope explicit. If it was already terminal, do not reopen it merely to repair history; report any conflict with the satisfaction check.
 - **decision-map / decision-ticket:** publish a realization/backlink or delivery summary. Do not change Wayfinder lifecycle state because implementation was delivered.
-- **spec:** if the source spec is already on the active ancestry path, report the provenance cycle and skip lifecycle mutation on that edge. If it is already in the processed-spec set outside the active path, keep the edge's keyed note but skip duplicate traversal of that spec's own provenance. Otherwise apply Step 2 to that upstream spec, supplying this satisfied downstream spec and its material delivery evidence as explicit additional evidence. If the upstream spec becomes satisfied, apply this step to its own immediate provenance.
+- **spec:** if the source spec is already on the active ancestry path, report the provenance cycle and skip lifecycle mutation on that edge. Otherwise reconcile that source spec using Step 2, supplying this satisfied downstream spec and its material delivery evidence as explicit additional evidence. If the upstream spec becomes satisfied and is not yet in the propagated-spec set, apply this step to its own immediate provenance; if it is already propagated, keep the newly verified result and edge note but skip duplicate traversal.
 - **unknown/custom role:** publish only a conservative backlink/summary unless the role's configured semantics explicitly define stronger reconciliation behavior.
 
 Do not reopen an upstream source merely to repair history. Publish any missing idempotent summary that is still valid and report persisted state that conflicts with the satisfaction check.
