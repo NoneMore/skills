@@ -16,9 +16,9 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
 
-### 2. Explore the codebase
+### 2. Use codebase context
 
-If you have not already explored the codebase in this conversation, do so. Ticket titles and descriptions should use the project's domain glossary vocabulary and respect ADRs in the area they change.
+Use codebase context already available in the conversation to align ticket terminology with the project's domain vocabulary and ADRs.
 
 If a prerequisite refactor is required before an independently verifiable slice can land, model that refactor as a blocking ticket.
 
