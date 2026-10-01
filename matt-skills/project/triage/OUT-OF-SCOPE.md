@@ -1,13 +1,17 @@
 # Out-of-Scope Knowledge Base
 
-The `.out-of-scope/` directory in a repo stores persistent records of **rejected enhancement concepts**. It serves two purposes:
+Use `.out-of-scope/` only for **maintainer-rejected enhancement concepts**. It is current decision memory, not a graveyard for every closed item.
 
-1. **Institutional memory:** preserve why a feature was rejected after the tracker item is closed or terminally marked.
-2. **Deduplication:** when a new request matches a prior rejection, surface the existing decision instead of re-litigating it from scratch.
+It serves two purposes:
 
-This knowledge base is tracker-agnostic. Request references may be GitHub/GitLab links or ids, or repo-relative local-markdown issue paths.
+1. preserve the durable reason a capability is outside project scope;
+2. surface that decision when a conceptually similar request arrives later.
 
-## Directory structure
+Do not record bugs, temporary deferrals, or requests closed because the behavior already exists.
+
+## One concept, one file
+
+Store one file per rejected concept:
 
 ```text
 .out-of-scope/
@@ -16,82 +20,61 @@ This knowledge base is tracker-agnostic. Request references may be GitHub/GitLab
 └── graphql-api.md
 ```
 
-Use one file per **concept**, not one file per issue. Multiple requests for the same underlying thing belong in the same record.
+Several tracker items requesting the same concept belong in the same file.
 
-## File format
+Use a short kebab-case filename that names the concept without needing to open the file.
 
-Write the file as a short, readable design note rather than a database row. It should be understandable to someone who was not present for the original triage.
+## Record shape
 
 ```markdown
-# Dark Mode
+# <Concept>
 
-This project does not support dark mode or user-facing theming.
+<one-sentence statement of the current scope decision>
 
 ## Why this is out of scope
 
-<durable explanation of the product, architectural, or strategic reason>
+<durable product, architectural, technical, or strategic reason>
 
 ## Prior requests
 
-- <tracker reference or local issue path> — "Add dark mode support"
-- <tracker reference or local issue path> — "Night theme for accessibility"
+- <tracker reference> — "<request title>"
 ```
 
-### Naming the file
+The reasoning must survive schedule changes and team turnover. "We are too busy right now" is a deferral, not an out-of-scope decision.
 
-Use a short descriptive kebab-case concept name such as `dark-mode.md`, `plugin-system.md`, or `graphql-api.md`. The filename should communicate the rejected concept without requiring the file to be opened.
+Use the configured tracker's normal reference form for prior requests.
 
-### Writing the reason
+## During triage
 
-The reason must be substantive and durable. Good reasons reference:
+Compare the incoming request to existing files by **domain concept**, not only by wording.
 
-- Project scope or philosophy.
-- Technical or architectural constraints.
-- Strategic decisions already made.
+When a likely match exists, surface the prior decision and its reason to the maintainer. The maintainer chooses one of three outcomes:
 
-Avoid temporary circumstances such as "we are too busy right now". That is a deferral, not a durable rejection.
+- **Confirm:** keep the decision, append the new request reference, then move the item to the configured `wontfix` state.
+- **Reconsider:** update or delete the stale scope record, then continue normal triage.
+- **Different concept:** leave the prior record unchanged and continue normal triage.
 
-Code samples are allowed when they explain the architectural constraint, but the decision should remain understandable if implementation details later move.
+Do not silently treat semantic similarity as a maintainer decision.
 
-## When to check `.out-of-scope/`
+## When writing or updating a record
 
-During triage's context-gathering step, read the files under `.out-of-scope/` and compare the incoming request by **concept**, not just keywords.
+Only write after the maintainer has rejected an enhancement.
 
-For example, "night theme" may match an existing `dark-mode.md` record even if the words are different.
+1. Find an existing file for the same concept.
+2. Update that file, or create one if none exists.
+3. Ensure the durable reason and current decision are explicit.
+4. Add the new tracker reference exactly once.
+5. Publish the required triage note using the disclaimer and tracker mechanics defined by `SKILL.md` and the configured issue-tracker document.
+6. Move the item to the configured terminal state.
 
-If a likely match exists, surface it to the maintainer and summarize the prior reason. The maintainer may then:
+## Completion check
 
-- **Confirm:** append the new request to the existing record and move the item to the configured `wontfix` state.
-- **Reconsider:** delete or update the out-of-scope record and continue normal triage.
-- **Disagree:** treat the requests as related but materially distinct and continue normal triage.
+The out-of-scope step is complete only when:
 
-Do not make the final scope judgment silently; the maintainer owns that decision.
+- exactly one current concept record represents the decision;
+- its reason is durable rather than temporary;
+- the new request is referenced once;
+- the tracker item points back to the recorded decision;
+- the tracker item is in the maintainer-approved terminal state.
 
-## When to write to `.out-of-scope/`
-
-Write here only when an **enhancement** is deliberately rejected as `wontfix`.
-
-This applies equally to rejected enhancement issues and external PRs/MRs. For a local-markdown tracker, use the repo-relative issue path as the prior-request reference.
-
-Do **not** write here when an item is terminal because the requested behavior is **already implemented**. That is a built feature, not a rejected concept, and recording it as out-of-scope would poison future deduplication.
-
-The flow:
-
-1. The maintainer decides the enhancement is out of scope.
-2. Check for an existing matching concept record.
-3. If it exists, append the new tracker reference under `## Prior requests`.
-4. Otherwise create a new concept file with the decision, durable reason, and first request reference.
-5. Publish a triage note on the tracker item that explains the decision and references the `.out-of-scope/` file.
-6. Apply the configured `wontfix` state and close the item where the tracker has a close operation. For local markdown, the terminal `Status:` value is sufficient.
-
-Any tracker note generated in step 5 must use the standard triage AI disclaimer from `SKILL.md`.
-
-## Updating or removing out-of-scope files
-
-If the maintainer changes their mind about a previously rejected concept:
-
-- Delete or update the `.out-of-scope/` file so it no longer states a decision that is not current.
-- Historical tracker items do not need to be reopened automatically.
-- The new item that triggered reconsideration proceeds through normal triage.
-
-Treat these files as current scope decisions, not an append-only archive of obsolete policy.
+If the maintainer reverses the decision later, update or delete the record so `.out-of-scope/` continues to describe **current** scope rather than obsolete history.
