@@ -22,13 +22,20 @@ Create a new file under `.scratch/<feature-slug>/` (creating the directory if ne
 
 Read the referenced path. For a bare issue number, search `.scratch/*/issues/` and use it only if exactly one file has that number; otherwise ask for the feature or path.
 
+## Relationships
+
+- **Hierarchy**: record `Parent: <path>` near the top of the child file. For implementation tickets produced from a local spec, the parent is that feature's `spec.md`; for Wayfinder decision tickets, the parent is that effort's `map.md`.
+- **Blocking**: record `Blocked by: <path>, <path>` near the top of the blocked file. A missing line or `Blocked by: None` means no blockers.
+
+Hierarchy says what larger work an item belongs to; blocking says what must finish first; provenance says why a derived artifact exists. Read and update them independently.
+
 ## Wayfinding operations
 
 Used by the `wayfinder` skill. The **map** is a file with one **child** file per ticket.
 
 - **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body), with `Work-Item-Role: decision-map` and any immediate `Derived-From:` sources.
-- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with `Work-Item-Role: decision-ticket` and the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a separate `Wayfinder-State:` line records `open`/`claimed`/`resolved`/`closed`. `Type:` is not the work-item role. Do not reuse the triage `Status:` field for this lifecycle.
-- **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists has `Wayfinder-State: resolved` or `Wayfinder-State: closed`.
+- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with `Work-Item-Role: decision-ticket`, `Parent: ../map.md`, and the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a separate `Wayfinder-State:` line records `open`/`claimed`/`resolved`/`closed`. `Type:` is not the work-item role. Do not reuse the triage `Status:` field for this lifecycle.
+- **Blocking**: use the `Blocked by:` representation above. A ticket is unblocked when every referenced file has `Wayfinder-State: resolved` or `Wayfinder-State: closed`.
 - **Frontier**: scan `.scratch/<effort>/issues/` for files with `Wayfinder-State: open` that are unblocked and unclaimed; first by number wins.
 - **Claim**: set `Wayfinder-State: claimed` and save before any work.
 - **Resolve**: append the answer under an `## Answer` heading, set `Wayfinder-State: resolved`, then append a context pointer (gist + link) to the map's Decisions-so-far in `map.md`. For a ticket ruled out of scope, set `Wayfinder-State: closed` instead.
