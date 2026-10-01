@@ -20,25 +20,21 @@ This is a prompt-driven skill, not a deterministic script. Explore, present what
 
 Look at the current repo to understand its starting state. Read whatever exists; don't assume:
 
-- `git remote -v` and `.git/config`: which remote is the canonical issue-tracker project? Record the exact GitHub `owner/repo` or GitLab `group/project`; don't make downstream skills rediscover it from cwd.
-- The active agent harness/runtime when known, its project-instruction loader semantics, and existing candidates such as `AGENTS.override.md`, `AGENTS.md`, `CLAUDE.md`, or configured fallback names. Determine which artifact is actually effective before proposing an edit; filenames are not interchangeable across harnesses.
+- `git remote -v` and `.git/config`: enumerate GitHub/GitLab tracker candidates and their exact `owner/repo` or `group/project` identities. If there is exactly one candidate, propose it in Section A; if there are multiple, let the user choose the canonical project.
+- Determine the active harness/runtime's project-instruction loader semantics from the environment or a maintained harness profile, and inspect the files that loader can select.
 - `CONTEXT.md` and `CONTEXT-MAP.md` at the repo root
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
-- `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
-- Monorepo / multi-context signals: workspace manifests and tooling (`pnpm-workspace.yaml`, package-manager `workspaces`, Cargo workspaces, `go.work`, Nx/Turborepo/Bazel configuration), multiple independently owned packages/apps, or existing bounded-context docs. Treat these as evidence, not a JS-specific gate: absence of any one signal does not prove the repo is single-context.
 
 ### 2. Present findings and ask
 
-Summarise what's present and what's missing. Then take the sections in order. One section, one answer, then the next.
-
-Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip a section only when exploration already settled it (for example, Section C when there is no meaningful multi-context evidence).
+Summarise what's present and what's missing. Then take Sections A–C in order and ask only the questions specified below.
 
 **Section A: Issue tracker.**
 
 > Choose where this repo tracks work; downstream engineering skills read and write through this configuration.
 
-Default posture: these skills were designed for GitHub. If a `git remote` points at GitHub, propose that. If a `git remote` points at GitLab (`gitlab.com` or a self-hosted host), propose GitLab. Otherwise (or if the user prefers), offer:
+If Section 1 found exactly one GitHub/GitLab tracker candidate, propose it. If it found multiple candidates, present them and ask which project is canonical. If it found none, offer:
 
 - **GitHub**: issues live in the repo's GitHub Issues (uses the `gh` CLI)
 - **GitLab**: issues live in the repo's GitLab Issues (uses the [`glab`](https://gitlab.com/gitlab-org/cli) CLI)
@@ -63,20 +59,16 @@ Consumers should never have to invent missing tracker behavior.
 
 The defaults are the five canonical roles, each label string equal to its name: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. On **yes**, write them as-is. Only if the user says no, usually because their tracker already uses other names (e.g. `bug:triage` for `needs-triage`), collect the overrides so `triage` applies existing labels instead of creating duplicates.
 
-**Section C: Domain docs.** Default to **single-context** (one `CONTEXT.md` + `docs/adr/` at the repo root) when exploration found no meaningful multi-context evidence. Write it without asking in that case.
-
-Offer **multi-context** (a root `CONTEXT-MAP.md` pointing to per-context `CONTEXT.md` files) when exploration found credible multi-context evidence, whether or not the repo uses a JavaScript workspace tool. Then confirm which layout they want.
+**Section C: Domain docs.** If an existing `docs/agents/domain.md` declares a layout, preserve it unless the user asked to change it. Otherwise, use **multi-context** only when `CONTEXT-MAP.md` already exists or the user explicitly requests multi-context. In every other case, write the **single-context** layout without asking.
 
 ### 3. Resolve the instruction target and confirm the draft
 
 Resolve the instruction artifact **before** asking the user to approve the draft:
 
-- Honor an explicitly requested artifact first.
-- Otherwise use the active harness's effective project-instruction loader semantics discovered in step 1. Edit an existing artifact only if that harness will actually load it at the intended scope.
+- If the user explicitly named an artifact, use it; if the active runtime will not load it, say so before confirmation rather than silently substituting another file.
+- Otherwise use the loader semantics from step 1 to select the effective project artifact.
 - If an installed harness-authoring/reference skill (such as `agents-md-wizard`) is available, use its maintained loader profile rather than copying harness-specific filename ordering into this skill.
-- If exact loader behavior is unavailable and multiple plausible artifacts exist, ask which runtime/artifact should receive the block. If none exists, propose the active harness's normal project artifact; fall back to `AGENTS.md` only when no better loader evidence exists.
-
-Never choose a file merely because its name looks familiar; the target is the artifact the runtime will actually load.
+- If loader semantics do not identify a target, ask which runtime/artifact should receive the block. Do not invent a filename fallback.
 
 Then show the user the selected instruction artifact and a draft of:
 
