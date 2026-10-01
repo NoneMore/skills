@@ -19,21 +19,25 @@ Read the supplied artifact's full body/comments, work-item role, tracker state, 
 
 Never infer provenance from hierarchy or hierarchy from provenance.
 
-- For an `implementation-ticket`, continue with its parent spec.
-- For a `spec`, continue from its persisted reconciliation state and direct provenance.
+- For an `implementation-ticket`, use its parent spec as the contract to reconcile.
+- For a `spec`, use the subject itself as the contract to reconcile.
 - For any other role, stop unless an enclosing workflow supplied a spec whose upstream sources are being reconciled.
 
 **Completion condition:** the current role and all immediate relationships needed for the next step come from persisted state.
 
-### 2. Reconcile an implementation ticket to its spec
+### 2. Reconcile the spec contract
 
-If the implementation ticket has no parent spec, there is no spec-level reconciliation target; stop without inventing one.
+If an implementation ticket has no parent spec, there is no spec-level reconciliation target; stop without inventing one.
 
-Read the parent spec and all of its `implementation-ticket` children. Terminality only decides when the spec is ready to verify; it is never evidence that the spec is satisfied.
+If the spec is already terminal with a persisted `Status: satisfied` Reconciliation Result, skip directly to Step 3. A terminal spec without that result is not proof of satisfaction; continue verification from available persisted evidence and report an inconsistent state if the evidence is insufficient.
 
-If any required implementation child is non-terminal, upsert the spec's canonical Reconciliation Result as waiting, including the non-terminal children and any material delivered/blocked/abandoned progress, then stop.
+Read the spec and its `implementation-ticket` children. Treat those children as required unless the spec explicitly says otherwise. Terminality only decides when the spec is ready to verify; it is never evidence that the spec is satisfied.
 
-When the required implementation children are terminal, verify the spec's actual contract against persisted evidence: the spec body and acceptance criteria, every relevant child Implementation Result, delivery evidence, and the resulting repository behavior where needed.
+If the spec has implementation children and any required child is non-terminal, upsert the spec's canonical Reconciliation Result as waiting, including the non-terminal children and any material delivered/blocked/abandoned progress, then stop.
+
+If the spec has no implementation children because it was executed directly, use its own canonical Implementation Result and delivery evidence as the execution evidence. A non-terminal direct execution result is waiting, not satisfied.
+
+Once the relevant execution work is terminal, verify the spec's actual contract against persisted evidence: the spec body and acceptance criteria, every relevant child or direct Implementation Result, delivery evidence, and the resulting repository behavior where needed.
 
 Use this semantic record; the tracker configuration defines how it is stored:
 
@@ -46,7 +50,7 @@ Remaining: <explicit unmet scope, or None>
 Next action: <concrete next action, or None>
 ```
 
-- **Satisfied:** upsert `Status: satisfied`, finalize the spec idempotently, verify both persisted state and result, then continue to Step 3.
+- **Satisfied:** upsert `Status: satisfied`, finalize the spec only if it is not already terminal, verify both persisted state and result, then continue to Step 3.
 - **Unsatisfied:** upsert `Status: unsatisfied` with explicit remaining scope and a concrete next action. Keep the spec open. Do not silently create implementation tickets or reinterpret terminal child outcomes as success.
 
 Blocked, abandoned, rejected, or partial child outcomes may be terminal inputs to verification; they do not by themselves satisfy the spec.
