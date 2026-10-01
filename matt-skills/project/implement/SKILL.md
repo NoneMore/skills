@@ -16,19 +16,19 @@ When the user supplies a persisted tracker reference, use the repo's configured 
 
 For a supplied tracker item, read its full body, comments, work-item role, triage state, parent/children, blockers, claim/execution state, existing Implementation Result, and configured repository delivery policy. Do not mutate the tracker while deciding whether the item can run.
 
-A normal execution candidate is an open, ready execution leaf under the configured tracker semantics. A decomposed spec with implementation-ticket children is not an execution leaf even if its readiness metadata remains `ready-for-agent`.
+Apply normal execution-frontier eligibility only to items that do not already carry a durable implementation lifecycle outcome. A normal execution candidate is an open, ready execution leaf under the configured tracker semantics. A decomposed spec with implementation-ticket children is not an execution leaf even if its readiness metadata remains `ready-for-agent`.
 
-If the item is ineligible, blocked, or claimed by another execution session, stop before code/test mutation and report the persisted reason/state.
+An explicitly selected item with persisted `blocked`, `awaiting-delivery`, `delivered`, or `abandoned` state may be outside the normal frontier; continue to Step 2 so that persisted lifecycle state decides re-entry. Otherwise, if the item is ineligible or claimed by another execution session, stop before code/test mutation and report the persisted reason/state.
 
-**Completion condition:** the execution contract and current lifecycle state are known, or the workflow has stopped without mutation because the item cannot run.
+**Completion condition:** the execution contract and current lifecycle state are known, and either the item is eligible for new execution, is eligible for lifecycle re-entry in Step 2, or the workflow has stopped without mutation.
 
 ### 2. Resume durable lifecycle state
 
 If a canonical Implementation Result already exists, continue from its persisted outcome and `Next action` rather than replaying completed work:
 
-- `delivered` on an already-finalized item: re-read the result and terminal state, report them, and stop.
+- `delivered`: if the tracker is already finalized, re-read the result and terminal state, report them, and stop. If the result is delivered but tracker finalization is incomplete, re-check the configured delivery evidence. When that evidence still proves delivery, run the configured finalization idempotently, verify the terminal state and canonical result, and stop. If delivery evidence no longer proves delivery, report the inconsistent persisted state and stop without replaying implementation or downgrading the result.
 - `awaiting-delivery`: claim the item using the configured execution claim operation, then inspect the configured delivery evidence. If delivery is still pending, release the active claim while preserving awaiting-delivery state and stop. If delivery is complete, upsert the result to `delivered`, finalize the item, verify both writes, and stop. Do not rerun TDD, review, or commit.
-- `blocked`: resume only when the explicitly selected item can proceed. Claim first, then clear/update the configured suspension state and continue from `Next action`; do not redo completed phases without a concrete reason.
+- `blocked`: first re-check the persisted blocker/suspension condition. If the explicitly selected item still cannot proceed, report the persisted blocker and stop without mutation. Otherwise claim it, clear/update the configured suspension state, and continue from `Next action`; do not redo completed phases without a concrete reason.
 - `abandoned`: report the persisted terminal outcome and stop.
 
 **Completion condition:** a resumable item is either finalized from persisted evidence, left safely pending, or positioned at the first unfinished lifecycle action.
