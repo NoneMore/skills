@@ -70,7 +70,7 @@ If delivery evidence is complete, upsert `Outcome: delivered`, verify the persis
 
 If delivery is pending, upsert `Outcome: awaiting-delivery`, then use the configured suspension operation to release the active claim while keeping the item outside the execution frontier. End the session.
 
-**Completion condition:** the canonical result and tracker state durably represent either delivered terminal work or open, unclaimed work awaiting delivery.
+**Completion condition:** the canonical result is durable; awaiting delivery is open and unclaimed, while a terminal implementation outcome has completed role-aware reconciliation with no stale active claim.
 
 ### 4. Stop safely
 
