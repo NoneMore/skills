@@ -28,17 +28,15 @@ Record `Parent: <path>` near the top of a child file. Implementation tickets pro
 
 ## Implementation execution and delivery
 
-Used by `implement`. Triage `Status:`, implementation execution, repository delivery, and terminal tracker state are separate fields/sections.
+Used by `implement`. Triage `Status:`, execution coordination, delivery result, and terminal tracker state are separate concerns.
 
-- **Delivery policy:** setup writes `Delivery-Mode: <direct-commit|pr-mr>` and `Delivery-Target: <branch>` into this section of the generated tracker config, plus a concrete PR/MR publication/inspection operation when `pr-mr` is selected. If no remote delivery surface exists, `pr-mr` is unsupported rather than guessed.
-- **Tracker terminal state:** missing `Tracker-State:` means `open` for backward compatibility. Finalization writes `Tracker-State: closed`; do not reuse triage `Status:` for terminal state.
-- **Execution frontier:** scan participating request/spec/implementation-ticket files whose tracker state is open and whose mapped triage `Status:` is `ready-for-agent`. Exclude files with unresolved `Blocked by`, or `Execution-State: claimed|blocked|awaiting-delivery|finalized`. Missing `Execution-State:` means unclaimed/open. A spec with any child carrying `Work-Item-Role: implementation-ticket` is not an execution leaf; its children own execution.
-- **Claim:** set `Execution-State: claimed` and save before any code/test mutation. Re-read the file and frontier to verify the claim persisted and the item disappeared from normal discovery.
-- **Blocked / awaiting delivery:** replace the execution field with `Execution-State: blocked` or `Execution-State: awaiting-delivery`. This transition releases the active claim while keeping the item outside the frontier. A real blocker should also be recorded in `Blocked by`.
-- **Implementation Result:** maintain exactly one `## Implementation Result` section using the semantic result shape required by `implement`; create it when absent and replace its contents on re-entry.
-- **Delivery evidence:** for direct-commit mode, refresh the configured target ref and require `git merge-base --is-ancestor <implementation-sha> <target-ref>` to succeed. For `pr-mr`, use the concrete publication/inspection operation written here by setup and require merged/target-branch evidence; do not infer completion from an open request or local commit.
-- **Finalize delivered:** upsert `Outcome: delivered`, set `Execution-State: finalized` and `Tracker-State: closed`, then re-read the file. Seeing those same values with one canonical result is an idempotent no-op.
-- **Abandon:** upsert `Outcome: abandoned`, set `Execution-State: finalized` and `Tracker-State: closed`, then re-read the terminal file.
+- **Delivery policy:** setup writes `Delivery-Mode: <direct-commit|pr-mr>` and `Delivery-Target: <branch>`, plus concrete PR/MR publication and inspection operations when `pr-mr` is selected. If no remote delivery surface exists, `pr-mr` is unsupported.
+- **Tracker terminal state:** missing `Tracker-State:` means `open`; terminal work uses `Tracker-State: closed`.
+- **Execution frontier:** scan open request/spec/implementation-ticket files whose mapped `Status:` is `ready-for-agent`. Exclude unresolved `Blocked by` entries and `Execution-State: claimed|suspended`. Missing `Execution-State:` means unclaimed. A spec with any `implementation-ticket` child is not an execution leaf.
+- **Claim / release / suspend:** claim with `Execution-State: claimed`. Release by removing `Execution-State:`; suspend with `Execution-State: suspended`, which also releases the active claim. A real blocker should also be recorded in `Blocked by`.
+- **Implementation Result:** maintain exactly one `## Implementation Result` section using the semantic result required by `implement`; create it when absent and replace its contents on re-entry.
+- **Delivery evidence:** for direct-commit mode, refresh the configured target ref and require `git merge-base --is-ancestor <implementation-sha> <target-ref>` to succeed. For `pr-mr`, use the publication/inspection operation written by setup and require merged/target-branch evidence.
+- **Terminal operation:** set `Tracker-State: closed` and remove `Execution-State:`. Repeating this on an already-closed file is a no-op.
 
 ## Wayfinding operations
 
