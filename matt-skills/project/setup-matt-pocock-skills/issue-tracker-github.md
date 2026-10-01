@@ -19,7 +19,7 @@ Do not rediscover the repository from `git remote -v` after setup; the configure
 
 ## Relationships
 
-- **Hierarchy**: native sub-issues are canonical. Create a child with `gh issue create -R <owner>/<repo> --parent <parent> ...`, attach an existing issue with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`, and read with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary` or `--json parent` on the child. If unsupported, fall back to `Parent: #<n>` in the child body and, when useful, a task list on the parent.
+- **Hierarchy**: native sub-issues are canonical. Create a child with `gh issue create -R <owner>/<repo> --parent <parent> ...`, attach an existing issue with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`, and read with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary` or `--json parent` on the child. If unsupported, fall back to `Parent: #<n>` in the child body and a task list on the parent so children remain discoverable from the parent.
 - **Blocking**: native issue dependencies are canonical. Add with `gh issue edit <child> -R <owner>/<repo> --add-blocked-by <blocker>` and inspect with `gh issue view <child> -R <owner>/<repo> --json blockedBy`. If unsupported, fall back to `Blocked by: #<n>, #<n>` in the child body; a ticket is unblocked when every blocker is closed.
 
 Hierarchy says what work a ticket belongs to; blocking says what must finish first. Do not infer one from the other.
