@@ -36,7 +36,7 @@ Used by `implement`. Triage `Status:`, execution coordination, delivery result, 
 - **Claim / release / suspend:** claim with `Execution-State: claimed`. Release by removing `Execution-State:`; suspend with `Execution-State: suspended`, which also releases the active claim. A real blocker should also be recorded in `Blocked by`.
 - **Implementation Result:** maintain exactly one `## Implementation Result` section using the semantic result required by `implement`; create it when absent and replace its contents on re-entry.
 - **Delivery evidence:** for direct-commit mode, refresh the configured target ref and require `git merge-base --is-ancestor <implementation-sha> <target-ref>` to succeed. For `pr-mr`, use the publication/inspection operation written by setup and require merged/target-branch evidence.
-- **Terminal operation:** set `Tracker-State: closed` and clear `Execution-State:`. The operation is safe to repeat.
+- **Terminal operation:** set `Tracker-State: closed` and clear `Execution-State:`. The operation is safe to repeat. `reconcile` decides when a terminal Implementation Result should invoke it according to work-item role.
 
 ## Upstream reconciliation
 
