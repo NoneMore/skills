@@ -66,7 +66,7 @@ Blocker: <reason, when applicable>
 Next action: <the next lifecycle action, or None>
 ```
 
-If delivery evidence is complete, upsert `Outcome: delivered`, run the configured terminal finalization, verify it, then call the Skill tool with "reconcile" and pass the tracker item.
+If delivery evidence is complete, upsert `Outcome: delivered`, verify the persisted result, then call the Skill tool with "reconcile" and pass the tracker item. Do not run the tracker terminal operation here: `reconcile` owns role-aware terminal mutation so direct requests/specs are not closed before their contracts are verified.
 
 If delivery is pending, upsert `Outcome: awaiting-delivery`, then use the configured suspension operation to release the active claim while keeping the item outside the execution frontier. End the session.
 
@@ -77,7 +77,7 @@ If delivery is pending, upsert `Outcome: awaiting-delivery`, then use the config
 If claimed work cannot continue, do not leave an active claim:
 
 - **Blocked:** upsert `Outcome: blocked` with the blocker and concrete `Next action`; record a real blocking relationship when one exists, then use the configured suspension operation to release the claim while keeping the item outside the execution frontier.
-- **Abandoned:** upsert `Outcome: abandoned` with the reason and material partial work, run and verify the configured terminal operation, then call the Skill tool with "reconcile" and pass the tracker item.
+- **Abandoned:** upsert `Outcome: abandoned` with the reason and material partial work, verify the persisted result, then call the Skill tool with "reconcile" and pass the tracker item.
 
 A failure before a tracker-backed item was successfully claimed is read-only from the tracker's perspective.
 
