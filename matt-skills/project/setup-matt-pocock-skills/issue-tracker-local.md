@@ -16,7 +16,7 @@ Create a new file under `.scratch/<feature-slug>/` (creating the directory if ne
 
 ## When a skill says "fetch the relevant ticket"
 
-Read the referenced path. A bare issue number is usable only when the conversation already names one `.scratch/<feature>/` directory; otherwise ask for the feature or path.
+Read the referenced path. For a bare issue number, search `.scratch/*/issues/` and use it only if exactly one file has that number; otherwise ask for the feature or path.
 
 ## Wayfinding operations
 
