@@ -31,10 +31,12 @@ Every AI-authored tracker note created during triage must start with:
 
 ## State machine
 
-Two category roles:
+Classify each item as one category for triage reasoning and briefs:
 
 - `bug` — existing behavior is broken.
 - `enhancement` — new or improved behavior is requested.
+
+Persist the category only if the configured tracker already defines how categories are represented.
 
 Five canonical state roles:
 
@@ -44,19 +46,19 @@ Five canonical state roles:
 - `ready-for-human` — the next implementation step requires a human.
 - `wontfix` — the request will not be actioned.
 
-A triaged item has exactly one category role and exactly one state role. If existing state roles conflict, stop and ask the maintainer which state is authoritative before any other mutation.
+A triaged item has exactly one state role. If existing state roles conflict, stop and ask the maintainer which state is authoritative before any other mutation.
 
 Normal transitions are:
 
 ```text
 untriaged -> needs-triage
 needs-triage -> needs-info | ready-for-agent | ready-for-human | wontfix
-needs-info -> needs-triage   (after meaningful reporter activity)
+needs-info -> needs-triage   (after reporter activity that addresses outstanding questions)
 ```
 
-The maintainer may override this machine. Flag an unusual transition, then follow the maintainer's explicit direction.
+If the requested transition is not listed above, point that out before mutation. Follow the maintainer's explicit direction if they confirm it.
 
-If the configured tracker includes external PRs/MRs as a request surface, apply the same machine to them. A `ready-for-agent` PR/MR has a brief describing what remains to be done to the existing diff; `ready-for-human` means the next step is human-only.
+If the configured tracker includes external PRs/MRs as a request surface, apply the same machine to them. A `ready-for-agent` PR/MR has a brief describing what remains to be done to the existing diff; `ready-for-human` means the next implementation step is human-only.
 
 ## Invocation
 
@@ -75,7 +77,7 @@ Query the configured tracker and account for three buckets, oldest first:
 
 1. **Untriaged** — no triage state yet.
 2. **`needs-triage`** — evaluation is in progress.
-3. **`needs-info` with new reporter activity after the last triage note** — ready for re-evaluation.
+3. **`needs-info` with reporter activity after the last triage note that addresses an outstanding question** — ready for re-evaluation.
 
 If external PRs/MRs are in scope, include only external submissions during discovery; an explicitly named PR/MR is triaged regardless of author.
 
@@ -90,55 +92,64 @@ Read the complete tracker item, including prior triage notes; for a PR/MR, read 
 Check both:
 
 - **Redundancy:** search by domain concept for an existing implementation of the requested behavior.
-- **Prior rejection:** inspect `.out-of-scope/` for a conceptually similar rejected enhancement.
+- **Prior rejection:** if `.out-of-scope/` exists, account for every existing `.out-of-scope/*.md` record before concluding that no prior rejection applies.
 
 **Completion condition:** you can state what was requested, what prior triage already established, where you checked the current code, whether equivalent behavior already exists, and whether a prior rejection is relevant.
 
 ### 2. Recommend
 
-Recommend exactly one category and one state, with concise reasons and the relevant codebase evidence. If category representation on the configured tracker is ambiguous or would require creating a new label/schema value, surface that instead of inventing one.
+Recommend exactly one category and one state, with concise reasons and the relevant codebase evidence.
 
-**Completion condition:** the maintainer has a concrete category/state recommendation and enough evidence to accept, override, or ask for verification.
+**Completion condition:** the maintainer has a concrete category/state recommendation and enough evidence to accept, override, or request further verification.
 
 Wait for the maintainer's direction before changing tracker state.
 
 ### 3. Verify the claim
 
-Verify before grilling:
+Use evidence available in the current context and environment. Never report a claim as verified unless the evidence establishes it.
 
-- **Bug:** reproduce from the reporter's steps when the environment permits.
-- **PR/MR:** check whether the diff does what it claims; run the relevant tests or commands where possible.
-- **Enhancement:** verify the described current behavior and the absence/presence of the requested capability where that claim matters.
+- **Bug:** use the reporter's reproduction steps as the claim to test.
+- **PR/MR:** any verification claim must be based on the contribution's diff or resulting code, not the base version alone.
+- **Enhancement:** establish the current behavior when the triage outcome depends on whether the requested capability already exists.
 
-Classify the result as **confirmed**, **not reproduced/not verified**, or **insufficient detail**.
+Classify the result as:
 
-**Completion condition:** the verification outcome is explicit and includes the behavior or code seam that supports it. Insufficient detail strongly favors `needs-info`.
+- **confirmed** — evidence establishes the claim;
+- **not reproduced / not verified** — a performed check did not establish the claim;
+- **insufficient detail** — information or access required for a relevant check is absent.
 
-### 4. Clarify only when needed
+**Completion condition:** the verification outcome is explicit and names the evidence that supports it, or the specific missing information/access that prevented verification.
 
-If the item is not specific enough to choose a durable outcome, call the Skill tool twice, for `grilling` and `domain-modeling`. Use them to settle the missing product/design decisions and update durable domain docs as decisions land.
+### 4. Resolve blocking unknowns
 
-These are model-invoked supporting skills. If a required supporting skill is unavailable, say so rather than emulating it by directly reading its `SKILL.md`.
+Enter this step only when an unresolved product or design decision prevents either:
 
-**Completion condition:** either the request is decision-complete enough for a durable brief, or the remaining unknowns are specific questions suitable for `needs-info`.
+- choosing one triage state; or
+- writing concrete desired behavior and independently checkable acceptance criteria for a ready brief.
+
+Call the Skill tool twice, for `grilling` and `domain-modeling`. Use them to settle those decisions and update durable domain docs as decisions land.
+
+These are model-invoked supporting skills. If a required supporting skill is unavailable, report that dependency as unavailable rather than emulating it by directly reading its `SKILL.md`.
+
+**Completion condition:** either the blocking decisions are resolved, or each unresolved blocker is expressed as a specific reporter question and the item can move to `needs-info`.
 
 ### 5. Apply one outcome
 
 Use the configured tracker operations and mapped state string:
 
-- **`ready-for-agent`** — publish an agent brief from [AGENT-BRIEF.md](AGENT-BRIEF.md), then apply the category and mapped state.
-- **`ready-for-human`** — publish the same contract shape, plus the concrete reason the next step cannot be delegated.
+- **`ready-for-agent`** — publish an agent brief from [AGENT-BRIEF.md](AGENT-BRIEF.md), then apply the mapped state and persist the category only if the tracker defines category representation.
+- **`ready-for-human`** — publish the same contract shape, plus the concrete reason the next step cannot be delegated; then apply the mapped state and any defined category representation.
 - **`needs-info`** — publish triage notes using the template below, then apply the mapped state.
 - **`wontfix`**:
   - already implemented → point to the existing behavior; do not add it to `.out-of-scope/`;
   - rejected bug → explain the decision;
   - rejected enhancement → update the knowledge base using [OUT-OF-SCOPE.md](OUT-OF-SCOPE.md), then reference that decision in the closing note.
   Apply the mapped terminal state and close/terminally mark the item using the configured tracker semantics.
-- **`needs-triage`** — apply the mapped state; add a progress note only when it preserves useful context.
+- **`needs-triage`** — apply the mapped state.
 
 After mutation, re-read the tracker item.
 
-**Completion condition:** the item has exactly one intended state role, one category representation when the tracker supports it, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
+**Completion condition:** the item has exactly one intended state role, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
 
 ### 6. Stop at the phase boundary
 
