@@ -18,6 +18,37 @@ Issues and specs for this repo live as GitLab issues. Use the [`glab`](https://g
 
 Do not rediscover the project from `git remote -v` after setup; the configured project above is the source of truth.
 
+## Work-item identity and provenance
+
+The shared work-item protocol uses one semantic role per participating item:
+
+- `request`
+- `decision-map`
+- `decision-ticket`
+- `spec`
+- `implementation-ticket`
+
+**Role representation:** use exactly one `work-item:<role>` project label. Read role from those labels; if more than one canonical role label is present, treat the item as inconsistent rather than guessing. Apply the role with `glab issue update <n> -R <group/project> --label "work-item:<role>"` (or the `glab mr update` equivalent when an MR is configured as a request surface), removing any conflicting canonical role label first. If a required role label does not exist, create it through the project labels API: `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="work-item:<role>" -f color="#6E7781" -f description="Work item role: <role>"`.
+
+**Provenance representation:** store zero or more immediate sources on the derived artifact as one reserved description line near the top:
+
+```text
+Derived-From: #<n>, #<n>
+```
+
+A missing line or `Derived-From: None` means an empty source set. Read only the immediate references on that line. Do not copy transitive ancestors. When writing provenance to an existing item, read its full description, replace or insert only the reserved line, preserve the remaining description verbatim, then write the complete description back.
+
+Role identifies what the artifact is. `Derived-From` explains which immediate earlier artifacts materially informed it. Neither is hierarchy, blocking, triage state, Wayfinder type/state, or tracker open/closed state; never infer one from another.
+
+After changing role or provenance, re-read the item and verify the persisted role and immediate source set.
+
+## Relationships
+
+- **Hierarchy**: use native parent/child relationships where the configured GitLab tier/API exposes them. Otherwise persist `Parent: #<n>` in the child description and read hierarchy from that reserved line.
+- **Blocking**: use GitLab's native blocking link where available. Add it with the `/blocked_by #<n>` quick action posted as a note. On tiers where native blocking links are unavailable, fall back to `Blocked by: #<n>, #<n>` in the child description; a ticket is unblocked when every blocker is closed.
+
+Hierarchy says what work a ticket belongs to; blocking says what must finish first; provenance says why a derived artifact exists. Do not infer any one from another.
+
 ## Merge requests as a triage surface
 
 **MRs as a request surface: no.** _(Set to `yes` if this repo treats external merge requests as feature requests; `triage` reads this flag.)_
@@ -42,8 +73,8 @@ Run `glab issue view <number> -R <group/project> --comments`.
 
 Used by the `wayfinder` skill. The **map** is a single issue with **child** issues as tickets.
 
-- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `glab issue create -R <group/project> --label wayfinder:map`.
-- **Child ticket**: an issue carrying `Part of #<map>` at the top of its description and labels `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
+- **Map**: a single issue with work-item role `decision-map` plus label `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body and any `Derived-From` sources. `glab issue create -R <group/project> --label wayfinder:map`, then persist the work-item role through the operation above.
+- **Child ticket**: an issue with work-item role `decision-ticket`, carrying `Part of #<map>` at the top of its description and labels `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). The Wayfinder type is not the work-item role. Once claimed, the ticket is assigned to the driving dev.
 - **Blocking**: GitLab's **native blocking link**, the canonical, UI-visible representation. Add it with the `/blocked_by #<n>` quick action, posted as a note (`glab issue note <child> -R <group/project> --message "/blocked_by #<blocker>"`). Native blocking links are a Premium/Ultimate feature; on the free tier (or where unavailable) fall back to a `Blocked by: #<n>, #<n>` line at the top of the description. A ticket is unblocked when every blocker is closed.
 - **Frontier query**: `glab issue list -R <group/project> -F json` scoped to the map's children, then drop any child with an assignee or an open blocker. Inspect native issue links with `glab api --paginate "projects/<url-encoded-project-path>/issues/<iid>/links"`; a `link_type` of `is_blocked_by` whose linked issue has `state: opened` is a live blocker. With the text fallback, resolve every issue named in the `Blocked by` line and treat any open one as a live blocker. First in map order wins.
 - **Claim**: `glab issue update <n> -R <group/project> --assignee @me`, the session's first write.
