@@ -50,8 +50,8 @@ Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also rec
 For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported with a durable fallback:
 
 - exact project/workspace identity;
-- ticket create/read/list-search/comment plus triage-state and terminal-state mutation;
-- parent/child hierarchy and blocking relationships;
+- ticket create/read/list-search/comment, apply/remove triage state, and terminal close/reject;
+- create/read parent-child and blocking relationships;
 - claiming and the Wayfinder frontier (open + unblocked + unclaimed children);
 - post-mutation readback so consumers can verify persisted state.
 
