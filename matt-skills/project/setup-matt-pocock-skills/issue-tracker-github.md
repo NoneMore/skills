@@ -33,6 +33,15 @@ GitHub shares one number space across issues and PRs, so a bare `#42` may be eit
 
 Create a GitHub issue.
 
+When a publishing workflow is decomposing an existing GitHub issue/spec into child tickets (notably `to-tickets`), use **native sub-issues as the canonical hierarchy**:
+
+- Create each new ticket with `gh issue create -R <owner>/<repo> --parent <parent> ...`, or attach an existing ticket with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`.
+- Read the hierarchy with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary`; a child can expose its parent with `--json parent`.
+- If the installed GitHub/GHES version does not support native sub-issues, fall back to a `Parent: #<n>` reference in each child body and, when useful, a task list on the parent.
+- Parent/child is **not** an execution dependency. Use native issue dependencies separately for blocking edges between tickets.
+
+If there is no source/parent issue (for example tickets are created directly from conversation context), publish the issues without inventing a synthetic parent.
+
 ## When a skill says "fetch the relevant ticket"
 
 Run `gh issue view <number> -R <owner>/<repo> --comments`.
