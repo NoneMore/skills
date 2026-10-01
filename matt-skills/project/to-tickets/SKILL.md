@@ -48,7 +48,7 @@ Present the proposed breakdown as a numbered list. For each ticket, show:
 Ask the user:
 
 - Does the granularity feel right? (too coarse / too fine)
-- Are the blocking edges correct: does each ticket only depend on tickets that genuinely gate it?
+- Are the blocking edges correct: does each blocker have to finish before the blocked ticket can start?
 - Should any tickets be merged or split further?
 
 Iterate until the user approves the breakdown.
@@ -103,4 +103,4 @@ The end-to-end behaviour this ticket makes work, from the user's perspective, no
 
 </issue-template>
 
-In either form, avoid specific file paths or code snippets: they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
+In either form, do not include specific file paths or code snippets; they go stale fast.
