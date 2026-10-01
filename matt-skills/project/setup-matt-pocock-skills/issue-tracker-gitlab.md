@@ -24,12 +24,9 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 - **Derived from:** store immediate sources near the top of the description as `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the description when updating this line.
 - **Verify:** after writing either field, re-read the item and confirm the persisted value.
 
-## Relationships
+## Hierarchy
 
-- **Hierarchy:** store `Part of #<parent>` near the top of the child description.
-- **Blocking:** use GitLab's native blocking link where available: post `/blocked_by #<n>` as a note. Where unavailable, use `Blocked by: #<n>, #<n>` in the child description.
-
-Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
+Store `Part of #<parent>` near the top of a child description. Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
 
 ## Merge requests as a triage surface
 
@@ -55,9 +52,9 @@ Run `glab issue view <number> -R <group/project> --comments`.
 
 Used by the `wayfinder` skill. The **map** is a single issue with **child** issues as tickets.
 
-- **Map**: a single issue labelled `wayfinder:map` with work-item role `decision-map`, holding the Notes / Decisions-so-far / Fog body and any immediate `Derived-From` sources. `glab issue create -R <group/project> --label wayfinder:map`.
-- **Child ticket**: give it work-item role `decision-ticket`, link it with `Part of #<map>`, and apply `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
-- **Blocking**: use the blocking representation above; a ticket is unblocked when every blocker is closed.
+- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `glab issue create -R <group/project> --label wayfinder:map`.
+- **Child ticket**: an issue carrying `Part of #<map>` at the top of its description and labels `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
+- **Blocking**: GitLab's **native blocking link**, the canonical, UI-visible representation. Add it with the `/blocked_by #<n>` quick action, posted as a note (`glab issue note <child> -R <group/project> --message "/blocked_by #<blocker>"`). Native blocking links are a Premium/Ultimate feature; on the free tier (or where unavailable) fall back to a `Blocked by: #<n>, #<n>` line at the top of the description. A ticket is unblocked when every blocker is closed.
 - **Frontier query**: `glab issue list -R <group/project> -F json` scoped to the map's children, then drop any child with an assignee or an open blocker. Inspect native issue links with `glab api --paginate "projects/<url-encoded-project-path>/issues/<iid>/links"`; a `link_type` of `is_blocked_by` whose linked issue has `state: opened` is a live blocker. With the text fallback, resolve every issue named in the `Blocked by` line and treat any open one as a live blocker. First in map order wins.
 - **Claim**: `glab issue update <n> -R <group/project> --assignee @me`, the session's first write.
 - **Resolve**: `glab issue note <n> -R <group/project> --message "<answer>"`, then `glab issue close <n> -R <group/project>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
