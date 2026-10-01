@@ -50,10 +50,7 @@ For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract,
 - read/write work-item role for `request`, `decision-map`, `decision-ticket`, `spec`, and `implementation-ticket`;
 - read/write `derived-from` as zero or more direct tracker sources stored on the derived artifact; a direct source is an artifact used as input to create the current artifact, without following that source's own provenance;
 - create/read parent-child and blocking relationships;
-- implementation execution-frontier semantics, claim/release, blocked/suspended and awaiting-delivery coordination;
-- read/upsert of one canonical durable Implementation Result without duplicate records;
-- repository delivery policy: delivery mode, target branch, publication operation when applicable, and concrete completion evidence;
-- terminal delivery finalization plus blocked/abandoned cleanup;
+- implementation lifecycle operations: execution frontier, claim/release/suspend, canonical Implementation Result upsert, repository delivery policy/evidence, and terminal finalize/abandon;
 - claiming and the Wayfinder frontier (open + unblocked + unclaimed children);
 - a post-mutation verification operation so consumers can confirm persisted state.
 
