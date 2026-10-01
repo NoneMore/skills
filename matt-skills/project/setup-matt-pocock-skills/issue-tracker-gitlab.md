@@ -24,9 +24,9 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 
 When set to `yes`, MRs run through the same labels and states as issues, using the `glab mr` equivalents:
 
-- **Read an MR**: `glab mr view <number> --comments` and `glab mr diff <number>` for the diff.
-- **List external MRs for triage**: `glab mr list -F json`, then keep only MRs whose author is not a project member/owner (a contributor's MR, not a maintainer's in-flight work).
-- **Comment / label / close**: `glab mr note`, `glab mr update --label`/`--unlabel`, `glab mr close`.
+- **Read an MR**: `glab mr view <number> -R <group/project> --comments` and `glab mr diff <number> -R <group/project>` for the diff.
+- **List external MRs for triage**: `glab mr list -R <group/project> -F json`, then keep only submissions whose author is not a project member/owner. Determine membership against the configured project's member data rather than assuming every non-self MR is external; if membership cannot be established, do not silently classify that MR as external.
+- **Comment / label / close**: use `glab mr note <number> -R <group/project>`, `glab mr update <number> -R <group/project> --label`/`--unlabel`, and `glab mr close <number> -R <group/project>`.
 
 Unlike GitHub, GitLab numbers issues and MRs separately, so `#42` is unambiguous once you know which surface the maintainer means.
 
