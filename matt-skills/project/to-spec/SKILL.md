@@ -16,9 +16,11 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 3. Check that the conversation is **decision-complete enough to implement**. Material architectural branches, unresolved product choices, or unverified assumptions that would force the implementing agent to make a design decision are blockers. Do not invent answers just to finish the spec, and do not mark a blocked spec `ready-for-agent`. Instead, tell the user which unresolved decisions remain and suggest the appropriate **user-invoked** workflow by canonical skill name (normally `grill-with-docs`, or `wayfinder` for a multi-session decision space). Tell the human to invoke it explicitly using their harness's user-invocation mechanism; do not invoke, read, shell out to, or emulate those workflows yourself.
 
-4. Write the spec using the template below, then publish it to the project issue tracker. Apply the configured `ready-for-agent` triage role - no need for additional triage. For a local-markdown tracker, record the configured role string as `Status: <role>` near the top of the spec.
+4. Resolve provenance from the material tracker artifacts actually used to synthesize this spec. Record zero or more immediate sources. If a Wayfinder map already carries the originating request in its own provenance, include the request again only when the request itself directly informed this spec; do not copy transitive ancestry.
 
-5. After publishing, tell the user that the user-invoked `to-tickets` skill is the normal next workflow when they want implementation tickets, and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate it yourself.
+5. Write the spec using the template below, then publish it to the project issue tracker with work-item role `spec`, the immediate `derived-from` source set from step 4, and the configured `ready-for-agent` triage state. Use the configured tracker representations rather than inventing platform-specific fields here. After publishing, re-read the spec and verify its role, immediate provenance set, and triage state.
+
+6. Tell the user that the user-invoked `to-tickets` skill is the normal next workflow when they want implementation tickets, and that they must invoke it explicitly using their harness's user-invocation mechanism. Do not invoke or emulate it yourself.
 
 <spec-template>
 
