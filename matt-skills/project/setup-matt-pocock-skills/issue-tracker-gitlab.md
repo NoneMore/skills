@@ -10,7 +10,7 @@ Issues and specs for this repo live as GitLab issues. Use the [`glab`](https://g
 
 - **Create an issue**: `glab issue create -R <group/project> --title "..." --description "..."`. For multi-line descriptions from stdin/heredoc, use `--description-file -`; `--description -` opens an editor and is not the stdin form.
 - **Read an issue**: `glab issue view <number> -R <group/project> --comments`. Use `-F json` for machine-readable output.
-- **List issues**: `glab issue list -R <group/project> -F json` with appropriate `--label` filters.
+- **List issues**: `glab issue list -R <group/project> -F json`
 - **Comment on an issue**: `glab issue note <number> -R <group/project> --message "..."`. GitLab calls comments "notes".
 - **Apply / remove labels**: `glab issue update <number> -R <group/project> --label "..."` / `--unlabel "..."`. Multiple labels can be comma-separated or by repeating the flag.
 - **Close**: `glab issue close <number> -R <group/project>`. `glab issue close` does not accept a closing comment, so post the explanation first with `glab issue note <number> -R <group/project> --message "..."`, then close.
