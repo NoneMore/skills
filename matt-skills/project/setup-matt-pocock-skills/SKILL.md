@@ -57,7 +57,7 @@ Work-item role, `derived-from`, hierarchy, blocking, triage state, Wayfinder lif
 
 Consumers should never have to invent missing tracker behavior.
 
-**Section B: Triage label vocabulary.** Always configure this vocabulary. `triage` consumes it when installed, and `to-spec` / `to-tickets` consume the `ready-for-agent` role even when `triage` itself is absent. Ask exactly one question:
+**Section B: Triage label vocabulary.** These are triage-state roles, not work-item roles. Always configure this vocabulary. `triage` consumes it when installed, and `to-spec` / `to-tickets` consume the `ready-for-agent` role even when `triage` itself is absent. Ask exactly one question:
 
 > Do you want to keep the default triage labels? (recommended: **yes**)
 
