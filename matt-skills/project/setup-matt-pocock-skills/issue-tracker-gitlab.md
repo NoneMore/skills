@@ -27,6 +27,17 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 
 Store `Part of #<parent>` near the top of a child description. Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
 
+## Implementation execution and delivery
+
+Used by `implement`. Triage readiness, execution coordination, delivery result, and GitLab open/closed state are separate concerns.
+
+- **Delivery policy:** `Mode: <direct-commit|merge-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For merge-request mode, publish with `glab mr create -R <group/project> --target-branch <branch> --fill --yes` when no delivery MR already exists.
+- **Execution frontier:** start from open `request`, `spec`, or `implementation-ticket` issues carrying the configured `ready-for-agent` triage label. Exclude issues with an assignee, an open blocker, or `execution:suspended`. Also exclude a `spec` once it has an `implementation-ticket` child. Use `glab issue list -R <group/project> --output json` for candidates and inspect hierarchy/blocking with the configured representations. Explicitly named items may still be read for resume/finalization.
+- **Claim / release / suspend:** claim with `glab issue update <n> -R <group/project> --assignee @me`; release with `--unassign`. Suspension uses one `execution:suspended` label; create it when missing with `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="execution:suspended" -f color="#6E7781" -f description="Implementation execution is suspended"`. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
+- **Implementation Result:** store exactly one issue note containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
+- **Delivery evidence:** for direct-commit mode, run `glab api --paginate "projects/<url-encoded-project-path>/repository/commits/<sha>/refs?type=branch"` and require the configured target branch. For merge-request mode, inspect `glab api projects/<url-encoded-project-path>/merge_requests/<iid>`; require `state: merged` and the configured `target_branch`.
+- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
+
 ## Merge requests as a triage surface
 
 **MRs as a request surface: no.** _(Set to `yes` if this repo treats external merge requests as feature requests; `triage` reads this flag.)_

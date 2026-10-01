@@ -26,6 +26,18 @@ Read the referenced path. For a bare issue number, search `.scratch/*/issues/` a
 
 Record `Parent: <path>` near the top of a child file. Implementation tickets produced from a local spec use `Parent: ../spec.md`; Wayfinder decision tickets use `Parent: ../map.md`.
 
+## Implementation execution and delivery
+
+Used by `implement`. Triage `Status:`, execution coordination, delivery result, and terminal tracker state are separate concerns.
+
+- **Delivery policy:** setup writes `Delivery-Mode: <direct-commit|pr-mr>` and `Delivery-Target: <branch>`, plus concrete PR/MR publication and inspection operations when `pr-mr` is selected. If no remote delivery surface exists, `pr-mr` is unsupported.
+- **Tracker terminal state:** missing `Tracker-State:` means `open`; terminal work uses `Tracker-State: closed`.
+- **Execution frontier:** scan open request/spec/implementation-ticket files whose mapped `Status:` is `ready-for-agent`. Exclude unresolved `Blocked by` entries and `Execution-State: claimed|suspended`. Missing `Execution-State:` means unclaimed. A spec with any `implementation-ticket` child is not an execution leaf.
+- **Claim / release / suspend:** claim with `Execution-State: claimed`. Release by removing `Execution-State:`; suspend with `Execution-State: suspended`, which also releases the active claim. A real blocker should also be recorded in `Blocked by`.
+- **Implementation Result:** maintain exactly one `## Implementation Result` section using the semantic result required by `implement`; create it when absent and replace its contents on re-entry.
+- **Delivery evidence:** for direct-commit mode, refresh the configured target ref and require `git merge-base --is-ancestor <implementation-sha> <target-ref>` to succeed. For `pr-mr`, use the publication/inspection operation written by setup and require merged/target-branch evidence.
+- **Terminal operation:** set `Tracker-State: closed` and clear `Execution-State:`. The operation is safe to repeat.
+
 ## Wayfinding operations
 
 Used by the `wayfinder` skill. The **map** is a file with one **child** file per ticket.

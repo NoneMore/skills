@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Scaffold the per-repo configuration that the engineering skills assume:
 
-- **Issue tracker**: where issues live, the exact tracker project/repo identity, and the operations downstream skills rely on (GitHub by default; local markdown is also supported out of the box)
+- **Issue tracker**: where issues live, the exact tracker project/repo identity, execution coordination, repository delivery policy, and the operations downstream skills rely on (GitHub by default; local markdown is also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 
@@ -50,12 +50,19 @@ For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract,
 - read/write work-item role for `request`, `decision-map`, `decision-ticket`, `spec`, and `implementation-ticket`;
 - read/write `derived-from` as zero or more direct tracker sources stored on the derived artifact; a direct source is an artifact used as input to create the current artifact, without following that source's own provenance;
 - create/read parent-child and blocking relationships;
+- implementation lifecycle operations: execution frontier, claim/release/suspend, canonical Implementation Result upsert, repository delivery policy/evidence, and terminal finalize/abandon;
 - claiming and the Wayfinder frontier (open + unblocked + unclaimed children);
 - a post-mutation verification operation so consumers can confirm persisted state.
 
 Work-item role, `derived-from`, hierarchy, blocking, triage state, Wayfinder lifecycle, and tracker open/closed state are independent; do not infer one from another.
 
 Consumers should never have to invent missing tracker behavior.
+
+Then establish the repository delivery policy. Determine the repository's default branch from remote/project metadata when available and propose it as the target. Ask one question:
+
+> When should implementation count as delivered to `<target-branch>`: after a verified direct commit reaches that branch, or only after a PR/MR is merged into it? If the target branch is different, name it.
+
+Record the chosen mode, target branch, delivery publication operation when applicable, and concrete completion-evidence operation in `docs/agents/issue-tracker.md`. Delivery policy is repository configuration: `implement` consumes it and must not invent GitHub/GitLab-specific delivery rules.
 
 **Section B: Triage label vocabulary.** These are triage-state roles, not work-item roles. Always configure this vocabulary. `triage` consumes it when installed, and `to-spec` / `to-tickets` consume the `ready-for-agent` role even when `triage` itself is absent. Ask exactly one question:
 

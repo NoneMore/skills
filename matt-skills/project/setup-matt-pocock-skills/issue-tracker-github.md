@@ -31,6 +31,17 @@ Role and provenance are independent from hierarchy, blocking, triage state, Wayf
 
 Hierarchy says what work a ticket belongs to; blocking says what must finish first. Do not infer one from the other.
 
+## Implementation execution and delivery
+
+Used by `implement`. Triage readiness, execution coordination, delivery result, and GitHub open/closed state are separate concerns.
+
+- **Delivery policy:** `Mode: <direct-commit|pull-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For pull-request mode, publish with `gh pr create -R <owner>/<repo> --base <branch> --fill` when no delivery PR already exists.
+- **Execution frontier:** start from open `request`, `spec`, or `implementation-ticket` issues carrying the configured `ready-for-agent` triage label. Exclude issues with an assignee, an open blocker, or `execution:suspended`. Also exclude a `spec` once it has an `implementation-ticket` child. Inspect candidates with `gh issue list ... --json number,title,body,labels,assignees` and `gh issue view` as needed. Explicitly named items may still be read for resume/finalization.
+- **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`; release with `--remove-assignee @me`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
+- **Implementation Result:** store exactly one issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
+- **Delivery evidence:** for direct-commit mode, run `gh api "repos/<owner>/<repo>/compare/<commit>...<target-branch>" --jq .status`; `ahead` or `identical` means the target contains the commit. For pull-request mode, inspect the recorded PR with `gh pr view <pr> -R <owner>/<repo> --json state,mergedAt,baseRefName,url,mergeCommit`; require merged state and the configured target branch.
+- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `triage` reads this flag.)_
