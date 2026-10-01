@@ -27,7 +27,7 @@ Read the referenced path. For a bare issue number, search `.scratch/*/issues/` a
 - **Hierarchy**: record `Parent: <path>` near the top of the child file. For implementation tickets produced from a local spec, the parent is that feature's `spec.md`; for Wayfinder decision tickets, the parent is that effort's `map.md`.
 - **Blocking**: record `Blocked by: <path>, <path>` near the top of the blocked file. A missing line or `Blocked by: None` means no blockers.
 
-Hierarchy says what larger work an item belongs to; blocking says what must finish first; provenance says why a derived artifact exists. Read and update them independently.
+Hierarchy says what larger work an item belongs to; blocking says what must finish first; provenance says why a derived artifact exists. Read and update them independently. After changing role, provenance, hierarchy, or blocking, re-read the file and verify the persisted fields.
 
 ## Wayfinding operations
 
