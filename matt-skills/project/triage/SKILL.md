@@ -53,7 +53,7 @@ Normal transitions are:
 ```text
 untriaged -> needs-triage
 needs-triage -> needs-info | ready-for-agent | ready-for-human | wontfix
-needs-info -> needs-triage   (after reporter activity that addresses outstanding questions)
+needs-info -> needs-triage   (after reporter activity since the last triage note)
 ```
 
 If the requested transition is not listed above, point that out before mutation. Follow the maintainer's explicit direction if they confirm it.
@@ -77,7 +77,7 @@ Query the configured tracker and account for three buckets, oldest first:
 
 1. **Untriaged** — no triage state yet.
 2. **`needs-triage`** — evaluation is in progress.
-3. **`needs-info` with reporter activity after the last triage note that addresses an outstanding question** — ready for re-evaluation.
+3. **`needs-info` with reporter activity since the last triage note** — ready for re-evaluation.
 
 If external PRs/MRs are in scope, include only external submissions during discovery; an explicitly named PR/MR is triaged regardless of author.
 
@@ -131,7 +131,7 @@ Call the Skill tool twice, for `grilling` and `domain-modeling`. Use them to set
 
 These are model-invoked supporting skills. If a required supporting skill is unavailable, report that dependency as unavailable rather than emulating it by directly reading its `SKILL.md`.
 
-**Completion condition:** either the blocking decisions are resolved, or each unresolved blocker is expressed as a specific reporter question and the item can move to `needs-info`.
+**Completion condition:** either the blocking decisions are resolved, or each unresolved blocker is explicit. Use `needs-info` only when reporter input is required; otherwise keep the item in the state that matches who must act next.
 
 ### 5. Apply one outcome
 
@@ -153,7 +153,7 @@ After mutation, re-read the tracker item.
 
 ### 6. Stop at the phase boundary
 
-Triage prepares work; it does not implement it. When a `ready-for-agent` item should be built next, tell the user that `implement` is the normal user-invoked next workflow and that they must invoke it explicitly. Do not invoke, read, shell out to, or emulate `implement`.
+Triage prepares work; it does not implement it. If the user asks to continue from a `ready-for-agent` item into implementation, tell them that `implement` is the user-invoked next workflow and that they must invoke it explicitly. Do not invoke, read, shell out to, or emulate `implement`.
 
 ## Quick state override
 
