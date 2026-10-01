@@ -20,10 +20,10 @@ For a tracker item, read its full body/comments, work-item role, triage state, h
 
 If an Implementation Result exists, resume from its `Outcome` and `Next action`:
 
-- `delivered`: if the tracker is already terminal, call the Skill tool with "reconcile" and pass the tracker item, then stop. Otherwise re-check delivery evidence; if it still proves delivery, finalize idempotently, verify, call "reconcile", and stop. If it does not, report the inconsistent persisted state without replaying implementation or downgrading the result.
-- `awaiting-delivery`: inspect delivery evidence without claiming. If still pending, report it and stop. If complete, upsert `delivered`, finalize, verify, call the Skill tool with "reconcile" and pass the tracker item, then stop. Do not rerun TDD, review, or commit.
+- `delivered`: if the tracker is already terminal, call the Skill tool with "reconcile" and pass the tracker item, then stop. Otherwise re-check delivery evidence; if it still proves delivery, call "reconcile" and stop. If it does not, report the inconsistent persisted state without replaying implementation or downgrading the result.
+- `awaiting-delivery`: inspect delivery evidence without claiming. If still pending, report it and stop. If complete, upsert `delivered`, verify the persisted result, call the Skill tool with "reconcile" and pass the tracker item, then stop. Do not rerun TDD, review, or commit.
 - `blocked`: re-check the blocker/suspension condition. If it still cannot proceed, report the blocker and stop. Otherwise claim first, clear the configured suspension state, and continue from `Next action` without repeating completed phases.
-- `abandoned`: ensure the configured terminal operation has completed, verify it, call the Skill tool with "reconcile" and pass the tracker item, then stop.
+- `abandoned`: call the Skill tool with "reconcile" and pass the tracker item, then stop.
 
 Otherwise require a normal execution candidate: an open, ready execution leaf under the configured tracker semantics. A spec with implementation-ticket children is not an execution leaf even if it remains `ready-for-agent`. If the item is ineligible or already claimed, stop before code/test mutation.
 
