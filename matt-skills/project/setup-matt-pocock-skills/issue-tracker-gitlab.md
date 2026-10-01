@@ -4,7 +4,7 @@ Issues and specs for this repo live as GitLab issues. Use the [`glab`](https://g
 
 ## Project
 
-**Project: `<group/project>`.** Setup replaces this placeholder with the canonical GitLab project (including subgroup namespace when applicable). Treat it as configuration: pass `-R <group/project>` on tracker commands instead of inferring a project from the current working directory.
+**Project: `<group/project>`.** Setup replaces this placeholder with the canonical GitLab project (including subgroup namespace when applicable). Treat it as configuration: pass `-R <group/project>` on tracker commands instead of inferring a project from the current working directory. For API endpoints that require a project path, also render the same identity URL-encoded (for example `group/subgroup/project` → `group%2Fsubgroup%2Fproject`) instead of relying on cwd-derived `:id` / `:fullpath` placeholders.
 
 ## Conventions
 
@@ -25,7 +25,7 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 When set to `yes`, MRs run through the same labels and states as issues, using the `glab mr` equivalents:
 
 - **Read an MR**: `glab mr view <number> -R <group/project> --comments` and `glab mr diff <number> -R <group/project>` for the diff.
-- **List external MRs for triage**: `glab mr list -R <group/project> -F json`, then keep only submissions whose author is not a project member/owner. Determine membership against the configured project's member data rather than assuming every non-self MR is external; if membership cannot be established, do not silently classify that MR as external.
+- **List external MRs for triage**: `glab mr list -R <group/project> -F json`, then keep only submissions whose author username is absent from the configured project's effective member set. Query that set explicitly with `glab api --paginate "projects/<url-encoded-group%2Fproject>/members/all" --jq '.[].username'`, where setup renders `<url-encoded-group%2Fproject>` from the configured project identity (including subgroup separators as `%2F`). The `/members/all` endpoint includes inherited members visible to the authenticated user. If membership cannot be established, do not silently classify that MR as external.
 - **Comment / label / close**: use `glab mr note <number> -R <group/project>`, `glab mr update <number> -R <group/project> --label`/`--unlabel`, and `glab mr close <number> -R <group/project>`.
 
 Unlike GitHub, GitLab numbers issues and MRs separately, so `#42` is unambiguous once you know which surface the maintainer means.
