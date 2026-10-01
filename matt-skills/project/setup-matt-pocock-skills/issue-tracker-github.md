@@ -17,36 +17,20 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 Do not rediscover the repository from `git remote -v` after setup; the configured repository above is the source of truth.
 
-## Work-item identity and provenance
+## Work-item metadata
 
-The shared work-item protocol uses one semantic role per participating item:
+- **Role:** use exactly one `work-item:<role>` label. Multiple canonical role labels are inconsistent. Write with `gh issue edit <n> -R <owner>/<repo> --add-label "work-item:<role>"` (or `gh pr edit` for a configured PR request surface), removing a conflicting canonical role first; create a missing role label with `gh label create`.
+- **Derived from:** store immediate sources near the top of the body as `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the body when updating this line.
+- **Verify:** after writing either field, re-read the item and confirm the persisted value.
 
-- `request`
-- `decision-map`
-- `decision-ticket`
-- `spec`
-- `implementation-ticket`
-
-**Role representation:** use exactly one `work-item:<role>` label. Read role from those labels; if more than one canonical role label is present, treat the item as inconsistent rather than guessing. Apply the role with `gh issue edit <n> -R <owner>/<repo> --add-label "work-item:<role>"` (or the `gh pr edit` equivalent when a PR is configured as a request surface), removing any conflicting canonical role label first. If a required role label does not exist, create it with `gh label create "work-item:<role>" -R <owner>/<repo> --description "Work item role: <role>"`.
-
-**Provenance representation:** store zero or more immediate sources on the derived artifact as one reserved body line near the top:
-
-```text
-Derived-From: #<n>, #<n>
-```
-
-A missing line or `Derived-From: None` means an empty source set. Read only the immediate references on that line. Do not copy transitive ancestors. When writing provenance to an existing item, read its full body, replace or insert only the reserved line, preserve the remaining body verbatim, then write the complete body back.
-
-Role identifies what the artifact is. `Derived-From` explains which immediate earlier artifacts materially informed it. Neither is hierarchy, blocking, triage state, Wayfinder type/state, or tracker open/closed state; never infer one from another.
-
-After changing role or provenance, re-read the item and verify the persisted role and immediate source set.
+Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
 
 ## Relationships
 
 - **Hierarchy**: native sub-issues are canonical. Create a child with `gh issue create -R <owner>/<repo> --parent <parent> ...`, attach an existing issue with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`, and read with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary` or `--json parent` on the child. If unsupported, fall back to `Parent: #<n>` in the child body.
 - **Blocking**: native issue dependencies are canonical. Add with `gh issue edit <child> -R <owner>/<repo> --add-blocked-by <blocker>` and inspect with `gh issue view <child> -R <owner>/<repo> --json blockedBy`. If unsupported, fall back to `Blocked by: #<n>, #<n>` in the child body; a ticket is unblocked when every blocker is closed.
 
-Hierarchy says what work a ticket belongs to; blocking says what must finish first. Provenance says why a derived artifact exists. Do not infer any one of these relationships from another.
+Hierarchy says what work a ticket belongs to; blocking says what must finish first. Do not infer one from the other.
 
 ## Pull requests as a triage surface
 
@@ -72,8 +56,8 @@ Run `gh issue view <number> -R <owner>/<repo> --comments`.
 
 Used by the `wayfinder` skill. The **map** is a single issue with **child** issues as tickets.
 
-- **Map**: a single issue with work-item role `decision-map` plus label `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body and any `Derived-From` sources. `gh issue create -R <owner>/<repo> --label wayfinder:map ...`, then persist the work-item role through the operation above.
-- **Child ticket**: give it work-item role `decision-ticket` and link it to the map using the hierarchy above; with the hierarchy fallback, maintain the map task list so the frontier can enumerate children. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). The Wayfinder type is not the work-item role. Once claimed, assign it to the driving dev.
+- **Map**: a single issue labelled `wayfinder:map` with work-item role `decision-map`, holding the Notes / Decisions-so-far / Fog body and any immediate `Derived-From` sources. `gh issue create -R <owner>/<repo> --label wayfinder:map ...`.
+- **Child ticket**: give it work-item role `decision-ticket` and link it to the map using the hierarchy above; with the hierarchy fallback, maintain the map task list so the frontier can enumerate children. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
 - **Blocking**: use the blocking representation above.
 - **Frontier query**: get child identities from `gh issue view <map> -R <owner>/<repo> --json subIssues`; for open children, inspect `state,assignees,blockedBy` with `gh issue view`. Drop any child with an open blocker or an assignee; first in map order wins. If using the task-list fallback, derive children from that list and resolve `Blocked by` references explicitly.
 - **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`, the session's first write.
