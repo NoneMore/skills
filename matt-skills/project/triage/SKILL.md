@@ -23,7 +23,7 @@ Use these sources authoritatively:
 
 Do not duplicate tracker commands here, guess label strings, or create a canonical label merely because the configured tracker uses another name.
 
-Triage operates on work items with role `request`. Before any triage-state mutation, read the role: persist `request` when absent, and stop instead of reclassifying an item that already has another role. Work-item role is independent from category and triage state.
+Before any triage-state mutation, persist work-item role `request`. Work-item role is independent from category and triage state.
 
 Every AI-authored tracker note created during triage must start with:
 
