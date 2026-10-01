@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Implement the work described by the user in the spec or tickets. Keep the session bounded: implementation may finish before repository delivery finishes.
 
-When the user supplies a persisted tracker reference, use the repo's configured issue tracker as the source of truth for execution coordination and delivery. If no tracker item is supplied, skip tracker lifecycle mutations and use the code lifecycle below with the user's supplied contract.
+When the user supplies a persisted tracker reference, use the repo's configured issue tracker as the source of truth for execution coordination and delivery. If that configuration is missing or does not define the implementation execution/delivery capabilities below, stop before mutation and tell the user to invoke the user-invoked `setup-matt-pocock-skills` workflow explicitly. If no tracker item is supplied, skip tracker lifecycle mutations and use the code lifecycle below with the user's supplied contract.
 
 ## Process
 
@@ -51,11 +51,13 @@ Run typechecking regularly, single test files regularly, and the full test suite
 
 Once implementation and tests are complete, call the Skill tool with "code-review" exactly once. Pass both the captured review fixed point and the known originating execution contract explicitly; review must not rediscover a contract the enclosing workflow already knows.
 
-Address the review before committing. Commit the verified work using the repository's configured delivery policy rather than assuming that a commit alone means delivery is complete.
+Address the review before committing. For tracker-backed work, commit the verified work according to the repository's configured delivery policy rather than assuming that a commit alone means delivery is complete. For standalone work, commit to the current branch after review unless the user supplied different delivery instructions.
 
 **Completion condition:** implementation is verified, review findings are addressed, and the resulting commit SHA(s) are known.
 
 ### 5. Publish delivery and the durable result
+
+For standalone work with no persisted tracker item, report the commit plus verification/review outcome after the commit and stop; the rest of this section applies only to tracker-backed execution.
 
 Use the configured repository delivery operation. In a direct-commit repository, delivery is complete only when the configured evidence shows the verified commit on the configured target branch. In a PR/MR repository, publish or identify the delivery request, record its link, and inspect its configured evidence; do not wait indefinitely for external review or merge.
 
