@@ -36,16 +36,14 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 - **Claim / release / suspend:** claim with `glab issue update <n> -R <group/project> --assignee @me`; release with `--unassign`. Suspension uses one `execution:suspended` label; create it when missing with `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="execution:suspended" -f color="#6E7781" -f description="Implementation execution is suspended"`. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
 - **Implementation Result:** store exactly one issue note containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
 - **Delivery evidence:** for direct-commit mode, run `glab api --paginate "projects/<url-encoded-project-path>/repository/commits/<sha>/refs?type=branch"` and require the configured target branch. For merge-request mode, inspect `glab api projects/<url-encoded-project-path>/merge_requests/<iid>`; require `state: merged` and the configured `target_branch`.
-- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat. `reconcile` decides when a terminal Implementation Result should invoke it according to work-item role.
+- **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
 
 ## Upstream reconciliation
 
 Used by `reconcile`. The workflow decides requirement satisfaction; this adapter only persists and verifies its inputs/results.
 
-- **Terminal children/results:** enumerate children through the hierarchy representation above, read each child's tracker state, and read its canonical Implementation Result when present.
 - **Reconciliation Result:** store exactly one issue note containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
 - **Source-keyed upstream note:** on each direct provenance source, store one note keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same note on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
-- **Verification/finalization:** re-read the marked records and issue state after mutation. Reuse the terminal operation above only when `reconcile` has verified that artifact's own completion semantics.
 
 ## Merge requests as a triage surface
 
