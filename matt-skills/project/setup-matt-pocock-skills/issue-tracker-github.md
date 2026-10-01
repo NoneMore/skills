@@ -17,6 +17,13 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 Do not rediscover the repository from `git remote -v` after setup; the configured repository above is the source of truth.
 
+## Relationships
+
+- **Hierarchy**: native sub-issues are canonical. Create a child with `gh issue create -R <owner>/<repo> --parent <parent> ...`, attach an existing issue with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`, and read with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary` or `--json parent` on the child. If unsupported, fall back to `Parent: #<n>` in the child body and, when useful, a task list on the parent.
+- **Blocking**: native issue dependencies are canonical. Add with `gh issue edit <child> -R <owner>/<repo> --add-blocked-by <blocker>` and inspect with `gh issue view <child> -R <owner>/<repo> --json blockedBy`. If unsupported, fall back to `Blocked by: #<n>, #<n>` in the child body; a ticket is unblocked when every blocker is closed.
+
+Hierarchy says what work a ticket belongs to; blocking says what must finish first. Do not infer one from the other.
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `triage` reads this flag.)_
@@ -31,16 +38,7 @@ GitHub shares one number space across issues and PRs, so a bare `#42` may be eit
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitHub issue.
-
-When a publishing workflow is decomposing an existing GitHub issue/spec into child tickets (notably `to-tickets`), use **native sub-issues as the canonical hierarchy**:
-
-- Create each new ticket with `gh issue create -R <owner>/<repo> --parent <parent> ...`, or attach an existing ticket with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`.
-- Read the hierarchy with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary`; a child can expose its parent with `--json parent`.
-- If the installed GitHub/GHES version does not support native sub-issues, fall back to a `Parent: #<n>` reference in each child body and, when useful, a task list on the parent.
-- Parent/child is **not** an execution dependency. Use native issue dependencies separately for blocking edges between tickets.
-
-If there is no source/parent issue (for example tickets are created directly from conversation context), publish the issues without inventing a synthetic parent.
+Create a GitHub issue. When decomposing an existing issue/spec, use the configured hierarchy above; when there is no source issue, do not invent a synthetic parent.
 
 ## When a skill says "fetch the relevant ticket"
 
@@ -51,8 +49,8 @@ Run `gh issue view <number> -R <owner>/<repo> --comments`.
 Used by the `wayfinder` skill. The **map** is a single issue with **child** issues as tickets.
 
 - **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `gh issue create -R <owner>/<repo> --label wayfinder:map ...`.
-- **Child ticket**: create it as a native sub-issue with `gh issue create -R <owner>/<repo> --parent <map> ...` (or attach an existing issue with `gh issue edit <map> -R <owner>/<repo> --add-sub-issue <child>`). Where the installed GitHub/GHES version lacks native sub-issues, add the child to a task list in the map body and put `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
-- **Blocking**: prefer GitHub's native issue dependencies. Add an edge with `gh issue edit <child> -R <owner>/<repo> --add-blocked-by <blocker>`; inspect it with `gh issue view <child> -R <owner>/<repo> --json blockedBy`. Where dependencies aren't available, fall back to a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
+- **Child ticket**: link it to the map using the hierarchy above. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
+- **Blocking**: use the blocking representation above.
 - **Frontier query**: get child identities from `gh issue view <map> -R <owner>/<repo> --json subIssues`; for open children, inspect `state,assignees,blockedBy` with `gh issue view`. Drop any child with an open blocker or an assignee; first in map order wins. If using the task-list fallback, derive children from that list and resolve `Blocked by` references explicitly.
 - **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`, the session's first write.
 - **Resolve**: `gh issue comment <n> -R <owner>/<repo> --body "<answer>"`, then `gh issue close <n> -R <owner>/<repo>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
