@@ -49,6 +49,12 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 - **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
 - **Source-keyed upstream note:** on each direct provenance source, store one comment keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same comment on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
 
+## External-request discovery
+
+- **Operation:** query the REST issue list oldest first, exclude pull requests, and exclude `OWNER`, `MEMBER`, and `COLLABORATOR` author associations:
+
+  `gh api --paginate "repos/<owner>/<repo>/issues?state=open&sort=created&direction=asc&per_page=100" --jq '.[] | select(has("pull_request") | not) | select(.author_association != "OWNER" and .author_association != "MEMBER" and .author_association != "COLLABORATOR") | {number, title, body, createdAt: .created_at, labels: [.labels[].name], author: .user.login, authorAssociation: .author_association}'`
+
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `triage` reads this flag.)_
@@ -56,7 +62,7 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 When set to `yes`, PRs run through the same labels and states as issues, using the `gh pr` equivalents:
 
 - **Read a PR**: `gh pr view <number> -R <owner>/<repo> --comments` and `gh pr diff <number> -R <owner>/<repo>` for the diff.
-- **List external PRs for triage**: do **not** request `authorAssociation` from `gh pr list --json`; that field is not exposed there. Query the REST PR list instead, oldest first, and exclude internal associations: `gh api --paginate "repos/<owner>/<repo>/pulls?state=open&sort=created&direction=asc&per_page=100" --jq '.[] | select(.author_association != "OWNER" and .author_association != "MEMBER" and .author_association != "COLLABORATOR") | {number, title, body, createdAt: .created_at, labels: [.labels[].name], author: .user.login, authorAssociation: .author_association}'`. Fetch comments/details for selected PRs with `gh pr view <number> -R <owner>/<repo> --comments`.
+- **List external PRs for triage**: do **not** request `authorAssociation` from `gh pr list --json`; that field is not exposed there. Query the REST PR list instead, oldest first, and exclude internal associations: `gh api --paginate "repos/<owner>/<repo>/pulls?state=open&sort=created&direction=asc&per_page=100" --jq '.[] | select(.author_association != "OWNER" and .author_association != "MEMBER" and .author_association != "COLLABORATOR") | {number, title, body, createdAt: .created_at, labels: [.labels[].name], author: .user.login, authorAssociation: .author_association}'`.
 - **Comment / label / close**: use `gh pr comment <number> -R <owner>/<repo>`, `gh pr edit <number> -R <owner>/<repo> --add-label`/`--remove-label`, and `gh pr close <number> -R <owner>/<repo>`.
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either: resolve with `gh pr view 42 -R <owner>/<repo>` and fall back to `gh issue view 42 -R <owner>/<repo>`.

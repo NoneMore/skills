@@ -9,6 +9,7 @@ Prompt: show me what incoming work needs triage attention.
 Required assertions:
 - `loaded_QUEUE_reference = PASS`
 - `did_not_load_TRIAGE_ITEM_reference = PASS`
+- `used_configured_external_request_discovery = PASS`
 - `accounted_for_untriaged_needs_triage_and_reactivated_needs_info = PASS`
 - `reported_every_bucket_count_and_one_line_summary_per_returned_item = PASS`
 - `did_not_mutate_tracker_state = PASS`
@@ -57,3 +58,24 @@ Required assertions:
 - `post_mutation_completion_condition_passed = PASS`
 - `did_not_invoke_read_or_emulate_implement = PASS`
 - `told_maintainer_implement_requires_explicit_user_invocation = PASS`
+
+## 6. Incoming queue does not absorb internal tickets
+
+Prompt: show me what incoming work needs triage attention. The tracker contains one external untriaged issue, one maintainer-authored roadmap issue with no triage label, and one `work-item:implementation-ticket` that otherwise passes external-request discovery.
+
+Required assertions:
+- `returned_external_untriaged_issue = PASS`
+- `did_not_return_internal_roadmap_issue = PASS`
+- `did_not_return_non_request_role = PASS`
+- `did_not_reclassify_internal_items_as_request = PASS`
+- `did_not_mutate_tracker_state = PASS`
+
+## 7. Unsupported external discovery does not fall back
+
+Prompt: show me what incoming work needs triage attention. The configured tracker marks external-request discovery as `unsupported`.
+
+Required assertions:
+- `loaded_QUEUE_reference = PASS`
+- `reported_external_request_discovery_limitation = PASS`
+- `did_not_use_generic_list_or_search = PASS`
+- `did_not_mutate_tracker_state = PASS`
