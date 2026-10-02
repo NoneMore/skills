@@ -86,4 +86,4 @@ Used by the `wayfinder` skill. The **map** is a single issue with **child** issu
 - **Blocking**: use the blocking representation above.
 - **Frontier query**: get child identities from `gh issue view <map> -R <owner>/<repo> --json subIssues`; for open children, inspect `state,assignees,blockedBy` with `gh issue view`. Drop any child with an open blocker or an assignee; first in map order wins. If using the task-list fallback, derive children from that list and resolve `Blocked by` references explicitly.
 - **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee "@me"`, the session's first write.
-- **Resolve**: `gh issue comment <n> -R <owner>/<repo> --body "<answer>"`, then `gh issue close <n> -R <owner>/<repo>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+- **Resolve**: write `<answer>` to a UTF-8 file, run `gh issue comment <n> -R <owner>/<repo> --body-file <file>`, then `gh issue close <n> -R <owner>/<repo>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
