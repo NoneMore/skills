@@ -2,34 +2,23 @@
 
 This directory is an isolated prototype for replacing the current project tracker model.
 
-It intentionally does **not** port the existing downstream workflows. The prototype starts at setup and defines only the shared issue model plus two storage backends:
+It intentionally does **not** port the existing downstream workflows. The prototype starts at setup and defines one semantic issue model plus two storage backends:
 
-- GitHub Issues — the reference implementation.
-- Local Markdown — a degraded fallback that mirrors the same semantics.
+- GitHub Issues — the reference implementation when all required native capabilities are available.
+- Local Markdown — the degraded fallback.
 
-## Core idea
+The authoritative tracker semantics live in [`setup-tracker/ISSUE-MODEL.md`](setup-tracker/ISSUE-MODEL.md). Backend documents define representation and operations only.
 
-GitHub issues are signals and work items, but not every issue is managed work.
+## Model at a glance
 
-Managed work has exactly one type:
+Issues are either external intake or internally owned managed work.
+
+Managed work has exactly one of two types:
 
 - `investigation` — resolve uncertainty.
-- `change` — make an observable state different.
+- `change` — make observable state different.
 
-External reports and requests remain external issues. They are not converted into managed work. Maintainers create separate managed issues and link the external issues as direct sources.
-
-An investigation never changes type into a change. It may produce zero, one, or many change issues, each sourcing the investigation.
-
-## Orthogonal dimensions
-
-- **Type** — what completion means.
-- **Status** — where the issue is in its lifecycle.
-- **Sources** — which issues directly caused this issue to exist.
-- **Parent/children** — decomposition.
-- **Blocked by** — scheduling dependency.
-- **Assignee** — execution claim.
-
-None of these dimensions may be inferred from another.
+External intake remains separate from managed work so reporter identity, evidence, and discussion are preserved.
 
 ## Non-goals
 
@@ -41,5 +30,3 @@ This prototype does not:
 - support GitLab, Jira, Linear, or a generic "other tracker" contract;
 - migrate existing issues;
 - define downstream workflow behavior yet.
-
-See `setup-tracker/ISSUE-MODEL.md` for the semantic contract.

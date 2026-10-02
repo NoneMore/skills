@@ -1,20 +1,24 @@
 # Issue model
 
-This is the semantic contract for the tracker v2 prototype. Storage backends must preserve these meanings.
+This is the authoritative semantic contract for the tracker v2 prototype. Storage backends define representation and operations; they must preserve these meanings rather than redefine them.
 
-## 1. Issues and managed work
+## 1. Intake and managed work
 
-An issue may be either an intake signal or managed work.
+An issue is either external intake or managed work.
 
-**Intake signal**
+### External intake
 
-An issue that reports an observation, asks for support, requests a feature, starts a discussion, or otherwise supplies project input. Intake issues may be externally authored and do not require a managed-work type.
+External intake reports an observation, asks for support, requests a feature, starts a discussion, or otherwise supplies project input.
 
-Do not convert an external intake issue into managed work. External issues preserve reporter identity, wording, evidence, and discussion.
+External intake remains untyped. Preserve the reporter's identity, wording, evidence, and discussion instead of converting the issue into managed work.
 
-**Managed work**
+Triage may gather missing information and produce a recommendation. A maintainer then decides whether the project will act. If action is accepted, create or attach a separate managed issue and record the intake issue as a direct source.
 
-An issue that maintainers have chosen to own as project work. Every managed-work issue has exactly one type.
+### Managed work
+
+Managed work is internally created project work whose proposer has already decided what the project should own.
+
+Every managed issue has exactly one managed-work type and an issue-specific completion condition when it is created. Managed work does not pass through intake triage.
 
 The presence of exactly one managed-work type is sufficient to identify an issue as managed work. There is no separate `managed` field.
 
@@ -59,43 +63,57 @@ Examples:
 - Any managed issue may be decomposed into child issues of either type.
 - Bug, feature, enhancement, docs, refactor, security, and similar classifications are optional repository taxonomy, not managed-work types.
 - External classification never determines managed-work type.
-- If an external issue requires project work, create or attach it to a separate managed issue instead of retyping the external issue.
+- If external intake requires project work, create or attach it to a separate managed issue instead of retyping the intake issue.
 
 ## 4. Status
 
-Status is orthogonal to type.
+Status is orthogonal to type, but some statuses apply only to intake or only to managed work.
 
-Canonical statuses:
+### Intake-only statuses
 
-- `needs-triage` — intake has not been evaluated yet.
-- `needs-info` — progress requires information from a source/reporter.
-- `ready` — managed work is sufficiently defined and can be claimed.
+- `needs-triage` — external intake still needs maintainer evaluation or re-evaluation.
+- `needs-info` — external intake cannot be evaluated because information is missing from the reporter or another source.
+
+Managed work never uses `needs-triage` or `needs-info`: its proposer must resolve those questions before creating it.
+
+### Managed-work statuses
+
+- `ready` — managed work is decided, sufficiently defined, and can be claimed now.
 - `in-progress` — managed work is actively being worked.
-- `blocked` — work cannot proceed until an explicit dependency or condition clears.
-- `waiting` — no active work is needed until an external event completes.
-- `done` — the issue's own completion condition is satisfied.
-- `cancelled` — the issue will not be completed as defined.
+- `blocked` — managed work cannot proceed until an explicit prerequisite is completed or cleared.
+
+Use `blocked` when there is a concrete prerequisite that must be acted on or completed, such as another issue. Use `waiting` instead when no work should happen until an external event or decision arrives.
+
+### Shared lifecycle statuses
+
+- `waiting` — no active work is needed now; the issue is waiting for an external event or human decision.
+- `done` — the issue's own completion condition has been satisfied, or external intake has been fully addressed.
+- `cancelled` — the issue will not be completed or acted on as defined.
+
+For external intake, `waiting` may mean triage has produced a recommendation and is waiting for a maintainer decision, or that accepted downstream work is still in progress.
 
 Typical intake paths:
 
 ```text
 needs-triage -> needs-info -> needs-triage
 needs-triage -> waiting
-needs-triage -> done
-needs-triage -> cancelled
+waiting -> needs-triage
+waiting -> done
+waiting -> cancelled
 ```
 
 Typical managed-work paths:
 
 ```text
 ready -> in-progress
-in-progress -> blocked -> in-progress
-in-progress -> waiting -> in-progress
+ready -> blocked|waiting
+in-progress -> blocked|waiting
+blocked|waiting -> ready|in-progress
 in-progress -> done
 ready|in-progress|blocked|waiting -> cancelled
 ```
 
-These are normal paths, not a reason to invent more statuses. A workflow may require explicit human approval for unusual transitions.
+These are normal paths, not a reason to invent more statuses. Unusual transitions must still preserve the status meanings above.
 
 Terminal statuses are `done` and `cancelled`.
 
@@ -103,7 +121,7 @@ Terminal statuses are `done` and `cancelled`.
 
 `Sources` is direct provenance: the issues whose information or demand was used to define the current issue.
 
-Examples:
+Example:
 
 ```text
 #101 external report ----\
@@ -126,7 +144,7 @@ Rules:
 
 Parent/child means decomposition.
 
-A child is a constituent part of completing its parent. Any issue type may parent any issue type.
+A child is a constituent part of completing its parent. Any managed issue type may parent either managed issue type.
 
 Do not use parent/child merely to group related issues. Use ordinary links, labels, milestones, or projects for grouping.
 
@@ -142,9 +160,9 @@ Dependencies are independent from hierarchy and provenance. Never infer one rela
 
 Assignee represents the active claim.
 
-Do not create a second claim lifecycle field. A ready, unblocked managed issue with no active assignee is executable frontier work.
+Do not create a second claim lifecycle field. A `ready` managed issue with no active assignee is executable frontier work.
 
-Status still describes lifecycle: claiming normally moves `ready` to `in-progress`; releasing or suspending work must leave a truthful status such as `ready`, `blocked`, or `waiting`.
+Claiming normally moves `ready` to `in-progress`. Releasing or suspending work must leave a truthful status such as `ready`, `blocked`, or `waiting`.
 
 ## 9. Closing and reconciliation
 
@@ -165,4 +183,4 @@ Issue
 └── Body/comments  contract, evidence, outcome
 ```
 
-An issue without a type is not managed work. Managed work has exactly one type.
+An issue without a type is external intake. Managed work has exactly one type.

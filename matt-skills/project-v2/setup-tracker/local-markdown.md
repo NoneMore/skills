@@ -1,8 +1,8 @@
 # Local Markdown backend
 
-Local Markdown is the degraded fallback for repositories that do not have a usable GitHub Issues surface.
+Local Markdown is the degraded fallback when no GitHub repository satisfies the complete tracker-v2 capability set.
 
-It mirrors the GitHub semantic model rather than defining a second model.
+Tracker semantics are defined only in [ISSUE-MODEL.md](ISSUE-MODEL.md). This file defines Local Markdown representation and operations.
 
 ## Storage
 
@@ -18,7 +18,13 @@ Use one file per issue:
 .tracker/issues/<NNNN>-<slug>.md
 ```
 
-Assign the next monotonically increasing four-digit number by scanning existing files. The number is the local issue identity.
+Assign the next monotonically increasing four-digit number by scanning existing conforming files. The number is the local issue identity.
+
+### Existing files
+
+Before configuring Local Markdown, inspect every existing `.tracker/issues/*.md` file.
+
+Each file must already match the tracker-v2 header contract below. If any file does not match, stop without modifying the tracker. Do not reinterpret or migrate legacy files; migration is outside this prototype.
 
 ## Representation
 
@@ -39,44 +45,56 @@ Then follows the issue body and append-only discussion/evidence sections as need
 
 ### Type
 
-`Type: None` means the issue is intake/unmanaged.
+Use:
 
-Managed work has exactly one of:
-
-- `investigation`
-- `change`
-
-Do not mutate an external/intake issue into managed work. Create a separate managed issue and reference the intake issue in `Sources`.
+- `Type: None` for external intake;
+- `Type: investigation` or `Type: change` for managed work.
 
 ### Status
 
-Use the canonical statuses from `ISSUE-MODEL.md`.
+Use exactly one canonical status from `ISSUE-MODEL.md`, respecting whether that status applies to intake or managed work.
 
 There is no separate local tracker-state field. `done` and `cancelled` are terminal; every other status is non-terminal.
 
 ### Sources
 
-`Sources` contains direct local issue numbers only. Record direct provenance, never its transitive closure.
+Store direct local issue numbers only:
 
-### Hierarchy and dependencies
+```text
+Sources: 0001, 0007
+```
 
-`Parent` is decomposition.
+Use `Sources: None` when empty.
 
-`Blocked-By` is scheduling dependency.
+### Hierarchy
 
-They are independent from each other and from Sources.
+Store the direct parent only:
+
+```text
+Parent: 0004
+```
+
+Use `Parent: None` when there is no parent.
+
+### Dependencies
+
+Store direct blockers:
+
+```text
+Blocked-By: 0002, 0009
+```
+
+Use `Blocked-By: None` when there are no blockers.
 
 ### Claim
 
-`Assignee` mirrors GitHub assignee. Setting it claims the issue; clearing it releases the claim.
-
-Do not add an execution-state field.
+Store the active assignee in `Assignee`. Use `Assignee: None` when unclaimed.
 
 ## Operations
 
 ### Create
 
-Create the next numbered file with complete metadata. Managed work must have a type; intake uses `Type: None`.
+Create the next numbered file with the complete header. Choose type and status according to `ISSUE-MODEL.md`.
 
 ### Read
 
@@ -84,7 +102,7 @@ Read the whole file, including discussion/evidence.
 
 ### List/search
 
-Scan `.tracker/issues/*.md` and parse the header fields.
+Scan `.tracker/issues/*.md` and parse the required header fields. Treat a malformed header as tracker corruption; do not silently guess missing values.
 
 ### Mutate
 
