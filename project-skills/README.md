@@ -1,4 +1,4 @@
-# Project tracker v2 prototype
+# Project tracker prototype
 
 An isolated prototype for replacing the current project tracker model.
 

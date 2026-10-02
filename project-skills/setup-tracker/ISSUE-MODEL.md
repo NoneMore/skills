@@ -1,6 +1,6 @@
 # Issue model
 
-Authoritative semantics for tracker v2. Backend documents define representation only.
+Authoritative semantics for the tracker. Backend documents define representation only.
 
 ## Intake and managed work
 

@@ -1,6 +1,6 @@
 # Local Markdown backend
 
-Representation and operations for tracker v2. Semantics live in [ISSUE-MODEL.md](ISSUE-MODEL.md).
+Representation and operations for the tracker. Semantics live in [ISSUE-MODEL.md](ISSUE-MODEL.md).
 
 ## Storage
 
@@ -12,7 +12,7 @@ Store issues as:
 
 Use the next monotonically increasing four-digit number.
 
-Before setup, every existing `.tracker/issues/*.md` file must already match the v2 header below. Otherwise stop without modifying the tracker; migration is out of scope.
+Before setup, every existing `.tracker/issues/*.md` file must already match the header below. Otherwise stop without modifying the tracker; migration is out of scope.
 
 ## Header
 

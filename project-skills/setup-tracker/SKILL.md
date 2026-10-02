@@ -1,6 +1,6 @@
 ---
 name: setup-tracker
-description: "Configure the tracker v2 prototype with GitHub Issues when supported, otherwise Local Markdown."
+description: "Configure the project tracker with GitHub Issues when supported, otherwise Local Markdown."
 disable-model-invocation: true
 ---
 
@@ -30,7 +30,7 @@ Do not create textual GitHub fallbacks for hierarchy or dependencies.
 
 For GitHub, record the exact `owner/repo` and inspect existing labels.
 
-For Local Markdown, inspect `.tracker/issues/*.md` if present. If any existing issue does not match the v2 header in [local-markdown.md](local-markdown.md), stop without modifying the tracker. Migration is out of scope.
+For Local Markdown, inspect `.tracker/issues/*.md` if present. If any existing issue does not match the header in [local-markdown.md](local-markdown.md), stop without modifying the tracker. Migration is out of scope.
 
 ### 3. Configure
 
@@ -40,7 +40,7 @@ For GitHub:
 
 ```markdown
 # Issue tracker
-Model: tracker-v2
+Model: tracker
 Backend: github
 Repository: <owner>/<repo>
 Semantics: <path to ISSUE-MODEL.md>
@@ -51,14 +51,14 @@ For Local Markdown:
 
 ```markdown
 # Issue tracker
-Model: tracker-v2
+Model: tracker
 Backend: local-markdown
 Issue root: .tracker/issues/
 Semantics: <path to ISSUE-MODEL.md>
 Operations: <path to local-markdown.md>
 ```
 
-For GitHub, create missing tracker-v2 labels described in [github.md](github.md). Preserve unrelated labels.
+For GitHub, create missing tracker labels described in [github.md](github.md). Preserve unrelated labels.
 
 For Local Markdown, ensure `.tracker/issues/` exists.
 
@@ -72,10 +72,10 @@ If project instructions were changed, verify the issue-tracker pointer resolves 
 
 For GitHub, verify:
 
-- required capabilities and tracker-v2 labels are available;
+- required capabilities and tracker labels are available;
 - unrelated labels were not removed or renamed.
 
-For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the v2 header.
+For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the header.
 
 Setup is complete only when every applicable check passes.
 

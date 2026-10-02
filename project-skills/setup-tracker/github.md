@@ -1,6 +1,6 @@
 # GitHub Issues backend
 
-Representation and operations for tracker v2. Semantics live in [ISSUE-MODEL.md](ISSUE-MODEL.md).
+Representation and operations for the tracker. Semantics live in [ISSUE-MODEL.md](ISSUE-MODEL.md).
 
 ## Capability requirement
 
@@ -23,7 +23,7 @@ Repository labels such as `bug`, `enhancement`, or `documentation` remain indepe
 
 ## Setup
 
-Create missing tracker-v2 type and status labels. Preserve unrelated labels.
+Create missing tracker type and status labels. Preserve unrelated labels.
 
 ## Operations
 

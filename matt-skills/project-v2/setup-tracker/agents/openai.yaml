@@ -1,5 +1,0 @@
-interface:
-  display_name: "Setup Tracker v2"
-  short_description: "Configure the GitHub-first tracker v2 prototype"
-policy:
-  allow_implicit_invocation: false
