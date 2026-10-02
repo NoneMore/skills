@@ -2,6 +2,8 @@
 
 Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
+Shared tracker semantics are defined in [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md). This file defines only the GitHub representation, operations, fallbacks, and verification used to realize that contract.
+
 ## Repository
 
 **Repository: `<owner>/<repo>`.** Setup replaces this placeholder with the canonical GitHub repository. Treat it as configuration: pass `-R <owner>/<repo>` on tracker commands instead of inferring a repository from the current working directory.
@@ -24,8 +26,6 @@ Do not rediscover the repository from `git remote -v` after setup; the configure
 - **Role:** read `work-item:<role>` labels. To write a role, remove any other `work-item:*` role labels, add the target label with `gh issue edit <n> -R <owner>/<repo> --add-label "work-item:<role>"` (or `gh pr edit` for a configured PR request surface), and create the target first when missing with `gh label create "work-item:<role>" -R <owner>/<repo> --description "Work item role: <role>"`.
 - **Derived from:** read source references from one reserved body line near the top: `Derived-From: #<n>, #<n>`. Missing or `Derived-From: None` means no sources. Preserve the rest of the body when updating this line.
 
-Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
-
 ## Relationships
 
 - **Hierarchy**: native sub-issues are canonical. Create a child with `gh issue create -R <owner>/<repo> --parent <parent> ...`, attach an existing issue with `gh issue edit <parent> -R <owner>/<repo> --add-sub-issue <child>`, and read with `gh issue view <parent> -R <owner>/<repo> --json subIssues,subIssuesSummary` or `--json parent` on the child. If unsupported, fall back to `Parent: #<n>` in the child body.
@@ -35,11 +35,11 @@ Hierarchy says what work a ticket belongs to; blocking says what must finish fir
 
 ## Implementation execution and delivery
 
-Used by `implement`. Triage readiness, execution coordination, delivery result, and GitHub open/closed state are separate concerns.
+Used by `implement`. Eligibility, frontier, coordination, result, and terminal semantics come from [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md); this section defines their GitHub realization.
 
 - **Delivery policy:** `Mode: <direct-commit|pull-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For pull-request mode, publish with `gh pr create -R <owner>/<repo> --base <branch> --fill` when no delivery PR already exists.
-- **Execution frontier:** start from open `request`, `spec`, or `implementation-ticket` issues carrying the configured `ready-for-agent` triage label. Exclude issues with an assignee, an open blocker, or `execution:suspended`. Also exclude a `spec` once it has an `implementation-ticket` child. Inspect candidates with `gh issue list ... --json number,title,body,labels,assignees` and `gh issue view` as needed. Explicitly named items may still be read for resume/finalization.
-- **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee "@me"`; release with `--remove-assignee "@me"`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
+- **Execution frontier realization:** enumerate candidate issues with `gh issue list ... --json number,title,body,labels,assignees`; inspect role, tracker state, configured triage label, `blockedBy`, assignees, `execution:suspended`, and child roles with `gh issue view` as needed. Preserve the provider's configured ordering and apply the eligibility/frontier predicates from [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md).
+- **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee "@me"`; release with `--remove-assignee "@me"`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Realize contract ordering by adding suspension before removing the assignee, and by assigning the current actor before removing suspension on resume.
 - **Implementation Result:** store exactly one issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment with `gh issue comment <n> -R <owner>/<repo> --body-file <file>` when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> --field "body=@<file>"`.
 - **Delivery evidence:** for direct-commit mode, run `gh api "repos/<owner>/<repo>/compare/<commit>...<target-branch>" --jq .status`; `ahead` or `identical` means the target contains the commit. For pull-request mode, inspect the recorded PR with `gh pr view <pr> -R <owner>/<repo> --json state,mergedAt,baseRefName,url,mergeCommit`; require merged state and the configured target branch.
 - **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
@@ -50,6 +50,10 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 
 - **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment with `gh issue comment <n> -R <owner>/<repo> --body-file <file>` when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> --field "body=@<file>"`.
 - **Source-keyed upstream note:** on each direct provenance source, store one comment keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same comment on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
+
+## Post-mutation verification
+
+After a tracker mutation, re-read the affected issue with `gh issue view <n> -R <owner>/<repo> --json number,state,body,labels,assignees,parent,subIssues,blockedBy` plus the configured comment/API read when verifying canonical result or reconciliation-note storage. Verify the semantic fact required by [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md); a successful `gh` exit alone is not sufficient for claim ownership or other race-sensitive writes.
 
 ## External-request discovery
 
@@ -84,6 +88,6 @@ Used by the `wayfinder` skill. The **map** is a single issue with **child** issu
 - **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `gh issue create -R <owner>/<repo> --label wayfinder:map ...`.
 - **Child ticket**: link it to the map using the hierarchy above; with the hierarchy fallback, maintain the map task list so the frontier can enumerate children. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
 - **Blocking**: use the blocking representation above.
-- **Frontier query**: get child identities from `gh issue view <map> -R <owner>/<repo> --json subIssues`; for open children, inspect `state,assignees,blockedBy` with `gh issue view`. Drop any child with an open blocker or an assignee; first in map order wins. If using the task-list fallback, derive children from that list and resolve `Blocked by` references explicitly.
+- **Frontier query**: get child identities and map order from `gh issue view <map> -R <owner>/<repo> --json subIssues`; inspect the child facts required by the shared Wayfinder frontier rule with `gh issue view`. If using the task-list fallback, derive the same ordered child set from that list and resolve `Blocked by` references explicitly before applying [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md).
 - **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee "@me"`, the session's first write.
 - **Resolve**: write `<answer>` to a UTF-8 file, run `gh issue comment <n> -R <owner>/<repo> --body-file <file>`, then `gh issue close <n> -R <owner>/<repo>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
