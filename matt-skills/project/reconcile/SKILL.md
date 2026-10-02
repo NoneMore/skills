@@ -29,6 +29,8 @@ For a request/spec, use required implementation-ticket children when present. Ot
 
 Required children must be terminal before satisfaction is checked. Terminal children, including blocked/abandoned/partial outcomes, trigger verification but do not prove satisfaction. For a directly executed request/spec with `Outcome: delivered`, re-check configured delivery evidence before recording satisfaction.
 
+Once persisted evidence is sufficient to evaluate the contract, verify its requested/acceptance behavior against that evidence and current repository behavior where needed, then persist the result.
+
 Use one canonical record:
 
 ```markdown
@@ -41,19 +43,19 @@ Next action: <concrete next action, or None>
 ```
 
 - **Waiting:** upsert `waiting` with the non-terminal or missing evidence and stop.
-- **Satisfied:** verify the contract's requested/acceptance behavior against persisted evidence and current repository behavior where needed; upsert `satisfied`, finalize only if not already terminal, and verify both result and tracker state.
-- **Unsatisfied:** upsert `unsatisfied` with explicit remaining scope and a concrete next action. Keep an open contract open and release/suspend any stale active claim. If it was already terminal before this check, do not reopen it merely to repair history; report the lifecycle conflict.
+- **Satisfied:** upsert `satisfied`, finalize only if not already terminal, and verify both result and tracker state.
+- **Unsatisfied:** upsert `unsatisfied` with explicit remaining scope and a concrete next action. Keep an open contract open and release any active claim. If it was already terminal before this check, do not reopen it merely to repair history; report the lifecycle conflict.
 
-A terminal contract with a persisted `satisfied` result does not need re-verification unless new material evidence requires it.
+A terminal contract with a persisted `satisfied` result skips this step; a satisfied spec still continues to Step 3.
 
-**Completion condition:** the contract is durably waiting/unsatisfied and open without a stale claim, or terminal with a verified `satisfied` result.
+**Completion condition:** the contract is durably waiting/unsatisfied and open, or terminal with a verified `satisfied` result.
 
 ### 3. Reconcile immediate provenance
 
 Only continue for a satisfied spec. Read every immediate `derived-from` source and use the configured source-keyed upstream note so reruns update rather than duplicate the record.
 
-- **request:** publish the delivery summary, verify the original requested outcome against delivered scope/current behavior, and persist its Reconciliation Result using Step 2 semantics. Finalize only if satisfied.
-- **spec:** publish the delivery summary and verify that spec as a separate contract using Step 2 semantics. Do not follow that source spec's own provenance in this invocation.
+- **request:** publish the delivery summary, then reconcile the request using Step 2 with this spec's result and delivery evidence as additional evidence.
+- **spec:** publish the delivery summary, then reconcile that spec using Step 2 with this spec's result and delivery evidence as additional evidence. Do not follow that source spec's own provenance in this invocation.
 - **decision-map / decision-ticket:** publish a realization/backlink or delivery summary; do not change Wayfinder lifecycle state because implementation was delivered.
 
 If an upstream source is already terminal, do not reopen it merely to repair history; record/report any conflict instead.
