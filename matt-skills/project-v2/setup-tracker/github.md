@@ -4,7 +4,7 @@ Representation and operations for tracker v2. Semantics live in [ISSUE-MODEL.md]
 
 ## Capability requirement
 
-Use this backend only when GitHub Issues and the available tooling/API can read and write labels, assignees, native sub-issues, and native issue dependencies.
+Use this backend only when GitHub Issues are enabled and the available tooling/API can read and write issues, labels, assignees, native sub-issues, and native issue dependencies.
 
 If native sub-issues or dependencies cannot be read and written, use Local Markdown. Do not encode those relations in issue text.
 

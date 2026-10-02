@@ -48,8 +48,6 @@ Managed work may use:
 
 `done` and `cancelled` are terminal.
 
-Whether a `ready` issue is executable is derived from its assignee and blockers, not from status.
-
 ## Sources
 
 `Sources` is direct provenance: issues whose information or demand was used to define the current issue.
@@ -66,7 +64,7 @@ Do not use hierarchy merely to group related issues. Completing all children doe
 
 ## Dependencies
 
-`BlockedBy` records scheduling dependencies. An issue is executable only when none of its blockers is non-terminal.
+`BlockedBy` records scheduling dependencies. A blocker is live while its referenced issue is non-terminal.
 
 Dependencies are independent from hierarchy and provenance.
 
@@ -74,7 +72,7 @@ Dependencies are independent from hierarchy and provenance.
 
 Assignee is the claim mechanism. Do not add another execution-state field.
 
-A claimed issue may still have blockers; claim and dependency are independent.
+Claim is independent from status and dependencies.
 
 ## Reconciliation
 

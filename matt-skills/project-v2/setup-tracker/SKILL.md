@@ -18,7 +18,7 @@ Inspect repository remotes, repository metadata, and available GitHub tooling/AP
 
 GitHub is usable only when the selected repository has Issues enabled and the available tooling/API can read and write:
 
-- labels and assignees;
+- issues, labels, and assignees;
 - native sub-issues;
 - native issue dependencies.
 
@@ -60,6 +60,8 @@ Operations: <path to local-markdown.md>
 
 For GitHub, create missing tracker-v2 labels described in [github.md](github.md). Preserve unrelated labels.
 
+For Local Markdown, ensure `.tracker/issues/` exists.
+
 If the active harness exposes a project instruction artifact, add or update one short issue-tracker pointer to `docs/agents/issues.md`. Do not copy the contract into project instructions.
 
 ### 4. Verify
@@ -68,9 +70,12 @@ Re-read `docs/agents/issues.md` and verify its backend identity and both referen
 
 If project instructions were changed, verify the issue-tracker pointer resolves and is not duplicated.
 
-For GitHub, verify the required labels and native relation capabilities are available after setup.
+For GitHub, verify:
 
-For Local Markdown, verify existing files were preserved and every issue file matches the v2 header.
+- required capabilities and tracker-v2 labels are available;
+- unrelated labels were not removed or renamed.
+
+For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the v2 header.
 
 Setup is complete only when every applicable check passes.
 
