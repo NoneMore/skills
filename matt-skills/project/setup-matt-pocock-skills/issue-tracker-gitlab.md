@@ -38,6 +38,13 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 - **Delivery evidence:** for direct-commit mode, run `glab api --paginate "projects/<url-encoded-project-path>/repository/commits/<sha>/refs?type=branch"` and require the configured target branch. For merge-request mode, inspect `glab api projects/<url-encoded-project-path>/merge_requests/<iid>`; require `state: merged` and the configured `target_branch`.
 - **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
 
+## Upstream reconciliation
+
+Used by `reconcile`. The workflow decides requirement satisfaction; this adapter only persists and verifies its inputs/results.
+
+- **Reconciliation Result:** store exactly one issue note containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
+- **Source-keyed upstream note:** on each direct provenance source, store one note keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same note on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
+
 ## Merge requests as a triage surface
 
 **MRs as a request surface: no.** _(Set to `yes` if this repo treats external merge requests as feature requests; `triage` reads this flag.)_

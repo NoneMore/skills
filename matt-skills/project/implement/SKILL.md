@@ -20,10 +20,10 @@ For a tracker item, read its full body/comments, work-item role, triage state, h
 
 If an Implementation Result exists, resume from its `Outcome` and `Next action`:
 
-- `delivered`: if the tracker is already terminal, report it and stop. Otherwise re-check delivery evidence; if it still proves delivery, finalize idempotently and stop. If it does not, report the inconsistent persisted state without replaying implementation or downgrading the result.
-- `awaiting-delivery`: inspect delivery evidence without claiming. If still pending, report it and stop. If complete, upsert `delivered`, finalize, verify, and stop. Do not rerun TDD, review, or commit.
+- `delivered`: call the Skill tool with "reconcile" and pass the tracker item, then stop.
+- `awaiting-delivery`: inspect delivery evidence without claiming. If still pending, report it and stop. If complete, upsert `delivered`, verify the persisted result, call the Skill tool with "reconcile" and pass the tracker item, then stop. Do not rerun TDD, review, or commit.
 - `blocked`: re-check the blocker/suspension condition. If it still cannot proceed, report the blocker and stop. Otherwise claim first, clear the configured suspension state, and continue from `Next action` without repeating completed phases.
-- `abandoned`: report the terminal outcome and stop.
+- `abandoned`: call the Skill tool with "reconcile" and pass the tracker item, then stop.
 
 Otherwise require a normal execution candidate: an open, ready execution leaf under the configured tracker semantics. A spec with implementation-ticket children is not an execution leaf even if it remains `ready-for-agent`. If the item is ineligible or already claimed, stop before code/test mutation.
 
@@ -66,19 +66,19 @@ Blocker: <reason, when applicable>
 Next action: <the next lifecycle action, or None>
 ```
 
-If delivery evidence is complete, upsert `Outcome: delivered`, then run the configured terminal finalization.
+If delivery evidence is complete, upsert `Outcome: delivered`, verify the persisted result, then call the Skill tool with "reconcile" and pass the tracker item. Do not run the tracker terminal operation here: `reconcile` owns role-aware terminal mutation so direct requests/specs are not closed before their contracts are verified.
 
 If delivery is pending, upsert `Outcome: awaiting-delivery`, then use the configured suspension operation to release the active claim while keeping the item outside the execution frontier. End the session.
 
-**Completion condition:** the canonical result and tracker state durably represent either delivered terminal work or open, unclaimed work awaiting delivery.
+**Completion condition:** the canonical result is durable; awaiting delivery is open and unclaimed, while a terminal implementation outcome has completed role-aware reconciliation with no stale active claim.
 
 ### 4. Stop safely
 
 If claimed work cannot continue, do not leave an active claim:
 
 - **Blocked:** upsert `Outcome: blocked` with the blocker and concrete `Next action`; record a real blocking relationship when one exists, then use the configured suspension operation to release the claim while keeping the item outside the execution frontier.
-- **Abandoned:** upsert `Outcome: abandoned` with the reason and material partial work, then run the configured terminal operation.
+- **Abandoned:** upsert `Outcome: abandoned` with the reason and material partial work, verify the persisted result, then call the Skill tool with "reconcile" and pass the tracker item.
 
 A failure before a tracker-backed item was successfully claimed is read-only from the tracker's perspective.
 
-**Completion condition:** the canonical result records why work stopped, and no active claim remains.
+**Completion condition:** the canonical result records why work stopped, no active claim remains, and terminal tracker-backed work has invoked upstream reconciliation from persisted state.
