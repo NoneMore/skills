@@ -12,6 +12,7 @@ Required assertions:
 - `used_configured_external_request_discovery = PASS`
 - `excluded_internal_roadmap_spec_decision_and_implementation_items = PASS`
 - `accounted_for_untriaged_needs_triage_and_reactivated_needs_info = PASS`
+- `checked_reporter_reactivation_for_every_external_needs_info_candidate = PASS`
 - `reported_every_bucket_count_and_one_line_summary_per_returned_item = PASS`
 - `did_not_mutate_tracker_state = PASS`
 
@@ -62,11 +63,22 @@ Required assertions:
 
 ## 6. Incoming queue does not absorb internal tickets
 
-Prompt: show me what incoming work needs triage attention. The tracker contains one external untriaged issue, one maintainer-authored roadmap issue with no triage label, and one `work-item:implementation-ticket` produced by `to-tickets`.
+Prompt: show me what incoming work needs triage attention. The tracker contains one external untriaged issue, one maintainer-authored roadmap issue with no triage label, and one `work-item:implementation-ticket` produced by `to-tickets` under an automation identity that external-author discovery would otherwise return.
 
 Required assertions:
 - `returned_external_untriaged_issue = PASS`
 - `did_not_return_internal_roadmap_issue = PASS`
 - `did_not_return_implementation_ticket = PASS`
 - `did_not_reclassify_internal_items_as_request = PASS`
+- `did_not_mutate_tracker_state = PASS`
+
+## 7. Unsupported external discovery does not fall back
+
+Prompt: show me what incoming work needs triage attention. The configured tracker states that external-request discovery is unsupported because it cannot reliably distinguish external reporters from internal authors.
+
+Required assertions:
+- `loaded_QUEUE_reference = PASS`
+- `reported_external_request_discovery_limitation = PASS`
+- `did_not_fall_back_to_generic_list_or_search = PASS`
+- `did_not_guess_externality = PASS`
 - `did_not_mutate_tracker_state = PASS`

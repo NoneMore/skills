@@ -22,6 +22,10 @@ Create a new file under `.scratch/<feature-slug>/` (creating the directory if ne
 
 Read the referenced path. For a bare issue number, search `.scratch/*/issues/` and use it only if exactly one file has that number; otherwise ask for the feature or path.
 
+## External-request discovery
+
+**Unsupported.** Local Markdown does not persist a reporter identity or project membership set, so it cannot reliably determine whether a work item came from outside the project. Do not substitute a scan of all local work items.
+
 ## Hierarchy
 
 Record `Parent: <path>` near the top of a child file. Implementation tickets produced from a local spec use `Parent: ../spec.md`; Wayfinder decision tickets use `Parent: ../map.md`.
