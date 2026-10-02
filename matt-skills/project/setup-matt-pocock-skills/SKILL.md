@@ -41,12 +41,13 @@ If Section 1 found exactly one GitHub/GitLab tracker candidate, propose it. If i
 - **Local markdown**: issues live as files under `.scratch/<feature>/` in this repo (good for solo projects or repos without a remote)
 - **Other** (Jira, Linear, etc.): collect the operations listed in the tracker contract below.
 
-Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. The GitHub and GitLab templates carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
+Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. External issues are the default incoming-request surface and the tracker config must define how to discover only submissions from outside the project's internal contributor/member set. The GitHub and GitLab templates also carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
 
 For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported with a durable fallback:
 
 - exact project/workspace identity;
 - ticket create/read/list-search/comment, apply/remove triage state, and terminal close/reject;
+- external-request discovery: a concrete operation that lists incoming issues from outside the configured project's internal contributor/member set without mixing in internally-authored roadmap/spec/implementation work; if the tracker cannot establish author membership reliably, record that limitation instead of guessing;
 - read/write work-item role for `request`, `decision-map`, `decision-ticket`, `spec`, and `implementation-ticket`;
 - read/write `derived-from` as zero or more direct tracker sources stored on the derived artifact; a direct source is an artifact used as input to create the current artifact, without following that source's own provenance;
 - create/read parent-child and blocking relationships;
