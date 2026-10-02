@@ -48,7 +48,7 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 
 Used by `reconcile`. The workflow decides requirement satisfaction; this adapter only persists and verifies its inputs/results.
 
-- **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; keep the body in a UTF-8 file, create the marked comment with `gh issue comment <n> -R <owner>/<repo> --body-file <file>` when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> --field "body=@<file>"`.
+- **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment with `gh issue comment <n> -R <owner>/<repo> --body-file <file>` when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> --field "body=@<file>"`.
 - **Source-keyed upstream note:** on each direct provenance source, store one comment keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same comment on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
 
 ## External-request discovery
