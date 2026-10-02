@@ -55,8 +55,6 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 
   `gh api --paginate "repos/<owner>/<repo>/issues?state=open&sort=created&direction=asc&per_page=100" --jq '.[] | select(has("pull_request") | not) | select(.author_association != "OWNER" and .author_association != "MEMBER" and .author_association != "COLLABORATOR") | {number, title, body, createdAt: .created_at, labels: [.labels[].name], author: .user.login, authorAssociation: .author_association}'`
 
-- `author_association` is the configured GitHub externality signal for this adapter; do not treat it as a stronger membership guarantee than the API provides.
-- For every returned candidate carrying the mapped `needs-info` state, fetch full comments/details with the normal issue read operation so the queue can determine whether reporter activity occurred after the last triage note.
 ## Pull requests as a triage surface
 
 **PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `triage` reads this flag.)_
@@ -64,7 +62,7 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 When set to `yes`, PRs run through the same labels and states as issues, using the `gh pr` equivalents:
 
 - **Read a PR**: `gh pr view <number> -R <owner>/<repo> --comments` and `gh pr diff <number> -R <owner>/<repo>` for the diff.
-- **List external PRs for triage**: do **not** request `authorAssociation` from `gh pr list --json`; that field is not exposed there. Query the REST PR list instead, oldest first, and exclude internal associations: `gh api --paginate "repos/<owner>/<repo>/pulls?state=open&sort=created&direction=asc&per_page=100" --jq '.[] | select(.author_association != "OWNER" and .author_association != "MEMBER" and .author_association != "COLLABORATOR") | {number, title, body, createdAt: .created_at, labels: [.labels[].name], author: .user.login, authorAssociation: .author_association}'`. For every returned PR carrying the mapped `needs-info` state, fetch comments/details with `gh pr view <number> -R <owner>/<repo> --comments` before queue accounting.
+- **List external PRs for triage**: do **not** request `authorAssociation` from `gh pr list --json`; that field is not exposed there. Query the REST PR list instead, oldest first, and exclude internal associations: `gh api --paginate "repos/<owner>/<repo>/pulls?state=open&sort=created&direction=asc&per_page=100" --jq '.[] | select(.author_association != "OWNER" and .author_association != "MEMBER" and .author_association != "COLLABORATOR") | {number, title, body, createdAt: .created_at, labels: [.labels[].name], author: .user.login, authorAssociation: .author_association}'`.
 - **Comment / label / close**: use `gh pr comment <number> -R <owner>/<repo>`, `gh pr edit <number> -R <owner>/<repo> --add-label`/`--remove-label`, and `gh pr close <number> -R <owner>/<repo>`.
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either: resolve with `gh pr view 42 -R <owner>/<repo>` and fall back to `gh issue view 42 -R <owner>/<repo>`.

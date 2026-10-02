@@ -49,8 +49,6 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 
 - **Resolve the internal member set:** query `glab api --paginate "projects/<url-encoded-project-path>/members/all" | jq -r '.[].username'`. The `/members/all` endpoint includes inherited members visible to the authenticated user.
 - **Operation:** query issues oldest first with `glab api --paginate "projects/<url-encoded-project-path>/issues?state=opened&order_by=created_at&sort=asc&per_page=100"`, then keep only issues whose `.author.username` is absent from the effective member set.
-- If membership cannot be established, this capability is unavailable; do not classify an issue as external by guess or ordinary-list fallback.
-- For every returned candidate carrying the mapped `needs-info` state, fetch full comments/details with the normal issue read operation so the queue can determine whether reporter activity occurred after the last triage note.
 ## Merge requests as a triage surface
 
 **MRs as a request surface: no.** _(Set to `yes` if this repo treats external merge requests as feature requests; `triage` reads this flag.)_
@@ -58,7 +56,7 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 When set to `yes`, MRs run through the same labels and states as issues, using the `glab mr` equivalents:
 
 - **Read an MR**: `glab mr view <number> -R <group/project> --comments` and `glab mr diff <number> -R <group/project>` for the diff.
-- **List external MRs for triage**: `glab mr list -R <group/project> -F json`, then keep only submissions whose author username is absent from the configured project's effective member set. Query that set explicitly with `glab api --paginate "projects/<url-encoded-project-path>/members/all" | jq -r '.[].username'`. The `/members/all` endpoint includes inherited members visible to the authenticated user. If membership cannot be established, do not silently classify that MR as external. For every returned MR carrying the mapped `needs-info` state, fetch its notes/details before queue accounting.
+- **List external MRs for triage**: `glab mr list -R <group/project> -F json`, then keep only submissions whose author username is absent from the configured project's effective member set. Query that set explicitly with `glab api --paginate "projects/<url-encoded-project-path>/members/all" | jq -r '.[].username'`. The `/members/all` endpoint includes inherited members visible to the authenticated user.
 - **Comment / label / close**: use `glab mr note <number> -R <group/project>`, `glab mr update <number> -R <group/project> --label`/`--unlabel`, and `glab mr close <number> -R <group/project>`.
 
 Unlike GitHub, GitLab numbers issues and MRs separately, so `#42` is unambiguous once you know which surface the maintainer means.

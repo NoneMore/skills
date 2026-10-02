@@ -24,7 +24,7 @@ Read the referenced path. For a bare issue number, search `.scratch/*/issues/` a
 
 ## External-request discovery
 
-**Unsupported.** Local Markdown does not persist a reporter identity or project membership set, so it cannot reliably determine whether a work item came from outside the project. Do not substitute a scan of all local work items.
+**Unsupported:** Local Markdown has no reporter/member identity.
 
 ## Hierarchy
 

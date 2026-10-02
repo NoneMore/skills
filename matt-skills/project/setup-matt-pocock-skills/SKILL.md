@@ -41,13 +41,13 @@ If Section 1 found exactly one GitHub/GitLab tracker candidate, propose it. If i
 - **Local markdown**: issues live as files under `.scratch/<feature>/` in this repo (good for solo projects or repos without a remote)
 - **Other** (Jira, Linear, etc.): collect the operations listed in the tracker contract below.
 
-Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. The tracker config must define an external-request discovery capability or explicitly mark it unsupported when reliable externality cannot be established. The GitHub and GitLab templates define that operation; the Local Markdown template marks it unsupported because it has no durable reporter/member identity. The GitHub and GitLab templates also carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
+Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. The tracker config must define external-request discovery or mark it unsupported. The GitHub and GitLab templates also carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
 
 For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported with a durable fallback:
 
 - exact project/workspace identity;
 - ticket create/read/list-search/comment, apply/remove triage state, and terminal close/reject;
-- external-request discovery: a concrete operation that identifies issues whose authors are outside the configured project's internal contributor/member set; if reliable membership/externality cannot be established, mark this capability unsupported and do not substitute an ordinary list/search operation;
+- external-request discovery: a concrete operation, or `unsupported`;
 - read/write work-item role for `request`, `decision-map`, `decision-ticket`, `spec`, and `implementation-ticket`;
 - read/write `derived-from` as zero or more direct tracker sources stored on the derived artifact; a direct source is an artifact used as input to create the current artifact, without following that source's own provenance;
 - create/read parent-child and blocking relationships;
