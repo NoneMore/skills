@@ -6,14 +6,16 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 **Repository: `<owner>/<repo>`.** Setup replaces this placeholder with the canonical GitHub repository. Treat it as configuration: pass `-R <owner>/<repo>` on tracker commands instead of inferring a repository from the current working directory.
 
+Commands in this adapter are argument contracts: adapt shell syntax without changing the arguments. Quote account selectors such as `"@me"`. Pass generated or multiline Markdown through UTF-8 files or stdin instead of interpolating it into the command line: use `--body-file <file>` / `--body-file -` where available, and `gh api --field "body=@<file>"` / `--field "body=@-"` for API fields. Do not require POSIX heredocs.
+
 ## Conventions
 
-- **Create an issue**: `gh issue create -R <owner>/<repo> --title "..." --body "..."`. For multi-line bodies, use `--body-file -` with stdin/heredoc.
+- **Create an issue**: `gh issue create -R <owner>/<repo> --title "..." --body "..."`; use `--body-file` for generated or multiline bodies.
 - **Read an issue**: `gh issue view <number> -R <owner>/<repo> --comments --json number,title,body,state,labels,comments`.
 - **List issues**: `gh issue list -R <owner>/<repo> --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'`
-- **Comment on an issue**: `gh issue comment <number> -R <owner>/<repo> --body "..."`
+- **Comment on an issue**: `gh issue comment <number> -R <owner>/<repo> --body-file <file>` for generated text; `--body "..."` is fine for a short literal.
 - **Apply / remove labels**: `gh issue edit <number> -R <owner>/<repo> --add-label "..."` / `--remove-label "..."`
-- **Close**: `gh issue close <number> -R <owner>/<repo> --comment "..."`
+- **Close**: `gh issue close <number> -R <owner>/<repo>`; if a closing note is needed, comment first using the operation above.
 
 Do not rediscover the repository from `git remote -v` after setup; the configured repository above is the source of truth.
 
@@ -37,8 +39,8 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 
 - **Delivery policy:** `Mode: <direct-commit|pull-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For pull-request mode, publish with `gh pr create -R <owner>/<repo> --base <branch> --fill` when no delivery PR already exists.
 - **Execution frontier:** start from open `request`, `spec`, or `implementation-ticket` issues carrying the configured `ready-for-agent` triage label. Exclude issues with an assignee, an open blocker, or `execution:suspended`. Also exclude a `spec` once it has an `implementation-ticket` child. Inspect candidates with `gh issue list ... --json number,title,body,labels,assignees` and `gh issue view` as needed. Explicitly named items may still be read for resume/finalization.
-- **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`; release with `--remove-assignee @me`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
-- **Implementation Result:** store exactly one issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
+- **Claim / release / suspend:** claim with `gh issue edit <n> -R <owner>/<repo> --add-assignee "@me"`; release with `--remove-assignee "@me"`. Suspension uses one `execution:suspended` label; create it with `gh label create "execution:suspended" -R <owner>/<repo> --description "Implementation execution is suspended"` if missing. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
+- **Implementation Result:** store exactly one issue comment containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment with `gh issue comment <n> -R <owner>/<repo> --body-file <file>` when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> --field "body=@<file>"`.
 - **Delivery evidence:** for direct-commit mode, run `gh api "repos/<owner>/<repo>/compare/<commit>...<target-branch>" --jq .status`; `ahead` or `identical` means the target contains the commit. For pull-request mode, inspect the recorded PR with `gh pr view <pr> -R <owner>/<repo> --json state,mergedAt,baseRefName,url,mergeCommit`; require merged state and the configured target branch.
 - **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
 
@@ -46,7 +48,7 @@ Used by `implement`. Triage readiness, execution coordination, delivery result, 
 
 Used by `reconcile`. The workflow decides requirement satisfaction; this adapter only persists and verifies its inputs/results.
 
-- **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> -f body="..."`.
+- **Reconciliation Result:** store exactly one issue comment containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read comments with `gh api --paginate repos/<owner>/<repo>/issues/<n>/comments`; create the marked comment with `gh issue comment <n> -R <owner>/<repo> --body-file <file>` when absent, otherwise update it with `gh api --method PATCH repos/<owner>/<repo>/issues/comments/<comment-id> --field "body=@<file>"`.
 - **Source-keyed upstream note:** on each direct provenance source, store one comment keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same comment on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
 
 ## External-request discovery
@@ -83,5 +85,5 @@ Used by the `wayfinder` skill. The **map** is a single issue with **child** issu
 - **Child ticket**: link it to the map using the hierarchy above; with the hierarchy fallback, maintain the map task list so the frontier can enumerate children. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, assign it to the driving dev.
 - **Blocking**: use the blocking representation above.
 - **Frontier query**: get child identities from `gh issue view <map> -R <owner>/<repo> --json subIssues`; for open children, inspect `state,assignees,blockedBy` with `gh issue view`. Drop any child with an open blocker or an assignee; first in map order wins. If using the task-list fallback, derive children from that list and resolve `Blocked by` references explicitly.
-- **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee @me`, the session's first write.
-- **Resolve**: `gh issue comment <n> -R <owner>/<repo> --body "<answer>"`, then `gh issue close <n> -R <owner>/<repo>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+- **Claim**: `gh issue edit <n> -R <owner>/<repo> --add-assignee "@me"`, the session's first write.
+- **Resolve**: write `<answer>` to a UTF-8 file, run `gh issue comment <n> -R <owner>/<repo> --body-file <file>`, then `gh issue close <n> -R <owner>/<repo>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
