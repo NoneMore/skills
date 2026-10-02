@@ -43,22 +43,17 @@ If Section 1 found exactly one GitHub/GitLab tracker candidate, propose it. If i
 
 Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. The tracker config must define external-request discovery or mark it unsupported. The GitHub and GitLab templates also carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
 
-For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported:
+The provider-independent tracker semantics are defined once in [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md). GitHub, GitLab, local markdown, and any custom tracker configuration are provider realizations of that contract.
+
+For **Other** trackers, `docs/agents/issue-tracker.md` is a concrete adapter, not freeform notes. Record:
 
 - exact project/workspace identity;
-- ticket create/read/list-search/comment, apply/remove triage state, and terminal close/reject;
+- ticket create/read/list-search/comment operations;
 - external-request discovery: a concrete operation, or `unsupported`;
-- read/write work-item role for `request`, `decision-map`, `decision-ticket`, `spec`, and `implementation-ticket`;
-- read/write `derived-from` as zero or more direct tracker sources stored on the derived artifact; a direct source is an artifact used as input to create the current artifact, without following that source's own provenance;
-- create/read parent-child and blocking relationships;
-- implementation lifecycle operations: execution frontier, claim/release/suspend, canonical Implementation Result upsert, repository delivery policy/evidence, and an idempotent terminal operation;
-- upstream reconciliation operations: canonical Reconciliation Result upsert and source-keyed upstream note upsert;
-- claiming and the Wayfinder frontier (open + unblocked + unclaimed children);
-- a post-mutation verification operation so consumers can confirm persisted state.
+- the storage/read/write/verification operations that realize every required capability in [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md);
+- any unsupported required capability explicitly, rather than leaving downstream skills to invent behavior.
 
-Work-item role, `derived-from`, hierarchy, blocking, triage state, Wayfinder lifecycle, and tracker open/closed state are independent; do not infer one from another.
-
-Consumers should never have to invent missing tracker behavior.
+Do not restate or redefine shared semantics in the generated adapter. Reference the contract and describe only provider representation, operations, fallbacks, and verification.
 
 Then establish the repository delivery policy. Determine the repository's default branch from remote/project metadata when available and propose it as the target. Ask one question:
 
