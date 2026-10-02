@@ -2,6 +2,8 @@
 
 Issues and specs for this repo live as GitLab issues. Use the [`glab`](https://gitlab.com/gitlab-org/cli) CLI for all operations.
 
+Shared tracker semantics are defined in [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md). This file defines only the GitLab representation, operations, fallbacks, and verification used to realize that contract.
+
 ## Project
 
 **Project: `<group/project>`.** Setup replaces this placeholder with the canonical GitLab project (including subgroup namespace when applicable). Treat it as configuration: pass `-R <group/project>` on tracker commands instead of inferring a project from the current working directory. For API endpoints that require a project path, also render `<url-encoded-project-path>` from the same identity (for example `group/subgroup/project` → `group%2Fsubgroup%2Fproject`) instead of relying on cwd-derived `:id` / `:fullpath` placeholders.
@@ -25,15 +27,15 @@ Do not rediscover the project from `git remote -v` after setup; the configured p
 
 ## Hierarchy
 
-Store `Part of #<parent>` near the top of a child description. Role and provenance are independent from hierarchy, blocking, triage state, Wayfinder metadata, and tracker open/closed state.
+Store `Part of #<parent>` near the top of a child description.
 
 ## Implementation execution and delivery
 
-Used by `implement`. Triage readiness, execution coordination, delivery result, and GitLab open/closed state are separate concerns.
+Used by `implement`. Eligibility, frontier, coordination, result, and terminal semantics come from [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md); this section defines their GitLab realization.
 
 - **Delivery policy:** `Mode: <direct-commit|merge-request>`. `Target branch: <branch>`. Setup replaces both placeholders. For merge-request mode, publish with `glab mr create -R <group/project> --target-branch <branch> --fill --yes` when no delivery MR already exists.
-- **Execution frontier:** start from open `request`, `spec`, or `implementation-ticket` issues carrying the configured `ready-for-agent` triage label. Exclude issues with an assignee, an open blocker, or `execution:suspended`. Also exclude a `spec` once it has an `implementation-ticket` child. Use `glab issue list -R <group/project> --output json` for candidates and inspect hierarchy/blocking with the configured representations. Explicitly named items may still be read for resume/finalization.
-- **Claim / release / suspend:** claim with `glab issue update <n> -R <group/project> --assignee @me`; release with `--unassign`. Suspension uses one `execution:suspended` label; create it when missing with `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="execution:suspended" -f color="#6E7781" -f description="Implementation execution is suspended"`. Add suspension before releasing a claim. When resuming suspended work, claim before removing suspension.
+- **Execution frontier realization:** enumerate candidate issues with `glab issue list -R <group/project> --output json`; inspect role, tracker state, configured triage label, assignee, `execution:suspended`, hierarchy, and blocking through the representations below. Preserve provider ordering and apply the eligibility/frontier predicates from [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md).
+- **Claim / release / suspend:** claim with `glab issue update <n> -R <group/project> --assignee @me`; release with `--unassign`. Suspension uses one `execution:suspended` label; create it when missing with `glab api --method POST "projects/<url-encoded-project-path>/labels" -f name="execution:suspended" -f color="#6E7781" -f description="Implementation execution is suspended"`. Realize contract ordering by adding suspension before unassigning, and by assigning the current actor before removing suspension on resume.
 - **Implementation Result:** store exactly one issue note containing `<!-- skills:implementation-result -->` followed by the semantic result required by `implement`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
 - **Delivery evidence:** for direct-commit mode, run `glab api --paginate "projects/<url-encoded-project-path>/repository/commits/<sha>/refs?type=branch"` and require the configured target branch. For merge-request mode, inspect `glab api projects/<url-encoded-project-path>/merge_requests/<iid>`; require `state: merged` and the configured `target_branch`.
 - **Terminal operation:** close the issue and clear `execution:suspended` plus any active assignee. The operation is safe to repeat.
@@ -44,6 +46,10 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 
 - **Reconciliation Result:** store exactly one issue note containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
 - **Source-keyed upstream note:** on each direct provenance source, store one note keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same note on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
+
+## Post-mutation verification
+
+After a tracker mutation, re-read the affected issue with `glab issue view <n> -R <group/project> -F json` and use the configured notes/API reads when verifying canonical result or reconciliation-note storage. Verify the semantic fact required by [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md); a successful `glab` exit alone is not sufficient for claim ownership or other race-sensitive writes.
 
 ## External-request discovery
 
@@ -76,6 +82,6 @@ Used by the `wayfinder` skill. The **map** is a single issue with **child** issu
 - **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `glab issue create -R <group/project> --label wayfinder:map`.
 - **Child ticket**: an issue carrying `Part of #<map>` at the top of its description and labels `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
 - **Blocking**: GitLab's **native blocking link**, the canonical, UI-visible representation. Add it with the `/blocked_by #<n>` quick action, posted as a note (`glab issue note <child> -R <group/project> --message "/blocked_by #<blocker>"`). Native blocking links are a Premium/Ultimate feature; on the free tier (or where unavailable) fall back to a `Blocked by: #<n>, #<n>` line at the top of the description. A ticket is unblocked when every blocker is closed.
-- **Frontier query**: `glab issue list -R <group/project> -F json`, keep issues whose description contains `Part of #<map>`, then drop any child with an assignee or an open blocker. Inspect native issue links with `glab api --paginate "projects/<url-encoded-project-path>/issues/<iid>/links"`; a `link_type` of `is_blocked_by` whose linked issue has `state: opened` is a live blocker. With the text fallback, resolve every issue named in the `Blocked by` line and treat any open one as a live blocker. First in map order wins.
+- **Frontier query**: enumerate map children with `glab issue list -R <group/project> -F json` using `Part of #<map>` and preserve map order. Inspect assignee and native blocking links with `glab api --paginate "projects/<url-encoded-project-path>/issues/<iid>/links"`; with the text fallback, resolve every issue named in the `Blocked by` line. Apply the shared Wayfinder frontier rule from [TRACKER-CONTRACT.md](./TRACKER-CONTRACT.md).
 - **Claim**: `glab issue update <n> -R <group/project> --assignee @me`, the session's first write.
 - **Resolve**: `glab issue note <n> -R <group/project> --message "<answer>"`, then `glab issue close <n> -R <group/project>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
