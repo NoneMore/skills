@@ -74,7 +74,7 @@ Interpret the maintainer's natural-language request:
 - **Triage one specific item without an explicitly requested target state** — read [TRIAGE-ITEM.md](TRIAGE-ITEM.md) and follow the standard triage path.
 - **Show incoming work needing attention, or work already ready for agents** — read [QUEUE.md](QUEUE.md).
 
-If queue discovery later resolves to one chosen item, load [TRIAGE-ITEM.md](TRIAGE-ITEM.md) then. Do not translate these requests into host-specific command syntax.
+Do not translate these requests into host-specific command syntax.
 
 ## Phase boundary
 
