@@ -45,6 +45,16 @@ Used by `reconcile`. The workflow decides requirement satisfaction; this adapter
 - **Reconciliation Result:** store exactly one issue note containing `<!-- skills:reconciliation-result -->` followed by the semantic result defined by `reconcile`. Read notes with `glab api --paginate projects/<url-encoded-project-path>/issues/<iid>/notes`; create the marked note when absent, otherwise update it with `glab api --method PUT projects/<url-encoded-project-path>/issues/<iid>/notes/<note-id> -f body="..."`.
 - **Source-keyed upstream note:** on each direct provenance source, store one note keyed by the satisfied spec: `<!-- skills:reconciliation-from:#<spec> -->`. Create it when absent and update that same note on rerun. The workflow supplies the role-appropriate delivery summary, remaining scope, or realization backlink.
 
+## Issues as a triage surface
+
+External issues are the default incoming-request surface.
+
+- **Resolve the internal member set:** query `glab api --paginate "projects/<url-encoded-project-path>/members/all" | jq -r '.[].username'`. The `/members/all` endpoint includes inherited members visible to the authenticated user.
+- **List external issues for triage:** query issues oldest first with `glab api --paginate "projects/<url-encoded-project-path>/issues?state=opened&order_by=created_at&sort=asc&per_page=100"`, then keep only issues whose `.author.username` is absent from the effective member set. Do not use the ordinary project issue list as the triage queue because it also contains maintainer-authored roadmap/spec/implementation work.
+- If membership cannot be established, do not silently classify an issue as external; report the discovery limitation instead.
+- Fetch comments/details for selected issues with the normal issue read operation before deciding whether a `needs-info` item has new reporter activity.
+- The external-author filter is for queue discovery. An explicitly named issue is resolved directly by identity, while the triage workflow still refuses to re-triage an internal `implementation-ticket` produced by `to-tickets`.
+
 ## Merge requests as a triage surface
 
 **MRs as a request surface: no.** _(Set to `yes` if this repo treats external merge requests as feature requests; `triage` reads this flag.)_
