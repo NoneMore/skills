@@ -12,7 +12,7 @@ Keep items with work-item role `request` or no role, then account for three buck
 2. **`needs-triage`** — evaluation is in progress.
 3. **`needs-info` with reporter activity since the last triage note** — ready for re-evaluation.
 
-For every `needs-info` candidate, read its comments/notes and include it only when reporter activity occurred after the last triage note.
+Include `needs-info` only when reporter activity occurred after the last triage note.
 
 If external PRs/MRs are configured as a request surface, apply the same queue rules to them.
 

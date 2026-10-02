@@ -43,7 +43,7 @@ If Section 1 found exactly one GitHub/GitLab tracker candidate, propose it. If i
 
 Record the choice in `docs/agents/issue-tracker.md`. For GitHub/GitLab, also record the canonical project identity discovered above and have commands target it explicitly rather than relying on the current working directory's remote. The tracker config must define external-request discovery or mark it unsupported. The GitHub and GitLab templates also carry a "PRs/MRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs/MRs in the triage queue can flip the flag in the file later.
 
-For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported with a durable fallback:
+For **Other** trackers, `docs/agents/issue-tracker.md` is a capability contract, not freeform notes. For each item below, give the concrete operation or explicitly mark it unsupported:
 
 - exact project/workspace identity;
 - ticket create/read/list-search/comment, apply/remove triage state, and terminal close/reject;
