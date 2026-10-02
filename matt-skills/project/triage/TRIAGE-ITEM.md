@@ -1,0 +1,99 @@
+# Triage One Item
+
+Use this reference when evaluating, verifying, recommending a state for, or mutating one specific issue or PR/MR. The canonical state machine, tracker sources, work-item role, note disclaimer, post-mutation verification, and implementation phase boundary remain authoritative in [SKILL.md](SKILL.md).
+
+## Standard triage
+
+### 1. Gather context
+
+Read the complete tracker item, including prior triage notes; for a PR/MR, read the diff. Explore the relevant code using the project's domain vocabulary and current ADRs.
+
+Check both:
+
+- **Redundancy:** search by domain concept for an existing implementation of the requested behavior.
+- **Prior rejection:** follow [OUT-OF-SCOPE.md](OUT-OF-SCOPE.md) to check existing scope-decision records.
+
+**Completion condition:** you can state what was requested, what prior triage already established, where you checked the current code, whether equivalent behavior already exists, and whether a prior rejection is relevant.
+
+### 2. Recommend
+
+Recommend exactly one category and one state, with concise reasons and the relevant codebase evidence.
+
+**Completion condition:** the maintainer has a concrete category/state recommendation and enough evidence to accept, override, or request further verification.
+
+Wait for the maintainer's direction before changing tracker state.
+
+### 3. Verify the claim
+
+Use evidence available in the current context and environment. Never report a claim as verified unless the evidence establishes it.
+
+- **Bug:** use the reporter's reproduction steps as the claim to test.
+- **PR/MR:** any verification claim must be based on the contribution's diff or resulting code, not the base version alone.
+- **Enhancement:** establish the current behavior when the triage outcome depends on whether the requested capability already exists.
+
+Classify the result as:
+
+- **confirmed** — evidence establishes the claim;
+- **not reproduced / not verified** — a performed check did not establish the claim;
+- **insufficient detail** — information or access required for a relevant check is absent.
+
+**Completion condition:** the verification outcome is explicit and names the evidence that supports it, or the specific missing information/access that prevented verification.
+
+### 4. Resolve blocking unknowns
+
+Enter this step only when an unresolved product or design decision prevents either:
+
+- choosing one triage state; or
+- writing concrete desired behavior and independently checkable acceptance criteria for a ready brief.
+
+Call the Skill tool twice, for `grilling` and `domain-modeling`. Use them to settle those decisions and update durable domain docs as decisions land.
+
+These are model-invoked supporting skills. If a required supporting skill is unavailable, report that dependency as unavailable rather than emulating it by directly reading its `SKILL.md`.
+
+**Completion condition:** either the blocking decisions are resolved, or each unresolved blocker is explicit. Use `needs-info` only when reporter input is required; otherwise keep the item in the state that matches who must act next.
+
+### 5. Apply one outcome
+
+Use the configured tracker operations and mapped state string:
+
+- **`ready-for-agent`** — publish an agent brief from [AGENT-BRIEF.md](AGENT-BRIEF.md), then apply the mapped state and persist the category only if the tracker defines category representation.
+- **`ready-for-human`** — publish the same contract shape, plus the concrete reason the next step cannot be delegated; then apply the mapped state and any defined category representation.
+- **`needs-info`** — publish triage notes using the template below, then apply the mapped state.
+- **`wontfix`**:
+  - already implemented → point to the existing behavior; do not add it to `.out-of-scope/`;
+  - rejected bug → explain the decision;
+  - rejected enhancement → update the knowledge base using [OUT-OF-SCOPE.md](OUT-OF-SCOPE.md), then reference that decision in the closing note.
+  Apply the mapped terminal state and close/terminally mark the item using the configured tracker semantics.
+- **`needs-triage`** — apply the mapped state.
+
+After mutation, re-read the tracker item.
+
+**Completion condition:** the mutation invariants in [SKILL.md](SKILL.md) hold, every required note is present, and the persisted tracker state matches the maintainer-approved outcome.
+
+## Explicit state override
+
+When the maintainer explicitly requests a state move, trust the override. State the exact mutation first: target canonical triage role, mapped tracker value, conflicting triage states to remove, comment/brief behavior, and whether the item becomes terminal.
+
+Skip grilling. If `ready-for-agent` would be applied without a durable brief, ask whether the maintainer wants one written first.
+
+After mutation, re-read the item and verify work-item role `request` and that the requested triage state is the only triage state present.
+
+## Needs-info note
+
+```markdown
+> *This was generated by AI during triage.*
+
+## Triage Notes
+
+**What we've established so far:**
+
+- point 1
+- point 2
+
+**What we still need from you (@reporter):**
+
+- specific question 1
+- specific question 2
+```
+
+Preserve everything already established. Do not ask a question that prior notes or reporter replies have already answered.
