@@ -1,145 +1,79 @@
 ---
 name: setup-tracker
-description: "Prototype setup for the v2 project tracker: GitHub Issues first, local Markdown fallback, with managed work reduced to investigation and change issues."
+description: "Configure the tracker v2 prototype with GitHub Issues when supported, otherwise Local Markdown."
 disable-model-invocation: true
 ---
 
 # Setup Tracker
 
-Configure a repository to use the tracker v2 issue model.
+Configure issue tracking only. Do not install or emulate downstream workflows.
 
-This skill configures only issue tracking. It does not install or emulate downstream project workflows.
-
-Read [ISSUE-MODEL.md](ISSUE-MODEL.md) before writing configuration. Treat it as the only authority for tracker semantics; backend documents define storage and operations.
+Read [ISSUE-MODEL.md](ISSUE-MODEL.md) before writing configuration. It is the only authority for tracker semantics.
 
 ## Process
 
-### 1. Detect the backend
+### 1. Choose the backend
 
-Inspect repository remotes, repository metadata, and the available GitHub tooling/API.
+Inspect repository remotes, repository metadata, and available GitHub tooling/API.
 
-A GitHub repository is usable for tracker v2 only when:
+GitHub is usable only when the selected repository has Issues enabled and the available tooling/API can read and write:
 
-- GitHub Issues are enabled;
-- labels and assignees can be read and written;
-- native sub-issues can be read and written;
-- native issue dependencies can be read and written.
+- labels and assignees;
+- native sub-issues;
+- native issue dependencies.
 
-If exactly one usable GitHub repository is associated with the workspace, choose GitHub.
+If exactly one usable GitHub repository matches the workspace, use it. If several are plausible, ask which is canonical. If none is usable, use Local Markdown.
 
-If multiple usable GitHub repositories are plausible tracker targets, show them and ask the user which repository is canonical.
+Do not create textual GitHub fallbacks for hierarchy or dependencies.
 
-If no candidate satisfies the complete GitHub capability set, choose Local Markdown. Do not invent textual GitHub fallbacks for hierarchy or dependencies.
+### 2. Inspect existing state
 
-Do not ask the user to choose among tracker vendors.
+For GitHub, record the exact `owner/repo` and inspect existing labels.
 
-### 2. Inspect existing tracker state
+For Local Markdown, inspect `.tracker/issues/*.md` if present. If any existing issue does not match the v2 header in [local-markdown.md](local-markdown.md), stop without modifying the tracker. Migration is out of scope.
 
-For GitHub:
-
-- record the exact `owner/repo`;
-- inspect existing labels before creating anything;
-- preserve unrelated labels and community taxonomy.
-
-For Local Markdown:
-
-- inspect `.tracker/issues/` if present;
-- if it contains any `*.md` file that does not match the tracker-v2 header contract in [local-markdown.md](local-markdown.md), stop without modifying the tracker; migration is out of scope;
-- preserve every conforming existing file;
-- determine the next available local issue number.
-
-### 3. Present the proposed configuration
-
-Show:
-
-- selected backend;
-- GitHub repository identity or local issue root;
-- the two managed-work type representations;
-- the canonical status representations;
-- how Sources, Parent, Blocked-By, and Assignee will be represented.
-
-State that external intake and internally created managed work follow [ISSUE-MODEL.md](ISSUE-MODEL.md). Do not add downstream workflow behavior to this setup.
-
-### 4. Configure
+### 3. Configure
 
 Write `docs/agents/issues.md`.
 
-For GitHub use:
+For GitHub:
 
 ```markdown
 # Issue tracker
-
 Model: tracker-v2
 Backend: github
 Repository: <owner>/<repo>
-
-Managed types:
-- type:investigation
-- type:change
-
-Statuses:
-- status:needs-triage
-- status:needs-info
-- status:ready
-- status:in-progress
-- status:blocked
-- status:waiting
-- status:done
-- status:cancelled
-
-Sources: reserved body line `Sources: ...`
-Hierarchy: GitHub native sub-issues
-Dependencies: GitHub native issue dependencies
-Claim: GitHub assignee
-
-Semantics: <path to this skill's ISSUE-MODEL.md>
-Backend operations: <path to this skill's github.md>
+Semantics: <path to ISSUE-MODEL.md>
+Operations: <path to github.md>
 ```
 
-For Local Markdown use:
+For Local Markdown:
 
 ```markdown
 # Issue tracker
-
 Model: tracker-v2
 Backend: local-markdown
 Issue root: .tracker/issues/
-
-Semantics: <path to this skill's ISSUE-MODEL.md>
-Backend operations: <path to this skill's local-markdown.md>
+Semantics: <path to ISSUE-MODEL.md>
+Operations: <path to local-markdown.md>
 ```
 
-For GitHub, create missing tracker-v2 labels described in [github.md](github.md). Do not delete or rename unrelated labels.
+For GitHub, create missing tracker-v2 labels described in [github.md](github.md). Preserve unrelated labels.
 
-If the active harness has a project instruction artifact, add or update one short `## Issue tracker` pointer to `docs/agents/issues.md`. Do not copy the semantic contract into project instructions.
+If the active harness exposes a project instruction artifact, add or update one short issue-tracker pointer to `docs/agents/issues.md`. Do not copy the contract into project instructions.
 
-### 5. Verify
+### 4. Verify
 
-Re-read `docs/agents/issues.md` and verify:
+Re-read `docs/agents/issues.md` and verify its backend identity and both referenced files resolve.
 
-- the selected backend and repository/root are exact;
-- the `Semantics` pointer resolves to this skill's `ISSUE-MODEL.md`;
-- the `Backend operations` pointer resolves to the selected backend document.
+If project instructions were changed, verify the issue-tracker pointer resolves and is not duplicated.
 
-If a project instruction artifact was changed, re-read it and verify it contains exactly one issue-tracker pointer to `docs/agents/issues.md`, and that the pointer resolves.
+For GitHub, verify the required labels and native relation capabilities are available after setup.
 
-For GitHub, also verify:
+For Local Markdown, verify existing files were preserved and every issue file matches the v2 header.
 
-- both managed type labels exist;
-- every canonical status label exists;
-- native sub-issues and native issue dependencies remain readable and writable through the selected tooling/API;
-- no setup mutation changed unrelated labels.
+Setup is complete only when every applicable check passes.
 
-For Local Markdown, also verify:
+### 5. Stop
 
-- the issue root can be created and written;
-- every pre-existing issue file was preserved unchanged;
-- every `*.md` issue file matches the tracker-v2 header contract.
-
-Setup is complete only when every applicable verification above passes.
-
-### 6. Stop
-
-Report the configured backend and model.
-
-Do not continue into triage, investigation, specification, decomposition, implementation, reconciliation, or any other downstream workflow. Those workflows are intentionally absent from this prototype.
+Report the configured backend. Do not continue into downstream workflows.
