@@ -4,11 +4,11 @@
 
 ## Core idea
 
-`review` is a broad capability over many kinds of existing work products.
+`review` is a broad capability over many kinds of existing results.
 
-Its center of gravity is not code review specifically. It is:
+Its center of gravity is:
 
-> **Independently evaluate an existing result against the expectations that matter for that result, and surface evidence-backed findings.**
+> **Independently evaluate an existing result against the expectations that matter for that result, and surface substantiated findings.**
 
 The object boundary should be broad. The evaluation methods should be object-specific.
 
@@ -16,7 +16,7 @@ The object boundary should be broad. The evaluation methods should be object-spe
 
 ## Purpose
 
-Evaluate an existing result independently enough to identify material problems, omissions, mismatches, risks, or quality concerns.
+Independently evaluate an existing result and identify material problems, mismatches, omissions, or risks relative to the expectations that matter for it.
 
 ## Accepts
 
@@ -34,104 +34,60 @@ The reviewed object does not need to have been produced by another project skill
 
 ## Owns
 
-- identify the relevant expectations for the review;
-- examine the existing result against those expectations;
-- gather enough evidence to support material findings;
-- report findings clearly enough for the user to decide what to do next.
+Evidence-backed findings about where the reviewed result does or does not meet the expectations relevant to the requested review.
 
 The primary outcome is an **independent evaluation**, not a lifecycle transition and not necessarily a persisted review artifact.
 
-## May also
+## Outcome-specific invariants
 
-When useful, `review` may:
+These responsibilities belong in core because they follow directly from review as an evaluation capability:
 
-- inspect surrounding code, history, docs, issues, specs, ADRs, or domain material;
-- run tests or experiments;
-- reproduce behavior;
-- compare alternatives or prior versions;
-- verify claims against the current system;
-- suggest concrete fixes or alternative designs;
-- make small temporary changes to test a concern.
-
-These are evidence-gathering techniques, not separate required capabilities.
+1. **Use criteria appropriate to the object and review intent.** Do not force every result through one universal checklist or fixed pair of axes.
+2. **Distinguish findings from preference and speculation.** A reviewer preference is not automatically a defect; a plausible concern is not automatically a substantiated finding.
+3. **Verify material claims independently.** Do not treat the producer's explanation, implementation intent, or claim of correctness as proof that the result is correct.
+4. **Do not require producing the replacement result.** Review can suggest fixes, redesigns, or rewrites, but its own outcome is complete when the material evaluation is established.
 
 ## Done when
 
-The concerns relevant to the requested review have been examined and the material findings are explicit, with enough evidence to distinguish substantiated concerns from speculation.
+The material concerns within the requested review scope have been evaluated and the findings are explicit enough for the user to act on or accept the result.
 
-An explicit lack of findings is also a valid outcome when the review has been sufficiently thorough for the requested scope.
+An explicit lack of findings is also a valid outcome when the requested review has been performed sufficiently to support that conclusion.
 
-## Does not require
+## Persistence
 
-- a diff;
-- a PR/MR;
-- a spec;
-- a previous `implement` run;
-- a fixed Standards/Spec two-axis model;
-- a canonical review-result schema;
-- tracker setup;
-- persistence outside the conversation.
+When the review surface is naturally durable, such as a PR/MR review, findings may be persisted there.
 
-When the natural review surface is durable, such as a PR/MR review, findings may be persisted there. Otherwise conversation context is a valid default result.
+Otherwise conversation context is a valid default result. `review` does not require a canonical review-result schema.
 
 ---
 
-## Broad capability, object-specific methods
+## Object-specific guidance belongs below the core
 
-The capability boundary should not force every object through one generic checklist.
-
-Different review objects need different evaluation dimensions and evidence-gathering techniques.
+Different reviewed objects need different evaluation dimensions and evidence-gathering methods. Those differences are useful, but they do not belong in one universal review procedure.
 
 ### Code / diff / PR
 
-Likely concerns include:
+Potential object-specific concerns include correctness, requested behavior, regressions, verification, maintainability, repository conventions, and architecture effects.
 
-- correctness;
-- behavior requested vs behavior delivered;
-- regressions;
-- tests and verification;
-- maintainability and unnecessary complexity;
-- repository conventions;
-- architecture effects.
-
-Useful methods may include reading the diff and surrounding code, running tests, tracing callers, inspecting history, and comparing against a request/spec.
+Possible methods include reading surrounding code, tracing callers, running relevant tests, inspecting history, and comparing against a request or spec.
 
 ### Design / architecture
 
-Likely concerns include:
+Potential concerns include assumptions, missing scenarios, conceptual consistency, module/interface shape, coupling, failure modes, and relevant future constraints.
 
-- assumptions;
-- missing or contradictory scenarios;
-- conceptual consistency;
-- module/interface/seam shape;
-- coupling and locality;
-- failure modes;
-- relevant future constraints.
-
-Useful methods may include scenario stress-testing, counterexamples, comparing alternatives, inspecting the existing architecture, and challenging domain terminology.
+Possible methods include scenario stress-testing, counterexamples, comparing alternatives, and inspecting the existing architecture and domain model.
 
 ### Specification
 
-Likely concerns include:
-
-- ambiguity;
-- missing decisions;
-- contradictions;
-- unverifiable requirements;
-- scope gaps;
-- hidden assumptions or accidental implementation commitments.
+Potential concerns include ambiguity, missing decisions, contradictions, unverifiable requirements, scope gaps, hidden assumptions, and accidental implementation commitments.
 
 ### Decomposition / tickets
 
-Likely concerns include:
+Potential concerns include coverage, slice independence, dependency correctness, missing integration work, granularity, and actionability.
 
-- coverage of the intended work;
-- slice independence;
-- dependency correctness;
-- missing integration work;
-- useful granularity and actionability.
+These are examples, not a closed taxonomy. They are candidates for optional references such as `references/code.md`, `references/design.md`, `references/spec.md`, or `references/decomposition.md` if the guidance proves worth preserving.
 
-These categories are examples, not a closed taxonomy. Object-specific guidance can live as optional reference material rather than separate project skills.
+The core skill should not enumerate all of their methods.
 
 ---
 
@@ -140,22 +96,20 @@ These categories are examples, not a closed taxonomy. Object-specific guidance c
 The distinction is based on the primary outcome, not on which actions are allowed.
 
 ```text
-"How should this architecture work?"       -> design
+"How should this architecture work?"        -> design
 "Here is the architecture; find problems." -> review
 
 "Write this spec."                          -> specify
 "Find problems in this spec."              -> review
 
-"Break this work into tickets."             -> decompose
-"Check whether these tickets are good."     -> review
+"Break this work into tickets."            -> decompose
+"Check whether these tickets are good."    -> review
 
-"Implement this change."                    -> implement
-"Check whether this implementation is good."-> review
+"Implement this change."                   -> implement
+"Check whether this implementation is good." -> review
 ```
 
-`review` may suggest redesigns, rewrites, or fixes, but it does not need to take ownership of producing the replacement result in order to complete its own outcome.
-
-Likewise, another capability may review its own work locally. Independent `review` remains useful when the user's primary intent is evaluation.
+Another capability may evaluate its own work locally. Independent `review` remains useful when evaluation itself is the user's requested outcome.
 
 ---
 
@@ -168,10 +122,11 @@ The current implementation should not define the abstraction around:
 - a fixed Standards + Spec pair of axes;
 - a fixed code-smell checklist as core capability semantics;
 - tracker configuration as a prerequisite;
-- mandatory sub-agent structure.
+- mandatory sub-agent structure;
+- generic evidence-gathering steps repeated in core merely because review may use them.
 
-Some of those techniques may remain useful for code review and can survive as optional reference guidance.
+Some specialized techniques may survive as optional object-specific reference guidance.
 
 The core rule is:
 
-> **Review has a broad object boundary, but object-specific evaluation techniques.**
+> **Review has a broad object boundary, but only outcome-specific evaluation responsibilities belong in core.**
