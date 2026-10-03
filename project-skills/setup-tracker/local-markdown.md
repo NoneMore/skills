@@ -49,7 +49,41 @@ Preserve intake content after the header as:
 
 Do not paraphrase or replace the original intake wording or evidence. Preserve existing discussion entries and append new discussion with speaker attribution.
 
-Managed work does not require these body sections.
+## Managed-work body
+
+Managed issues must contain:
+
+```markdown
+## Completion condition
+
+<issue-specific, checkable completion condition>
+```
+
+Add `## Context` only when context beyond the title, Sources, Parent, and Blocked-By fields is needed to define or execute the work.
+
+Skills that create or execute managed work may append structured sections they own, for example:
+
+```markdown
+## Execution notes
+
+...
+
+## Implementation result
+
+...
+
+## Conclusion
+
+...
+
+## Evidence
+
+...
+```
+
+These section names are examples, not a required global set. A skill may define the sections appropriate to its workflow. When updating an owned section, preserve the completion condition and all unrelated sections.
+
+Do not duplicate header metadata in body sections.
 
 ## Operations
 
@@ -57,8 +91,10 @@ Create new issues with the complete header.
 
 When creating intake, record `Reporter` and `Origin`, preserve the original wording and evidence under `## Intake`, and preserve discussion under `## Discussion`.
 
+When creating managed work, set `Reporter: None` and `Origin: None`, write the required completion condition, and preserve any Skill-owned extension sections supplied by the creating workflow.
+
 Read the whole file. For list/search, parse the required header fields; do not guess missing values.
 
-When mutating, change only the relevant header field or body section and preserve unrelated content. Re-read the changed fields afterward.
+When mutating, change only the relevant header field or owned body section and preserve unrelated content. Re-read the changed fields or sections afterward.
 
 Set `Status: done` or `Status: cancelled` for terminal issues.
