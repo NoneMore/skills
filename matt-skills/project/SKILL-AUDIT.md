@@ -20,6 +20,8 @@ The default should be: **fewer, broader locally-complete capabilities, with meth
 
 This is not a push toward one giant skill. A skill still needs a clear local outcome. The point is to stop promoting every reusable idea or workflow step into a separate node in the suite.
 
+The target count is not a design goal. If nine capabilities still contain accidental duplication, reduce further. If a tenth capability closes a real coverage gap, keep it.
+
 ---
 
 ## The skill-existence test
