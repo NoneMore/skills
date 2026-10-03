@@ -4,27 +4,21 @@
 
 Store tracked issues as `.tracker/issues/<ID>.md` using positive integer IDs. New issues normally use one greater than the greatest existing ID; on collision choose another unused ID.
 
-## Header
+## Representation
+
+A tracked issue has this header:
 
 ```markdown
 # <title>
 
-Kind: <intake|managed>
-Type: <investigation|change|None>
-Status: <allowed status>
-Sources: <ID, ID|None>
+Type: <investigation|change>
+Status: <ready|waiting|done|cancelled>
+Sources: <ID, URL, reference|None>
 Parent: <ID|None>
 Blocked-By: <ID, ID|None>
-Reporter: <actor|Unknown|None>
 ```
 
-`intake` uses `Type: None`; `managed` uses one managed-work type. `Reporter` is the original intake reporter when known, `Unknown` when it cannot be established, and `None` for managed work.
-
-## Body
-
-Preserve intake wording, evidence, and discussion, for example under `## Intake` and `## Discussion`.
-
-Managed work contains:
+A tracked issue contains:
 
 ```markdown
 ## Completion condition

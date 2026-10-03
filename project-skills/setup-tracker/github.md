@@ -6,34 +6,30 @@ Setup requires GitHub Issues and label read/write access. Native sub-issue or de
 
 ## Representation
 
+A GitHub issue is tracked when it has exactly one supported `tracker:type:*` label and exactly one supported `tracker:status:*` label.
+
 | Model field | GitHub representation |
 | --- | --- |
-| Kind | `tracker:kind:intake` or `tracker:kind:managed` |
-| Type | `tracker:type:investigation` or `tracker:type:change` on managed work only |
-| Status | one allowed `tracker:status:*` label |
+| Type | `tracker:type:investigation` or `tracker:type:change` |
+| Status | `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`, or `tracker:status:cancelled` |
 | Sources | reserved `Sources:` body line (`Sources: None` when empty) |
 | Parent | native sub-issue relation |
 | BlockedBy | native issue dependency |
 
 Required tracker labels:
 
-- `tracker:kind:intake`, `tracker:kind:managed`
 - `tracker:type:investigation`, `tracker:type:change`
-- `tracker:status:needs-triage`, `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`
+- `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`, `tracker:status:cancelled`
 
-GitHub open/closed state may mirror status for usability but is not canonical tracker state.
+GitHub open/closed state may mirror terminal status for usability but is not canonical tracker state.
 
 ## Body
 
-Every tracked issue contains:
+A tracked issue contains:
 
 ```markdown
-Sources: <#101, #117|None>
-```
+Sources: <#101, owner/repo#117, https://example.com/source|None>
 
-Managed work also contains:
-
-```markdown
 ## Completion condition
 <checkable condition>
 ```

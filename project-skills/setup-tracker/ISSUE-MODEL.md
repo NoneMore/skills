@@ -2,32 +2,36 @@
 
 Backends represent this model; they do not redefine it.
 
-## Classification
+Contract version: `2`.
 
-Only explicitly classified issues participate in the tracker.
+Issue origin is not tracker state. Uncontrolled/native issues remain outside the tracker; workflows may create tracked work with those issues recorded in `Sources`.
 
-- `intake` — external input such as a report, request, question, or discussion.
-- `managed` — work the project has decided to own.
+## Work
 
-Managed work is either `investigation` (resolve uncertainty) or `change` (change observable state). Intake has no managed-work type. Repository taxonomy such as bug, feature, docs, or security is independent.
+Every tracked issue has one immutable `Type`:
 
-Preserve intake reporter, wording, evidence, and discussion. Accepted intake may source separate managed work instead of being rewritten as managed work.
+- `investigation` — its completion condition establishes an answer, evidence, or decision that resolves uncertainty;
+- `change` — its completion condition establishes an observable state change. Analysis or discovery performed to make that change does not make the work an investigation.
 
-## Status and content
+Choose `Type` from what satisfying the completion condition produces, not from how much uncertainty exists while doing the work. Do not change `Type`. When a completed investigation implies implementation work, finish it and create a new `change` with the investigation in `Sources`.
 
-| Kind | Allowed status |
-| --- | --- |
-| intake | `needs-triage`, `waiting`, `done` |
-| managed | `ready`, `waiting`, `done` |
+Every tracked issue has one `Status`:
 
-Status is explicit tracker state; backend open/closed state does not define it. Managed work has an issue-specific, checkable completion condition. A `waiting` issue records both `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming actionable again).
+- `ready` — no issue-local condition prevents the work from proceeding;
+- `waiting` — no project-local action can advance the work until a named external event or decision occurs;
+- `done` — the issue-specific completion condition has been satisfied;
+- `cancelled` — the work has been intentionally terminated without satisfying its completion condition.
+
+`done` and `cancelled` are terminal. Later project work is a new tracked issue; when a terminal issue directly motivates that work, record it in `Sources`.
+
+Every tracked issue has an issue-specific, checkable completion condition. A `waiting` issue also records `Waiting for` (the named external event or decision) and `Resume when` (a condition that can be checked directly as true or false). Do not use `waiting` merely because the next step is uncertain or requires more analysis.
 
 Skills may add sections they own, but must preserve unrelated content.
 
 ## Relations
 
-- `Sources` is required direct provenance for every tracked issue. It may reference existing intake or managed work, must not self-reference, and does not imply hierarchy or dependency. Empty provenance is explicit.
-- `Parent` is optional managed-work decomposition. Only managed work participates; each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent.
-- `BlockedBy` is a managed-work scheduling dependency. Both endpoints are existing managed work; self-reference and cycles are forbidden.
+- `Sources` is required direct provenance. It may reference tracked issues or durable external/native sources; referencing a source does not make it tracked. `Sources` must not self-reference and does not imply hierarchy or dependency. Empty provenance is explicit.
+- `Parent` is optional decomposition between tracked issues. Each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent. An issue with any tracked child is not an execution leaf; after decomposition, any remaining directly executable work must be represented by a child.
+- `BlockedBy` is a scheduling dependency between tracked issues. Self-reference and cycles are forbidden. A `ready` issue with any unresolved blocker is blocked and not actionable; blocking does not change `Status`. A blocker is resolved for scheduling only when it is `done`; `cancelled` does not satisfy dependents.
 
-Execution coordination (assignment, claiming, concurrency, ownership, frontier selection, orchestration), migration/versioning, delivery policy, and issue-template UX are outside the tracker model.
+Repository taxonomy, source-specific ingestion and triage, execution coordination, migration, delivery policy, and issue-template UX are outside the tracker model. Contract versioning and upgrade gating belong to setup; migrations themselves remain outside the tracker model.
