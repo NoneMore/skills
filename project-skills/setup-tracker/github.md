@@ -6,7 +6,7 @@ Setup requires GitHub Issues and label read/write access. Native sub-issue or de
 
 ## Membership and representation
 
-Any issue with a `tracker:status:*` label participates in the tracker. A valid tracked issue has exactly one supported status label and exactly one type label.
+Any issue with a `tracker:status:*` label participates in the tracker. A valid tracked issue has exactly one `tracker:status:*` label and it is supported, and exactly one `tracker:type:*` label and it is supported.
 
 | Model field | GitHub representation |
 | --- | --- |
@@ -19,9 +19,11 @@ Any issue with a `tracker:status:*` label participates in the tracker. A valid t
 Required tracker labels:
 
 - `tracker:type:investigation`, `tracker:type:change`
-- `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`
+- `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`, `tracker:status:cancelled`
 
-GitHub open/closed state may mirror status for usability but is not canonical tracker state.
+Legacy or otherwise unsupported `tracker:status:*` or `tracker:type:*` labels make a participating issue invalid rather than adding another state or type.
+
+GitHub open/closed state may mirror terminal status for usability but is not canonical tracker state.
 
 ## Body
 
