@@ -1,5 +1,5 @@
 interface:
   display_name: "Setup Tracker"
-  short_description: "Configure the repository's intended tracker backend"
+  short_description: "Configure a minimal repository tracker contract"
 policy:
   allow_implicit_invocation: false
