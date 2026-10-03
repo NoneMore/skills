@@ -1,83 +1,41 @@
 # Issue model
 
-Authoritative semantics for the tracker. Backend documents define representation only.
+Backends represent this model; they do not redefine it.
 
-## Tracked issues
+## Classification
 
-Only explicitly classified issues participate in this tracker. Unclassified repository issues are outside it; do not infer tracker meaning from missing metadata, open/closed state, author, age, or historical usage.
+Only explicitly classified issues participate in the tracker. Unclassified repository issues remain outside it.
 
-Every tracked issue has exactly one kind:
+Every tracked issue has one kind:
 
-- `intake` — external project input such as a report, request, question, or discussion;
+- `intake` — external input such as a report, request, question, or discussion;
 - `managed` — work the project has decided to own.
 
-Intake preserves the original reporter, wording, evidence, and discussion. Accepted intake may source separate managed work rather than being rewritten into managed work.
+Every managed issue also has one type: `investigation` (resolve uncertainty) or `change` (change observable state). Intake has no managed-work type. Repository taxonomy such as bug, feature, docs, or security is independent.
 
-## Managed-work type
+Preserve intake reporter, wording, evidence, and discussion. Accepted intake may source separate managed work rather than being rewritten into managed work.
 
-Every managed issue has exactly one type:
+## Status and content
 
-- `investigation` — resolve a material uncertainty;
-- `change` — make observable state different.
+| Kind | Allowed status |
+| --- | --- |
+| intake | `needs-triage`, `waiting`, `done` |
+| managed | `ready`, `waiting`, `done` |
 
-Intake has no managed-work type. Repository taxonomy such as bug, feature, docs, or security is independent from tracker type.
+Status is explicit tracker state; backend open/closed state does not define it.
 
-## Status
+Every managed issue has an issue-specific, checkable completion condition.
 
-Every tracked issue has one explicit lifecycle status.
+A `waiting` issue records both `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming actionable again).
 
-Intake statuses:
+Skills may add sections they own, but must preserve unrelated content.
 
-- `needs-triage`
-- `waiting`
-- `done`
+## Relations
 
-Managed statuses:
+- `Sources` is direct provenance. It may reference existing intake or managed work, must not self-reference, and does not imply hierarchy or dependency.
+- `Parent` is optional managed-work decomposition. Only managed work participates; each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not automatically complete the parent.
+- `BlockedBy` is a managed-work scheduling dependency. Both endpoints must be existing managed work; self-reference and cycles are forbidden.
 
-- `ready`
-- `waiting`
-- `done`
+## Scope
 
-Status is semantic tracker state. A backend's own open/closed state may mirror it but does not define it.
-
-When a tracked issue is `waiting`, record both:
-
-- `Waiting for` — the external event or decision;
-- `Resume when` — a checkable condition for becoming actionable again.
-
-## Managed-work content
-
-Every managed issue must state an issue-specific, checkable completion condition.
-
-Skills may add sections they own, such as notes, conclusions, results, or evidence. When updating one of those sections, preserve unrelated content.
-
-## Sources
-
-`Sources` records direct provenance: tracked issues used to define the current issue.
-
-- Sources may be empty or many-to-many.
-- Record direct sources only, not transitive closure.
-- A source must exist and must not reference the current issue itself.
-- Sources do not imply hierarchy or dependency.
-
-## Hierarchy
-
-Parent/child means decomposition: a child is part of completing its parent.
-
-- Only managed work participates in hierarchy.
-- Each managed issue has at most one parent.
-- Parent relations must reference existing managed work, must not self-reference, and must not form cycles.
-- Completing all children does not automatically complete the parent.
-
-## Dependencies
-
-`BlockedBy` records scheduling dependencies.
-
-- Only managed work participates in dependencies.
-- Both endpoints must be existing managed work.
-- Dependencies must not self-reference or form cycles.
-- Dependencies are independent from hierarchy and sources.
-
-## Execution metadata
-
-Assignment, claiming, concurrency, execution ownership, frontier selection, and orchestration are not tracker semantics. A downstream workflow may use backend metadata for those purposes, but this contract does not prescribe how.
+Assignment, claiming, concurrency, execution ownership, frontier selection, orchestration, migration/versioning, delivery policy, and issue-template UX are outside the tracker model.
