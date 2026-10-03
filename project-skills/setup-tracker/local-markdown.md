@@ -9,10 +9,12 @@ Representation and operations for the tracker. The issue model owns semantics.
 Store tracked issues as:
 
 ```text
-.tracker/issues/<NNNN>-<slug>.md
+.tracker/issues/<NNNN>.md
 ```
 
-Use the next monotonically increasing four-digit number. Create the path with a create-only operation that must fail rather than overwrite when the candidate path already exists. On collision, rescan and retry with the next available number. If the active runtime cannot provide create-only semantics, concurrent issue creation must be serialized by the caller.
+Use the next monotonically increasing four-digit numeric ID. The numeric ID is the canonical local issue reference and the complete filename stem; do not add a title-derived suffix to the canonical issue path.
+
+Create the candidate path with a create-only operation that must fail rather than overwrite when that numeric ID already exists. Because every creator of the same candidate ID targets the same path, a create-only collision atomically detects that the ID was claimed. On collision, rescan and retry with the next available number. If the active runtime cannot provide create-only semantics, concurrent issue creation must be serialized by the caller.
 
 ## Header
 
@@ -104,7 +106,7 @@ Do not duplicate header metadata in body sections.
 
 ## Operations
 
-Create new tracked issues with the complete header using the create-only collision protocol in the Storage section.
+Create new tracked issues with the complete header using the create-only numeric-ID collision protocol in the Storage section.
 
 When creating intake, set `Kind: intake`, `Type: None`, an explicit intake status, `Reporter`, and `Origin`; preserve the original wording and evidence under `## Intake` and discussion under `## Discussion`.
 
@@ -130,7 +132,7 @@ Inspect `docs/agents/issues.md` and `.tracker/issues/` before setup.
 
 If no compatible current tracker contract exists and `.tracker/issues/` already contains issue files, stop without modifying them. Adopting, repairing, or migrating existing local issue files belongs to a separate migration/takeover workflow.
 
-When a compatible current contract already exists, every `.tracker/issues/*.md` file must match the required header and body invariants above. Also verify that source references are valid, managed-work-only relation endpoint rules hold, hierarchy and dependency graphs are acyclic, waiting sections match status, and managed-work claims contain at most one actor. Otherwise stop without modifying the tracker; setup never repairs issue data.
+When a compatible current contract already exists, every `.tracker/issues/*.md` file must use the canonical `<NNNN>.md` numeric-ID filename and match the required header and body invariants above. Also verify that source references are valid, managed-work-only relation endpoint rules hold, hierarchy and dependency graphs are acyclic, waiting sections match status, and managed-work claims contain at most one actor. A non-canonical issue filename or any state that would make a numeric reference ambiguous is invalid and stops setup without repair.
 
 If `docs/agents/issues.md` already declares a different tracker model, backend, or contract version, stop. If it declares the same contract version but its normative contract text differs from the current version-1 contract, also stop. Replacing, upgrading, repairing, or taking over a tracker contract is migration and is out of scope.
 
