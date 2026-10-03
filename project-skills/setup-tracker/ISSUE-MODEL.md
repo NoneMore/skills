@@ -74,6 +74,12 @@ Assignee is the claim mechanism. Do not add another execution-state field.
 
 Claim is independent from status and dependencies.
 
+## Frontier
+
+Executable frontier work is managed work that is `ready`, unclaimed, and has no live blocker.
+
+Frontier is derived, not stored.
+
 ## Reconciliation
 
 External intake is closed independently from managed work. Completing managed work may justify closing a source issue, but only when that source has actually been addressed.
