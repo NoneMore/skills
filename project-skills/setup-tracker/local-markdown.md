@@ -9,12 +9,12 @@ Representation and operations for the tracker. The issue model owns semantics.
 Store tracked issues as:
 
 ```text
-.tracker/issues/<NNNN>.md
+.tracker/issues/<ID>.md
 ```
 
-Use the next monotonically increasing four-digit numeric ID. The numeric ID is the canonical local issue reference and the complete filename stem; do not add a title-derived suffix to the canonical issue path.
+Use monotonically increasing positive numeric IDs starting at `1`. Render each ID canonically as base-10 digits left-padded with zeroes to width four when its value has fewer than four digits: `0001` through `9999`, then `10000`, `10001`, and so on without a fixed upper digit width. The canonical numeric ID is the complete filename stem; do not add a title-derived suffix. References in header fields use the same canonical rendering.
 
-Create the candidate path with a create-only operation that must fail rather than overwrite when that numeric ID already exists. Because every creator of the same candidate ID targets the same path, a create-only collision atomically detects that the ID was claimed. On collision, rescan and retry with the next available number. If the active runtime cannot provide create-only semantics, concurrent issue creation must be serialized by the caller.
+Choose the next ID as one greater than the greatest existing numeric ID; never reuse a lower gap. Create the candidate path with a create-only operation that must fail rather than overwrite when that numeric ID already exists. Because every creator of the same candidate ID targets the same path, a create-only collision atomically detects that the ID was claimed. On collision, rescan and retry with one greater than the new greatest existing ID. If the active runtime cannot provide create-only semantics, concurrent issue creation must be serialized by the caller.
 
 ## Header
 
@@ -24,9 +24,9 @@ Create the candidate path with a create-only operation that must fail rather tha
 Kind: <intake|managed>
 Type: <investigation|change|None>
 Status: <canonical status>
-Sources: <NNNN, NNNN|None>
-Parent: <NNNN|None>
-Blocked-By: <NNNN, NNNN|None>
+Sources: <ID, ID|None>
+Parent: <ID|None>
+Blocked-By: <ID, ID|None>
 Assignee: <actor|None>
 Reporter: <actor|Unknown|None>
 Origin: <source-ref|Unknown|None>
@@ -120,7 +120,9 @@ To acquire a managed-work claim, first verify that the issue is on the executabl
 
 Release the claim by restoring `Assignee: None` when execution stops, when handing work off, or before moving the issue out of `ready`.
 
-When mutating, change only the relevant header field or owned body section and preserve unrelated content. Entering `waiting` requires the active `## Waiting` section; leaving `waiting` requires removing that active section. Re-read the changed fields or sections afterward.
+When changing status, first read the current `Status`. If it is `done` or `cancelled`, only an idempotent write of that same value is allowed by ordinary tracker operations; any different target status requires migration or repair and must stop. Otherwise update the status while preserving unrelated content. Before moving managed work out of `ready`, release its claim. Entering `waiting` requires the active `## Waiting` section; leaving `waiting` requires removing that active section.
+
+When mutating any other field or owned body section, change only the relevant field or section and preserve unrelated content. Re-read the changed fields or sections afterward.
 
 Set `Status: done` or `Status: cancelled` before treating an issue as terminal.
 
@@ -132,7 +134,7 @@ Inspect `docs/agents/issues.md` and `.tracker/issues/` before setup.
 
 If no compatible current tracker contract exists and `.tracker/issues/` already contains issue files, stop without modifying them. Adopting, repairing, or migrating existing local issue files belongs to a separate migration/takeover workflow.
 
-When a compatible current contract already exists, every `.tracker/issues/*.md` file must use the canonical `<NNNN>.md` numeric-ID filename and match the required header and body invariants above. Also verify that source references are valid, managed-work-only relation endpoint rules hold, hierarchy and dependency graphs are acyclic, waiting sections match status, and managed-work claims contain at most one actor. A non-canonical issue filename or any state that would make a numeric reference ambiguous is invalid and stops setup without repair.
+When a compatible current contract already exists, every `.tracker/issues/*.md` file must use the canonical numeric filename rendering defined above and match the required header and body invariants. Reject non-canonical aliases such as `1.md`, `00001.md`, title-suffixed files, or any state that would make a numeric reference ambiguous. Also verify that all numeric references use canonical rendering, source references are valid, managed-work-only relation endpoint rules hold, hierarchy and dependency graphs are acyclic, waiting sections match status, and managed-work claims contain at most one actor.
 
 If `docs/agents/issues.md` already declares a different tracker model, backend, or contract version, stop. If it declares the same contract version but its normative contract text differs from the current version-1 contract, also stop. Replacing, upgrading, repairing, or taking over a tracker contract is migration and is out of scope.
 
