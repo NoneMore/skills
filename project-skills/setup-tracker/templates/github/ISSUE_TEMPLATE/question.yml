@@ -1,0 +1,28 @@
+name: Question or support request
+description: Ask for help or clarification about using the project.
+title: ""
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: What do you need help with?
+      description: Describe the question or the outcome you are trying to reach.
+      placeholder: What are you trying to understand or accomplish?
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried or checked?
+      description: Include commands, documentation, examples, or approaches already attempted when relevant.
+      placeholder: What have you already tried?
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add versions, examples, links, screenshots, logs, or other useful context.
+      placeholder: Anything else that may help us understand the request.
+    validations:
+      required: false
