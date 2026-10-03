@@ -79,9 +79,9 @@ If backend verification fails, stop without publishing a repository contract.
 
 ### 5. Publish the repository-local contract
 
-Write `docs/agents/issues.md` only after backend configuration and verification succeed.
+Only publish `docs/agents/issues.md` after backend configuration and verification succeed. If no compatible contract exists, create it now. If an exact compatible contract already exists, preserve it unchanged rather than rewriting it on every setup run.
 
-Start with backend identity:
+For a new contract, start with backend identity:
 
 For GitHub:
 
@@ -108,7 +108,7 @@ Then materialize the contract mechanically:
 1. copy, verbatim and in order, the content between `<!-- repository-contract:start -->` and `<!-- repository-contract:end -->` in [ISSUE-MODEL.md](ISSUE-MODEL.md);
 2. append, verbatim and in order, the content between the same markers in the selected backend document.
 
-Do not copy the marker lines themselves. Do not paraphrase, summarize, reorder, deduplicate, or otherwise rewrite contract text. Apart from the backend-identity values above and insignificant surrounding blank lines, two runs against the same contract version and backend must produce the same normative contract text.
+Do not copy the marker lines themselves. Do not paraphrase, summarize, reorder, deduplicate, or otherwise rewrite contract text. Apart from the backend-identity values above and insignificant surrounding blank lines, two repositories using the same contract version and backend must have the same normative contract text.
 
 Do not copy backend-selection, capability-detection, setup-only checks/mutations, or any other text outside the marked contract regions. The generated `docs/agents/issues.md` must not contain references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path.
 
@@ -116,7 +116,7 @@ The generated `docs/agents/issues.md` is the project authority after setup. A fr
 
 If a compatible `docs/agents/issues.md` already exists, re-running setup must not silently rewrite normative text. If its `Contract-Version: 1` normative text differs from the current version-1 source, stop and require migration or repair.
 
-After the contract is written, if the active harness exposes a project instruction artifact, add or update one short issue-tracker pointer to `docs/agents/issues.md`. Do not copy the contract into project instructions.
+After the contract exists, if the active harness exposes a project instruction artifact, add or update one short issue-tracker pointer to `docs/agents/issues.md`. Do not copy the contract into project instructions.
 
 ### 6. Verify the published contract
 
