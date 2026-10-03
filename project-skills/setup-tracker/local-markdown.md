@@ -4,27 +4,26 @@
 
 Store tracked issues as `.tracker/issues/<ID>.md` using positive integer IDs. New issues normally use one greater than the greatest existing ID; on collision choose another unused ID.
 
+`.tracker/issues/` contains tracked work, not mirrored copies of external intake. External reports, messages, documents, or other durable inputs should normally remain at their source and be referenced through `Sources` when they motivate tracked work.
+
 ## Header
 
 ```markdown
 # <title>
 
-Kind: <intake|managed>
+Kind: <repository-defined category|None>
 Type: <investigation|change|None>
-Status: <allowed status>
-Sources: <ID, ID|None>
+Status: <needs-triage|ready|waiting|done>
+Sources: <ID, URL, reference|None>
 Parent: <ID|None>
 Blocked-By: <ID, ID|None>
-Reporter: <actor|Unknown|None>
 ```
 
-`intake` uses `Type: None`; `managed` uses one managed-work type. `Reporter` is the original intake reporter when known, `Unknown` when it cannot be established, and `None` for managed work.
+`Kind` is optional repository/project taxonomy. `Type: None` is allowed while work is not yet classified; `ready` requires a typed issue. Source references may identify another local tracked issue or durable external provenance, and do not create a tracked copy of that source.
 
 ## Body
 
-Preserve intake wording, evidence, and discussion, for example under `## Intake` and `## Discussion`.
-
-Managed work contains:
+Whenever `Type` is set, the issue contains:
 
 ```markdown
 ## Completion condition
