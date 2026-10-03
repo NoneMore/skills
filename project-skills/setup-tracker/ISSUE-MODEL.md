@@ -27,6 +27,18 @@ An investigation never becomes a change. If investigation produces work that cha
 
 Repository taxonomy such as bug, feature, docs, refactor, or security is independent from managed-work type.
 
+## Managed-work content
+
+Every managed issue must state an issue-specific, checkable completion condition.
+
+The issue body should contain only context that helps define or execute the work. Do not duplicate tracker metadata such as type, status, sources, hierarchy, dependencies, or claim in the body when the backend has a canonical representation for those dimensions.
+
+Skills that create or execute managed work may add structured sections for information they own. Examples include execution notes, implementation results, investigation conclusions, evidence, experiments, or handoff material.
+
+Skill-owned sections are extensions of the managed issue, not tracker dimensions. A skill may create and update the sections it owns, but must preserve unrelated sections and content owned by other skills. The tracker contract does not require every managed issue to contain every extension section.
+
+Extension sections must not redefine the issue's type, lifecycle status, provenance, hierarchy, dependencies, claim, or completion condition.
+
 ## Status
 
 Status is lifecycle only. Claiming and dependencies are separate dimensions.
