@@ -2,7 +2,7 @@ name: Bug report
 description: Report behavior that appears incorrect or broken.
 title: ""
 labels:
-  - "status:needs-triage"
+  - "tracker:status:needs-triage"
 body:
   - type: textarea
     id: what-happened
