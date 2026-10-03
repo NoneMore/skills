@@ -5,11 +5,14 @@ An isolated prototype for replacing the current project tracker model.
 It defines:
 
 - one semantic issue model;
-- GitHub Issues as the reference backend when required native relations are usable;
-- Local Markdown as the fallback;
+- explicit tracker classification so unclassified repository issues remain outside the tracker;
+- GitHub Issues as the intended backend when the repository uses GitHub and required native relations are usable;
+- Local Markdown as an explicit alternative, not an automatic fallback for missing GitHub capability;
 - a versioned repository-local tracker contract (`Contract-Version: 1`).
 
 See [`setup-tracker/ISSUE-MODEL.md`](setup-tracker/ISSUE-MODEL.md) for the semantic contract. Backend documents define representation and operations only.
+
+Every tracked issue is explicitly classified as either intake or managed work. Setup never adopts, repairs, migrates, or reinterprets pre-existing unclassified issues; that belongs to a separate migration/takeover workflow.
 
 Managed work has exactly one of two types:
 
@@ -20,12 +23,16 @@ Every managed issue has a checkable completion condition. Managed work in `waiti
 
 External intake remains separate from managed work so reporter identity, evidence, and discussion are preserved. Intake can source managed work but does not participate in managed-work hierarchy or dependency graphs. Hierarchy and dependency relations are managed-work-only, self-reference is forbidden, and both graphs must remain acyclic.
 
-For managed work, assignee is the current execution claim rather than long-lived ownership. Managed work has at most one assignee; executable frontier work is `ready`, unclaimed, and has no live blocker. Claims are coordination rather than a distributed lock, so execution workflows re-check claim ownership before consequential mutations or external effects.
+For managed work, assignee is the current execution claim rather than long-lived ownership. The execution model does not permit concurrent top-level execution of the same managed issue; subagents operate inside the claiming execution rather than claiming the issue independently. Executable frontier work is `ready`, unclaimed, and has no live blocker.
 
-GitHub tracker labels are namespaced as `tracker:type:*` and `tracker:status:*` so ordinary repository taxonomy such as `bug`, `feature`, or `documentation` remains independent. GitHub setup can install intake-only forms for common entry points while keeping blank issues available; reporters never choose the internal managed-work type or lifecycle state.
+GitHub tracker labels are namespaced as `tracker:kind:*`, `tracker:type:*`, and `tracker:status:*` so ordinary repository taxonomy such as `bug`, `feature`, or `documentation` remains independent. GitHub setup can install intake-only forms for common entry points while keeping blank issues available. Shipped forms explicitly classify their issues as intake; blank issues remain unclassified until a downstream intake/triage workflow adopts them.
+
+When GitHub is the intended backend, setup requires usable Issues, labels, assignees, native sub-issues, and native issue dependencies. It uses any available GitHub API/tooling that can provide those operations; if a required capability is unavailable, setup stops rather than silently switching the repository to Local Markdown or using textual relation fallbacks.
 
 Local Markdown keeps monotonically increasing numeric issue IDs, but creation must use create-only semantics with collision retry; runtimes that cannot provide that guarantee must serialize concurrent creators.
 
+`Contract-Version: 1` is a frozen normative protocol snapshot once published. Normative semantic or backend-contract changes require a new contract version rather than silently changing the meaning of version 1.
+
 ## Non-goals
 
-This prototype does not port downstream workflows, migrate existing issues, support other tracker vendors, or modify the current project skills.
+This prototype does not port downstream workflows, migrate or take over existing issues, support other tracker vendors, or modify the current Matt skills.
