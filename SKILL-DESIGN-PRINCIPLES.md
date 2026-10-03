@@ -4,9 +4,9 @@ A compact framework for designing, implementing, and maintaining agent skills.
 
 ## Core Mental Model
 
-A skill is not a magic capability upgrade. It does not change the model's parameters, base knowledge, or fundamental reasoning capacity.
+A skill does not change the model's parameters, base knowledge, or fundamental reasoning capacity. But it can extend the **effective capability of the agent system** by packaging instructions, domain knowledge, executable procedures, resources, and access paths.
 
-A skill is a **task-scoped cognitive and operational scaffold**: it helps an agent turn existing capabilities into more reliable, efficient, and repeatable outcomes.
+A skill is therefore a **task-scoped cognitive and operational scaffold**: it makes useful behavior more reliable, efficient, reusable, and verifiable.
 
 Its main sources of value are:
 
@@ -14,23 +14,21 @@ Its main sources of value are:
 2. **Lower context cost** — keep specialized rules, conventions, and references out of always-loaded instructions.
 3. **Lower behavioral variance** — make similar tasks converge on similar depth, structure, and completion standards.
 4. **Lower verification cost** — make important work end in explicit, checkable conditions.
-5. **Operational leverage** — move deterministic work to scripts, tools, and structured resources when the model should not do it probabilistically.
-
-A useful distinction is:
+5. **Operational leverage** — move deterministic work to scripts, tools, and structured resources when probabilistic execution is unnecessary.
 
 > **Model capability is not the same as system capability.**
 >
-> Skills improve the system around the model, not the model itself.
+> Skills do not make the underlying model smarter; they improve and can extend the system around it.
 
 ---
 
-## L0 — Metacognition
+## L0 — Purpose
 
 Ask first: **why should this exist as a skill?**
 
-A skill should encode reusable task knowledge that materially improves cost, consistency, reliability, or execution. Avoid turning every preference or prompt pattern into a skill.
+A skill should encode reusable task knowledge or execution patterns that materially improve cost, consistency, reliability, or capability. Avoid turning every preference, one-off instruction, or prompt pattern into a skill.
 
-The goal is not to maximize instructions. The goal is to minimize unnecessary reasoning, context, and uncertainty while preserving good judgment.
+The goal is not to maximize instructions. It is to minimize unnecessary reasoning, context, and uncertainty while preserving good judgment.
 
 ---
 
@@ -44,7 +42,9 @@ Put information at the lowest level where it is reliably available when needed.
 | A reusable workflow for a recognizable task class | Skill |
 | Branch-specific domain knowledge | `references/` |
 | Deterministic computation or transformation | `scripts/` |
-| Live, permissioned, or external state | Tool / API / MCP |
+| Live or external state | Tool / API / MCP |
+| Access enforcement and authorization | Runtime / tool boundary |
+| Task-specific authority policy | Skill |
 | Reusable output skeletons or artifacts | `assets/` |
 | One-off requirements | User prompt |
 
@@ -60,15 +60,12 @@ Treat a skill as a behavioral contract:
 
 A well-designed skill makes the following clear when relevant:
 
-- **Trigger** — when the skill should be used.
-- **Anti-trigger** — similar cases where it should not be used.
-- **Inputs** — information required to proceed.
-- **Preconditions** — conditions that must already hold.
+- **Trigger / anti-trigger** — when the skill should and should not be used.
+- **Inputs / preconditions** — what information and state are required to proceed.
 - **Authority** — what the agent may read, change, execute, or delegate.
-- **Invariants** — rules that must remain true throughout execution.
+- **Invariants** — what must remain true throughout execution.
 - **Decision points** — meaningful branches and how to resolve them.
-- **Output contract** — what the skill must produce.
-- **Completion criteria** — observable conditions that distinguish done from not done.
+- **Output and completion** — what must be produced and what observable conditions mean “done.”
 - **Failure behavior** — what to do when information, tools, or permissions are insufficient.
 - **Stop boundary** — where the skill must stop rather than expanding scope opportunistically.
 
@@ -84,22 +81,17 @@ Design for limited attention and context.
 
 Keep the common path in the main skill file and load specialized material only when the relevant branch is reached.
 
-A typical hierarchy is:
-
 ```text
 metadata → SKILL.md → references / scripts / assets on demand
 ```
 
-### Single source of truth
+### Authoritative sources, deliberate repetition
 
-Each rule, definition, or invariant should have one authoritative location. Repetition increases maintenance cost and creates stale copies.
+Each rule, definition, or invariant should have one authoritative source. Avoid accidental duplication, but allow deliberate local restatement of critical constraints when it materially improves execution reliability.
 
 ### Context pointers
 
-A good pointer states both:
-
-1. what the referenced material contains; and
-2. when it should be loaded.
+A useful pointer states both **what** the referenced material contains and **when** it should be loaded.
 
 ### Locality
 
@@ -107,13 +99,7 @@ Keep definitions, rules, caveats, and completion conditions close to the workflo
 
 ### Prune aggressively
 
-Remove instructions that are:
-
-- irrelevant to the task,
-- stale relative to the environment, or
-- behaviorally inert.
-
-Shorter instructions make important constraints easier to notice and maintain.
+Remove instructions that are irrelevant, stale, behaviorally inert, or cheaper to discover at runtime. Shorter instructions make important constraints easier to notice and maintain.
 
 ---
 
@@ -126,17 +112,13 @@ Treat discovery metadata as an index, not as marketing copy. A useful descriptio
 When multiple skills coexist, design for:
 
 - distinct and discriminating triggers,
-- minimal overlap,
+- minimal unnecessary overlap,
 - clear model-invoked vs. user-invoked behavior,
 - explicit dependencies where composition is intentional,
 - router skills only when they reduce real discovery cost,
-- skill granularity justified by independent discoverability or materially different context.
+- granularity justified by independent discoverability or materially different context.
 
-A useful approximation is:
-
-> **Skill quality ≈ routing quality × execution quality**
-
-If either side approaches zero, the skill is ineffective.
+Skill quality is bottlenecked by its weakest critical layer: good execution cannot compensate for failed routing, and good routing cannot compensate for an unreliable workflow.
 
 ---
 
@@ -146,7 +128,7 @@ Conceptual quality and format validity are separate concerns.
 
 Use the open [Agent Skills specification](https://agentskills.io/specification) as the baseline packaging contract, then apply runtime-specific extensions only where required.
 
-A common structure is:
+A practical extended structure is:
 
 ```text
 skill-name/
@@ -158,7 +140,7 @@ skill-name/
 └── agents/       # runtime-specific metadata when needed
 ```
 
-`SKILL.md` should remain the canonical entry point. Runtime-specific metadata, such as OpenAI integration metadata, should extend the skill rather than redefine its core behavior.
+`SKILL.md` should remain the canonical entry point. Runtime-specific metadata should extend the skill rather than redefine its core behavior.
 
 Engineering concerns include:
 
@@ -166,9 +148,9 @@ Engineering concerns include:
 - stable relative references,
 - minimal runtime assumptions,
 - bounded tool permissions,
-- portable packaging,
 - explicit dependencies,
-- deterministic scripts for deterministic work.
+- portable packaging where useful,
+- deterministic mechanisms for deterministic work.
 
 Format compliance is the floor, not the definition of a good skill.
 
@@ -176,7 +158,7 @@ Format compliance is the floor, not the definition of a good skill.
 
 ## L6 — Evaluation and Governance
 
-Skills are probabilistic programs and should be evaluated as such.
+Skill execution is partially probabilistic, so structural validity alone is not enough. Evaluate routing, behavior, and outcomes empirically.
 
 At minimum, test four dimensions:
 
@@ -190,7 +172,7 @@ At minimum, test four dimensions:
 Also monitor lifecycle concerns:
 
 - routing regressions,
-- unnecessary token/context growth,
+- unnecessary token or context growth,
 - stale references,
 - broken scripts or runtime assumptions,
 - permission or safety expansion,
@@ -207,29 +189,11 @@ Deleting a skill can be a valid improvement.
 Before adding or changing a skill, ask:
 
 1. **Task fit** — Is this reusable behavior actually worth skillizing?
-2. **Contract** — Is the required behavior and stopping condition explicit?
+2. **Contract** — Are the required behavior, authority, and stopping condition explicit?
 3. **Context** — Is information loaded only where it is needed?
 4. **Routing** — Can the right task discover the skill without excessive overlap?
 5. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 6. **Compatibility** — Does the package conform to the target skill/runtime specification?
-7. **Evaluation** — Can we detect routing, behavioral, and outcome regressions?
+7. **Evaluation** — Can routing, behavioral, and outcome regressions be detected?
 
-A compact model is:
-
-```text
-Skill Effectiveness
-≈ Task Fit
-× Routing
-× Behavioral Contract
-× Context Design
-× Execution Reliability
-× Evaluation Quality
-```
-
-A weakness near zero in any major factor can dominate the whole system.
-
----
-
-## Principle
-
-> **A good skill does not try to make the model smarter. It makes the surrounding system clearer, cheaper, more constrained, more reusable, and easier to verify.**
+> **A good skill does not try to make the underlying model smarter. It makes the surrounding system more capable, clearer, cheaper, more constrained, more reusable, and easier to verify.**
