@@ -1,4 +1,4 @@
-# Project tracker prototype
+# Project tracker
 
 A small backend-independent contract for tracked project work.
 
@@ -7,4 +7,4 @@ A small backend-independent contract for tracked project work.
 - `setup-tracker` configures one backend and publishes the contract without adopting existing work.
 - Published contracts are versioned; setup stops on a version mismatch rather than inferring compatibility or migrating tracked work.
 
-Repository taxonomy, source-specific ingestion and triage, execution coordination, migration, delivery policy, public issue forms, additional tracker vendors, downstream workflow ports, and changes to the current Matt skills are outside this prototype.
+Repository taxonomy, source-specific ingestion and triage, execution coordination, migration, delivery policy, public issue forms, additional tracker vendors, downstream workflow ports, and changes to the current Matt skills are outside this scope.
