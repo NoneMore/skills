@@ -18,10 +18,9 @@ Sources: <ID, ID|None>
 Parent: <ID|None>
 Blocked-By: <ID, ID|None>
 Reporter: <actor|Unknown|None>
-Origin: <source-ref|Unknown|None>
 ```
 
-`intake` requires `Type: None`; `managed` requires one managed-work type. Every tracked issue stores one allowed status.
+`intake` requires `Type: None`; `managed` requires one managed-work type. Every tracked issue stores one allowed status and explicit `Sources` (`None` when empty). `Reporter` is the original intake reporter when known, `Unknown` when an intake reporter cannot be established, and `None` for managed work.
 
 ## Body
 
