@@ -8,7 +8,9 @@ disable-model-invocation: true
 
 Configure issue tracking only. Do not install or emulate downstream workflows.
 
-Read [ISSUE-MODEL.md](ISSUE-MODEL.md) before writing configuration. It is the only authority for tracker semantics.
+Read [ISSUE-MODEL.md](ISSUE-MODEL.md) before writing configuration. It is the only authority for tracker semantics. Read the selected backend document for representation and operations.
+
+The files in this skill are setup inputs. After setup, `docs/agents/issues.md` is the repository-local tracker contract and must not depend on the skill installation path.
 
 ## Process
 
@@ -34,7 +36,9 @@ For Local Markdown, inspect `.tracker/issues/*.md` if present. If any existing i
 
 ### 3. Configure
 
-Write `docs/agents/issues.md`.
+Write `docs/agents/issues.md` as a self-contained repository-local contract.
+
+Start with backend identity:
 
 For GitHub:
 
@@ -43,8 +47,6 @@ For GitHub:
 Model: tracker
 Backend: github
 Repository: <owner>/<repo>
-Semantics: <path to ISSUE-MODEL.md>
-Operations: <path to github.md>
 ```
 
 For Local Markdown:
@@ -54,9 +56,16 @@ For Local Markdown:
 Model: tracker
 Backend: local-markdown
 Issue root: .tracker/issues/
-Semantics: <path to ISSUE-MODEL.md>
-Operations: <path to local-markdown.md>
 ```
+
+Then materialize into the same file:
+
+1. the complete semantic contract from [ISSUE-MODEL.md](ISSUE-MODEL.md);
+2. the complete representation and operations contract from the selected backend document.
+
+Adapt document headings as needed so the result is one coherent file. Preserve the meaning of the source contracts. Do not leave references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path in `docs/agents/issues.md`.
+
+The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker from repository contents alone.
 
 For GitHub, create missing tracker labels described in [github.md](github.md). Preserve unrelated labels.
 
@@ -66,7 +75,12 @@ If the active harness exposes a project instruction artifact, add or update one 
 
 ### 4. Verify
 
-Re-read `docs/agents/issues.md` and verify its backend identity and both referenced files resolve.
+Re-read `docs/agents/issues.md` and verify:
+
+- the backend identity is exact;
+- the full semantic contract and selected backend representation/operations are present;
+- executable frontier is defined once, in the semantic portion;
+- no reference depends on a skill file or installation path.
 
 If project instructions were changed, verify the issue-tracker pointer resolves and is not duplicated.
 
