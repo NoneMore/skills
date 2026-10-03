@@ -27,11 +27,15 @@ An issue without a tracker kind label is outside the tracker. Ordinary repositor
 
 ## Body
 
-Managed work contains:
+Every tracked issue contains:
 
 ```markdown
 Sources: <#101, #117|None>
+```
 
+Managed work also contains:
+
+```markdown
 ## Completion condition
 <checkable condition>
 ```
