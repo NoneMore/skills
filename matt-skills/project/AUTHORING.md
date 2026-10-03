@@ -2,127 +2,132 @@
 
 This note captures how the body of a capability-oriented `SKILL.md` should be written.
 
-The goal is to keep a skill useful and behavior-shaping without turning it into either a generic methodology handbook or a workflow engine.
+The goal is to keep a skill behavior-shaping without turning it into a generic agent handbook, methodology catalog, or workflow engine.
 
 ## Core rule
 
-A `SKILL.md` should contain the guidance that remains true across multiple concrete methods of completing the capability.
+A core instruction belongs in a capability only when it passes **both** of these tests:
 
-Prefer a small core made of:
+1. **Cross-method test** — does this remain true across multiple materially different ways of completing the capability?
+2. **Outcome-coupling test** — is this responsibility specifically implied by the outcome this capability owns, rather than being generic advice that would apply almost unchanged to other skills?
 
-1. **Capability contract** — what user-facing outcome the skill owns, what natural inputs it accepts, and when that local outcome is complete.
-2. **Capability invariants** — properties that should remain true regardless of which concrete method is chosen.
-3. **Decision heuristics** — cues for choosing among possible techniques based on the shape, uncertainty, risk, and evidence needs of the current task.
-
-Move specialized expert methods into optional reference material when they are useful enough to preserve.
+A healthy skill therefore tends toward:
 
 ```text
 SKILL.md
   = capability contract
-  + capability-specific invariants
-  + decision heuristics
+  + outcome-specific invariants
+  + optional outcome-specific heuristics
 
 references/
   = specialized expert methods
 
-conversation + repository
-  = actual task state
+general agent behavior
+  = omitted from the skill
 ```
 
-The skill body should not attempt to enumerate every possible task subtype or artifact shape.
+The second filter is important. "Understand the task", "inspect context", "resolve ambiguity", "gather evidence", and "ask when necessary" may all be good agent behavior, but repeating them in every skill does not define a capability.
 
 ---
 
 ## Capability contract
 
-The contract says what the skill owns, not how every instance must proceed.
+The contract states the local result the capability owns.
 
-A useful contract normally includes:
+The smallest useful shape is usually:
 
 - `Purpose`
-- `Accepts`
 - `Owns`
-- `May also`
 - `Done when`
-- `Does not require`
 
-Example shape for implementation:
+Add `Accepts` when describing natural input shapes improves direct entry or discoverability.
+
+Other sections are optional:
+
+- `May also` is useful only when an overlap would otherwise be surprising or confusing. Do not use it to enumerate everything an agent is allowed to do.
+- `Does not require` is especially useful during this refactor to make removed predecessor/protocol assumptions explicit. It does not need to remain forever once those assumptions no longer exist.
+
+A capability boundary defines **ownership**, not a permission boundary.
+
+Example implementation contract:
 
 ```text
 Purpose:
-Turn a concrete requested change into working production behavior.
+Turn a requested production change into working production behavior.
 
 Owns:
-- making the production changes necessary for the requested outcome
-- preserving relevant existing behavior
-- obtaining proportionate evidence that the requested outcome works
+- the production behavior requested
+- preservation of relevant behavior outside the intended change
+- production artifacts fit to remain in the real system
+- evidence that the changed behavior works at the boundary where it matters
 
 Done when:
-The requested behavior exists and there is enough evidence, relative to the
-risk and scope of the change, that it works without unacceptable regressions.
+The requested production behavior works, relevant preservation expectations hold,
+and the resulting production artifacts are acceptable to keep.
 ```
 
 This does not imply a sequence such as diagnose -> TDD -> review -> reconcile.
 
 ---
 
-## Capability invariants
+## Outcome-specific invariants
 
-Invariants are the highest-value part of the core skill body. They should shape behavior across many task shapes without prescribing one method.
+Invariants are the highest-value part of the core skill body, but only when they are coupled to the owned outcome.
 
-Possible implementation invariants include:
+Good implementation invariants are specific to changing the production system:
 
-- understand the requested outcome before committing to a solution;
-- use the existing system as the primary source of constraints;
-- avoid unrelated change unless broader change is justified by the requested outcome;
-- verify behavior at the level where failure would matter;
-- do not confuse a preferred test command passing with evidence that every material surface of the requested behavior has been verified.
+- own the requested production behavior, not merely the textual edit;
+- preserve relevant production behavior outside the intended change unless changing it is justified;
+- verify the changed behavior at the system boundary where the implementation is expected to matter;
+- do not leave exploratory shortcuts, fake dependencies, or temporary scaffolding in the production result unless they are intentionally part of the design.
 
-Possible design invariants include:
+Good design invariants are specific to resolving design choices:
 
-- make material design decisions explicit rather than leaving them implicit in downstream implementation;
-- distinguish durable project decisions from temporary exploration;
-- preserve room for multiple techniques such as inspection, comparison, experimentation, prototyping, or direct reasoning.
+- make material design choices explicit rather than silently delegating them to later implementation;
+- keep the chosen direction coherent with the constraints that motivated it;
+- distinguish settled design decisions from genuinely open design questions.
 
-Possible review invariants include:
+Good review invariants are specific to independent evaluation:
 
-- derive evaluation criteria from the object and user intent rather than forcing one universal checklist;
-- distinguish findings from speculative concerns;
-- support material findings with evidence proportionate to the claim.
+- use criteria appropriate to the reviewed object and review intent rather than a universal checklist;
+- distinguish violated expectations and material risks from preferences or speculative concerns;
+- independently verify material claims rather than treating the producer's explanation as proof;
+- do not require producing the replacement result in order to complete the review.
 
-An invariant belongs in core `SKILL.md` only when it remains useful across multiple concrete methods.
+Compare these with generic instructions such as:
+
+```text
+Understand what done means.
+Gather enough evidence.
+Resolve important uncertainty.
+```
+
+Those may be sound general behavior, but they fail the outcome-coupling test because they can be copied almost unchanged into `design`, `review`, `implement`, and other capabilities.
 
 ---
 
-## Decision heuristics
+## Decision heuristics are optional
 
-Heuristics tell the agent when a technique is likely useful without turning that technique into a required stage.
+A capability does not need a heuristic section merely because useful techniques exist.
 
-Example implementation heuristics:
+A heuristic belongs in core only when it also passes both placement tests:
 
 ```text
-If the failure mechanism is unclear, investigate before changing code.
-
-If behavior can be checked cheaply with an automated test, prefer that over
-manual confidence alone.
-
-If the change crosses a risky integration boundary, verify at that boundary.
-
-If the existing architecture makes the requested behavior awkward, make the
-smallest design decision necessary rather than blindly patching around it.
-
-If uncertainty can be reduced more cheaply with a spike or prototype, use one.
+cross-method = yes
+outcome-coupled = yes
 ```
 
-These heuristics may naturally invoke behaviors associated with debugging, testing, prototyping, research, or design. None of those behaviors becomes a required cross-skill transition.
+If a heuristic mainly says when to research, investigate, prototype, test, inspect history, or ask a question, it is probably general agent behavior or specialized method guidance rather than capability core.
+
+Do not make every skill restate the same execution wisdom.
 
 ---
 
 ## References hold specialized methods
 
-A reference is appropriate when a problem shape has reusable expert technique that materially improves execution but does not define a separate user-facing capability.
+A reference is appropriate when a problem shape, object type, or expert discipline has reusable technique that materially improves execution but does not define a separate user-facing capability.
 
-Possible examples:
+Illustrative shapes:
 
 ```text
 implement/
@@ -151,9 +156,9 @@ design/
     decision-techniques.md
 ```
 
-These names are illustrative, not a required taxonomy.
+These names are examples, not a required taxonomy.
 
-The reference split should follow the natural specialization of the capability:
+The natural split differs by capability:
 
 - review guidance often varies by **object being evaluated**;
 - implementation guidance often varies by **problem shape or technique**;
@@ -163,9 +168,28 @@ Do not force every capability into the same reference structure.
 
 ---
 
+## General agent behavior is not skill content
+
+Do not use project skills as a place to restate behaviors expected of the agent generally.
+
+Typical examples to omit unless a capability-specific version can be derived from the outcome:
+
+- read the relevant files;
+- inspect history when useful;
+- research unknown facts;
+- clarify material ambiguity;
+- form hypotheses;
+- gather evidence;
+- use tools proportionately;
+- tell the user about unresolved uncertainty.
+
+The fact that a capability may perform these actions does not require listing them under `May also` or turning them into named phases.
+
+---
+
 ## Do not replace horizontal workflow with vertical workflow
 
-Removing a lifecycle pipeline is not enough if the replacement merely creates many implementation subflows.
+Removing a lifecycle pipeline is not enough if the replacement merely creates task-subtype workflows.
 
 Avoid replacing:
 
@@ -182,58 +206,44 @@ implement-refactor
 implement-migration
 ```
 
-or a single large `implement` skill that internally encodes those as mandatory named branches with their own rigid phases.
+or with one large `implement` skill that encodes those categories as mandatory named branches with rigid phases.
 
-The task subtype may affect technique selection. It should not automatically create another workflow protocol.
+Task shape may influence which references or techniques are useful. It should not automatically create another workflow protocol.
 
 ---
 
-## Test for core-vs-reference placement
+## Core-vs-reference placement
 
-For each instruction, ask:
-
-> Does this remain true across multiple materially different ways of completing the capability?
-
-If yes, it probably belongs in `SKILL.md`.
-
-If it is specific to one technique, problem shape, artifact type, or expert discipline, it probably belongs in optional reference material.
-
-Examples:
+For every proposed instruction, ask in order:
 
 ```text
-Always write a failing test first.
+1. Cross-method test
+   Would this still be true if the capability were completed using a very
+   different valid method?
+
+2. Outcome-coupling test
+   If I replaced this skill with another capability, would the instruction
+   still read almost unchanged?
 ```
 
-This is technique-specific and does not belong in the core implementation skill.
+Strong core candidates answer:
 
 ```text
-Obtain evidence proportionate to the risk and behavior changed.
+cross-method = yes
+outcome-coupled = yes
 ```
 
-This remains true across many implementation methods and is a good core invariant.
+Technique-specific guidance belongs in references.
 
-Similarly:
+Generic guidance that fails outcome coupling usually belongs nowhere in the project skill suite.
 
-```text
-Always create three alternatives.
-```
-
-is a design technique, while:
-
-```text
-Do not silently leave material design decisions for downstream implementation
-when those decisions are part of the user's current concern.
-```
-
-is a capability-level invariant.
+This second failure mode is also a useful deletion signal: if a proposed skill has no meaningful instructions left after generic behavior and techniques are removed, it may not justify an independent invocation surface.
 
 ---
 
 ## References are not hidden required stages
 
 Moving instructions into references must not recreate sequencing indirectly.
-
-A reference should be available when useful, not required merely because a task was classified into a category.
 
 Bad:
 
@@ -244,7 +254,7 @@ This is a bug. Load debugging.md and execute phases 1-8 before any code change.
 Preferred:
 
 ```text
-Use debugging guidance when the uncertainty and failure shape make it useful.
+Use specialized debugging guidance when it materially helps the current work.
 ```
 
 The capability remains responsible for its own outcome either way.
@@ -256,11 +266,12 @@ The capability remains responsible for its own outcome either way.
 A healthy capability should tend toward:
 
 ```text
-small, outcome-oriented SKILL.md
-+ a few high-value invariants
-+ conditional decision heuristics
+small outcome-oriented SKILL.md
++ a few outcome-specific invariants
++ optional outcome-specific heuristics
 + optional deep references
-+ no fixed project-wide sequence
++ no generic agent handbook
++ no fixed workflow sequence
 ```
 
-The skill body is not a textbook. It is the smallest set of instructions that reliably improves ownership of the capability's outcome across varied tasks.
+The skill body is the smallest set of instructions that reliably improves ownership of **this particular outcome** across varied tasks.
