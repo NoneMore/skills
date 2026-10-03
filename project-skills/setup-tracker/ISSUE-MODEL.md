@@ -64,17 +64,31 @@ Managed work may use:
 
 `done` and `cancelled` are terminal.
 
+### Waiting contract
+
+Managed work in `waiting` must record both what it is waiting for and a checkable resume condition. Backends define the representation, but the semantic content is:
+
+- **Waiting for:** the external event or human decision that currently requires no project action;
+- **Resume when:** the condition whose satisfaction makes the issue actionable again.
+
+This waiting metadata is required managed-work content, not a tracker dimension. When the resume condition becomes true, move the issue to `ready` unless it has instead become `done` or `cancelled`. Managed work that is not `waiting` must not retain active waiting metadata.
+
 ## Sources
 
 `Sources` is direct provenance: issues whose information or demand was used to define the current issue.
 
 - Record direct sources only, not transitive sources.
 - Sources may be many-to-many or empty.
+- A source must reference an existing issue and must not reference the current issue itself.
 - Sources do not imply hierarchy or dependency.
 
 ## Hierarchy
 
 Parent/child means decomposition: a child is part of completing its parent.
+
+Only managed work participates in hierarchy. Intake may be a source of managed work but cannot be a parent or child.
+
+Each managed issue has at most one parent. Parent relationships must reference existing managed issues, must not self-reference, and must not form cycles.
 
 Do not use hierarchy merely to group related issues. Completing all children does not itself complete the parent.
 
@@ -82,13 +96,19 @@ Do not use hierarchy merely to group related issues. Completing all children doe
 
 `BlockedBy` records scheduling dependencies. A blocker is live while its referenced issue is non-terminal.
 
+Only managed work participates in dependency relationships. A blocker and blocked issue must both be managed work. Dependencies must reference existing issues, must not self-reference, and must not form cycles.
+
 Dependencies are independent from hierarchy and provenance.
 
 ## Claim
 
-Assignee is the claim mechanism. Do not add another execution-state field.
+For managed work, assignee is the execution claim. It means "this actor is currently executing this issue", not long-lived ownership. Do not add another execution-state field.
 
-Claim is independent from status and dependencies.
+Managed work has at most one assignee. Intake assignees, when a backend permits them, are ordinary repository metadata and are not tracker claims.
+
+A managed issue may be claimed only when it is `ready` and has no live blocker. Claim acquisition is coordination rather than a distributed lock: after acquiring a claim, re-read the issue and begin or continue consequential execution only while the current actor remains the sole assignee and the issue remains `ready` with no live blocker. If a conflicting claimant is observed, do not continue execution and release only the current actor's claim when possible.
+
+Release the claim when execution stops, when handing work off, or before moving the issue out of `ready`. Claim is independent from hierarchy and provenance.
 
 ## Frontier
 
