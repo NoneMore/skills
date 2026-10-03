@@ -30,7 +30,7 @@ Do not create textual GitHub fallbacks for hierarchy or dependencies.
 
 ### 2. Inspect existing state
 
-For GitHub, record the exact `owner/repo` and inspect existing labels.
+For GitHub, record the exact `owner/repo`, inspect existing labels, and inspect `.github/ISSUE_TEMPLATE/` when present. Existing issue templates are repository-owned configuration; preserve useful intake forms and unrelated templates.
 
 For Local Markdown, inspect `.tracker/issues/*.md` if present. If any existing issue does not match the header in [local-markdown.md](local-markdown.md), stop without modifying the tracker. Migration is out of scope.
 
@@ -67,7 +67,14 @@ Do not copy backend-selection, capability-detection, or setup-only instructions 
 
 The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker from repository contents alone.
 
-For GitHub, create missing tracker labels described in [github.md](github.md). Preserve unrelated labels.
+For GitHub:
+
+- create missing tracker labels described in [github.md](github.md), preserving unrelated labels;
+- keep existing useful intake templates;
+- when a common intake surface is missing, copy the corresponding default form from `templates/github/ISSUE_TEMPLATE/` into `.github/ISSUE_TEMPLATE/` without replacing a different existing form;
+- ensure the issue-template chooser keeps blank issues enabled; when `config.yml` already exists, change only `blank_issues_enabled` and preserve its other configuration.
+
+The shipped forms are intake UX only. Do not expose `investigation` or `change` as public issue-template choices; managed work is created by internal workflows against the tracker contract.
 
 For Local Markdown, ensure `.tracker/issues/` exists.
 
@@ -80,6 +87,7 @@ Re-read `docs/agents/issues.md` and verify:
 - the backend identity is exact;
 - the full semantic contract and selected backend runtime representation/operations are present;
 - executable frontier is defined once, in the semantic portion;
+- managed work requires a checkable completion condition and permits Skill-owned extension sections;
 - no reference depends on a skill file or installation path.
 
 If project instructions were changed, verify the issue-tracker pointer resolves and is not duplicated.
@@ -87,7 +95,10 @@ If project instructions were changed, verify the issue-tracker pointer resolves 
 For GitHub, verify:
 
 - required capabilities and tracker labels are available;
-- unrelated labels were not removed or renamed.
+- unrelated labels were not removed or renamed;
+- common external intake has a usable form or blank-issue path;
+- blank issues are enabled;
+- no public issue template asks reporters to choose managed-work type or internal tracker state.
 
 For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the header.
 
