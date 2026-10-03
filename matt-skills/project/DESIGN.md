@@ -1,37 +1,41 @@
 # Matt Project Skills: Capability-Oriented Design
 
-> Status: draft design direction. This document defines the intended shape and review criteria for the project skill suite. It deliberately does **not** preserve the current workflow protocol or every current skill.
+> Status: draft design direction. This document defines the intended shape and review criteria for the project skill suite. It deliberately does **not** prescribe the exact migration or final implementation of each skill yet.
 
 ## Why this refactor
 
-The project skills have accumulated a preferred idea-to-ship sequence, tracker lifecycle states, handoff rules, canonical result records, and cross-skill transition requirements. Those mechanisms make one path explicit, but they also turn a collection of skills into a workflow protocol.
+The project skills have gradually accumulated a strong idea-to-ship sequence, tracker lifecycle states, handoff rules, canonical result records, and cross-skill transition requirements. Those mechanisms make one preferred path explicit, but they also turn a collection of skills into a workflow protocol.
 
-That is the wrong center of gravity.
+That is the wrong center of gravity for this suite.
 
-The suite should optimize for:
+The core properties should be:
 
-1. **Flexibility** — enter at the capability needed from the state that actually exists.
-2. **Composability** — combine capabilities in many orders without hidden predecessor/successor contracts.
-3. **Clear local boundaries** — every skill owns a recognizable local outcome and knows when it is done.
-4. **Coverage before exclusivity** — overlap is acceptable; uncovered gaps are worse.
-5. **Minimal protocol** — use code, Git, issues, PRs, CI, docs, and explicit artifacts as sources of truth instead of maintaining a second agent-specific lifecycle.
-6. **Capabilities, not methods** — a skill should represent a useful job to accomplish, not merely one technique for accomplishing it.
+1. **Flexibility**: a user can enter at the capability they need from the state they actually have.
+2. **Composability**: skills can be combined in many orders without hidden predecessor/successor contracts.
+3. **Clear local boundaries**: each skill owns a recognizable local outcome and knows when that outcome is complete.
+4. **Coverage before exclusivity**: capability overlap is acceptable; uncovered gaps are worse.
+5. **Minimal protocol**: durable state should live in the codebase, Git, tracker, PR, CI, or explicit artifacts—not in a second agent-specific lifecycle layered on top.
+6. **Capability scarcity**: reusable ideas, methods, references, routers, and wrappers should not automatically become separately invokable skills.
 
-The goal is not less discipline. The goal is to keep discipline local to the capability that needs it instead of encoding it as a global sequence.
+The goal is not to remove discipline. The goal is to move discipline back into the local capability that needs it instead of encoding discipline as a global sequence.
+
+See [SKILL-AUDIT.md](./SKILL-AUDIT.md) for the current consolidation audit and tentative disposition of every project skill.
 
 ---
 
-## 1. Capabilities, not stages
+## Primary design principle: capabilities, not stages
 
-A skill describes **what useful job it can complete**, not where it sits in a project lifecycle.
+A skill describes **what capability it provides**, not where it sits in a project lifecycle.
+
+A capability may be useful before, during, after, or independently of another capability. The same skill should remain valid when entered from different directions.
 
 Bad framing:
 
 ```text
-idea -> grill -> spec -> tickets -> implement -> test -> review -> reconcile
+idea -> grill -> spec -> tickets -> implement -> review -> reconcile
 ```
 
-This turns skill names into workflow stages. Any deviation then requires recovery rules, state transitions, or special cases.
+This turns skill names into workflow stages and makes every deviation require special protocol.
 
 Preferred framing:
 
@@ -47,59 +51,26 @@ Examples:
 
 - `to-spec` can synthesize a spec from any sufficiently complete source material.
 - `to-tickets` can decompose any sufficiently concrete body of work.
-- `implement` can implement from an issue, spec, ticket, conversation, or another explicit contract when enough intent is present.
+- `implement` can implement from an issue, spec, ticket, conversation, or other explicit contract when enough intent is present.
 - `code-review` can review a diff whether or not `implement` produced it.
 - `diagnosing-bugs` can investigate a failure without assuming a later implementation flow.
-- `prototype` can answer a runnable design question wherever that question appears.
+- `prototype` can answer a design question wherever that question appears.
 
-Common combinations may exist. They are examples, not lifecycle law.
-
----
-
-## 2. Capabilities, not development techniques
-
-A development technique is not automatically a skill.
-
-A skill deserves to exist when it owns a distinct useful outcome. A technique only describes **how** another capability may choose to work.
-
-### TDD is a technique, not a capability boundary
-
-Test-driven development is one valid implementation method, but it is not the only one. Requiring a dedicated `tdd` skill makes one development method part of the suite's topology and encourages artificial sequencing:
-
-```text
-implement -> tdd -> review
-```
-
-That is exactly the kind of coupling this refactor is removing.
-
-The intended direction is therefore to remove `tdd` as a project skill.
-
-Testing remains important, but responsibility belongs to the capability doing the work:
-
-- `implement` owns appropriate verification of the behavior it changes;
-- `diagnosing-bugs` may add a regression test when that is the strongest way to preserve the diagnosis/fix;
-- `prototype` may use tests when they help answer the target question, but should not be forced to production-level verification;
-- `code-review` may evaluate whether the available verification is sufficient for the claimed change.
-
-The owning capability may use test-first development, test-after development, characterization tests, property tests, manual verification, static checks, or another suitable method. The suite should not prescribe one universal order.
-
-A useful rule:
-
-> **Methods may be guidance inside capabilities; they should become standalone skills only when they own an independently useful outcome.**
-
-The same test should be applied to other candidates: if a skill is mainly a methodology, style, ritual, or preferred ordering rather than a locally complete job, it should probably become reference guidance or disappear.
+There may still be common combinations. They are examples, not lifecycle law.
 
 ---
 
-## 3. Manual invocation is control, not sequencing
+## Manual invocation is control, not sequencing
 
-User-invoked skills remain valuable because the human chooses which capability to apply.
+User-invoked skills remain user-invoked when explicit human choice is valuable. Manual invocation is a feature: the user decides which capability to apply next.
 
-Manual invocation must not imply a canonical sequence.
+However, manual invocation must not imply a canonical sequence.
+
+A skill may say that another capability could be useful. It should not require the user to traverse a prescribed next stage merely because this skill completed.
 
 Prefer:
 
-> The requested change is implemented and verified. An independent `code-review` may be useful if you want one.
+> The diff is implemented and tested. `code-review` may be useful if you want an independent review.
 
 Avoid:
 
@@ -109,209 +80,296 @@ The first preserves user control. The second creates a workflow engine in prose.
 
 ---
 
-## 4. Boundary model for every skill
+## A skill must earn its existence
 
-Every project skill should be reviewable with the same local boundary model.
+A reusable idea should not become a standalone skill merely because it is useful.
+
+A project skill should normally have:
+
+- an independently useful user-facing outcome;
+- natural inputs that exist outside this suite;
+- a local completion condition;
+- enough specialized behavior to justify dedicated instructions;
+- a reason that absorbing it into a neighboring capability would materially reduce quality, clarity, discoverability, or coverage.
+
+The following are normally **not** sufficient reasons for a standalone skill:
+
+- it is a preferred development method;
+- it provides shared vocabulary;
+- several other skills want to consult the same guidance;
+- it wraps two other skills;
+- it routes users to another skill;
+- it configures protocol invented by the suite itself;
+- it coordinates a fixed ordering between otherwise useful capabilities.
+
+This is why `tdd` should not remain a standalone project skill. TDD is one implementation technique. The capability doing the work owns testing and verification and may choose TDD, test-after, characterization tests, property tests, type checking, manual verification, or another appropriate strategy.
+
+**Instruction reuse does not require skill proliferation.** Shared methods and vocabulary can live in reference material that capabilities load when useful.
+
+---
+
+## Size is a design signal
+
+There is no fixed line-count limit for a skill, but size creates a burden of proof.
+
+A large `SKILL.md` often indicates one of three problems:
+
+1. several distinct outcomes have been bundled into one workflow;
+2. global sequencing/lifecycle machinery has accumulated around a local capability;
+3. reusable reference material is being loaded as core instructions every time.
+
+Prefer:
+
+```text
+small capability contract
++ optional technique/reference material
++ natural project artifacts
+```
+
+over:
+
+```text
+global state machine
++ tracker adapter protocol
++ phase ordering
++ method doctrine
++ persistence schema
++ next-step routing
+```
+
+If a capability is intrinsically hard, it may still need substantial instructions. The question is whether the complexity belongs to the local outcome or to an invented workflow surrounding it.
+
+---
+
+## Boundary model for every skill
+
+Each project skill should be reviewable using the same local boundary model.
 
 ### Purpose
 
-One sentence describing the local problem this capability solves.
+One sentence describing the capability in terms of the local problem it solves.
 
 ### Accepts
 
-The natural forms of input it can work from. Inputs should be semantic rather than tied to predecessor skills.
+The natural forms of input the skill can work from. Inputs should be semantic rather than tied to a predecessor skill.
 
-Examples: a conversation, issue, spec, diff, failing command, design question, code area, or artifact.
+Examples: a conversation, issue, spec, diff, failing command, design question, code area, or existing artifact.
 
 ### Owns
 
-The useful outcome this skill is responsible for producing.
+The outcome this skill is responsible for producing. This is the center of the skill.
 
 A skill should not need another skill to finish the responsibility it claims to own.
 
 ### May also
 
-Adjacent work the skill may perform when useful to complete its owned outcome.
+Adjacent work the skill is allowed to perform when doing so is useful to complete its owned outcome.
 
 Overlap is expected here. Explicit overlap is healthier than artificial gaps.
 
 ### Done when
 
-A local completion condition that does not depend on the skill's position in a larger flow.
+A local completion condition that can be evaluated without asking where the skill sits in a larger workflow.
 
-Good examples:
+Good completion conditions describe the task result:
 
 - a diagnosis is supported by evidence;
-- a spec is sufficiently decision-complete for its intended use;
+- a spec is decision-complete enough for the intended use;
 - a decomposition is independently actionable;
-- requested behavior is implemented and appropriately verified;
+- requested behavior is implemented and verified;
 - review findings are reported;
 - a prototype answered the target question.
 
-Bad examples:
+Bad completion conditions describe protocol position:
 
 - the next lifecycle state was persisted;
-- another skill was invoked;
-- a parent artifact was reconciled;
-- an item reached a suite-specific terminal state.
+- a downstream skill was invoked;
+- the parent artifact was reconciled;
+- the item reached the suite's canonical terminal status.
 
 ### Does not require
 
-Predecessors, successors, tracker roles, lifecycle markers, or suite-specific persisted state that are intentionally not prerequisites.
+Any predecessor, successor, tracker role, lifecycle marker, or suite-specific persisted state that is intentionally *not* a prerequisite.
 
-This section exists to expose accidental temporal coupling.
+This section exists to catch accidental temporal coupling.
 
 ---
 
-## 5. Coverage over disjointness
+## Coverage over disjointness
 
-The capability map should aim for practical coverage, not mutually exclusive partitions.
+The capability map should aim for complete practical coverage, not mutually exclusive partitions.
 
-Overlap is usually tolerable:
+If two skills can both reasonably accept a task, that is usually tolerable. The distinction should come from their center of gravity, not from artificial guardrails.
 
-- `diagnosing-bugs` may run experiments that resemble `research` or `prototype`;
-- `prototype` may discover architectural constraints that overlap with `codebase-design`;
-- `implement` may diagnose a small failure encountered while implementing;
-- `code-review` may identify design problems even though architecture capabilities exist.
+For example:
 
-The dangerous case is a gap:
+- investigation may run experiments that resemble research or prototyping;
+- prototyping may discover architectural constraints that overlap with design;
+- implementation may run tests or perform small diagnostic experiments;
+- review may identify design problems.
+
+The dangerous case is the opposite:
 
 ```text
 Skill A owns the first half.
 Skill B owns the second half.
-Neither owns a useful complete outcome from the user's current state.
+Neither owns the transition or complete local outcome.
 ```
 
-When forced to choose, prefer **overlap with clear centers of gravity** over **clean-looking separation with uncovered space**.
+That gap forces users or agents to reconstruct hidden workflow logic.
 
-A merge/delete signal is stronger when two skills have the same natural inputs, same owned outcome, and same completion condition.
+When forced to choose, prefer **overlap with clear ownership** over **clean-looking separation with uncovered space**.
 
 ---
 
-## 6. No hidden predecessor contracts
+## No hidden predecessor contracts
 
 A skill should not require another skill to have run merely to manufacture suite-specific state.
 
-Legitimate prerequisites are intrinsic to the work:
+A prerequisite is legitimate when it is intrinsic to the work:
 
 - review needs something to review;
 - implementation needs enough intent to implement;
-- diagnosis needs an observable symptom or failure;
-- decomposition needs a sufficiently concrete body of work.
+- a bug investigation needs an observable failure or symptom;
+- ticket decomposition needs a sufficiently concrete body of work.
 
-Suspicious prerequisites exist only because of the suite:
+A prerequisite is suspect when it exists only because of the suite:
 
-- a work-item role must have been persisted first;
-- another skill must have written a canonical result block;
-- a lifecycle field must be at the right stage;
-- a reconciliation pass must run before an otherwise valid capability may start.
+- a specific work-item role must have been persisted first;
+- a previous skill must have written a canonical result block;
+- a lifecycle field must say the item is at the right stage;
+- a reconciliation pass must run before another otherwise-valid capability can start.
 
 Skills should consume reality, not proof that another skill previously ran.
 
 ---
 
-## 7. Prefer real sources of truth
+## Prefer real sources of truth
 
-Do not create a second database about the work unless the extra state represents genuinely new information with no natural home elsewhere.
+Do not create a second database about the state of the work unless the new state represents information that has no natural home elsewhere.
 
-Prefer:
+Prefer existing durable evidence:
 
-- code and tests for behavior;
+- code and tests for implemented behavior;
 - commits and branches for code history;
 - issues for requested work and discussion;
 - PRs/MRs for proposed delivery and review;
 - CI for automated verification;
-- ADRs/domain docs for durable design knowledge;
-- explicit specs, research notes, or prototypes when the artifact itself is the useful output.
+- ADRs and domain docs for durable design knowledge;
+- explicit research/spec/prototype artifacts when the artifact itself is the useful output.
 
-Be suspicious of:
+Be suspicious of suite-specific mirrors such as:
 
-- canonical implementation-result records duplicating commit/PR/test state;
-- reconciliation records duplicating whether requirements are satisfied;
+- canonical implementation result records duplicating commit/PR/test state;
+- canonical reconciliation records duplicating whether requirements are satisfied;
 - claim/suspend/awaiting-delivery state layered over tracker state;
-- roles whose main purpose is deciding which skill may run next.
+- roles whose main purpose is to authorize which skill may run next.
 
-If state is needed only to make the workflow protocol work, remove the protocol before formalizing the state.
-
----
-
-## 8. Composition rules
-
-1. **Direct entry:** any skill should be directly usable when its natural inputs exist.
-2. **Local completion:** a skill owns its result; another skill is not required merely to finish its job.
-3. **Advisory neighbors:** a skill may suggest another capability but does not own the next step.
-4. **Optional context stays optional:** richer context may improve results without becoming a setup gate unless intrinsically necessary.
-5. **Integrations are adapters:** GitHub, GitLab, local Markdown, Jira, Linear, etc. should expose only the operations a local capability actually needs.
-6. **Techniques stay internal:** testing styles, refactoring techniques, interviewing styles, and similar methods should normally be guidance used by capabilities rather than workflow nodes.
-7. **Real human gates only:** ask for human decisions where a real product, architecture, publication, destructive, or authorization choice exists—not because the suite crossed a phase boundary.
+If state is necessary only to make the workflow protocol work, remove the protocol before formalizing the state.
 
 ---
 
-## 9. Protocol smells to remove
+## Composition rules
 
-Treat these as warnings during the refactor:
+### 1. Any skill should be directly enterable when its natural inputs exist
+
+The user should not have to reconstruct the route that would normally have led there.
+
+### 2. Skills may suggest neighbors, but do not own the next step
+
+Suggestions are advisory and should explain why the neighboring capability may help.
+
+### 3. Supporting composition must remain local
+
+A skill may use another model-invoked capability or shared reference when it is genuinely part of completing its own local outcome. This should not silently expand into ownership of a project-wide lifecycle.
+
+### 4. Optional context must stay optional
+
+A spec can improve review; it should not make review impossible when no spec exists. Domain docs can improve naming; their absence should not invent a setup gate unless the capability truly cannot operate without them.
+
+### 5. Integrations are adapters, not the domain model
+
+GitHub, GitLab, local Markdown, Jira, Linear, or another tracker may be useful persistence surfaces. The project skills should not inherit a large common tracker protocol merely to keep the suite internally consistent.
+
+A skill should ask only for the external operations its own capability actually needs.
+
+---
+
+## Protocol smells to remove
+
+During the refactor, treat the following as warning signs:
 
 - a named "main flow" that most work is expected to follow;
 - "after this, invoke X" as a correctness requirement;
-- correctness depending on a previous skill's private output format;
+- skill correctness depending on the previous skill's private output format;
 - suite-wide lifecycle enums;
-- claim/release/suspend machinery used mainly for agent coordination;
-- canonical result blocks duplicating Git/tracker/CI evidence;
+- claim/release/suspend protocols used primarily for agent coordination;
+- canonical result blocks whose information already exists in Git/tracker/CI;
 - a reconciliation phase required to decide whether completed work counts;
-- setup configuring operations unrelated to the capability being used;
-- work-item roles used mainly for routing between skills;
-- a standalone skill whose real distinction is only a preferred method or ordering;
-- recovery logic whose main job is resuming the suite's own state machine.
+- setup that configures operations unrelated to the capability currently being used;
+- work-item roles whose main purpose is routing between skills;
+- duplicated explanations of the same cross-skill invariant in several `SKILL.md` files;
+- recovery logic whose only job is to resume the suite's own state machine.
 
-Not every occurrence is automatically wrong, but each must justify why it belongs to a local capability.
+Not every occurrence is automatically wrong, but each one must justify why it belongs to the local capability rather than to an unnecessary global workflow.
 
 ---
 
-## 10. Design tests
+## Design tests for a skill
+
+Use these tests while rewriting individual skills.
+
+### Existence test
+
+Does this thing produce an independently valuable result, or is it primarily a method, reference, wrapper, router, or protocol mechanism?
 
 ### Direct-entry test
 
-Can the skill start from natural real-world inputs without running a preparatory suite skill?
+Given a natural task and enough real-world context, can the user invoke this skill directly without first running a preparatory suite skill?
 
 ### Reorder test
 
-Does it still make sense if neighboring capabilities happen in a different order?
+If neighboring capabilities happen in a different order, does this skill still make sense?
 
 ### Deletion test
 
-If an adjacent skill disappeared, would this skill still complete the outcome it claims to own?
+If an adjacent skill disappeared from the suite, would this skill still complete the outcome it claims to own?
+
+If not, the boundary is probably a workflow stage rather than a capability.
 
 ### Completion test
 
-Can we say in one or two sentences when the local job is done?
-
-### Method-vs-capability test
-
-Does the skill own an independently useful result, or does it mainly prescribe how another capability should work?
-
-If the latter, prefer reference guidance or inline instructions over a standalone skill.
+Can we state clearly, in one or two sentences, when this skill's local job is done?
 
 ### Source-of-truth test
 
-Is the skill reading/writing the natural durable source, or maintaining a second representation solely for workflow coordination?
+Is the skill reading and writing the most natural durable source, or maintaining a second representation solely for agent coordination?
+
+### Absorption test
+
+If this skill were folded into its nearest neighboring capability as optional guidance, what meaningful user-facing capability would be lost?
+
+If the answer is “none,” it probably should not remain independently invokable.
 
 ### Coverage test
 
-Across representative tasks, is there at least one skill that can own a useful outcome from the user's actual starting state?
+Across representative real tasks, is there always at least one skill that can own a useful outcome from the state the user actually has?
 
 ### Overlap test
 
-Where skills overlap, can we explain the difference in their primary outcomes without forbidding useful adjacent work?
+Where two skills overlap, is the difference in their primary outcome understandable without forbidding either skill from doing useful adjacent work?
 
 ### Small-task test
 
-Can a small task use one capability directly without paying setup/protocol costs designed for large projects?
+Can a small task use one capability directly, without paying the setup and protocol cost designed for a large project?
 
 ---
 
-## 11. Scenario matrix
+## Suite-level review method
 
-Validate the suite against real tasks rather than a canonical flow. At minimum:
+Before finalizing the refactor, test the skill set against a scenario matrix rather than against a canonical flow.
+
+Representative scenarios should include at least:
 
 - "This flaky test fails sometimes. Find out why."
 - "I know exactly what to change; implement this small request."
@@ -319,148 +377,139 @@ Validate the suite against real tasks rather than a canonical flow. At minimum:
 - "Turn this conversation into a durable spec."
 - "Break this body of work into independently useful slices."
 - "I need to see whether this UI/state model works before deciding."
-- "Review this PR against intended behavior."
+- "Review this PR against the intended behavior."
 - "Improve this awkward module without changing behavior."
 - "Research these two libraries and leave me evidence."
 - "I am halfway through a task and need to hand it to another agent."
-- "I have an existing external issue; help me act on it."
+- "I have an existing issue from outside this suite; help me act on it."
 - "I do not know which capability fits this situation."
 
 For each scenario, record:
 
 1. which skills can accept it directly;
-2. which skill(s) own a useful local outcome;
-3. whether any transition exists only because of suite protocol;
-4. whether overlap is confusing;
-5. whether a common task falls into an uncovered gap.
+2. which skill(s) clearly own a useful local outcome;
+3. whether any required transition exists only because of suite protocol;
+4. whether two or more skills overlap in a confusing way;
+5. whether any common task falls into an uncovered gap.
 
-Fix gaps before optimizing overlap away.
+Coverage gaps should be fixed before overlap is optimized away.
 
 ---
 
-## 12. Tentative capability map (not a sequence)
+## Tentative capability map (not a sequence)
 
-This table is only for checking coverage. Rows imply no order and do not commit us to preserving every current skill.
+The current consolidation audit suggests a much smaller shape than the existing directory structure. One plausible target is:
 
-| Capability area | Existing skills that may cover it |
+| Capability area | Possible surviving capability |
 | --- | --- |
-| Clarify / challenge intent | `grill-with-docs`, `grilling` |
-| Navigate available capabilities | `ask-matt` |
-| Research external facts | `research` |
-| Explore with runnable evidence | `prototype`, `diagnosing-bugs` |
-| Model domain language | `domain-modeling` |
-| Design code boundaries | `codebase-design` |
-| Produce a durable specification | `to-spec` |
-| Decompose work | `to-tickets` |
-| Implement behavior and verify the change | `implement` |
-| Diagnose failures | `diagnosing-bugs` |
-| Improve existing structure | `improve-codebase-architecture` |
-| Review changes | `code-review` |
-| Transfer context | `handoff` |
-| Configure optional integrations | `setup-matt-pocock-skills` |
-| Large ambiguous decision spaces | `wayfinder` |
+| Make design/architecture decisions | `design` (potentially absorbing domain modeling, codebase design, architecture improvement, and design grilling) |
+| Resolve technical uncertainty with evidence | `investigate` or a smaller `diagnosing-bugs` + `research` pair |
+| Learn through a cheap concrete artifact | `prototype` |
+| Make code changes | `implement` |
+| Evaluate code/behavior | `review` |
+| Produce a durable specification | `specify` / `to-spec` |
+| Decompose concrete work | `decompose` / `to-tickets` |
+| Assess raw incoming tracker work | `triage` |
+| Transfer continuation context | `handoff` (possibly global rather than project-level) |
 
-`tdd` is intentionally absent: test-driven development is treated as an optional implementation technique, not a project capability.
+This is a coverage map, not a commitment to names or an ordering. It is intentionally about half the current project-skill count.
+
+The audit currently favors removing or absorbing `tdd`, `reconcile`, `grill-with-docs`, `ask-matt`, most of `setup-matt-pocock-skills`, `codebase-design` as an invokable node, and the current workflow form of `wayfinder`.
 
 ---
 
-## 13. Settled design decisions
+## Open questions for the implementation discussion
 
-These are part of the direction unless later evidence changes them.
+The design direction above is intentional; these details are not settled yet.
 
-### Manual choice stays
+### 1. Do `research` and `diagnosing-bugs` converge into `investigate`?
 
-Users should remain free to explicitly choose capabilities. Simplifying workflow protocol does not mean introducing an automatic orchestrator.
+Both produce evidence-backed answers under uncertainty. Debugging may still be common and specialized enough to deserve a dedicated entry. Decide based on scenario coverage and discoverability, not on preserving names.
 
-### Coverage is more important than non-overlap
+### 2. Does design become one capability?
 
-Prefer a modest amount of understandable overlap over common tasks falling between skill boundaries.
+`domain-modeling`, `codebase-design`, `improve-codebase-architecture`, and `grill-with-docs` heavily overlap around making better design decisions. A likely direction is one user-facing design/architecture capability backed by reusable references for domain language, ADRs, deep modules, seams, design-it-twice, and grilling technique.
 
-### TDD should not remain a standalone project skill
+The unresolved question is whether there are actually two distinct user-facing outcomes in this cluster that deserve separate capabilities.
 
-Testing is part of implementation/diagnosis/review as appropriate. Test-first is one possible method, not the suite's required development sequence.
+### 3. How broad should `review` be?
 
-### Do not replace the current protocol with a centralized protocol
+The current `code-review` is diff-oriented. If `reconcile` disappears, review may also need to answer “does the current implementation satisfy this request/spec?” even without a fresh diff.
 
-The target is deletion of unnecessary lifecycle machinery, not moving it into a schema or shared workflow engine.
+### 4. Does `triage` remain project-level?
 
----
+Raw incoming work needs assessment, but the current suite-wide state machine should disappear. Decide whether a lightweight tracker-intake capability still adds enough value beyond normal issue handling.
 
-## 14. Open questions for implementation discussion
+### 5. Is `handoff` project-specific?
 
-### What should `ask-matt` become?
+The output is a portable continuation artifact, which may belong under global/meta utilities rather than project engineering.
 
-The current router teaches a main flow. A capability-oriented version could instead present plausible capabilities for the user's current state and explain their different outcomes without defining a normal lifecycle.
+### 6. Does any standalone capability survive from `wayfinder`?
 
-### How broad should `implement` be?
+The current skill coordinates a decision-map workflow, multiple ticket types, claims, frontiers, research/prototype/grilling, and tracker state. Preserve an explicit “map this decision space” capability only if that artifact is independently valuable after orchestration is removed.
 
-It clearly owns implementation plus appropriate verification, but details remain open: how much local diagnosis, refactoring, documentation, or review should it perform before those become better handled as separately chosen capabilities?
+### 7. What shared setup survives?
 
-The answer should maximize local completeness without turning `implement` into an all-purpose agent.
+Do not design a replacement setup contract up front. Rewrite capabilities first; then identify any configuration that is genuinely shared and cannot be discovered lazily.
 
-### Does `reconcile` survive at all?
+### 8. Which persistence is intrinsic?
 
-Much of its current purpose appears coupled to lifecycle machinery. Remove that machinery first, then see whether any independently useful capability remains. Do not preserve it by default.
-
-### How small should `setup-matt-pocock-skills` become?
-
-Setup should configure only genuinely shared optional integrations or documentation conventions. Determine those needs from rewritten local capabilities rather than designing a suite-wide tracker contract up front.
-
-### What persistence should be default versus optional?
-
-Some capabilities naturally produce durable artifacts (`to-spec`, research notes, ADRs). Others may not need persistence. Decide capability by capability whether persistence is the product, useful evidence, or historical workflow machinery.
-
-### Which human confirmation gates are intrinsic?
-
-Keep gates for real decisions or authority boundaries. Remove gates that only mark transitions between artificial stages.
-
-### How much overlap is too much?
-
-Overlap is healthy until two skills have effectively the same inputs, outcome, and completion condition. That is a stronger merge/delete signal than superficial similarity.
-
-### Is `wayfinder` one capability or a workflow bundle?
-
-Determine whether "map and resolve a large ambiguous decision space" is a coherent local outcome or whether the current skill bundles multiple capabilities.
-
-### Where should optional concurrent-agent coordination live?
-
-Claiming/blocking can be useful for genuine concurrent execution, but it should not be mandatory `implement` semantics. Decide whether this belongs in a separate optional capability/integration.
+A spec is durable because the artifact is the point. A research note may or may not need persistence. A prototype may be disposable. Decide persistence per capability rather than globally.
 
 ---
 
-## 15. Migration constraint
+## Migration constraint
 
-Optimize for simplification, not preservation of current behavior.
+The implementation refactor should optimize for simplification, not preservation of the current protocol or directory structure.
 
-Do not ask:
+Do not ask, "How do we reproduce every current lifecycle behavior in the new design?"
 
-> How do we reproduce every current lifecycle behavior in the new design?
+Ask instead:
 
-Ask:
-
-1. What useful local capability exists here?
+1. What local capability is actually useful here?
 2. What natural inputs does it need?
 3. What outcome does it own?
-4. What real source of truth already represents surrounding state?
-5. Is this a capability or merely a method?
-6. Which rules disappear once no canonical sequence is assumed?
+4. What real source of truth already represents the surrounding state?
+5. Which current rules disappear once no canonical sequence is assumed?
+6. Does this behavior need an independently invokable skill at all?
 
-Deleting skills, protocol, setup, persisted metadata, and cross-skill instructions is an expected outcome of this refactor.
+When removing a skill, classify its contents rather than moving the whole file:
+
+- capability behavior -> absorb into the capability that owns the outcome;
+- useful technique/reference -> retain as optional reference material;
+- integration detail -> keep only near the capability that needs it;
+- workflow sequencing -> delete;
+- suite lifecycle/protocol -> delete;
+- duplicated real-world state -> delete and read the real source instead.
+
+It is acceptable—and expected—for substantial instruction text, state, setup, and cross-skill instructions to be deleted rather than relocated.
 
 ---
 
 ## Target end state
 
+The suite should feel like this:
+
 ```text
-small, locally complete capabilities
+few, locally complete capabilities
 + broad natural inputs
 + clear completion conditions
 + intentional overlap
 + strong practical coverage
++ optional methods/references underneath
 + manual user choice
-+ techniques selected locally
 + minimal shared state
 + no required canonical order
 ```
 
-The suite should feel like a toolbox, not a workflow runtime.
+Not this:
+
+```text
+many workflow stages
++ wrappers and routers
++ technique-as-skill
++ transition rules
++ lifecycle metadata
++ mandatory setup
++ recovery protocol
+```
