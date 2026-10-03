@@ -2,32 +2,35 @@
 
 Backends represent this model; they do not redefine it.
 
-## Classification
+## Membership and validity
 
-Only issues with explicit tracker state participate in the tracker. Repository-native issues or other external material may remain untracked until a workflow adopts or triages them.
+Each backend defines tracker membership. Membership and validity are separate: malformed or incomplete tracked work remains tracked but invalid until repaired or removed.
 
-- `Kind` — optional repository-defined issue category such as bug, feature, docs, or another project taxonomy value. The tracker does not prescribe a universal Kind vocabulary.
-- `Type` — workflow semantics: `investigation` (resolve uncertainty), `change` (change observable state), or unset while the work is not yet classified.
+Issue origin is not tracker state. Uncontrolled/native issues may remain outside the tracker unless a workflow adopts them.
 
-Issue origin is not a tracker classification. External and internal input use the same tracked-work model. Do not copy or rewrite a source into a separate tracker issue solely to represent an intake boundary; when durable provenance exists, record it in `Sources`.
+## Work
 
-## Status and content
+Every valid tracked issue has one immutable `Type`:
 
-Status is explicit tracker state; backend open/closed state does not define it.
+- `investigation` — resolve uncertainty;
+- `change` — change observable state.
 
-- `needs-triage` — the issue has entered the tracker but still needs normalization or classification.
-- `ready` — the issue is actionable now. `Type` is required.
-- `waiting` — continuation depends on an external event or decision.
-- `done` — no further tracker action is required for this issue.
+Do not change `Type`. When a completed investigation implies implementation work, finish it and create a new `change` with the investigation in `Sources`.
 
-Whenever `Type` is set, the issue has an issue-specific, checkable completion condition. A `waiting` issue records both `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming actionable again).
+Every valid tracked issue has one `Status`:
+
+- `ready` — actionable now;
+- `waiting` — continuation depends on an external event or decision;
+- `done` — no further tracker action is required.
+
+Every tracked issue has an issue-specific, checkable completion condition. A `waiting` issue also records `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming actionable again).
 
 Skills may add sections they own, but must preserve unrelated content.
 
 ## Relations
 
-- `Sources` is required direct provenance for every tracked issue. It may reference tracked issues or durable external/native sources, and referencing a source does not make that source a tracked issue. `Sources` must not self-reference and does not imply hierarchy or dependency. Empty provenance is explicit.
-- `Parent` is optional decomposition between typed tracked issues. Each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent.
-- `BlockedBy` is a scheduling dependency between typed tracked issues. Self-reference and cycles are forbidden.
+- `Sources` is required direct provenance. It may reference tracked issues or durable external/native sources; referencing a source does not make it tracked. `Sources` must not self-reference and does not imply hierarchy or dependency. Empty provenance is explicit.
+- `Parent` is optional decomposition. Each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent.
+- `BlockedBy` is a scheduling dependency. Self-reference and cycles are forbidden.
 
-Execution coordination (assignment, claiming, concurrency, ownership, frontier selection, orchestration), migration/versioning, delivery policy, source-specific ingestion, and issue-template UX are outside the tracker model.
+Repository taxonomy, source-specific ingestion and triage, execution coordination, migration/versioning, delivery policy, and issue-template UX are outside the tracker model.
