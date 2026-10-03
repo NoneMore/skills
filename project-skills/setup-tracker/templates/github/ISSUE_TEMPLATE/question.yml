@@ -2,6 +2,7 @@ name: Question or support request
 description: Ask for help or clarification about using the project.
 title: ""
 labels:
+  - "tracker:kind:intake"
   - "tracker:status:needs-triage"
 body:
   - type: textarea
