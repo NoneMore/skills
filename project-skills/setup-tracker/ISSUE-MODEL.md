@@ -36,4 +36,4 @@ Skills may add sections they own, but must preserve unrelated content.
 - `Parent` is optional decomposition between tracked issues. Each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent.
 - `BlockedBy` is a scheduling dependency between tracked issues. Self-reference and cycles are forbidden. A `ready` issue with any unresolved blocker is blocked and not actionable; blocking is derived from `BlockedBy` and does not change the issue's `Status`. A blocker is resolved for scheduling only when its completion condition is satisfied, normally represented by `done`; `cancelled` does not by itself satisfy dependents.
 
-Repository taxonomy, source-specific ingestion and triage, execution coordination, migration/versioning, delivery policy, and issue-template UX are outside the tracker model.
+Repository taxonomy, source-specific ingestion and triage, execution coordination, migration, delivery policy, and issue-template UX are outside the tracker model. Contract versioning and upgrade gating belong to setup; migrations themselves remain outside the tracker model.
