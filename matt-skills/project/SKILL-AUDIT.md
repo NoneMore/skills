@@ -114,7 +114,7 @@ The audit below is deliberately biased toward deletion and absorption. The burde
 | --- | --- | --- |
 | `implement` | **Keep, rewrite heavily** | Clear independent outcome: make a requested code change work and verify it. Remove lifecycle, mandatory TDD, mandatory review, canonical result records, and tracker orchestration. |
 | `diagnosing-bugs` | **Keep, shrink** | Evidence-backed diagnosis is a real independent capability. Keep the feedback-loop discipline, but remove ritual that is not necessary for every investigation. Allow overlap with implementation when a repair is obvious/useful. |
-| `code-review` | **Keep, shrink** | Independent read-only evaluation of a diff/PR is a clear capability. Spec conformance can absorb the useful part of `reconcile`. Tracker setup should not be a prerequisite. |
+| `code-review` | **Keep, shrink** | Independent evaluation of code/behavior is a clear capability. Spec conformance can absorb the useful part of `reconcile`. Tracker setup should not be a prerequisite. |
 | `prototype` | **Keep, broaden and shrink** | “Build a cheap concrete artifact to answer a question” is independently useful. Current logic/UI branching and capture protocol are too prescriptive for the core skill. |
 | `research` | **Keep or merge into investigation** | Evidence-backed external/source research is useful, but background-agent execution and mandatory Markdown persistence are implementation choices. Re-evaluate whether it is distinct enough from a broader `investigate` capability. |
 | `to-spec` | **Keep, rewrite heavily** | Producing a durable specification from sufficiently settled material is a clear transformation. Remove tracker lifecycle, mandatory roles, testing doctrine, and prescribed next step. |
@@ -291,6 +291,8 @@ handoff         # package continuation context (possibly global, not project)
 That is about half the current count without intentionally creating a coverage gap.
 
 It is not important that the final number is nine. It is important that every remaining skill has a strong reason to exist independently.
+
+A still more aggressive result may collapse `research` into `investigate`, move `handoff` out of project skills, and drop `triage` if ordinary tracker handling covers the same need. The target should emerge from scenario coverage, not from a quota.
 
 ---
 
