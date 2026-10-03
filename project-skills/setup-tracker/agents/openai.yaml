@@ -1,5 +1,5 @@
 interface:
   display_name: "Setup Tracker"
-  short_description: "Configure the GitHub-first tracker prototype"
+  short_description: "Configure the repository's intended tracker backend"
 policy:
   allow_implicit_invocation: false
