@@ -12,7 +12,7 @@ A valid tracked issue has this header:
 # <title>
 
 Type: <investigation|change>
-Status: <ready|waiting|done>
+Status: <ready|waiting|done|cancelled>
 Sources: <ID, URL, reference|None>
 Parent: <ID|None>
 Blocked-By: <ID, ID|None>
