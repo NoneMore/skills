@@ -17,7 +17,11 @@ Setup requires GitHub Issues and label read/write access. Native sub-issue or de
 | Parent | native sub-issue relation |
 | BlockedBy | native issue dependency |
 
-Canonical status labels are `tracker:status:needs-triage`, `tracker:status:ready`, `tracker:status:waiting`, and `tracker:status:done`.
+Canonical tracker labels are:
+
+- `tracker:kind:intake`, `tracker:kind:managed`
+- `tracker:type:investigation`, `tracker:type:change`
+- `tracker:status:needs-triage`, `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`
 
 An issue without a tracker kind label is outside the tracker. Ordinary repository labels remain independent. GitHub open/closed state may mirror status for usability but is not canonical tracker state.
 
@@ -32,7 +36,7 @@ Sources: <#101, #117|None>
 <checkable condition>
 ```
 
-When waiting, also include:
+Any tracked issue with status `waiting` also contains:
 
 ```markdown
 ## Waiting
