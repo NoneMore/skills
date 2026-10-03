@@ -1,6 +1,6 @@
 # Local Markdown backend
 
-Local Markdown representation for the tracker. `ISSUE-MODEL.md` owns semantics.
+Local Markdown representation for the tracker. The issue model owns semantics.
 
 ## Storage
 
@@ -69,6 +69,6 @@ Additional workflow-owned sections are allowed. Preserve unrelated header fields
 
 ## Relations
 
-Before changing `Parent` or `Blocked-By`, verify the semantic endpoint and cycle rules from `ISSUE-MODEL.md`. `Sources` may reference intake or managed work but must reference existing tracked issues and must not self-reference.
+Before changing `Parent` or `Blocked-By`, verify the endpoint and cycle rules in the issue model. `Sources` may reference intake or managed work but must reference existing tracked issues and must not self-reference.
 
 Assignment, claiming, and execution ownership are intentionally not part of this file format.
