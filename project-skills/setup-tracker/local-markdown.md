@@ -1,10 +1,8 @@
 # Local Markdown backend
 
-Local Markdown representation for the issue model.
-
 ## Storage
 
-Store tracked issues as `.tracker/issues/<ID>.md` using positive integer IDs. New issues normally use one greater than the greatest existing ID. Never overwrite an existing issue file; on collision choose another unused ID.
+Store tracked issues as `.tracker/issues/<ID>.md` using positive integer IDs. New issues normally use one greater than the greatest existing ID; on collision choose another unused ID.
 
 ## Header
 
@@ -20,11 +18,11 @@ Blocked-By: <ID, ID|None>
 Reporter: <actor|Unknown|None>
 ```
 
-`intake` requires `Type: None`; `managed` requires one managed-work type. Every tracked issue stores one allowed status and explicit `Sources` (`None` when empty). `Reporter` is the original intake reporter when known, `Unknown` when an intake reporter cannot be established, and `None` for managed work.
+`intake` uses `Type: None`; `managed` uses one managed-work type. `Reporter` is the original intake reporter when known, `Unknown` when it cannot be established, and `None` for managed work.
 
 ## Body
 
-Preserve intake wording/evidence and discussion, for example under `## Intake` and `## Discussion`.
+Preserve intake wording, evidence, and discussion, for example under `## Intake` and `## Discussion`.
 
 Managed work contains:
 
@@ -33,16 +31,10 @@ Managed work contains:
 <checkable condition>
 ```
 
-Any tracked issue with status `waiting` also contains:
+A `waiting` issue also contains:
 
 ```markdown
 ## Waiting
 Waiting for: <event or decision>
 Resume when: <checkable condition>
 ```
-
-Preserve unrelated header fields and body sections when updating an issue.
-
-Before changing `Parent` or `Blocked-By`, enforce the issue model's endpoint and cycle rules. `Sources` may reference existing intake or managed work but must not self-reference.
-
-Assignment, claiming, and execution ownership are not part of this format.
