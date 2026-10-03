@@ -26,15 +26,19 @@ Otherwise, when exactly one GitHub repository matches the workspace, GitHub is t
 
 For an intended GitHub backend, verify that Issues are enabled and that the available GitHub tooling/API, taken together, can read and write:
 
-- issues, labels, and assignees;
+- issues and labels;
+- assignees, including checking whether a concrete GitHub login is assignable;
 - native sub-issues;
-- native issue dependencies.
+- native issue dependencies;
+- complete tracker-wide and relation result sets, including pagination to exhaustion when the underlying API is paginated.
 
-Use any available GitHub API or tool surface that can satisfy these operations; do not treat the absence of one convenience command as backend failure. If any required GitHub capability still cannot be performed, stop and report the exact missing capability. Do not fall back to Local Markdown and do not create textual GitHub fallbacks for hierarchy or dependencies.
+Use any available GitHub API or tool surface that can satisfy those operations; do not treat the absence of one convenience command as backend failure. If any required GitHub capability still cannot be performed, stop and report the exact missing capability. A tool that exposes only a truncated first page without a way to continue is insufficient for checks that require the complete set. Do not fall back to Local Markdown and do not create textual GitHub fallbacks for hierarchy or dependencies.
 
 ### 2. Inspect existing state and enforce the setup boundary
 
-For GitHub, record the exact `owner/repo`, inspect existing labels and `.github/ISSUE_TEMPLATE/` when present, inspect `docs/agents/issues.md`, and inspect issues carrying any canonical `tracker:kind:*`, `tracker:type:*`, or `tracker:status:*` label. Then run every check in the backend document's `Setup-only checks and mutations` section before making any tracker mutation.
+For GitHub, record the exact `owner/repo`, inspect existing labels and `.github/ISSUE_TEMPLATE/` when present, inspect `docs/agents/issues.md`, and inspect issues carrying any canonical `tracker:kind:*`, `tracker:type:*`, or `tracker:status:*` label. Exhaust every result page needed to establish whether tracker-shaped issues already exist and to validate relation graphs. Then run every check in the backend document's `Setup-only checks and mutations` section before making any tracker mutation.
+
+A canonical tracker label that already exists but is archived or otherwise unusable is a setup conflict, not a missing label. Stop before mutation rather than unarchiving, renaming, replacing, or repairing it.
 
 Ordinary existing GitHub issues with no canonical tracker labels are outside this tracker. Preserve them and do not classify, validate, close, relabel, or otherwise adopt them.
 
@@ -44,7 +48,7 @@ Any failed setup-only check stops setup before tracker mutation. Migration, take
 
 ### 3. Configure the backend
 
-Do not write `docs/agents/issues.md` yet. That file is the final publication/commit marker for successful setup.
+Do not write `docs/agents/issues.md` yet. That file is the final publication/commit marker for successful tracker configuration.
 
 For GitHub:
 
@@ -55,7 +59,7 @@ For GitHub:
 
 The shipped forms are intake UX only. They explicitly classify created issues as intake and apply `tracker:status:needs-triage`. Do not expose `investigation` or `change` as public issue-template choices; managed work is created by internal workflows against the tracker contract.
 
-A blank GitHub issue remains unclassified and outside the tracker until a downstream triage or intake workflow explicitly classifies it. Setup never adopts it.
+A blank GitHub issue remains unclassified and outside the tracker until a downstream triage or intake workflow classifies it under the persisted intake-cutover rule. Setup never adopts historical unclassified issues.
 
 For Local Markdown, perform the mutation in the backend document's `Setup-only checks and mutations` section after all preflight checks pass.
 
@@ -63,17 +67,17 @@ For Local Markdown, perform the mutation in the backend document's `Setup-only c
 
 For GitHub, verify:
 
-- every required GitHub capability remains usable;
-- canonical tracker kind, type, and status labels are available;
+- every required GitHub capability remains usable, including complete enumeration for global checks and assignability checks for claims;
+- canonical tracker kind, type, and status labels are available, usable, and not archived;
 - unrelated labels were not removed or renamed;
-- when a compatible current contract already existed, every tracked issue still satisfies the backend invariants;
+- when a compatible current contract already existed, every tracked issue still satisfies the backend invariants, using complete pagination for issue and relation enumeration;
 - ordinary unclassified existing issues remain untouched;
 - common external intake has a usable form or blank-issue path;
 - shipped forms apply both `tracker:kind:intake` and `tracker:status:needs-triage`;
-- blank issues are enabled and remain unclassified until explicitly adopted by a downstream workflow;
+- blank issues are enabled and remain unclassified until explicitly adopted by a downstream workflow under the contract cutover;
 - no public issue template asks reporters to choose managed-work type or internal tracker state.
 
-For Local Markdown, verify the issue root exists. When a compatible current contract already existed, verify every tracked issue file still satisfies the required header, body, relation, waiting, and claim invariants.
+For Local Markdown, verify the issue root exists. When a compatible current contract already existed, verify every tracked issue file still satisfies the required filename, header, body, relation, waiting, terminal-status, and claim invariants.
 
 If backend verification fails, stop without publishing a repository contract.
 
@@ -81,7 +85,7 @@ If backend verification fails, stop without publishing a repository contract.
 
 Only publish `docs/agents/issues.md` after backend configuration and verification succeed. If no compatible contract exists, create it now. If an exact compatible contract already exists, preserve it unchanged rather than rewriting it on every setup run.
 
-For a new contract, start with backend identity:
+For a new GitHub contract, immediately before writing `docs/agents/issues.md`, determine the greatest existing repository issue or pull-request number from a reliable complete query; use `0` when neither exists. Record that immutable value as the intake cutover. Do not recompute or advance it on later compatible setup runs.
 
 For GitHub:
 
@@ -91,6 +95,7 @@ Model: tracker
 Contract-Version: 1
 Backend: github
 Repository: <owner>/<repo>
+Intake-Cutover-Number: <highest existing issue-or-PR number|0>
 ```
 
 For Local Markdown:
@@ -112,9 +117,9 @@ Do not copy the marker lines themselves. Do not paraphrase, summarize, reorder, 
 
 Do not copy backend-selection, capability-detection, setup-only checks/mutations, or any other text outside the marked contract regions. The generated `docs/agents/issues.md` must not contain references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path.
 
-The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker from repository contents alone.
+The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker, including the GitHub intake boundary, from repository contents alone.
 
-If a compatible `docs/agents/issues.md` already exists, re-running setup must not silently rewrite normative text. If its `Contract-Version: 1` normative text differs from the current version-1 source, stop and require migration or repair.
+If a compatible `docs/agents/issues.md` already exists, re-running setup must preserve its backend identity values, including `Intake-Cutover-Number` for GitHub, and must not silently rewrite normative text. If its `Contract-Version: 1` normative text differs from the current version-1 source, stop and require migration or repair.
 
 After the contract exists, if the active harness exposes a project instruction artifact, add or update one short issue-tracker pointer to `docs/agents/issues.md`. Do not copy the contract into project instructions.
 
@@ -124,16 +129,20 @@ Re-read `docs/agents/issues.md` and verify:
 
 - `Model: tracker` and `Contract-Version: 1` are exact;
 - the selected backend identity is exact;
+- for GitHub, `Intake-Cutover-Number` is a non-negative integer, is unchanged on compatible reruns, and the runtime contract defines the eligibility rule for unclassified issues above versus at/below that boundary;
 - the semantic contract region exactly matches the marked semantic source text;
 - the runtime contract region exactly matches the marked selected-backend source text;
 - setup-only text and contract markers are absent;
 - tracked issues require explicit kind and explicit lifecycle status;
-- unclassified repository issues are explicitly outside the tracker and setup does not adopt them;
+- terminal lifecycle states cannot return to a different status through ordinary operations;
+- unclassified repository issues are explicitly outside the tracker and setup does not adopt historical ones;
 - executable frontier is defined once, in the semantic portion;
 - managed work requires a checkable completion condition;
 - waiting managed work requires `Waiting for` and `Resume when` content;
 - hierarchy and dependency endpoint/cycle rules are present;
+- GitHub global invariant checks require complete enumeration rather than a first-page result;
 - managed-work assignee is defined as a single execution claim rather than long-lived ownership;
+- for GitHub, claim acquisition requires a concrete assignable GitHub login;
 - same-issue top-level execution is non-concurrent and subagents do not independently claim it;
 - Skill-owned extension sections remain permitted;
 - no reference depends on a skill file or installation path.
