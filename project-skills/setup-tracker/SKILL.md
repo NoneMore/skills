@@ -70,7 +70,7 @@ Backend: local-markdown
 Issue root: .tracker/issues/
 ```
 
-Then append the complete issue model from `ISSUE-MODEL.md` and the complete selected backend representation. The resulting repository file must contain the rules themselves rather than links back to this Skill.
+Then append the complete contents of `ISSUE-MODEL.md` and the complete selected backend document. The generated file must contain those rules directly; it must not depend on resolving Skill-relative links at runtime.
 
 If the same backend is already configured by this Skill, refresh this generated contract without changing existing tracked issues.
 
