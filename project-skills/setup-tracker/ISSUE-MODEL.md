@@ -4,17 +4,22 @@ Authoritative semantics for the tracker. Backend documents define representation
 
 <!-- repository-contract:start -->
 
-## Intake and managed work
+## Tracked issues and classification
 
-An issue is either external intake or managed work.
+Only issues that a backend explicitly classifies as tracker issues participate in this contract. An unclassified repository issue is outside the tracker: do not infer tracker meaning from missing labels, missing fields, open/closed state, author, age, or historical usage.
 
-**External intake** is project input from outside the managed-work flow: reports, requests, support questions, or discussion. Keep it untyped and preserve the original reporter, wording, evidence, and discussion.
+Setup never classifies, adopts, or migrates pre-existing unclassified issues. Bringing existing work under this contract is a separate migration or takeover workflow.
 
-Triage may gather missing information and make a recommendation. A maintainer decides whether the project will act. Accepted work is represented by a separate managed issue that records the intake issue as a direct source.
+Every tracked issue has exactly one kind:
 
-**Managed work** is internally created work whose proposer has already decided what the project should own. It is created with exactly one type and an issue-specific completion condition. It does not pass through intake triage.
+- **intake** — project input from outside the managed-work flow: reports, requests, support questions, or discussion;
+- **managed** — internally created work whose proposer has already decided what the project should own.
 
-An issue with exactly one managed-work type is managed work. An issue without one is intake.
+External intake preserves the original reporter, wording, evidence, and discussion. Triage may gather missing information and make a recommendation. A maintainer decides whether the project will act. Accepted work is represented by a separate managed issue that records the intake issue as a direct source.
+
+Managed work is created with exactly one managed-work type and an issue-specific completion condition. It does not pass through intake triage.
+
+Kind is independent from type, status, sources, hierarchy, dependencies, and claim. Missing or contradictory classification metadata is invalid tracker state; never reinterpret it as another kind.
 
 ## Types
 
@@ -22,6 +27,8 @@ Exactly two managed-work types exist:
 
 - `investigation` — complete when a material uncertainty is resolved enough to stop investigating;
 - `change` — complete when an observable state has changed and the issue's completion condition is satisfied.
+
+Only managed work has a managed-work type, and it has exactly one. Intake has no managed-work type.
 
 Type describes the required outcome, not the method. Research, prototyping, discussion, experimentation, and code reading are methods.
 
@@ -33,19 +40,19 @@ Repository taxonomy such as bug, feature, docs, refactor, or security is indepen
 
 Every managed issue must state an issue-specific, checkable completion condition.
 
-The issue body should contain only context that helps define or execute the work. Do not duplicate tracker metadata such as type, status, sources, hierarchy, dependencies, or claim in the body when the backend has a canonical representation for those dimensions.
+The issue body should contain only context that helps define or execute the work. Do not duplicate tracker metadata such as kind, type, status, sources, hierarchy, dependencies, or claim in the body when the backend has a canonical representation for those dimensions.
 
 Skills that create or execute managed work may add structured sections for information they own. Examples include execution notes, implementation results, investigation conclusions, evidence, experiments, or handoff material.
 
 Skill-owned sections are extensions of the managed issue, not tracker dimensions. A skill may create and update the sections it owns, but must preserve unrelated sections and content owned by other skills. The tracker contract does not require every managed issue to contain every extension section.
 
-Extension sections must not redefine the issue's type, lifecycle status, provenance, hierarchy, dependencies, claim, or completion condition.
+Extension sections must not redefine the issue's kind, type, lifecycle status, provenance, hierarchy, dependencies, claim, or completion condition.
 
 ## Status
 
 Status is lifecycle only. Claiming and dependencies are separate dimensions.
 
-Every issue has exactly one semantic lifecycle status. A backend may derive a status when its representation makes that status unambiguous; otherwise it must store the status explicitly. Managed work must always store its status explicitly.
+Every tracked issue has exactly one explicit lifecycle status. Backends must store it explicitly; open/closed state or missing metadata must not be used to derive lifecycle status.
 
 Intake may use:
 
@@ -79,7 +86,7 @@ This waiting metadata is required managed-work content, not a tracker dimension.
 
 - Record direct sources only, not transitive sources.
 - Sources may be many-to-many or empty.
-- A source must reference an existing issue and must not reference the current issue itself.
+- A source must reference an existing tracked issue and must not reference the current issue itself.
 - Sources do not imply hierarchy or dependency.
 
 ## Hierarchy
@@ -105,6 +112,8 @@ Dependencies are independent from hierarchy and provenance.
 For managed work, assignee is the execution claim. It means "this actor is currently executing this issue", not long-lived ownership. Do not add another execution-state field.
 
 Managed work has at most one assignee. Intake assignees, when a backend permits them, are ordinary repository metadata and are not tracker claims.
+
+The execution model does not permit concurrent top-level execution of the same managed issue. A runtime must serialize attempts to execute the same issue. Subagents operate inside the claiming execution and do not acquire independent claims on that issue.
 
 A managed issue may be claimed only when it is `ready` and has no live blocker. Claim acquisition is coordination rather than a distributed lock: after acquiring a claim, re-read the issue and begin or continue consequential execution only while the current actor remains the sole assignee and the issue remains `ready` with no live blocker. If a conflicting claimant is observed, do not continue execution and release only the current actor's claim when possible.
 
