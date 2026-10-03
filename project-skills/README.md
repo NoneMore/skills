@@ -15,7 +15,9 @@ Managed work has exactly one of two types:
 - `investigation` — resolve uncertainty;
 - `change` — make observable state different.
 
-External intake remains separate from managed work so reporter identity, evidence, and discussion are preserved.
+Every managed issue has a checkable completion condition. Skills that create or execute managed work may add structured sections they own, such as execution notes, implementation results, conclusions, or evidence, while preserving unrelated sections.
+
+External intake remains separate from managed work so reporter identity, evidence, and discussion are preserved. GitHub setup can install intake-only forms for common entry points while keeping blank issues available; reporters never choose the internal managed-work type or lifecycle state.
 
 ## Non-goals
 
