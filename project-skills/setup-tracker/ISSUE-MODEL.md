@@ -23,14 +23,14 @@ Every valid tracked issue has one `Status`:
 - `waiting` — continuation depends on an external event or decision;
 - `done` — no further tracker action is required.
 
-Every tracked issue has an issue-specific, checkable completion condition. A `waiting` issue also records `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming actionable again).
+Every valid tracked issue has an issue-specific, checkable completion condition. A valid `waiting` issue also records `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming actionable again).
 
 Skills may add sections they own, but must preserve unrelated content.
 
 ## Relations
 
-- `Sources` is required direct provenance. It may reference tracked issues or durable external/native sources; referencing a source does not make it tracked. `Sources` must not self-reference and does not imply hierarchy or dependency. Empty provenance is explicit.
-- `Parent` is optional decomposition. Each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent.
-- `BlockedBy` is a scheduling dependency. Self-reference and cycles are forbidden.
+- `Sources` is required direct provenance for every valid tracked issue. It may reference tracked issues or durable external/native sources; referencing a source does not make it tracked. `Sources` must not self-reference and does not imply hierarchy or dependency. Empty provenance is explicit.
+- `Parent` is optional decomposition between tracked issues. Each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not complete the parent.
+- `BlockedBy` is a scheduling dependency between tracked issues. Self-reference and cycles are forbidden.
 
 Repository taxonomy, source-specific ingestion and triage, execution coordination, migration/versioning, delivery policy, and issue-template UX are outside the tracker model.
