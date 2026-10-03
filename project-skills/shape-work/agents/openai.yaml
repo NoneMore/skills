@@ -1,0 +1,5 @@
+interface:
+  display_name: "Shape Work"
+  short_description: "Shape engineering work without overreaching into investigation"
+policy:
+  allow_implicit_invocation: false
