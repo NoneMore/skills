@@ -8,7 +8,7 @@ Contract version: `2`.
 
 Each backend defines tracker membership. Membership and validity are separate: malformed or incomplete tracked work remains tracked but invalid until repaired or removed.
 
-Issue origin is not tracker state. Uncontrolled/native issues may remain outside the tracker unless a workflow adopts them.
+Issue origin is not tracker state. Uncontrolled/native issues remain outside the tracker; workflows may create tracked work with those issues recorded in `Sources`.
 
 ## Work
 
@@ -25,6 +25,8 @@ Every valid tracked issue has one `Status`:
 - `waiting` — continuation depends on an external event or decision;
 - `done` — the issue-specific completion condition has been satisfied;
 - `cancelled` — the work has been intentionally terminated without satisfying its completion condition.
+
+`done` and `cancelled` are terminal. Later project work is represented by a new tracked issue; when a terminal issue directly motivates that work, record it in `Sources`.
 
 Every valid tracked issue has an issue-specific, checkable completion condition. A valid `waiting` issue also records `Waiting for` (the external event or decision) and `Resume when` (a checkable condition for becoming ready again).
 
