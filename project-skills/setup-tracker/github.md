@@ -1,6 +1,6 @@
 # GitHub Issues backend
 
-GitHub representation for the tracker. `ISSUE-MODEL.md` owns semantics.
+GitHub representation for the tracker. The issue model owns semantics.
 
 ## Requirements
 
@@ -58,7 +58,7 @@ Setup never classifies existing unclassified issues. A downstream workflow may c
 
 ## Relations
 
-Before adding a parent or dependency relation, verify the semantic endpoint and cycle rules from `ISSUE-MODEL.md`.
+Before adding a parent or dependency relation, verify the endpoint and cycle rules in the issue model.
 
 If the active GitHub tooling cannot perform a relation operation, the workflow that needs that relation must stop or ask the user for another representation. Missing relation tooling does not make initial tracker setup fail.
 
