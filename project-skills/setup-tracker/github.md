@@ -25,7 +25,7 @@ GitHub open/closed state may mirror status for usability but is not canonical tr
 
 ## Body
 
-Every tracked issue contains:
+A valid tracked issue contains:
 
 ```markdown
 Sources: <#101, owner/repo#117, https://example.com/source|None>
@@ -34,7 +34,7 @@ Sources: <#101, owner/repo#117, https://example.com/source|None>
 <checkable condition>
 ```
 
-A `waiting` issue also contains:
+A valid `waiting` issue also contains:
 
 ```markdown
 ## Waiting
