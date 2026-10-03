@@ -2,6 +2,7 @@ name: Feature request
 description: Describe a need, capability, or workflow you want the project to support.
 title: ""
 labels:
+  - "tracker:kind:intake"
   - "tracker:status:needs-triage"
 body:
   - type: textarea
