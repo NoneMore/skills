@@ -29,3 +29,9 @@
 **Scenario:** A workflow tries to use intake as a parent or create a managed-work dependency cycle.
 
 **Expected:** reject the relation. Intake may be a source; hierarchy and dependencies are managed-work-only and acyclic.
+
+## 6. Reruns are idempotent and instruction wiring is opt-in
+
+**Scenario:** The same backend is already configured and setup is run again without a request to edit project instructions.
+
+**Expected:** create only missing setup configuration, refresh `docs/agents/issues.md`, leave tracked issues untouched, and do not modify project instructions.
