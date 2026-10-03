@@ -16,22 +16,22 @@
 
 **Scenario:** GitHub Issues and labels work, but native dependency operations are unavailable.
 
-**Expected:** GitHub setup succeeds; a later workflow checks dependency capability if it needs that relation.
+**Expected:** GitHub setup succeeds; the published backend contract states that a later workflow checks dependency capability if it needs that relation.
 
-## 4. Managed work is bounded
+## 4. Generated contract preserves managed-work bounds
 
-**Scenario:** Managed work lacks a checkable completion condition, or `waiting` lacks `Waiting for` / `Resume when`.
+**Scenario:** Setup publishes `docs/agents/issues.md` for either backend.
 
-**Expected:** treat the issue as incomplete until those required contents exist.
+**Expected:** the generated contract contains the managed-work requirement for an issue-specific, checkable completion condition and contains `Waiting for` / `Resume when` requirements for every tracked issue whose status is `waiting`, including intake.
 
-## 5. Relations keep their meaning
+## 5. Generated contract preserves relation semantics
 
-**Scenario:** A workflow tries to use intake as a parent or create a managed-work dependency cycle.
+**Scenario:** Setup publishes `docs/agents/issues.md` for either backend.
 
-**Expected:** reject the relation. Intake may be a source; hierarchy and dependencies are managed-work-only and acyclic.
+**Expected:** the generated contract preserves the issue model's relation constraints: intake may be a source; parent and blocking relations are managed-work-only; self-relations and cycles are forbidden where specified.
 
-## 6. Reruns are idempotent and instruction wiring is opt-in
+## 6. Reruns are deterministic and instruction wiring is opt-in
 
-**Scenario:** The same backend is already configured and setup is run again without a request to edit project instructions.
+**Scenario:** The same backend is already configured, source contract files are unchanged, and setup is run again without a request to edit project instructions.
 
-**Expected:** create only missing setup configuration, refresh `docs/agents/issues.md`, leave tracked issues untouched, and do not modify project instructions.
+**Expected:** create only missing setup configuration, rebuild `docs/agents/issues.md` to the same content rather than appending duplicate contract text, leave tracked issues untouched, and do not modify project instructions.
