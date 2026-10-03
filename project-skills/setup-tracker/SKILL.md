@@ -12,6 +12,8 @@ Read [ISSUE-MODEL.md](ISSUE-MODEL.md) before writing configuration. It is the on
 
 The files in this skill are setup inputs. After setup, `docs/agents/issues.md` is the repository-local tracker contract and must not depend on the skill installation path.
 
+The contract version written by this Skill is `1`. Contract version is a repository protocol/schema version, not a product or Skill release version. A different or missing version in an existing tracker contract requires migration and must not be silently rewritten by setup.
+
 ## Process
 
 ### 1. Choose the backend
@@ -47,6 +49,7 @@ For GitHub:
 ```markdown
 # Issue tracker
 Model: tracker
+Contract-Version: 1
 Backend: github
 Repository: <owner>/<repo>
 ```
@@ -56,6 +59,7 @@ For Local Markdown:
 ```markdown
 # Issue tracker
 Model: tracker
+Contract-Version: 1
 Backend: local-markdown
 Issue root: .tracker/issues/
 ```
@@ -67,7 +71,7 @@ Then materialize the contract mechanically:
 
 Do not copy the marker lines themselves. Do not paraphrase, summarize, reorder, deduplicate, or otherwise rewrite contract text. Apart from the backend-identity values above and insignificant surrounding blank lines, two runs against the same Skill revision and backend must produce the same contract text.
 
-Do not copy backend-selection, capability-detection, setup-only checks/mutations, or any other text outside the marked contract regions. The generated file must not contain references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path.
+Do not copy backend-selection, capability-detection, setup-only checks/mutations, or any other text outside the marked contract regions. The generated `docs/agents/issues.md` must not contain references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path.
 
 The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker from repository contents alone.
 
@@ -88,27 +92,32 @@ If the active harness exposes a project instruction artifact, add or update one 
 
 Re-read `docs/agents/issues.md` and verify:
 
-- the backend identity is exact;
+- `Model: tracker` and `Contract-Version: 1` are exact;
+- the selected backend identity is exact;
 - the semantic contract region exactly matches the marked semantic source text;
 - the runtime contract region exactly matches the marked selected-backend source text;
 - setup-only text and contract markers are absent;
 - executable frontier is defined once, in the semantic portion;
-- managed work requires a checkable completion condition and permits Skill-owned extension sections;
+- managed work requires a checkable completion condition;
+- waiting managed work requires `Waiting for` and `Resume when` content;
+- hierarchy and dependency endpoint/cycle rules are present;
+- managed-work assignee is defined as a single execution claim rather than long-lived ownership;
+- Skill-owned extension sections remain permitted;
 - no reference depends on a skill file or installation path.
 
 If project instructions were changed, verify the issue-tracker pointer resolves and is not duplicated.
 
 For GitHub, verify:
 
-- required capabilities and canonical tracker labels are available;
+- required capabilities and canonical namespaced tracker labels are available;
 - unrelated labels were not removed or renamed;
 - every existing issue carrying canonical tracker labels satisfies the backend preflight invariants;
 - common external intake has a usable form or blank-issue path;
-- shipped forms apply `status:needs-triage`;
+- shipped forms apply `tracker:status:needs-triage`;
 - blank issues are enabled and an unlabeled blank issue is valid intake by the documented derived-status rule;
 - no public issue template asks reporters to choose managed-work type or internal tracker state.
 
-For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the required header and body invariants.
+For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the required header, body, relation, waiting, and claim invariants.
 
 Setup is complete only when every applicable check passes.
 
