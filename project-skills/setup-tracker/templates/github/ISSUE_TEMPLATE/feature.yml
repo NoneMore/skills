@@ -1,0 +1,28 @@
+name: Feature request
+description: Describe a need, capability, or workflow you want the project to support.
+title: ""
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you need?
+      description: Describe the problem or workflow you want to improve before proposing a particular implementation.
+      placeholder: What are you trying to accomplish, and what makes it difficult today?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What would a useful outcome look like?
+      description: Describe the user-visible result or capability that would help.
+      placeholder: What would become possible or easier for you?
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Context or examples
+      description: Add examples, constraints, links, screenshots, or related workflows when useful.
+      placeholder: Anything that helps us understand the request and its context.
+    validations:
+      required: false
