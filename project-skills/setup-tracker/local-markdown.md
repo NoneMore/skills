@@ -2,11 +2,11 @@
 
 ## Storage
 
-Any `.tracker/issues/<ID>.md` file with a positive integer ID participates in the tracker. New issues normally use one greater than the greatest existing ID; on collision choose another unused ID.
+Store tracked issues as `.tracker/issues/<ID>.md` using positive integer IDs. New issues normally use one greater than the greatest existing ID; on collision choose another unused ID.
 
 ## Representation
 
-A valid tracked issue has this header:
+A tracked issue has this header:
 
 ```markdown
 # <title>
@@ -18,14 +18,14 @@ Parent: <ID|None>
 Blocked-By: <ID, ID|None>
 ```
 
-A valid tracked issue contains:
+A tracked issue contains:
 
 ```markdown
 ## Completion condition
 <checkable condition>
 ```
 
-A valid `waiting` issue also contains:
+A `waiting` issue also contains:
 
 ```markdown
 ## Waiting
