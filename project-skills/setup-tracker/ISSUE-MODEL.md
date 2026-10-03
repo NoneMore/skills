@@ -69,7 +69,7 @@ Managed work may use:
 - `done` — its completion condition is satisfied;
 - `cancelled` — it will not be completed as defined.
 
-`done` and `cancelled` are terminal.
+`done` and `cancelled` are terminal. Once an issue reaches either terminal status, it must not transition to any different lifecycle status under this contract. Reopening or changing a terminal outcome requires an explicit migration or repair workflow outside ordinary tracker operations; repeating the same terminal status is idempotent.
 
 ### Waiting contract
 
