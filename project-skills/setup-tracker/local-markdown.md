@@ -18,14 +18,14 @@ Parent: <ID|None>
 Blocked-By: <ID, ID|None>
 ```
 
-Every tracked issue contains:
+A valid tracked issue contains:
 
 ```markdown
 ## Completion condition
 <checkable condition>
 ```
 
-A `waiting` issue also contains:
+A valid `waiting` issue also contains:
 
 ```markdown
 ## Waiting
