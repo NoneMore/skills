@@ -41,7 +41,7 @@ Do not copy type, status, sources, hierarchy, dependencies, or assignee into ord
 
 Public GitHub issue templates are intake aids only. They must not ask reporters to choose managed-work type, completion condition, hierarchy, dependencies, claim, or internal lifecycle state.
 
-Setup may install intake-only issue forms for common entry points such as bug reports and feature requests. Keep blank issues enabled so valid external intake is not rejected merely because it does not fit a form.
+Keep existing useful intake forms. When a common intake surface is missing, setup may install the corresponding default issue form shipped with this skill. Keep blank issues enabled so valid external intake is not rejected merely because it does not fit a form.
 
 Issues created through any form or as a blank issue remain untyped external intake. Repository taxonomy labels applied by forms remain independent from tracker type and status.
 
@@ -49,7 +49,7 @@ Issues created through any form or as a blank issue remain untyped external inta
 
 Create missing tracker type and status labels. Preserve unrelated labels.
 
-Install the intake issue forms shipped with this skill under `.github/ISSUE_TEMPLATE/` without replacing unrelated repository templates. If a target path already exists with different content, preserve it and report the conflict rather than overwriting it.
+Preserve repository-owned issue templates. Add a shipped intake form only when the repository lacks a suitable form for that entry point, and never overwrite a different existing template. Ensure `.github/ISSUE_TEMPLATE/config.yml` has `blank_issues_enabled: true`; preserve all other existing chooser configuration.
 
 ## Operations
 
