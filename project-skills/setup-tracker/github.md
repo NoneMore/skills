@@ -64,7 +64,7 @@ Public GitHub issue templates are intake aids only. They must not ask reporters 
 
 Keep existing useful intake forms. When a common intake surface is missing, setup may install the corresponding default issue form shipped with this skill. Shipped forms apply both `tracker:kind:intake` and `tracker:status:needs-triage`.
 
-Keep blank issues enabled so reporters are not rejected merely because their input does not fit a form. A blank issue without a tracker kind label is unclassified and outside the tracker until a triage or intake workflow explicitly classifies it. Setup never classifies or adopts such issues.
+Keep blank issues enabled so reporters are not rejected merely because their input does not fit a form. A blank issue without a tracker kind label is unclassified and outside the tracker until an intake/triage workflow that knows it is newly received under this tracker explicitly classifies it. Pre-existing unclassified issues remain outside the tracker and require a separate migration/takeover workflow.
 
 Issues created through shipped forms are tracked intake. Existing repository forms remain repository-owned; setup does not silently reinterpret issues created through them. Repository taxonomy labels applied by forms remain independent from tracker kind, type, and status.
 
@@ -72,7 +72,7 @@ Issues created through shipped forms are tracked intake. Existing repository for
 
 When creating intake, set `tracker:kind:intake`, set exactly one explicit intake status, and do not set a managed-work type.
 
-When explicitly adopting an unclassified issue as intake, preserve its reporter, wording, evidence, discussion, and unrelated repository metadata; add `tracker:kind:intake` and exactly one explicit intake status. Adoption is a downstream intake/triage operation, never a setup operation.
+When classifying a newly received unclassified issue as intake, the workflow must know that the issue belongs to the active tracker intake surface rather than pre-dating tracker setup. Preserve its reporter, wording, evidence, discussion, and unrelated repository metadata; add `tracker:kind:intake` and exactly one explicit intake status. Never use this operation to take over pre-existing unclassified issues; those require a separate migration/takeover workflow.
 
 When creating managed work, set `tracker:kind:managed`, exactly one managed-work type, and exactly one explicit managed-work status allowed by the semantic contract; write the required `Sources:` line and completion condition; preserve any Skill-owned extension sections supplied by the creating workflow.
 
