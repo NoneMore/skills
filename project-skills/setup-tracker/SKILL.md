@@ -61,9 +61,9 @@ Issue root: .tracker/issues/
 Then materialize into the same file:
 
 1. the complete semantic contract from [ISSUE-MODEL.md](ISSUE-MODEL.md);
-2. the complete representation and operations contract from the selected backend document.
+2. the selected backend's runtime representation and operations, including representation invariants needed to interpret stored issues.
 
-Adapt document headings as needed so the result is one coherent file. Preserve the meaning of the source contracts. Do not leave references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path in `docs/agents/issues.md`.
+Do not copy backend-selection, capability-detection, or setup-only instructions into the repository contract. Adapt document headings as needed so the result is one coherent file. Preserve the meaning of the source contracts. Do not leave references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path in `docs/agents/issues.md`.
 
 The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker from repository contents alone.
 
@@ -78,7 +78,7 @@ If the active harness exposes a project instruction artifact, add or update one 
 Re-read `docs/agents/issues.md` and verify:
 
 - the backend identity is exact;
-- the full semantic contract and selected backend representation/operations are present;
+- the full semantic contract and selected backend runtime representation/operations are present;
 - executable frontier is defined once, in the semantic portion;
 - no reference depends on a skill file or installation path.
 
