@@ -13,15 +13,15 @@ Read [ISSUE-MODEL.md](ISSUE-MODEL.md), then read only the selected backend docum
 ## 1. Choose backend
 
 - Explicit Local Markdown choice → Local Markdown.
-- Exactly one canonical GitHub repository → GitHub.
-- Several plausible GitHub repositories → ask which is canonical.
+- One intended GitHub repository is explicit in project configuration or unambiguously identified by the current repository → GitHub.
+- Several plausible GitHub repositories → ask which is intended.
 - No intended GitHub repository → Local Markdown.
 
 ## 2. Inspect configuration
 
 Read `docs/agents/issues.md` if present.
 
-- If it already configures the same backend, treat this as an idempotent rerun: make only missing setup changes and refresh the generated contract. Do not modify tracked issues.
+- If it already configures the same backend, treat this as an idempotent rerun: make only missing setup changes and rebuild the generated contract. Do not modify tracked issues.
 - If it configures another tracker/backend, stop unless the user explicitly requested replacement. Replacement changes setup artifacts only; it does not migrate or rewrite existing issues.
 
 For GitHub, confirm repository identity, Issues availability, label read/write access, and existing tracker labels. For Local Markdown, inspect `.tracker/issues/`.
@@ -30,11 +30,7 @@ Do not classify, repair, close, relabel, or otherwise adopt existing issues.
 
 ## 3. Configure
 
-For GitHub, ensure these labels exist while preserving unrelated labels:
-
-- `tracker:kind:intake`, `tracker:kind:managed`
-- `tracker:type:investigation`, `tracker:type:change`
-- `tracker:status:needs-triage`, `tracker:status:ready`, `tracker:status:waiting`, `tracker:status:done`
+For GitHub, ensure every label required by the selected backend contract exists while preserving unrelated labels.
 
 Do not modify issue templates. Native relation capabilities are checked only by workflows that use those relations.
 
@@ -42,7 +38,7 @@ For Local Markdown, ensure `.tracker/issues/` exists. Do not rewrite existing is
 
 ## 4. Publish and verify
 
-Write `docs/agents/issues.md` with:
+Rebuild `docs/agents/issues.md` from scratch on every run. Write this generated header:
 
 ```markdown
 # Issue tracker
@@ -51,10 +47,10 @@ Repository: <owner/repo>        # GitHub only
 Issue root: .tracker/issues/    # Local Markdown only
 ```
 
-Then append the complete issue model and selected backend document. The generated contract must contain the rules directly, not rely on Skill-relative links.
+After the header, copy the complete current contents of `ISSUE-MODEL.md`, then the complete current contents of the selected backend document. Do not append to the previous generated contract. The generated contract must contain the rules directly and must not rely on Skill-relative links.
 
 Only when the user explicitly asks to wire the tracker into project instructions, add or update one short pointer to `docs/agents/issues.md`.
 
-Re-read only what setup changed. Verify the GitHub labels or local issue root and confirm the generated contract names the intended backend and contains no execution-claim/orchestration protocol.
+Re-read only what setup changed. Verify the GitHub labels or local issue root. Verify that the generated header names the intended backend and that the two generated contract sections match the current issue model and selected backend document completely. A same-backend rerun with unchanged inputs must leave `docs/agents/issues.md` unchanged.
 
 Report the configured backend and stop.
