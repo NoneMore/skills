@@ -32,7 +32,7 @@ Skills may add sections they own, but must preserve unrelated content.
 
 ## Relations
 
-- `Sources` is direct provenance. It may reference existing intake or managed work, must not self-reference, and does not imply hierarchy or dependency.
+- `Sources` is required direct provenance for every tracked issue. It may reference existing intake or managed work, must not self-reference, and does not imply hierarchy or dependency. Empty provenance is represented explicitly by the backend.
 - `Parent` is optional managed-work decomposition. Only managed work participates; each issue has at most one parent; self-reference and cycles are forbidden. Completing all children does not automatically complete the parent.
 - `BlockedBy` is a managed-work scheduling dependency. Both endpoints must be existing managed work; self-reference and cycles are forbidden.
 
