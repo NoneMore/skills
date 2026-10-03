@@ -1,16 +1,10 @@
 # Local Markdown backend
 
-Local Markdown representation for the tracker. The issue model owns semantics.
+Local Markdown representation for the issue model.
 
 ## Storage
 
-Store tracked issues as:
-
-```text
-.tracker/issues/<ID>.md
-```
-
-Use positive integer IDs. New issues normally use one greater than the greatest existing ID. Never overwrite an existing issue file; if creation collides, choose another unused ID and retry.
+Store tracked issues as `.tracker/issues/<ID>.md` using positive integer IDs. New issues normally use one greater than the greatest existing ID. Never overwrite an existing issue file; on collision choose another unused ID.
 
 ## Header
 
@@ -27,48 +21,29 @@ Reporter: <actor|Unknown|None>
 Origin: <source-ref|Unknown|None>
 ```
 
-`Kind: intake` requires `Type: None`. `Kind: managed` requires exactly one managed-work type. Every tracked issue stores one status allowed for its kind.
+`intake` requires `Type: None`; `managed` requires one managed-work type. Every tracked issue stores one allowed status.
 
-For intake, preserve the original reporter and source when known. Managed work may use `Reporter: None` and `Origin: None`.
+## Body
 
-## Intake body
+Preserve intake wording/evidence and discussion, for example under `## Intake` and `## Discussion`.
 
-Preserve the original intake content and discussion rather than rewriting it as managed work. A simple representation is:
-
-```markdown
-## Intake
-
-<original wording and evidence>
-
-## Discussion
-
-<speaker-attributed discussion>
-```
-
-## Managed issue body
-
-Managed issues contain:
+Managed work contains:
 
 ```markdown
 ## Completion condition
-
-<issue-specific, checkable completion condition>
+<checkable condition>
 ```
 
-When status is `waiting`, also record:
+When waiting, also include:
 
 ```markdown
 ## Waiting
-
-Waiting for: <external event or decision>
-
+Waiting for: <event or decision>
 Resume when: <checkable condition>
 ```
 
-Additional workflow-owned sections are allowed. Preserve unrelated header fields and body sections when updating an issue.
+Preserve unrelated header fields and body sections when updating an issue.
 
-## Relations
+Before changing `Parent` or `Blocked-By`, enforce the issue model's endpoint and cycle rules. `Sources` may reference existing intake or managed work but must not self-reference.
 
-Before changing `Parent` or `Blocked-By`, verify the endpoint and cycle rules in the issue model. `Sources` may reference intake or managed work but must reference existing tracked issues and must not self-reference.
-
-Assignment, claiming, and execution ownership are intentionally not part of this file format.
+Assignment, claiming, and execution ownership are not part of this format.
