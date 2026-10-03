@@ -1,6 +1,8 @@
 name: Feature request
 description: Describe a need, capability, or workflow you want the project to support.
 title: ""
+labels:
+  - "status:needs-triage"
 body:
   - type: textarea
     id: need

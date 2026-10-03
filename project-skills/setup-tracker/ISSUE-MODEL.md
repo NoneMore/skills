@@ -2,6 +2,8 @@
 
 Authoritative semantics for the tracker. Backend documents define representation only.
 
+<!-- repository-contract:start -->
+
 ## Intake and managed work
 
 An issue is either external intake or managed work.
@@ -42,6 +44,8 @@ Extension sections must not redefine the issue's type, lifecycle status, provena
 ## Status
 
 Status is lifecycle only. Claiming and dependencies are separate dimensions.
+
+Every issue has exactly one semantic lifecycle status. A backend may derive a status when its representation makes that status unambiguous; otherwise it must store the status explicitly. Managed work must always store its status explicitly.
 
 Intake may use:
 
@@ -95,3 +99,5 @@ Frontier is derived, not stored.
 ## Reconciliation
 
 External intake is closed independently from managed work. Completing managed work may justify closing a source issue, but only when that source has actually been addressed.
+
+<!-- repository-contract:end -->

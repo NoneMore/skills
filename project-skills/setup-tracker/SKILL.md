@@ -30,9 +30,11 @@ Do not create textual GitHub fallbacks for hierarchy or dependencies.
 
 ### 2. Inspect existing state
 
-For GitHub, record the exact `owner/repo`, inspect existing labels, and inspect `.github/ISSUE_TEMPLATE/` when present. Existing issue templates are repository-owned configuration; preserve useful intake forms and unrelated templates.
+For GitHub, record the exact `owner/repo`, inspect existing labels and `.github/ISSUE_TEMPLATE/` when present, then run every check in the backend document's `Setup-only checks and mutations` section before making any tracker mutation. Existing issue templates are repository-owned configuration; preserve useful intake forms and unrelated templates.
 
-For Local Markdown, inspect `.tracker/issues/*.md` if present. If any existing issue does not match the header in [local-markdown.md](local-markdown.md), stop without modifying the tracker. Migration is out of scope.
+For Local Markdown, inspect `.tracker/issues/*.md` if present and run every check in the backend document's `Setup-only checks and mutations` section before making any tracker mutation.
+
+Any failed setup-only check stops setup before tracker mutation. Migration is out of scope.
 
 ### 3. Configure
 
@@ -58,25 +60,27 @@ Backend: local-markdown
 Issue root: .tracker/issues/
 ```
 
-Then materialize into the same file:
+Then materialize the contract mechanically:
 
-1. the complete semantic contract from [ISSUE-MODEL.md](ISSUE-MODEL.md);
-2. the selected backend's runtime representation and operations, including representation invariants needed to interpret stored issues.
+1. copy, verbatim and in order, the content between `<!-- repository-contract:start -->` and `<!-- repository-contract:end -->` in [ISSUE-MODEL.md](ISSUE-MODEL.md);
+2. append, verbatim and in order, the content between the same markers in the selected backend document.
 
-Do not copy backend-selection, capability-detection, or setup-only instructions into the repository contract. Adapt document headings as needed so the result is one coherent file. Preserve the meaning of the source contracts. Do not leave references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path in `docs/agents/issues.md`.
+Do not copy the marker lines themselves. Do not paraphrase, summarize, reorder, deduplicate, or otherwise rewrite contract text. Apart from the backend-identity values above and insignificant surrounding blank lines, two runs against the same Skill revision and backend must produce the same contract text.
+
+Do not copy backend-selection, capability-detection, setup-only checks/mutations, or any other text outside the marked contract regions. The generated file must not contain references to `ISSUE-MODEL.md`, `github.md`, `local-markdown.md`, this skill directory, or any installation-specific path.
 
 The generated `docs/agents/issues.md` is the project authority after setup. A fresh checkout must be able to interpret the tracker from repository contents alone.
 
 For GitHub:
 
-- create missing tracker labels described in [github.md](github.md), preserving unrelated labels;
+- perform the mutations in the backend document's `Setup-only checks and mutations` section after all preflight checks pass;
 - keep existing useful intake templates;
 - when a common intake surface is missing, copy the corresponding default form from `templates/github/ISSUE_TEMPLATE/` into `.github/ISSUE_TEMPLATE/` without replacing a different existing form;
 - ensure the issue-template chooser keeps blank issues enabled; when `config.yml` already exists, change only `blank_issues_enabled` and preserve its other configuration.
 
 The shipped forms are intake UX only. Do not expose `investigation` or `change` as public issue-template choices; managed work is created by internal workflows against the tracker contract.
 
-For Local Markdown, ensure `.tracker/issues/` exists.
+For Local Markdown, perform the mutation in the backend document's `Setup-only checks and mutations` section after all preflight checks pass.
 
 If the active harness exposes a project instruction artifact, add or update one short issue-tracker pointer to `docs/agents/issues.md`. Do not copy the contract into project instructions.
 
@@ -85,7 +89,9 @@ If the active harness exposes a project instruction artifact, add or update one 
 Re-read `docs/agents/issues.md` and verify:
 
 - the backend identity is exact;
-- the full semantic contract and selected backend runtime representation/operations are present;
+- the semantic contract region exactly matches the marked semantic source text;
+- the runtime contract region exactly matches the marked selected-backend source text;
+- setup-only text and contract markers are absent;
 - executable frontier is defined once, in the semantic portion;
 - managed work requires a checkable completion condition and permits Skill-owned extension sections;
 - no reference depends on a skill file or installation path.
@@ -94,13 +100,15 @@ If project instructions were changed, verify the issue-tracker pointer resolves 
 
 For GitHub, verify:
 
-- required capabilities and tracker labels are available;
+- required capabilities and canonical tracker labels are available;
 - unrelated labels were not removed or renamed;
+- every existing issue carrying canonical tracker labels satisfies the backend preflight invariants;
 - common external intake has a usable form or blank-issue path;
-- blank issues are enabled;
+- shipped forms apply `status:needs-triage`;
+- blank issues are enabled and an unlabeled blank issue is valid intake by the documented derived-status rule;
 - no public issue template asks reporters to choose managed-work type or internal tracker state.
 
-For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the header.
+For Local Markdown, verify the issue root exists, existing files were preserved, and every issue file matches the required header and body invariants.
 
 Setup is complete only when every applicable check passes.
 

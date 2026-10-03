@@ -2,6 +2,8 @@
 
 Representation and operations for the tracker. The issue model owns semantics.
 
+<!-- repository-contract:start -->
+
 ## Storage
 
 Store issues as:
@@ -11,8 +13,6 @@ Store issues as:
 ```
 
 Use the next monotonically increasing four-digit number.
-
-Before setup, every existing `.tracker/issues/*.md` file must already match the header below. Otherwise stop without modifying the tracker; migration is out of scope.
 
 ## Header
 
@@ -98,3 +98,11 @@ Read the whole file. For list/search, parse the required header fields; do not g
 When mutating, change only the relevant header field or owned body section and preserve unrelated content. Re-read the changed fields or sections afterward.
 
 Set `Status: done` or `Status: cancelled` for terminal issues.
+
+<!-- repository-contract:end -->
+
+## Setup-only checks and mutations
+
+Before setup, every existing `.tracker/issues/*.md` file must already match the required header and body invariants above. Otherwise stop without modifying the tracker; migration is out of scope.
+
+Ensure `.tracker/issues/` exists.
