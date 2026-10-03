@@ -34,7 +34,7 @@ Managed work contains:
 <checkable condition>
 ```
 
-When waiting, also include:
+Any tracked issue with status `waiting` also contains:
 
 ```markdown
 ## Waiting
