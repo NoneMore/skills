@@ -2,7 +2,7 @@
 name: apply-game-logic
 description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v1.1.0"
+  version: "v1.2.0"
 ---
 
 # Apply Game Logic
@@ -46,6 +46,8 @@ For calculators, simulators, reference implementations, and tests, preserve the 
 For observation-only instrumentation, use the smallest stable boundary and avoid changing the state transition being observed.
 
 For gameplay changes, load [references/change-design.md](references/change-design.md). Establish behavioral scope before choosing the mechanism; reversibility alone does not prove narrow scope.
+
+When the requested deliverable is a Cheat Engine table or Auto Assembler script, or Cheat Engine is selected as the retained runtime-change surface, also load [references/cheat-engine-delivery.md](references/cheat-engine-delivery.md). That reference owns CE-specific packaging, guards, validation levels, and restoration checks.
 
 ## 4. Bind implementation to evidence
 
