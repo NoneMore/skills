@@ -1,6 +1,6 @@
 interface:
   display_name: "Skill Prototype Forge"
-  short_description: "Derive Skill prototypes from conversation evidence"
-  default_prompt: "Use $skill-prototype-forge to derive grounded Skill prototypes from the relevant conversation evidence, then stop at the prototype boundary."
+  short_description: "Assess Skill candidates from conversation evidence"
+  default_prompt: "Use $skill-prototype-forge to assess the relevant conversation evidence and return the supported outcome: a grounded Skill prototype, a no-Skill recommendation, or an explicit evidence gap. Stop before Skill design or implementation."
 policy:
   allow_implicit_invocation: false
