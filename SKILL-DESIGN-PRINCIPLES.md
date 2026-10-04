@@ -67,7 +67,7 @@ Make clear, when relevant:
 - **Output and completion** — what must be produced and what observable conditions mean “done.”
 - **Failure and stop behavior** — what to do when information, tools, or permissions are insufficient, and where the skill must stop.
 
-Routing intent should be explicit in discovery metadata before activation; the skill body may refine it once loaded.
+For model-invoked skills, routing intent should be explicit in discovery metadata before activation; the skill body may refine it once loaded.
 
 Prefer explicit, checkable conditions over vague instructions such as “be thorough.”
 
@@ -94,14 +94,15 @@ Optimize for minimum sufficient context and procedure, not minimum length or max
 
 ## L4 — Routing and Composition
 
-A skill that cannot be discovered reliably is functionally absent.
+Decide invocation ownership before designing routing. A model-invoked skill must be discoverable reliably from information available before activation. A user-invoked skill delegates selection to the human and should not carry model-facing routing machinery without another concrete need.
 
-Treat discovery metadata as an index, not marketing copy. It should explain both **what the skill does** and **when it should be selected** because routing-critical information must be available before the skill body is loaded.
+For model-invoked skills, treat discovery metadata as an index, not marketing copy. It should explain both **what the skill does** and **when it should be selected** because routing-critical information must be available before the skill body is loaded. For user-invoked skills, optimize instead for clear human selection.
 
 When multiple skills coexist, prefer:
 
-- distinct, discriminating triggers with minimal unnecessary overlap,
-- clear model-invoked vs. user-invoked behavior,
+- invocation ownership explicit before routing and composition are designed,
+- for model-invoked skills, distinct, discriminating triggers with minimal unnecessary overlap,
+- clear human selection for user-invoked skills without unnecessary model-routing machinery,
 - explicit dependencies where composition is intentional,
 - router skills only when they reduce real discovery cost,
 - granularity justified by independent discoverability or materially different context.
@@ -156,7 +157,7 @@ Before adding or changing a skill, ask:
 2. **Contract** — Where a workflow exists, are scope, decisions, completion, failure, and stopping conditions explicit?
 3. **Context** — Is each piece of information better encoded than recovered when needed?
 4. **Complexity budget** — Would removing any nontrivial durable structure cause an identifiable behavioral or verification regression? If not, simplify or remove it.
-5. **Routing** — Can the right task discover the skill without excessive overlap?
+5. **Invocation and routing** — Who owns invocation? If model-invoked, can the right task discover the skill without excessive overlap? If user-invoked, is explicit human selection clear without unnecessary model-routing machinery?
 6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
 8. **Inspectability** — Can artifact defects be found directly, and is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
