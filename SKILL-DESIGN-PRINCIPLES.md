@@ -127,7 +127,7 @@ skill-name/
 ├── references/   # optional
 ├── scripts/      # optional
 ├── assets/       # optional
-├── evals/        # project convention; recommended, not core spec
+├── evals/        # optional project convention; not core spec
 └── agents/       # runtime-specific convention; not core spec
 ```
 
@@ -153,22 +153,25 @@ Format compliance is the floor, not the definition of a good skill.
 
 ---
 
-## L6 — Evaluation and Governance
+## L6 — Inspectability and Maintenance
 
-Skill execution is partially probabilistic, so structural validity alone is not enough. Evaluate routing, behavior, and outcomes empirically.
+A skill should be inspectable as an artifact, independently of any particular model run.
 
-At minimum, test:
+Dynamic evals can observe end-to-end system behavior, but they are weak as a primary measure of skill quality. For mechanically checkable instructions, pass/fail rates largely measure the executing model's ability to follow conditions and constraints; changing the model can change the result without changing the skill. For ambiguous timing, soft constraints, or judgment-heavy behavior, failures are harder to attribute: the cause may be model capability, skill wording, missing context, runtime behavior, task selection, or evaluator ambiguity.
 
-| Evaluation | Question |
-|---|---|
-| Positive routing | Does the skill activate when it should? |
-| Negative routing | Does it stay inactive when it should? |
-| Behavioral | Does it follow its contract after activation? |
-| Outcome | Does the result satisfy the completion criteria? |
+Dynamic eval therefore measures the interaction of **skill × model × runtime × task distribution**, not the skill in isolation. Use it when that interaction is what you need to validate, but do not treat it as a clean measurement of the skill artifact itself.
 
-Evaluation has attribution limits. Mechanically checkable instructions often test the model's ability to follow conditions and constraints as much as the quality of the skill itself. For ambiguous timing, soft constraints, or judgment-heavy behavior, failures are even harder to attribute cleanly to model capability versus skill design. Use evals to detect and characterize behavior, but do not assume they can always isolate the skill as the cause.
+Prefer static inspection of what the skill actually imposes. Review:
 
-Also watch for routing regressions, context growth, stale references, broken scripts or runtime assumptions, permission expansion, redundant skills, and behavior that has become a no-op.
+- the number of decision points, triggers, and behavioral constraints,
+- ambiguous or weakly specified triggers and constraints,
+- the share of decisions and constraints that require discretionary judgment,
+- overlapping, contradictory, or duplicated rules,
+- unverifiable completion conditions,
+- unnecessary model judgment where deterministic mechanisms would suffice,
+- stale references, broken dependencies, and invalid runtime assumptions.
+
+Where useful, count these explicitly: total triggers and constraints, how many are ambiguous, and the resulting ambiguity ratio. The goal is not to eliminate judgment, but to make each use of model judgment necessary, deliberate, and as well-bounded as the task permits.
 
 Merge, simplify, or delete skills when they no longer earn their complexity.
 
@@ -184,6 +187,6 @@ Before adding or changing a skill, ask:
 4. **Routing** — Can the right task discover the skill without excessive overlap?
 5. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 6. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-7. **Evaluation** — Can routing, behavioral, and outcome regressions be detected?
+7. **Inspectability** — How many decisions and constraints does the skill impose, how many are ambiguous, and can unnecessary judgment be removed?
 
 > **A good skill makes the surrounding system clearer, cheaper, more reliable, more constrained, more reusable, and easier to verify.**
