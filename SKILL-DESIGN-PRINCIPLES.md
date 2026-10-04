@@ -136,24 +136,13 @@ Format compliance is the floor, not the definition of a good skill.
 
 ## L6 — Inspectability and Maintenance
 
-A skill should be inspectable as an artifact, independently of any particular model run.
+A skill should be inspectable as an artifact, independently of any particular model run. Prefer static inspection for properties that can be checked directly: ambiguous triggers, decisions, or constraints; unnecessary discretion; conflicting or duplicated rules; unverifiable completion conditions; probabilistic work better made deterministic; and stale references, dependencies, or runtime assumptions.
 
-Dynamic eval is usually a poor default for skill quality assurance: it is costly, noisy, difficult to attribute, and often provides little actionable guidance for improving the skill itself. Mechanically checkable rules can usually be inspected directly. Judgment-heavy evals add model, task-selection, evaluator, and sampling variance, while synthetic cases may still fail to represent real use. Repeated trials can estimate system-level tendencies, but only at additional cost.
+Dynamic eval is usually a poor default for skill quality assurance. It is costly, noisy, difficult to attribute, and often produces measurements without actionable guidance. Synthetic cases also add task-selection, evaluator, and sampling variance and may not represent real use; repeated trials can estimate system tendencies, but statistical confidence alone does not make the result useful.
 
-Use dynamic eval when a concrete behavioral uncertainty cannot be resolved adequately by inspection and the expected information gain justifies the cost. Treat the result as evidence about **skill × model × runtime × task distribution**, not as an isolated score of the skill artifact.
+Use dynamic eval only when an important behavioral uncertainty cannot be resolved adequately by inspection and different plausible results would change a concrete design, deployment, mitigation, or acceptance decision. Treat results as evidence about **skill × model × runtime × task distribution**, not as isolated skill scores. When safe and observable, real use usually provides the most representative dynamic evidence; prefer learning from actual use over inventing synthetic proxies.
 
-Prefer static inspection of what the skill actually imposes. Review:
-
-- ambiguous or weakly specified triggers, decisions, and constraints,
-- unnecessary discretionary judgment,
-- overlapping, contradictory, or duplicated rules,
-- unverifiable completion conditions,
-- probabilistic execution where deterministic mechanisms would suffice,
-- stale references, broken dependencies, and invalid runtime assumptions.
-
-Counts can expose structure, but they are not quality scores. The goal is not to eliminate judgment or maximize rule coverage; it is to make each encoded constraint and each use of model judgment necessary, deliberate, and well-bounded.
-
-Merge, simplify, or delete skills when they no longer earn their complexity.
+Counts can expose structure, but they are not quality scores. Each encoded constraint and each use of model judgment should be necessary, deliberate, and well-bounded. Merge, simplify, or delete skills when they no longer earn their complexity.
 
 ---
 
@@ -167,6 +156,6 @@ Before adding or changing a skill, ask:
 4. **Routing** — Can the right task discover the skill without excessive overlap?
 5. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 6. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-7. **Inspectability** — Can ambiguity, contradiction, stale assumptions, and unnecessary judgment be found directly, and is any dynamic eval worth its cost?
+7. **Inspectability** — Can artifact defects be found directly, and would any dynamic eval change a concrete decision?
 
 > **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**
