@@ -25,9 +25,11 @@ Ask first: **why should this exist as a skill?**
 
 A skill should encode reusable task knowledge or execution patterns that materially improve cost, consistency, reliability, or capability. Do not turn every preference, one-off instruction, or prompt pattern into a skill.
 
-Encode only what earns its context and maintenance cost. Preserve judgment where fixed rules would add more complexity than value.
+Preserve judgment where fixed rules add more complexity than value.
 
-A skill also has a **complexity budget**. Every durable rule, phase, checkpoint, file, indirection, and eval should justify itself by reducing expected reasoning cost, behavioral variance, risk, or verification cost. Prefer the smallest contract that reliably changes behavior. Completeness means enough structure to execute and verify the task—not exhaustively restating general doctrine, encoding analysis that can be cheaply re-derived, or forcing confirmation when no behavior-changing uncertainty remains.
+A skill has a **complexity budget**. Add or retain durable structure only when it prevents a concrete failure, avoids meaningful repeated reasoning, or materially reduces behavioral variance, risk, or verification cost. Use a simpler mechanism when it provides the same benefit; remove structure whose absence causes no identifiable behavioral or verification regression.
+
+Completeness means enough structure to execute and verify the task—not exhaustive doctrine, cheaply re-derived analysis, or confirmation without behavior-changing uncertainty.
 
 ---
 
@@ -83,8 +85,7 @@ Use these rules:
 
 - **One authoritative source** — give each rule, definition, or invariant a canonical home; repeat critical constraints only when locality materially improves reliability.
 - **Useful pointers** — say what referenced material contains and when it should be loaded.
-- **Locality with justified indirection** — keep rules and completion conditions near the workflow that uses them; split files only when reduced context or complexity outweighs navigation cost.
-- **Budget ceremony and indirection** — extra phases, checkpoints, references, files, and validation machinery are costs; keep them only when they materially improve routing, reliability, safety, or verification.
+- **Locality with justified indirection** — keep rules and completion conditions near the workflow that uses them; add files, references, or other indirection only when their benefit outweighs navigation and maintenance cost.
 - **Aggressive pruning** — remove stale, irrelevant, behaviorally inert, or cheaply recoverable instructions.
 
 Optimize for minimum sufficient context and procedure, not minimum length or maximum coverage.
@@ -154,7 +155,7 @@ Before adding or changing a skill, ask:
 1. **Task fit** — Is this reusable behavior or knowledge worth skillizing?
 2. **Contract** — Where a workflow exists, are scope, decisions, completion, failure, and stopping conditions explicit?
 3. **Context** — Is each piece of information better encoded than recovered when needed?
-4. **Complexity budget** — Does each durable rule, stage, checkpoint, file, indirection, or eval earn its ongoing context and maintenance cost?
+4. **Complexity budget** — Would removing any nontrivial durable structure cause an identifiable behavioral or verification regression? If not, simplify or remove it.
 5. **Routing** — Can the right task discover the skill without excessive overlap?
 6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
