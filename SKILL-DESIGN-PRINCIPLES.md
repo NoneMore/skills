@@ -90,7 +90,7 @@ Use these rules:
 - **Justified indirection** — split files only when reduced context or complexity outweighs navigation cost.
 - **Aggressive pruning** — remove stale, irrelevant, behaviorally inert, or cheaply discoverable instructions.
 
-Shorter instructions make important constraints easier to notice and maintain.
+Optimize for minimum sufficient context, not minimum length.
 
 ---
 
@@ -127,8 +127,8 @@ skill-name/
 ├── references/   # optional
 ├── scripts/      # optional
 ├── assets/       # optional
-├── evals/        # recommended for non-trivial behavior
-└── agents/       # runtime-specific metadata when needed
+├── evals/        # project convention; recommended, not core spec
+└── agents/       # runtime-specific convention; not core spec
 ```
 
 `SKILL.md` should remain the canonical behavioral entry point. Runtime-specific metadata should extend the skill rather than redefine it.
