@@ -136,15 +136,11 @@ Format compliance is the floor, not the definition of a good skill.
 
 ## L6 — Inspectability and Maintenance
 
-A skill should be inspectable as an artifact, independently of any particular model run. Prefer static inspection for properties that can be checked directly: ambiguous triggers, decisions, or constraints; unnecessary discretion; conflicting or duplicated rules; unverifiable completion conditions; probabilistic work better made deterministic; and stale references, dependencies, or runtime assumptions.
+A skill should be inspectable as an artifact. Prefer static inspection for properties that can be checked directly: ambiguous or conflicting rules, unnecessary discretion, unverifiable completion conditions, probabilistic work better made deterministic, and stale dependencies or runtime assumptions.
 
-Dynamic eval is usually a poor default for skill quality assurance. It is costly, noisy, difficult to attribute, and often produces measurements without actionable guidance. Synthetic cases add task-selection, evaluator, and sampling variance; repeated trials can estimate system tendencies, but statistical confidence alone does not make a result useful.
+Use dynamic eval only for important behavioral uncertainty that inspection cannot resolve, when useful cases can be derived from the contract or representative use, the behavior is reproducible enough to diagnose, plausible results would change a concrete decision, and the expected value justifies the setup and maintenance cost. Prefer small, targeted cases around boundaries, transitions, and regressions.
 
-Use dynamic eval only when an important behavioral uncertainty cannot be resolved adequately by inspection, useful cases can be derived from the contract or representative use, the behavior is reproducible enough to diagnose, plausible results would lead to a stable design, deployment, mitigation, or acceptance decision, and the expected decision value justifies the setup and maintenance cost. Prefer small, targeted cases around explicit boundaries or transitions over broad synthetic suites.
-
-Treat dynamic results as evidence about **skill × model × runtime × task distribution**, not as isolated skill scores. Real-use evidence is usually best for understanding actual task distributions and discovering unanticipated failures; constructed cases are useful when they directly exercise known boundaries, rare transitions, or regressions. Neither should substitute for deterministic runtime enforcement where authorization, safety, or irreversible actions require guarantees.
-
-Counts can expose structure, but they are not quality scores. Each encoded constraint and each use of model judgment should be necessary, deliberate, and well-bounded. Merge, simplify, or delete skills when they no longer earn their complexity.
+Treat dynamic results as evidence about **skill × model × runtime × task distribution**, not as isolated skill scores. Real-use evidence helps reveal actual task distributions and unexpected failures; constructed cases help exercise known boundaries and rare regressions. Neither substitutes for deterministic enforcement where guarantees are required. Merge, simplify, or delete skills when they no longer earn their complexity.
 
 ---
 
