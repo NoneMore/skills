@@ -166,6 +166,8 @@ At minimum, test:
 | Behavioral | Does it follow its contract after activation? |
 | Outcome | Does the result satisfy the completion criteria? |
 
+Evaluation has attribution limits. Mechanically checkable instructions often test the model's ability to follow conditions and constraints as much as the quality of the skill itself. For ambiguous timing, soft constraints, or judgment-heavy behavior, failures are even harder to attribute cleanly to model capability versus skill design. Use evals to detect and characterize behavior, but do not assume they can always isolate the skill as the cause.
+
 Also watch for routing regressions, context growth, stale references, broken scripts or runtime assumptions, permission expansion, redundant skills, and behavior that has become a no-op.
 
 Merge, simplify, or delete skills when they no longer earn their complexity.
