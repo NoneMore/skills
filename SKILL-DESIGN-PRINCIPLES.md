@@ -6,15 +6,14 @@ A compact framework for designing, implementing, and maintaining agent skills.
 
 A skill does not change the model's parameters, base knowledge, or fundamental reasoning capacity. It extends the **effective capability of the agent system** by packaging task-specific instructions, knowledge, procedures, resources, and access paths.
 
-A skill is therefore a **task-scoped cognitive and operational scaffold**: it makes useful behavior more reliable, efficient, reusable, and verifiable.
+A skill is a **task-scoped cognitive and operational scaffold** that makes useful behavior more reliable, efficient, reusable, and verifiable.
 
 Its main sources of value are:
 
-1. **Lower reasoning cost** — avoid re-deriving recurring procedures.
-2. **Lower context cost** — keep specialized rules and references out of always-loaded instructions.
-3. **Lower behavioral variance** — make similar tasks converge on similar execution and completion standards.
-4. **Lower verification cost** — end important work in explicit, checkable conditions.
-5. **Operational leverage** — move deterministic work to scripts, tools, and structured resources when probabilistic execution is unnecessary.
+1. **Lower reasoning and context cost** — avoid re-deriving recurring procedures or keeping specialized material always loaded.
+2. **Lower behavioral variance** — make similar tasks converge on similar execution and completion standards.
+3. **Lower verification cost** — end important work in explicit, checkable conditions.
+4. **Operational leverage** — move deterministic work to scripts, tools, and structured resources when probabilistic execution is unnecessary.
 
 > **Model capability is not system capability.** Skills improve the system around the model; they do not make the underlying model smarter.
 
@@ -26,7 +25,7 @@ Ask first: **why should this exist as a skill?**
 
 A skill should encode reusable task knowledge or execution patterns that materially improve cost, consistency, reliability, or capability. Do not turn every preference, one-off instruction, or prompt pattern into a skill.
 
-The goal is to reduce unnecessary reasoning, context, and uncertainty while preserving judgment.
+Encode only what earns its context and maintenance cost. Preserve judgment where fixed rules would add more complexity than value.
 
 ---
 
@@ -37,46 +36,42 @@ Put information at the lowest level where it is reliably available when needed.
 | Content | Best home |
 |---|---|
 | Rules that apply to nearly every task | `AGENTS.md` or equivalent workspace instructions |
-| Reusable workflow for a recognizable task class | Skill |
-| Branch-specific domain knowledge | `references/` |
+| Reusable task knowledge or behavior | Skill |
+| Branch-specific stable knowledge | `references/` |
 | Deterministic computation or transformation | `scripts/` |
-| Live or external state | Tool / API / MCP |
+| Live, external, or cheaply recoverable state | Tool / API / MCP |
 | Behavioral scope and permission expectations | Skill |
 | Actual authorization and access enforcement | Runtime / tool boundary |
 | Reusable output skeletons or artifacts | `assets/` |
 | One-off requirements | User prompt |
 
-Do not cache cheap facts the environment can reveal directly. Documentation should add conventions, rationale, constraints, or non-obvious knowledge.
+Prefer recoverable information over cached information when retrieval is cheap and freshness matters. Documentation should add conventions, rationale, constraints, or non-obvious stable knowledge rather than duplicate state the environment can reveal directly.
 
 ---
 
 ## L2 — Behavioral Contract
 
-Treat a skill as a behavioral contract:
+For workflow-oriented skills, use a behavioral contract:
 
-> **Task context → controlled workflow → verifiable outcome**
+> **Task context → bounded decisions and actions → verifiable outcome**
 
-A well-designed skill makes the following clear when relevant:
+Make clear, when relevant:
 
-- **Inputs / preconditions** — what information and state are required.
-- **Behavioral scope** — what the agent should read, change, execute, or delegate within the task.
-- **Invariants** — what must remain true throughout execution.
+- **Inputs and preconditions** — what information and state are required.
+- **Behavioral scope and invariants** — what the agent should do and what must remain true.
 - **Decision points** — meaningful branches and how to resolve them.
 - **Output and completion** — what must be produced and what observable conditions mean “done.”
-- **Failure behavior** — what to do when information, tools, or permissions are insufficient.
-- **Stop boundary** — where the skill must stop rather than expanding scope opportunistically.
+- **Failure and stop behavior** — what to do when information, tools, or permissions are insufficient, and where the skill must stop.
 
 Routing intent should be explicit in discovery metadata before activation; the skill body may refine it once loaded.
 
-Prefer explicit, checkable completion criteria over vague instructions such as “be thorough.”
+Prefer explicit, checkable conditions over vague instructions such as “be thorough.”
 
 ---
 
 ## L3 — Information Architecture
 
-Design for limited attention and context.
-
-Keep the common path in the main skill file and load specialized material only when the relevant branch is reached:
+Design for limited attention and context. Keep the common path in the main skill file and load specialized material only when the relevant branch is reached:
 
 ```text
 metadata → SKILL.md → references / scripts / assets on demand
@@ -84,13 +79,12 @@ metadata → SKILL.md → references / scripts / assets on demand
 
 Use these rules:
 
-- **One authoritative source** — each rule, definition, or invariant should have a canonical home. Repeat critical constraints locally only when it materially improves execution reliability.
-- **Useful pointers** — say both what referenced material contains and when it should be loaded.
-- **Locality** — keep rules, caveats, and completion conditions near the workflow that uses them.
-- **Justified indirection** — split files only when reduced context or complexity outweighs navigation cost.
-- **Aggressive pruning** — remove stale, irrelevant, behaviorally inert, or cheaply discoverable instructions.
+- **One authoritative source** — give each rule, definition, or invariant a canonical home; repeat critical constraints only when locality materially improves reliability.
+- **Useful pointers** — say what referenced material contains and when it should be loaded.
+- **Locality with justified indirection** — keep rules and completion conditions near the workflow that uses them; split files only when reduced context or complexity outweighs navigation cost.
+- **Aggressive pruning** — remove stale, irrelevant, behaviorally inert, or cheaply recoverable instructions.
 
-Optimize for minimum sufficient context, not minimum length.
+Optimize for minimum sufficient context, not minimum length or maximum coverage.
 
 ---
 
@@ -98,18 +92,17 @@ Optimize for minimum sufficient context, not minimum length.
 
 A skill that cannot be discovered reliably is functionally absent.
 
-Treat discovery metadata as an index, not marketing copy. It should explain both **what the skill does** and **when it should be selected**. Routing-critical information belongs here because it must be available before the skill body is loaded.
+Treat discovery metadata as an index, not marketing copy. It should explain both **what the skill does** and **when it should be selected** because routing-critical information must be available before the skill body is loaded.
 
-When multiple skills coexist, design for:
+When multiple skills coexist, prefer:
 
-- distinct and discriminating triggers,
-- minimal unnecessary overlap,
+- distinct, discriminating triggers with minimal unnecessary overlap,
 - clear model-invoked vs. user-invoked behavior,
 - explicit dependencies where composition is intentional,
 - router skills only when they reduce real discovery cost,
 - granularity justified by independent discoverability or materially different context.
 
-Good execution cannot compensate for failed routing, and good routing cannot compensate for an unreliable workflow.
+Good execution cannot compensate for failed routing, and good routing cannot compensate for unreliable execution.
 
 ---
 
@@ -133,21 +126,9 @@ skill-name/
 
 `SKILL.md` should remain the canonical behavioral entry point. Runtime-specific metadata should extend the skill rather than redefine it.
 
-Engineering concerns include:
+Engineering concerns include valid frontmatter and naming, stable relative references, minimal runtime assumptions, explicit dependencies, bounded tool permissions, deterministic mechanisms for deterministic work, and portable packaging where useful.
 
-- valid frontmatter and naming,
-- stable relative references,
-- minimal runtime assumptions,
-- explicit dependencies,
-- bounded tool permissions,
-- deterministic mechanisms for deterministic work,
-- portable packaging where useful.
-
-### Trust boundaries
-
-A skill can declare behavioral scope, but **prompt text is not an authorization boundary**. Sensitive permissions, access control, and irreversible actions must be enforced by the runtime or tool layer.
-
-Treat bundled instructions, scripts, retrieved content, and tool outputs according to their trust level. External content should not gain authority merely because it appears inside the execution context.
+A skill can declare behavioral scope, but **prompt text is not an authorization boundary**. Sensitive permissions, access control, and irreversible actions must be enforced by the runtime or tool layer. Treat bundled instructions, scripts, retrieved content, and tool outputs according to their trust level; external content should not gain authority merely because it appears in context.
 
 Format compliance is the floor, not the definition of a good skill.
 
@@ -157,21 +138,20 @@ Format compliance is the floor, not the definition of a good skill.
 
 A skill should be inspectable as an artifact, independently of any particular model run.
 
-Dynamic evals can observe end-to-end system behavior, but they are weak as a primary measure of skill quality. For mechanically checkable instructions, pass/fail rates largely measure the executing model's ability to follow conditions and constraints; changing the model can change the result without changing the skill. For ambiguous timing, soft constraints, or judgment-heavy behavior, failures are harder to attribute: the cause may be model capability, skill wording, missing context, runtime behavior, task selection, or evaluator ambiguity.
+Dynamic eval is usually a poor default for skill quality assurance: it is costly, noisy, difficult to attribute, and often provides little actionable guidance for improving the skill itself. Mechanically checkable rules can usually be inspected directly. Judgment-heavy evals add model, task-selection, evaluator, and sampling variance, while synthetic cases may still fail to represent real use. Repeated trials can estimate system-level tendencies, but only at additional cost.
 
-Dynamic eval therefore measures the interaction of **skill × model × runtime × task distribution**, not the skill in isolation. Use it when that interaction is what you need to validate, but do not treat it as a clean measurement of the skill artifact itself.
+Use dynamic eval when a concrete behavioral uncertainty cannot be resolved adequately by inspection and the expected information gain justifies the cost. Treat the result as evidence about **skill × model × runtime × task distribution**, not as an isolated score of the skill artifact.
 
 Prefer static inspection of what the skill actually imposes. Review:
 
-- the number of decision points, triggers, and behavioral constraints,
-- ambiguous or weakly specified triggers and constraints,
-- the share of decisions and constraints that require discretionary judgment,
+- ambiguous or weakly specified triggers, decisions, and constraints,
+- unnecessary discretionary judgment,
 - overlapping, contradictory, or duplicated rules,
 - unverifiable completion conditions,
-- unnecessary model judgment where deterministic mechanisms would suffice,
+- probabilistic execution where deterministic mechanisms would suffice,
 - stale references, broken dependencies, and invalid runtime assumptions.
 
-Where useful, count these explicitly: total triggers and constraints, how many are ambiguous, and the resulting ambiguity ratio. The goal is not to eliminate judgment, but to make each use of model judgment necessary, deliberate, and as well-bounded as the task permits.
+Counts can expose structure, but they are not quality scores. The goal is not to eliminate judgment or maximize rule coverage; it is to make each encoded constraint and each use of model judgment necessary, deliberate, and well-bounded.
 
 Merge, simplify, or delete skills when they no longer earn their complexity.
 
@@ -181,12 +161,12 @@ Merge, simplify, or delete skills when they no longer earn their complexity.
 
 Before adding or changing a skill, ask:
 
-1. **Task fit** — Is this reusable behavior worth skillizing?
-2. **Contract** — Are behavior, scope, completion, failure, and stopping conditions explicit?
-3. **Context** — Is information loaded only where it is needed?
+1. **Task fit** — Is this reusable behavior or knowledge worth skillizing?
+2. **Contract** — Where a workflow exists, are scope, decisions, completion, failure, and stopping conditions explicit?
+3. **Context** — Is each piece of information better encoded than recovered when needed?
 4. **Routing** — Can the right task discover the skill without excessive overlap?
 5. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 6. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-7. **Inspectability** — How many decisions and constraints does the skill impose, how many are ambiguous, and can unnecessary judgment be removed?
+7. **Inspectability** — Can ambiguity, contradiction, stale assumptions, and unnecessary judgment be found directly, and is any dynamic eval worth its cost?
 
-> **A good skill makes the surrounding system clearer, cheaper, more reliable, more constrained, more reusable, and easier to verify.**
+> **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**
