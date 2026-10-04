@@ -27,6 +27,8 @@ A skill should encode reusable task knowledge or execution patterns that materia
 
 Encode only what earns its context and maintenance cost. Preserve judgment where fixed rules would add more complexity than value.
 
+A skill also has a **complexity budget**. Every durable rule, phase, checkpoint, file, indirection, and eval should justify itself by reducing expected reasoning cost, behavioral variance, risk, or verification cost. Prefer the smallest contract that reliably changes behavior. Completeness means enough structure to execute and verify the task—not exhaustively restating general doctrine, encoding analysis that can be cheaply re-derived, or forcing confirmation when no behavior-changing uncertainty remains.
+
 ---
 
 ## L1 — Scope and Placement
@@ -82,9 +84,10 @@ Use these rules:
 - **One authoritative source** — give each rule, definition, or invariant a canonical home; repeat critical constraints only when locality materially improves reliability.
 - **Useful pointers** — say what referenced material contains and when it should be loaded.
 - **Locality with justified indirection** — keep rules and completion conditions near the workflow that uses them; split files only when reduced context or complexity outweighs navigation cost.
+- **Budget ceremony and indirection** — extra phases, checkpoints, references, files, and validation machinery are costs; keep them only when they materially improve routing, reliability, safety, or verification.
 - **Aggressive pruning** — remove stale, irrelevant, behaviorally inert, or cheaply recoverable instructions.
 
-Optimize for minimum sufficient context, not minimum length or maximum coverage.
+Optimize for minimum sufficient context and procedure, not minimum length or maximum coverage.
 
 ---
 
@@ -151,9 +154,10 @@ Before adding or changing a skill, ask:
 1. **Task fit** — Is this reusable behavior or knowledge worth skillizing?
 2. **Contract** — Where a workflow exists, are scope, decisions, completion, failure, and stopping conditions explicit?
 3. **Context** — Is each piece of information better encoded than recovered when needed?
-4. **Routing** — Can the right task discover the skill without excessive overlap?
-5. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
-6. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-7. **Inspectability** — Can artifact defects be found directly, and is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
+4. **Complexity budget** — Does each durable rule, stage, checkpoint, file, indirection, or eval earn its ongoing context and maintenance cost?
+5. **Routing** — Can the right task discover the skill without excessive overlap?
+6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
+7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
+8. **Inspectability** — Can artifact defects be found directly, and is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
 
 > **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**
