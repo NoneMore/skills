@@ -1,32 +1,46 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+description: Interactively pressure-test a user's plan, decision, or idea through iterative questions. Use when the user explicitly wants to be grilled, interrogated, pressure-tested, or challenged through questions. Do not use for ordinary clarification, one-shot critique, or culinary grilling.
 ---
 
-Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
+Treat grilling as **decision clarification**, not exhaustive interviewing. Improve decision quality with the minimum sufficient questioning needed for the user's requested outcome.
 
-Work the tree in **rounds**. The **frontier** is every unsettled decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round.
+## Focus on material state
 
-Questions in the same round must be **parallel**. If answering one could change whether another should be asked, what it means, which answers are valid, or what you would recommend, they are not parallel: ask the upstream decision first and defer the other. Never batch a decision with its descendant. Recompute the frontier after every round.
+Track only decisions, facts, and assumptions that could materially change the requested outcome, recommendation, risk posture, or execution constraints. Track prerequisites only where they affect what is meaningful to resolve next.
 
-Prefer the harness's native structured question tool when available. Treat each frontier node as a separate question, use choices when natural, and include your recommended answer. If the tool has per-call limits, split the frontier across calls, but do not advance downstream until the whole frontier is answered.
+Actively surface material assumptions, failure modes, or conflicting alternatives the user has not named. Look for the upstream decision behind the surface question; distinguish ends from means, preferences from constraints, and reversible choices from commitments. Challenge answers that conflict with the objective, constraints, evidence, or earlier answers.
 
-Without a structured question tool, format a round like so:
+When material choices are mutually coupled, treat them as a joint tradeoff instead of forcing an artificial prerequisite order. Drop branches that become immaterial or dominated after upstream resolutions.
 
-```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+## Choose the next resolution
 
-➡️ <your recommended answer>
+Prefer unresolved material items with the highest **decision leverage**: items most likely to eliminate or reshape downstream work, resolve important uncertainty, expose material risk, or change the recommendation. Let answer or retrieval cost defer lower-value items, but do not silently prune something that remains material.
 
----
+Ask the user only when resolution genuinely requires user input:
 
-❓ **Q2** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+- Ask for personal values or judgments when the outcome depends on them. If the user delegates such a judgment, decide from the stated objective, constraints, and preferences.
+- Ask for private or user-specific facts only the user can authoritatively provide.
+- Recover external facts or evidence with available tools when doing so is reasonably cheap and relevant to a material decision.
 
-➡️ <your recommended answer>
-```
+Treat recovered information as settled only when its authority, freshness, and specificity are adequate for the decision. Do not turn weak, stale, generic, or indirect evidence into a fact about the user's case; keep material uncertainty explicit when the evidence is insufficient.
 
-Then wait for the user's answers before advancing the tree.
+Select the minimum sufficient set of independent user questions. If one answer could change whether another question should be asked, what it means, its valid answers, or the recommendation, ask the upstream question first. Never batch a question with its dependent descendant. Re-evaluate the material state after each user round and after newly recovered material information.
 
-Finding _facts_ is your job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent to find it; don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The _decisions_ are the user's: put each to them and wait.
+If material uncertainty cannot be resolved, test whether the requested outcome can still be handled responsibly through robustness across plausible outcomes, reversibility, staged commitment, bounded downside, or contingency planning. Keep the uncertainty explicit when such a path exists. Treat it as a blocker only when it prevents responsible completion of the requested outcome.
 
-The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
+## Run the interaction
+
+Prefer the harness's native structured question tool when available; otherwise use compact numbered questions. Avoid anchoring the user before eliciting a genuinely personal value or preference. Offer a recommendation when it serves the requested outcome and there is a defensible basis; do not require a separate delegation ceremony for instrumental or technical recommendations once the relevant objective, constraints, and preferences are clear.
+
+Wait for the user's answers before advancing dependent branches.
+
+## Finish on material completeness
+
+The grilling is complete when the material state is sufficient for the user's requested outcome. If the user wants a choice or recommendation, the state must be sufficient to choose or recommend responsibly. Otherwise it is enough to make the materially relevant conclusions, assumptions, risks, and residual uncertainty clear without forcing a direction.
+
+At completion, present a compact decision snapshot with the objective and requested outcome, settled material decisions and constraints, important assumptions or risks, the current conclusion or recommendation when applicable, and any residual uncertainty that still matters. Invite corrections; if a correction invalidates the basis of a dependent decision, reopen that decision and continue from the revised state.
+
+If unresolved uncertainty blocks responsible completion, present the current snapshot, name the blocker and affected decisions, and state what evidence or user input would unblock the session.
+
+If the user asks to stop, summarize the current state and stop.
