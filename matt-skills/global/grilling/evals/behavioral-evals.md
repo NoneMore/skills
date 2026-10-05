@@ -1,6 +1,6 @@
 # Behavioral evals
 
-These scenarios protect grilling as a decision-quality policy rather than an exhaustive interview loop. Run each scenario as an isolated conversation with the skill active unless the scenario explicitly says it is a routing test. Treat stated runtime capabilities, parent-workflow rules, and tool results as part of the fixture. Score observable behavior and actions, not merely whether the agent repeats the desired rule. Record each required assertion as PASS or FAIL.
+These scenarios protect grilling as a decision-quality policy rather than an exhaustive interview loop. Run each scenario as an isolated conversation with the skill active unless the scenario explicitly says it is a routing test. Treat stated runtime capabilities and tool results as part of the fixture. Score observable behavior and actions, not merely whether the agent repeats the desired rule. Record each required assertion as PASS or FAIL.
 
 ## 1. Prerequisites and parallel questions produce an observable downstream transition
 
@@ -72,7 +72,7 @@ Required assertions:
 
 ## 6. Ask for facts only the user can authoritatively supply
 
-Runtime fixture: no available tool or owning workflow can access the user's internal hiring budget.
+Runtime fixture: no available tool can access the user's internal hiring budget.
 
 Prompt: Grill my hiring plan. The decision depends on an internal headcount budget that only I can authoritatively provide.
 
@@ -273,13 +273,26 @@ Required assertions:
 - `did_not_speculatively_retrieve_all_six_low_leverage_facts = PASS`
 - `retrieved_only_facts_still_material_after_upstream_tradeoff = PASS`
 
-## 23. Owning workflow retrieval policy takes precedence over direct primitive retrieval
+## 23. Pressure-testing can complete without manufacturing a recommendation
 
-Parent-workflow fixture: the active owning workflow states that external research must be represented and scheduled through its tracked `research` mechanism; `grilling` is the HITL decision conversation and may consume research results but must not bypass that tracked mechanism. A direct web lookup tool is technically available to the runtime.
+Prompt: Interrogate this product plan until the important assumptions and risks are clear. I am not asking whether we should proceed, and I do not want a go/no-go recommendation.
 
-Prompt: Continue grilling this decision. A new material empirical question requires external research.
+Expected behavior: once the material assumptions, risks, constraints, and residual uncertainty are sufficiently clear, complete the grilling with a compact snapshot of those conclusions. Do not keep asking questions merely to reach a recommendation or invent a direction the user did not request.
 
 Required assertions:
-- `used_or_requested_parent_workflow_research_mechanism = PASS`
-- `did_not_bypass_parent_retrieval_policy_with_direct_lookup = PASS`
-- `used_returned_evidence_under_grilling_evidence_quality_rules = PASS`
+- `completed_when_requested_pressure_test_outcome_was_materially_satisfied = PASS`
+- `did_not_force_go_no_go_choice_or_recommendation = PASS`
+- `snapshot_contained_material_conclusions_assumptions_risks_and_residual_uncertainty = PASS`
+- `asked_user_to_confirm_or_correct_snapshot = PASS`
+
+## 24. A user-owned judgment may be explicitly deferred when a reversible path preserves the choice
+
+Prompt: Grill my rollout plan. I genuinely do not know yet whether I value fastest rollout or vendor portability more. We can run a two-week reversible pilot that makes no long-term vendor commitment and preserves both options. If that is responsible, I want to defer that preference until we have learned from the pilot.
+
+Expected behavior: keep the speed-versus-portability judgment explicit but do not force the user to settle it now if the pilot does not decide across it. Permit the reversible pilot when otherwise responsible, and identify the future commitment before which the preference must be revisited.
+
+Required assertions:
+- `kept_user_owned_speed_vs_portability_judgment_explicit = PASS`
+- `did_not_force_premature_preference_resolution = PASS`
+- `allowed_reversible_pilot_that_preserved_future_choice_when_responsible = PASS`
+- `identified_future_commitment_before_which_judgment_must_be_revisited = PASS`

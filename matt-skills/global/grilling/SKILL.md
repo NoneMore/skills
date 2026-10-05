@@ -1,9 +1,9 @@
 ---
 name: grilling
-description: Interactively stress-test a user's plan, decision, or idea by surfacing high-leverage unresolved judgments and assumptions in dependency-aware rounds. Use when the user explicitly wants to be grilled, interrogated, pressure-tested, or challenged through iterative questions before a recommendation. Do not use for one-shot critique, ordinary clarification, or culinary grilling.
+description: Interactively stress-test a user's plan, decision, or idea by surfacing high-leverage unresolved judgments and assumptions in dependency-aware rounds. Use when the user explicitly wants to be grilled, interrogated, pressure-tested, or challenged through iterative questions to clarify material assumptions, risks, tradeoffs, or a decision. Do not use for one-shot critique, ordinary clarification, or culinary grilling.
 ---
 
-Treat grilling as **decision clarification**, not exhaustive interviewing. Improve decision quality with the minimum sufficient questioning needed to resolve the material decision state.
+Treat grilling as **decision clarification**, not exhaustive interviewing. Improve decision quality with the minimum sufficient questioning needed for the user's requested outcome.
 
 ## Build the decision model
 
@@ -25,7 +25,7 @@ Prune branches whose answers are unlikely to change a downstream decision, recom
 
 The **resolution frontier** is the unresolved material nodes whose prerequisites are resolved or sufficiently characterized as nonblocking for that node under the uncertainty policy. Choose a resolution channel before deciding whether to ask the user:
 
-- **User-owned value or judgment** — ask the user before deciding across it. If the user delegates that judgment, decide from the settled objective, constraints, and stated preferences. Instrumental or technical choices may be recommended from the settled decision state without requiring a separate delegation step.
+- **User-owned value or judgment** — ask the user before deciding across it. If the user delegates that judgment, decide from the settled objective, constraints, and stated preferences. Instrumental or technical choices may be recommended from the settled decision state without requiring a separate delegation step. A user-owned judgment may remain explicitly deferred when the current staged or reversible path does not decide across it and preserves the future choice; revisit it before any dependent commitment.
 - **Private or user-specific fact only the user can authoritatively state** — ask the user.
 - **Externally recoverable fact, empirical assumption, or unresolved material uncertainty** — load `references/evidence-and-uncertainty.md` and follow it for that branch.
 
@@ -39,21 +39,23 @@ After each round and each newly recovered piece of material information, recompu
 
 Prefer the harness's native structured question tool when available; treat each selected user question as a separate question and use choices when natural.
 
-Offer a current recommendation when there is a defensible default and doing so helps expose the tradeoff. Avoid anchoring the user before eliciting a genuinely personal value or preference.
+Offer a recommendation only when it serves the user's requested outcome and there is a defensible default. Avoid anchoring the user before eliciting a genuinely personal value or preference.
 
 Without a structured question tool, use compact numbered questions and include a recommendation only when useful. Then wait for the user's answers before advancing dependent branches.
 
 ## Finish on material completeness
 
-The grilling is complete when the material decision state is sufficient to choose or recommend a direction responsibly. Every currently material node must be resolved or explicitly retained as nonblocking uncertainty with its decision implications understood. Nodes that become immaterial or dominated after upstream resolutions may be pruned.
+The grilling is complete when the material state is sufficient for the user's requested outcome. If the user wants a choice or recommendation, the state must be sufficient to choose or recommend responsibly. Otherwise it must be sufficient to state the materially relevant conclusions, assumptions, risks, and residual uncertainty without forcing a direction.
+
+Every currently material node must be resolved, explicitly retained as nonblocking uncertainty, or—when it is a user-owned judgment—explicitly deferred because the current path does not decide across it and preserves the future choice. Nodes that become immaterial or dominated after upstream resolutions may be pruned.
 
 At completion, present a compact decision snapshot containing:
 
-- the objective,
+- the objective and requested outcome,
 - settled material decisions and constraints,
 - important assumptions or residual risks,
-- the current recommendation or chosen direction,
-- unresolved uncertainty that still matters, why it is nonblocking, and how the direction accounts for it.
+- the current conclusion, recommendation, or chosen direction, as applicable,
+- unresolved uncertainty and deferred user-owned judgments that still matter, why they are nonblocking or safely deferred, and when they must be revisited.
 
 Ask the user to confirm or correct the snapshot. Confirmation completes grilling; it does not authorize consequential actions, which remain subject to normal runtime permission and confirmation rules.
 
