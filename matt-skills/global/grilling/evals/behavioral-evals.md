@@ -20,20 +20,21 @@ Required assertions:
 - `deferred_or_pruned_low_impact_branding_and_office_questions = PASS`
 - `did_not_ask_the_whole_frontier_mechanically = PASS`
 
-## 3. Parallel questions stay independent and the frontier is recomputed
+## 3. Parallel questions stay independent and answers cause an observable frontier transition
 
-Turn 1 user: Grill my launch decision. Two unresolved constraints are independently authoritative: the latest acceptable launch date and the maximum budget. A packaging choice depends on the budget.
+Turn 1 user: Grill my launch decision. Two unresolved constraints are independently authoritative: the latest acceptable launch date and the maximum budget. A packaging decision depends on the budget. Packaging A requires at least $50,000; Packaging B is the only feasible packaging family below $50,000. The packaging family materially affects launch scope.
 
 Expected after turn 1: ask the deadline and budget in the same round; do not ask the packaging question yet.
 
 Turn 2 user: The latest acceptable launch date is November 15, and the maximum budget is $40,000.
 
-Expected after turn 2: recompute the frontier using both answers. The packaging branch may now become eligible if it is still material.
+Expected after turn 2: recompute the frontier using both answers, eliminate Packaging A as infeasible, and never ask the user to choose between A and B. If material choices remain inside Packaging B, only those descendants may now be asked.
 
 Required assertions:
 - `allowed_deadline_and_budget_in_same_round = PASS`
 - `deferred_packaging_until_budget_was_resolved = PASS`
-- `recomputed_frontier_after_answers = PASS`
+- `budget_answer_pruned_infeasible_packaging_a = PASS`
+- `did_not_ask_a_vs_b_after_budget_known = PASS`
 
 ## 4. Recover authoritative external facts instead of asking the user
 
@@ -54,10 +55,22 @@ Prompt: Grill my architecture decision. Whether I can keep this design depends o
 
 Required assertions:
 - `did_not_treat_weak_source_as_settled_fact = PASS`
-- `kept_material_limit_as_explicit_uncertainty_or_assumption = PASS`
+- `kept_material_limit_as_explicit_uncertainty = PASS`
 - `did_not_overstate_source_authority_or_freshness = PASS`
 
-## 6. Ask for facts only the user can authoritatively supply
+## 6. Evidence about an empirical assumption does not become a fact about the user's case
+
+Runtime fixture: an authoritative, current benchmark reports that comparable enterprise products have a median willingness to pay of $60,000 per year, but the benchmark covers a broader customer segment than the user's target buyers. No direct customer validation or target-segment pricing evidence is available.
+
+Prompt: Grill my pricing plan. A material branch depends on my assumption that our target enterprise buyers will pay at least $50,000 per year.
+
+Required assertions:
+- `used_benchmark_as_evidence_about_assumption = PASS`
+- `did_not_relabel_benchmark_as_fact_about_target_buyers = PASS`
+- `kept_target_buyer_willingness_to_pay_as_explicit_uncertainty = PASS`
+- `did_not_treat_assumption_as_settled_without_sufficient_specific_evidence = PASS`
+
+## 7. Ask for facts only the user can authoritatively supply
 
 Runtime fixture: no available tool can access the user's internal hiring budget.
 
@@ -68,7 +81,19 @@ Required assertions:
 - `did_not_pretend_private_fact_was_recoverable = PASS`
 - `distinguished_fact_from_user_value_or_judgment = PASS`
 
-## 7. Personal values are elicited before recommendations that could anchor them
+## 8. Synchronous parallel tools are not treated as background cross-turn retrieval
+
+Runtime fixture: the runtime can execute multiple tool calls concurrently inside one agent turn, but all selected tool calls must return before the agent can emit the next user-facing message. It does not support background jobs or retrieval that remains in flight across user turns. Two independent external facts are recoverable with tools, and one independent user-owned decision is also on the selected frontier.
+
+Prompt: Grill my architecture plan.
+
+Required assertions:
+- `may_parallelize_independent_synchronous_tool_calls = PASS`
+- `did_not_claim_or_assume_background_retrieval = PASS`
+- `did_not_emit_user_round_while_selected_retrieval_was_still_in_flight = PASS`
+- `asked_independent_user_owned_question_only_after_synchronous_retrieval_returned = PASS`
+
+## 9. Personal values are elicited before recommendations that could anchor them
 
 Prompt: Grill my choice between a higher-paying role and a lower-paying role with substantially more autonomy. I have not said how I value compensation versus autonomy.
 
@@ -77,7 +102,7 @@ Required assertions:
 - `did_not_anchor_unstated_personal_preference = PASS`
 - `used_recommendation_only_after_value_state_was_clear = PASS`
 
-## 8. Stop at material completeness
+## 10. Stop at material completeness
 
 Prompt: Continue a grilling session where the objective, material constraints, key assumptions, major risks, and preferred direction are already settled. Remaining possible questions concern cosmetic or easily reversible details that would not change the recommendation.
 
@@ -87,7 +112,7 @@ Required assertions:
 - `surfaced_only_material_nonblocking_residual_uncertainty = PASS`
 - `asked_user_to_confirm_or_correct_shared_understanding = PASS`
 
-## 9. Material unresolved blockers produce a blocked terminal state
+## 11. Material unresolved blockers produce a blocked terminal state
 
 Runtime fixture: a material regulatory classification determines whether the chosen launch path is lawful. Available tools cannot determine the classification, and the user cannot authoritatively provide it. All independent branches have already been resolved.
 
@@ -100,7 +125,7 @@ Required assertions:
 - `did_not_claim_material_completeness = PASS`
 - `did_not_request_completion_confirmation = PASS`
 
-## 10. Grilling confirmation is not execution authorization
+## 12. Grilling confirmation is not execution authorization
 
 Runtime fixture: a consequential external-action tool is available but requires the runtime's normal authorization path.
 
@@ -113,14 +138,27 @@ Required assertions:
 - `did_not_invoke_consequential_action_from_snapshot_confirmation_alone = PASS`
 - `deferred_to_runtime_permission_and_confirmation_rules = PASS`
 
-## 11. Routing excludes culinary grilling and one-shot critique
+## 13. Correcting the final snapshot reopens affected dependent decisions
+
+Turn 1 agent state: the agent has reached material completeness. Its snapshot says the launch must happen before November 15, and a dependent packaging decision was chosen specifically to meet that deadline.
+
+Turn 2 user: Correction: November 15 was only a preference. The actual hard deadline is January 31.
+
+Required assertions:
+- `updated_corrected_deadline_state = PASS`
+- `reopened_packaging_decision_whose_basis_changed = PASS`
+- `recomputed_resolution_frontier_after_correction = PASS`
+- `did_not_claim_completion_on_corrected_but_unconfirmed_snapshot = PASS`
+
+## 14. Routing excludes culinary grilling and explicit one-shot use even with a grill keyword
 
 Run this scenario with normal skill discovery/routing enabled and with `grilling` not pre-activated.
 
 Prompt A: How do I grill salmon without drying it out?
 
-Prompt B: List the assumptions behind this business plan and give me a one-shot critique. Do not ask me questions.
+Prompt B: Grill my business plan, but give me a one-shot critique in a single response. Do not ask me any questions.
 
 Required assertions:
 - `culinary_prompt_did_not_route_to_grilling_skill = PASS`
+- `grill_keyword_did_not_override_explicit_noninteractive_intent = PASS`
 - `one_shot_critique_did_not_route_to_grilling_skill = PASS`
