@@ -17,35 +17,35 @@ Track prerequisites among them. Actively surface material assumptions, failure m
 
 Look for the upstream decision behind the surface question; distinguish means from ends, preferences from constraints, and reversible choices from commitments. Challenge answers that conflict with the objective, constraints, evidence, or earlier answers.
 
-When two material choices are mutually coupled, treat them as a joint tradeoff to resolve rather than reciprocal prerequisites that deadlock eligibility.
+When a set of material choices is mutually coupled, treat it as a joint tradeoff to resolve rather than reciprocal prerequisites that deadlock eligibility.
 
 Prune branches whose answers are unlikely to change a downstream decision, recommendation, material risk, or execution constraint.
 
 ## Select the next resolutions
 
-The **resolution frontier** is the unresolved material nodes whose prerequisites are resolved or explicitly nonblocking for that node under the uncertainty policy. Choose a resolution channel before deciding whether to ask the user:
+The **resolution frontier** is the unresolved material nodes whose prerequisites are resolved or sufficiently characterized as nonblocking for that node under the uncertainty policy. Choose a resolution channel before deciding whether to ask the user:
 
-- **Personal value or undelegated judgment** — ask the user. If the user explicitly delegates a choice, make it from the settled objective, constraints, and preferences rather than inventing additional preferences.
+- **User-owned value or judgment** — ask the user before deciding across it. If the user delegates that judgment, decide from the settled objective, constraints, and stated preferences. Instrumental or technical choices may be recommended from the settled decision state without requiring a separate delegation step.
 - **Private or user-specific fact only the user can authoritatively state** — ask the user.
 - **Externally recoverable fact, empirical assumption, or unresolved material uncertainty** — load `references/evidence-and-uncertainty.md` and follow it for that branch.
 
 Prioritize eligible nodes by **decision leverage**: prefer resolutions most likely to eliminate or reshape downstream branches, resolve important uncertainty, expose material risk, or change the recommendation. Let answer or retrieval cost defer low-value nodes.
 
-The **question frontier** is the selected resolution-frontier subset that requires a user response. Questions in the same round must be independent: if one answer could change whether another should be asked, what it means, its valid answers, or the recommendation, ask the upstream question first. Never batch a node with its descendant.
+Select the minimum sufficient set of high-leverage eligible nodes. Ask the user only for selected nodes whose resolution genuinely requires user input; resolve selected recoverable nodes through their appropriate channel. Questions asked in the same round must be independent: if one answer could change whether another should be asked, what it means, its valid answers, or the recommendation, ask the upstream question first. Never batch a node with its descendant.
 
-Ask the minimum sufficient set of high-leverage questions, resolve selected tool-recoverable nodes, then recompute the decision model after every round and after newly recovered material information. Do not mechanically resolve the whole frontier. Deferred material nodes remain unresolved and must be reconsidered before completion; do not prune them merely to reduce question count.
+After each round and each newly recovered piece of material information, recompute the decision model. Do not mechanically resolve the whole frontier. Deferred material nodes remain unresolved and must be reconsidered before completion; low leverage justifies deferral, not pruning.
 
 ## Run the interaction
 
-Prefer the harness's native structured question tool when available; treat each selected question-frontier node as a separate question and use choices when natural.
+Prefer the harness's native structured question tool when available; treat each selected user question as a separate question and use choices when natural.
 
-Offer a current recommendation only when there is a defensible default and doing so helps expose the tradeoff. Avoid anchoring the user before eliciting a genuinely personal value or preference.
+Offer a current recommendation when there is a defensible default and doing so helps expose the tradeoff. Avoid anchoring the user before eliciting a genuinely personal value or preference.
 
 Without a structured question tool, use compact numbered questions and include a recommendation only when useful. Then wait for the user's answers before advancing dependent branches.
 
 ## Finish on material completeness
 
-The grilling is complete when the material decision state is sufficient to choose or recommend a direction responsibly. Every material node must be resolved, explicitly retained as nonblocking uncertainty with its decision implications understood, or pruned for a stated reason such as immateriality or dominance.
+The grilling is complete when the material decision state is sufficient to choose or recommend a direction responsibly. Every currently material node must be resolved or explicitly retained as nonblocking uncertainty with its decision implications understood. Nodes that become immaterial or dominated after upstream resolutions may be pruned.
 
 At completion, present a compact decision snapshot containing:
 

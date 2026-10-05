@@ -1,10 +1,12 @@
 # Evidence, retrieval, and uncertainty
 
-Load this reference when the selected resolution frontier contains an externally recoverable fact, an empirical assumption that needs evidence, or material uncertainty that cannot yet be resolved.
+Load this reference when a selected resolution involves an externally recoverable fact, an empirical assumption that needs evidence, or material uncertainty that cannot yet be resolved.
+
+When an owning workflow defines its own research, retrieval, or persistence mechanism, use that mechanism rather than bypassing it. This reference governs how grilling evaluates the resulting facts, evidence, and uncertainty.
 
 ## Recover facts and evidence
 
-Do not ask the user for facts or external evidence that can be recovered reliably with available tools at reasonable cost. Use available tools or delegated agents when the runtime supports them.
+Do not ask the user for facts or external evidence that can be recovered reliably with the available mechanism at reasonable cost. Use available tools, delegated agents, or the owning workflow's retrieval path as appropriate.
 
 Treat a recovered fact as settled only when its source authority, freshness, and specificity are adequate for the decision. Otherwise keep it as explicit uncertainty rather than silently upgrading weak evidence to fact.
 
@@ -14,9 +16,9 @@ If a required fact cannot be recovered and the user cannot authoritatively provi
 
 ## Respect runtime retrieval semantics
 
-If the runtime supports **background retrieval that can remain in flight across user turns**, continue with independent question-frontier nodes while retrieval is pending.
+If the active retrieval mechanism supports **background work that can remain in flight across user turns**, continue with independent user questions while retrieval is pending.
 
-If retrieval is synchronous—even when multiple tool calls can run in parallel—do not leave selected retrieval in flight across a user turn. It is valid to ask an independent user question before starting that retrieval; once synchronous retrieval has started, finish it before emitting the next user-facing round. Do not assume sub-agents, background execution, or cross-turn concurrency exist.
+If retrieval is synchronous—even when multiple tool calls can run in parallel—do not leave started retrieval in flight across a user turn. It is valid to ask an independent user question before starting retrieval; once synchronous retrieval has started, finish it before emitting the next user-facing round. Do not assume sub-agents, background execution, or cross-turn concurrency exist.
 
 ## Decide responsibly under irreducible uncertainty
 
@@ -27,9 +29,9 @@ Material uncertainty does not automatically block a dependent decision. Treat it
 - staged commitment,
 - bounded downside,
 - contingency planning,
-- an explicit risk tradeoff.
+- an explicit risk tradeoff where the downside is within the user's authority and compatible with applicable constraints.
 
-For each dependent decision, once the uncertainty is characterized well enough to judge those protections, mark it **nonblocking for that decision** when a responsible path exists. That dependent decision may then enter the resolution frontier even though the uncertainty itself remains unresolved.
+For each dependent decision, once the uncertainty is characterized well enough to judge those protections, treat it as **nonblocking for that decision** when a responsible path exists. That dependent decision may then become eligible even though the uncertainty itself remains unresolved.
 
 Retain material residual uncertainty in the decision state when it is nonblocking, including why it is nonblocking and how the proposed direction accounts for it.
 
