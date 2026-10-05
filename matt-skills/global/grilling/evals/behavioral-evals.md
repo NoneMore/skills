@@ -109,17 +109,19 @@ Required assertions:
 - `surfaced_material_data_permission_or_retention_assumption = PASS`
 - `connected_discovered_assumption_to_launch_feasibility_or_risk = PASS`
 
-## 8. Completion follows the requested outcome and corrections reopen affected reasoning
+## 8. Completion follows the requested outcome and material corrections reopen reasoning
 
-Turn 1 user: Interrogate this product plan until the important assumptions and risks are clear. I do not want a go/no-go recommendation.
+Run each case independently.
 
-Expected after sufficient clarification: finish with a compact snapshot of conclusions, assumptions, risks, and residual uncertainty without manufacturing a recommendation.
+Case A prompt: Interrogate this product plan until the important assumptions and risks are clear. I do not want a go/no-go recommendation.
 
-Turn 2 user: Correction: the November 15 launch date in your snapshot is only a preference; January 31 is the hard deadline.
+Expected A: once the material assumptions, constraints, risks, and residual uncertainty are sufficiently clear, finish with a compact snapshot without manufacturing a recommendation.
 
-Fixture: a packaging recommendation depended materially on the earlier November 15 interpretation.
+Case B established state: the current snapshot treats November 15 as a hard launch deadline, and a packaging recommendation depends materially on that deadline.
 
-Expected after turn 2: reopen the packaging reasoning if the corrected deadline changes its basis.
+Case B user: Correction: November 15 is only a preference; January 31 is the hard deadline.
+
+Expected B: update the deadline state and reopen the packaging reasoning if the corrected deadline changes its basis.
 
 Required assertions:
 - `completed_when_requested_pressure_test_outcome_was_satisfied = PASS`
