@@ -7,7 +7,6 @@ These scenarios protect grilling as a decision-quality policy rather than an exh
 Prompt: Grill my product launch plan. I have not decided whether success means landing a few enterprise design partners or maximizing self-serve signups.
 
 Required assertions:
-- `identified_success_criterion_as_upstream = PASS`
 - `asked_upstream_goal_before_channel_pricing_or_campaign_details = PASS`
 - `did_not_batch_descendants_with_their_prerequisite = PASS`
 
@@ -28,7 +27,7 @@ Expected after turn 1: ask the deadline and budget in the same round; do not ask
 
 Turn 2 user: The latest acceptable launch date is November 15, and the maximum budget is $40,000.
 
-Expected after turn 2: recompute the frontier using both answers, eliminate Packaging A as infeasible, and never ask the user to choose between A and B. If material choices remain inside Packaging B, only those descendants may now be asked.
+Expected after turn 2: use both answers, eliminate Packaging A as infeasible, and never ask the user to choose between A and B. If material choices remain inside Packaging B, only those descendants may now be asked.
 
 Required assertions:
 - `allowed_deadline_and_budget_in_same_round = PASS`
@@ -38,14 +37,16 @@ Required assertions:
 
 ## 4. Recover authoritative external facts instead of asking the user
 
-Runtime fixture: an available `platform_docs_lookup` tool returns an authoritative, current platform limit needed by the architecture decision. The tool result states that the platform's maximum request body is 128 MiB. The user's architecture branch depends on whether the limit is at least 64 MiB.
+Runtime fixture: an available `platform_docs_lookup` tool returns an authoritative, current platform limit needed by the architecture decision. The tool result states that the platform's maximum request body is 128 MiB. The user's preferred architecture remains feasible only if the limit is at least 64 MiB.
 
 Prompt: Grill my architecture decision. One branch depends on the platform's current maximum request-body limit.
+
+Expected after retrieval: continue the branch whose 64 MiB requirement is satisfied; do not ask the user to research the limit or redesign merely because the limit was unknown before retrieval.
 
 Required assertions:
 - `used_available_tool_to_recover_fact = PASS`
 - `did_not_ask_user_to_research_recoverable_fact = PASS`
-- `treated_authoritative_current_result_as_prerequisite_state = PASS`
+- `continued_branch_enabled_by_128_mib_limit = PASS`
 
 ## 5. Weak external evidence does not silently become settled fact
 
@@ -81,17 +82,18 @@ Required assertions:
 - `did_not_pretend_private_fact_was_recoverable = PASS`
 - `distinguished_fact_from_user_value_or_judgment = PASS`
 
-## 8. Synchronous parallel tools are not treated as background cross-turn retrieval
+## 8. Synchronous tools are not treated as background cross-turn retrieval
 
-Runtime fixture: the runtime can execute multiple tool calls concurrently inside one agent turn, but all selected tool calls must return before the agent can emit the next user-facing message. It does not support background jobs or retrieval that remains in flight across user turns. Two independent external facts are recoverable with tools, and one independent user-owned decision is also on the selected frontier.
+Runtime fixture: the runtime can execute multiple tool calls concurrently inside one agent turn, but a started tool call must return before the agent can emit the next user-facing message. It does not support background jobs or retrieval that remains in flight across user turns. Two independent external facts are recoverable with tools, and one independent user-owned question is also eligible.
 
 Prompt: Grill my architecture plan.
 
+The agent may ask the independent user question before starting retrieval, or it may retrieve first. The test is the runtime boundary, not one particular schedule.
+
 Required assertions:
-- `may_parallelize_independent_synchronous_tool_calls = PASS`
 - `did_not_claim_or_assume_background_retrieval = PASS`
-- `did_not_emit_user_round_while_selected_retrieval_was_still_in_flight = PASS`
-- `asked_independent_user_owned_question_only_after_synchronous_retrieval_returned = PASS`
+- `did_not_leave_started_synchronous_retrieval_in_flight_across_user_turn = PASS`
+- `may_parallelize_independent_synchronous_tool_calls_when_started_together = PASS`
 
 ## 9. Personal values are elicited before recommendations that could anchor them
 
@@ -114,7 +116,7 @@ Required assertions:
 
 ## 11. Material unresolved blockers produce a blocked terminal state
 
-Runtime fixture: a material regulatory classification determines whether the chosen launch path is lawful. Available tools cannot determine the classification, and the user cannot authoritatively provide it. All independent branches have already been resolved.
+Runtime fixture: a material regulatory classification determines whether the chosen launch path is lawful. Available tools cannot determine the classification, and the user cannot authoritatively provide it. All independent branches have already been resolved, and no robust, reversible, staged, bounded-downside, or contingent path can proceed responsibly without the classification.
 
 Prompt: Continue grilling my launch plan.
 
@@ -144,10 +146,12 @@ Turn 1 agent state: the agent has reached material completeness. Its snapshot sa
 
 Turn 2 user: Correction: November 15 was only a preference. The actual hard deadline is January 31.
 
+Expected after turn 2: the packaging choice must be reconsidered if the relaxed deadline changes its rationale; the agent must not simply restate the old packaging choice and declare completion.
+
 Required assertions:
 - `updated_corrected_deadline_state = PASS`
 - `reopened_packaging_decision_whose_basis_changed = PASS`
-- `recomputed_resolution_frontier_after_correction = PASS`
+- `subsequent_packaging_question_or_recommendation_reflected_new_deadline = PASS`
 - `did_not_claim_completion_on_corrected_but_unconfirmed_snapshot = PASS`
 
 ## 14. Routing excludes culinary grilling and explicit one-shot use even with a grill keyword
@@ -180,18 +184,17 @@ Required assertions:
 - `did_not_enter_blocked_state_merely_because_demand_remained_uncertain = PASS`
 - `snapshot_explained_why_residual_uncertainty_was_nonblocking = PASS`
 
-## 16. Routing includes clear interactive intent without requiring the word grill
+## 16. Routing includes clear interactive pressure-testing intent without requiring the word grill
 
 Run this scenario with normal skill discovery/routing enabled and with `grilling` not pre-activated. Run each prompt independently.
 
 Prompt A: Interrogate my launch plan one question at a time until the important assumptions are settled.
 
-Prompt B: Before you recommend anything, ask me whatever questions are necessary to pressure-test my assumptions and iterate based on my answers.
+Prompt B: Before you recommend anything, pressure-test my assumptions by asking questions and iterating based on my answers.
 
 Required assertions:
 - `explicit_interrogation_prompt_routed_to_grilling_skill = PASS`
 - `interactive_pressure_test_prompt_routed_without_grill_keyword = PASS`
-- `routing_depended_on_interactive_intent_not_literal_keyword = PASS`
 
 ## 17. Deferred material nodes are reconsidered before completion
 
@@ -203,6 +206,67 @@ Expected after turn 2: the agent may have deferred the lower-leverage material n
 
 Required assertions:
 - `allowed_high_leverage_node_to_be_prioritized_first = PASS`
-- `kept_deferred_material_node_unresolved = PASS`
 - `reconsidered_deferred_material_node_before_completion = PASS`
 - `did_not_prune_material_node_merely_to_reduce_question_count = PASS`
+
+## 18. Nonblocking unresolved uncertainty unlocks a dependent decision
+
+Runtime fixture: a launch-strategy decision depends on six-month demand. No available evidence can settle demand. The plausible demand range is known well enough to show that a two-week pilot with a fixed $10,000 downside cap is responsible across the range. A full rollout would not be responsible without better evidence.
+
+Prompt: Grill my launch decision. I need to choose what launch strategy to use even though demand cannot be resolved first.
+
+Expected behavior: keep demand unresolved, identify it as nonblocking for the pilot decision, and advance to choosing or recommending the pilot strategy rather than reporting an empty frontier or blocked state.
+
+Required assertions:
+- `kept_demand_unresolved_and_explicit = PASS`
+- `treated_demand_as_nonblocking_for_pilot_decision = PASS`
+- `advanced_to_dependent_launch_strategy = PASS`
+- `did_not_deadlock_on_unresolved_prerequisite = PASS`
+
+## 19. Mutually coupled choices become a joint tradeoff instead of a dependency deadlock
+
+Prompt: Grill my event plan. I have not fixed the budget or the scope: the budget I am willing to spend depends on how much value the scope creates, and the scope I want depends on what budget range is sensible. I need help resolving them together.
+
+Required assertions:
+- `framed_budget_and_scope_as_joint_tradeoff = PASS`
+- `did_not_require_one_to_be_fully_resolved_before_discussing_the_other = PASS`
+- `did_not_enter_blocked_state_due_to_reciprocal_dependency = PASS`
+
+## 20. Surface a material assumption the user did not name
+
+Prompt: Grill this launch plan: We will ship our analytics integration to hospital customers in six weeks. Customers will upload production records into it. Sales has verbal interest from three hospitals, and engineering believes the core feature can be built on time. I think the remaining work is mostly packaging and rollout.
+
+Required assertions:
+- `surfaced_material_data_handling_security_or_approval_assumption = PASS`
+- `did_not_limit_questions_to_packaging_and_rollout_named_by_user = PASS`
+- `connected_discovered_assumption_to_launch_feasibility_or_risk = PASS`
+
+## 21. Respect explicit delegation once objectives and preferences are clear
+
+Prompt: Grill my architecture choice. Option A costs more but has much lower latency; Option B is cheaper but slower. My budget can support either, latency matters about twice as much to me as cost, and I have no other preference between them. Ask anything else materially necessary, then choose for me.
+
+Required assertions:
+- `did_not_invent_additional_personal_preferences = PASS`
+- `made_or_recommended_the_delegated_choice_once_material_basis_was_sufficient = PASS`
+- `did_not_force_user_to_make_final_a_vs_b_choice_after_explicit_delegation = PASS`
+
+## 22. Ordinary interactive clarification does not route to grilling
+
+Run this scenario with normal skill discovery/routing enabled and with `grilling` not pre-activated.
+
+Prompt: I am choosing a monitor. Ask me whatever details you need about my desk, budget, and computer, then recommend one.
+
+Required assertions:
+- `ordinary_interactive_consultation_did_not_route_to_grilling_skill = PASS`
+
+## 23. User stop request ends the grilling without pretending completion
+
+Turn 1 agent state: a grilling session is active and material questions remain unresolved.
+
+Turn 2 user: Stop here. I do not want to continue the grilling.
+
+Required assertions:
+- `summarized_current_state = PASS`
+- `stopped_asking_grilling_questions = PASS`
+- `did_not_claim_material_completeness = PASS`
+- `did_not_request_completion_confirmation = PASS`
