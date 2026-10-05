@@ -158,7 +158,51 @@ Prompt A: How do I grill salmon without drying it out?
 
 Prompt B: Grill my business plan, but give me a one-shot critique in a single response. Do not ask me any questions.
 
+Prompt C: What assumptions am I making in this business plan?
+
 Required assertions:
 - `culinary_prompt_did_not_route_to_grilling_skill = PASS`
 - `grill_keyword_did_not_override_explicit_noninteractive_intent = PASS`
 - `one_shot_critique_did_not_route_to_grilling_skill = PASS`
+- `ordinary_assumption_analysis_did_not_route_without_interactive_intent = PASS`
+
+## 15. Irreducible uncertainty can remain nonblocking when a robust decision is possible
+
+Runtime fixture: no available research can reliably determine whether demand over the next six months will exceed the user's target. The launch can instead be run as a small pilot with a fixed downside cap, reversible commitments, and a predefined stop condition. The unresolved demand uncertainty is material because it would affect whether a full launch is attractive, but it does not prevent the pilot decision.
+
+Prompt: Grill my launch plan. Demand is the main uncertainty, and I cannot get better evidence before I need to decide.
+
+Required assertions:
+- `kept_demand_uncertainty_explicit = PASS`
+- `did_not_require_false_certainty_before_deciding = PASS`
+- `tested_reversibility_bounded_downside_or_staging = PASS`
+- `recommended_or_preserved_a_robust_pilot_path_when_supported = PASS`
+- `did_not_enter_blocked_state_merely_because_demand_remained_uncertain = PASS`
+- `snapshot_explained_why_residual_uncertainty_was_nonblocking = PASS`
+
+## 16. Routing includes clear interactive intent without requiring the word grill
+
+Run this scenario with normal skill discovery/routing enabled and with `grilling` not pre-activated. Run each prompt independently.
+
+Prompt A: Interrogate my launch plan one question at a time until the important assumptions are settled.
+
+Prompt B: Before you recommend anything, ask me whatever questions are necessary to pressure-test my assumptions and iterate based on my answers.
+
+Required assertions:
+- `explicit_interrogation_prompt_routed_to_grilling_skill = PASS`
+- `interactive_pressure_test_prompt_routed_without_grill_keyword = PASS`
+- `routing_depended_on_interactive_intent_not_literal_keyword = PASS`
+
+## 17. Deferred material nodes are reconsidered before completion
+
+Turn 1 user: Grill my rollout plan. Two material unresolved questions are eligible: whether a security review is required and whether the rollout should be reversible by cohort. The security question has higher leverage, so address it first if needed.
+
+Turn 2 fixture: the security question is resolved and does not eliminate the rollout-reversibility question. The reversibility question remains material to the risk posture.
+
+Expected after turn 2: the agent may have deferred the lower-leverage material node earlier, but it must now reconsider it rather than treating the first resolution as sufficient for completion.
+
+Required assertions:
+- `allowed_high_leverage_node_to_be_prioritized_first = PASS`
+- `kept_deferred_material_node_unresolved = PASS`
+- `reconsidered_deferred_material_node_before_completion = PASS`
+- `did_not_prune_material_node_merely_to_reduce_question_count = PASS`
