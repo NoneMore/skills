@@ -1,32 +1,77 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+description: Interactively stress-test a user's plan, decision, or idea by surfacing high-leverage unresolved judgments and assumptions in dependency-aware rounds. Use when the user explicitly wants to be grilled, interrogated, challenged through questions, or wants assumptions resolved before a recommendation. Do not use for one-shot critique or culinary grilling.
 ---
 
-Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
+Treat grilling as **decision clarification**, not exhaustive interviewing. The goal is to improve decision quality with the fewest useful questions.
 
-Work the tree in **rounds**. The **frontier** is every unsettled decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round.
+## Build the decision model
 
-Questions in the same round must be **parallel**. If answering one could change whether another should be asked, what it means, which answers are valid, or what you would recommend, they are not parallel: ask the upstream decision first and defer the other. Never batch a decision with its descendant. Recompute the frontier after every round.
+Maintain an evolving **decision graph** around the user's actual objective.
 
-Prefer the harness's native structured question tool when available. Treat each frontier node as a separate question, use choices when natural, and include your recommended answer. If the tool has per-call limits, split the frontier across calls, but do not advance downstream until the whole frontier is answered.
+Represent only nodes that can materially affect the recommendation, risk posture, or execution path:
 
-Without a structured question tool, format a round like so:
+- **Decisions** — choices or judgments the user must own.
+- **Facts** — state or constraints that can be recovered from the environment or supplied authoritatively by the user.
+- **Assumptions** — beliefs whose failure could materially change the decision.
+- **Dependencies** — which nodes must be resolved before another question becomes meaningful.
+
+Look for the upstream decision behind the surface question. Distinguish means from ends, preferences from constraints, and reversible choices from commitments. Challenge answers that conflict with the stated objective, constraints, evidence, or earlier answers.
+
+Do not expand a branch merely because more questions are possible. Prune branches whose answers are unlikely to change a downstream decision, recommendation, material risk, or execution constraint.
+
+## Select the next questions
+
+The **frontier** is the set of unresolved decision or assumption nodes whose prerequisites are already resolved.
+
+Eligibility is not enough: prioritize the frontier by **decision leverage**. Prefer questions whose answers are most likely to eliminate or reshape downstream branches, resolve important uncertainty, expose material risk, or change the recommendation. Treat answer cost as a reason to defer low-value questions.
+
+Questions in the same round must be independent. If answering one could change whether another should be asked, what it means, which answers are valid, or what you would recommend, they are not parallel. Ask the upstream question first. Never batch a node with its descendant.
+
+Ask the smallest useful set of high-leverage frontier questions, then recompute the graph and frontier after every round and after any newly recovered fact. Do not mechanically ask the whole frontier.
+
+## Recover facts instead of outsourcing research
+
+Do not ask the user for facts that can be recovered reliably with available tools at reasonable cost. Use available tools or delegated agents to resolve them.
+
+Ask the user when the fact is private, preference-dependent, unavailable to the runtime, or something only they can authoritatively state. User-owned values and judgments remain theirs to decide.
+
+If the runtime supports concurrent retrieval, continue with independent frontier questions while facts are being recovered. Otherwise resolve the prerequisite before advancing its dependent branch. Do not assume sub-agents or asynchronous execution exist.
+
+If a required fact cannot be recovered and the user cannot authoritatively provide it, mark the uncertainty explicitly and continue only on branches that do not depend on it.
+
+## Run the interaction
+
+Prefer the harness's native structured question tool when available. Treat each selected frontier node as a separate question and use choices when natural.
+
+Offer your current recommendation when there is a defensible default and doing so helps expose the tradeoff. Do not invent a recommendation, and avoid anchoring the user before eliciting a genuinely personal value or preference.
+
+Without a structured question tool, format a round compactly, for example:
 
 ```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+❓ **Q1 — <title>**: <question, with choices when useful>
 
-➡️ <your recommended answer>
+➡️ <current recommendation and rationale, when useful>
 
 ---
 
-❓ **Q2** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
+❓ **Q2 — <title>**: <question>
 ```
 
-Then wait for the user's answers before advancing the tree.
+Then wait for the user's answers before advancing dependent branches.
 
-Finding _facts_ is your job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent to find it; don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The _decisions_ are the user's: put each to them and wait.
+## Finish on material completeness
 
-The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
+The grilling is complete when no unresolved decision, assumption, or missing fact is reasonably likely to change the user's objective, recommendation, material risk posture, or execution path. Do not continue merely to make the graph exhaustive.
+
+At completion, present a compact decision snapshot containing:
+
+- the objective,
+- the material decisions and constraints now settled,
+- the important assumptions or residual risks,
+- the current recommendation or chosen direction,
+- any unresolved uncertainty that still matters.
+
+Ask the user to confirm or correct that snapshot so shared understanding is observable. Confirmation completes the grilling; it is not authorization for consequential actions, which remain subject to the runtime's normal permission and confirmation rules.
+
+If the user asks to stop, summarize the current state and stop.
