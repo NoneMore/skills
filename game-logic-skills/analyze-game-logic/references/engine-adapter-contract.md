@@ -65,15 +65,6 @@ detach/restore limitations, and runtime observations that materially improve
 confidence. Runtime-action permissions and generic validation criteria remain in
 `SKILL.md`.
 
-## 8. Application handoff facts
-
-Document engine-specific facts that a downstream application may need to choose
-a safe mechanism, such as shared-state hazards, caller/source discrimination,
-value/type guards, lifetime constraints, or restoration limitations. Keep these
-as evidence requirements and scope hazards. Do not rank, recommend, or select a
-modification mechanism in the analysis adapter; mechanism selection belongs to
-`$apply-game-logic`.
-
 ## 9. Version-sensitive assumptions
 
 Keep a compact list of layouts, offsets, kind values, registration formats,
