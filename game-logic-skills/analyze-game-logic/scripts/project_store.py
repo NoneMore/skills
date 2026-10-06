@@ -1,358 +1,167 @@
-"""Deterministic helper for game-logic project knowledge stores.
+"""Canonical hierarchy front-end for the game-logic project knowledge store.
 
-The helper manages source registrations, retained artifacts, finding files,
-reciprocal evidence links, and one-way finding-consumption dependencies. It
-never interprets game semantics and never modifies analyzed source/binary
-targets. Python 3.8+; standard library only.
+New stores organize durable work by analysis and target scope while preserving
+compatibility with legacy ``notes/findings`` stores. The legacy helper remains
+the implementation source for manifest hashing/provenance and evidence links;
+this module adds deterministic scope creation, canonical path derivation, and
+structural validation.
 """
 
 import argparse
-import hashlib
 import json
-import re
 import sys
 import tempfile
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
-
-ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
-FINDING_ID_RE = re.compile(r"^- ID:\s*`([^`]+)`\s*$")
-EVIDENCE_REF_RE = re.compile(r"^- `([^`]+)`:\s*(.*)$")
-HEX64_RE = re.compile(r"^[0-9A-Fa-f]{64}$")
-VALID_ARTIFACT_STATUSES = {"active", "superseded", "missing"}
-VALID_SOURCE_STATUSES = {"active", "missing"}
-VALID_FINDING_STATUSES = {"confirmed", "working-hypothesis", "unknown", "superseded"}
+try:
+    import project_store_legacy as _legacy
+except ModuleNotFoundError:  # pragma: no cover - package import compatibility
+    from . import project_store_legacy as _legacy  # type: ignore
 
 
-class StoreError(RuntimeError):
-    pass
+StoreError = _legacy.StoreError
+ID_RE = _legacy.ID_RE
+FINDING_ID_RE = _legacy.FINDING_ID_RE
+EVIDENCE_REF_RE = _legacy.EVIDENCE_REF_RE
+VALID_FINDING_STATUSES = _legacy.VALID_FINDING_STATUSES
+manifest_path = _legacy.manifest_path
+load_manifest = _legacy.load_manifest
+atomic_write_json = _legacy.atomic_write_json
+atomic_write_text = _legacy.atomic_write_text
+artifacts_list = _legacy.artifacts_list
+sources_list = _legacy.sources_list
+require_id = _legacy.require_id
+confined_path = _legacy.confined_path
+sha256_file = _legacy.sha256_file
+parse_evidence_token = _legacy.parse_evidence_token
+parse_ref_locator = _legacy.parse_ref_locator
+link_evidence = _legacy.link_evidence
+report_errors = _legacy.report_errors
+
+_ORIGINAL_VALIDATE_MANIFEST_SHAPE = _legacy.validate_manifest_shape
+_ORIGINAL_PARSE_FINDINGS = _legacy.parse_findings
+_ORIGINAL_CMD_INIT = _legacy.cmd_init
+_ORIGINAL_CMD_ADD_ARTIFACT = _legacy.cmd_add_artifact
+_ORIGINAL_CMD_ADD_FINDING = _legacy.cmd_add_finding
+_ORIGINAL_BUILD_PARSER = _legacy.build_parser
+
+ANALYSES_DIR = "analyses"
+TARGETS_DIR = "targets"
+SHARED_ARTIFACTS = Path("shared") / "artifacts"
+CANONICAL_ROLES = {"artifacts", "scripts", "reports"}
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
+def analysis_dir(root: Path, analysis_id: str) -> Path:
+    return root / ANALYSES_DIR / analysis_id
 
 
-def atomic_write_json(path: Path, data: Dict[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = json.dumps(data, ensure_ascii=False, indent=2, sort_keys=False) + "\n"
-    temp = path.with_name(path.name + ".tmp")
-    temp.write_text(payload, encoding="utf-8")
-    temp.replace(path)
+def target_dir(root: Path, analysis_id: str, target_id: str) -> Path:
+    return analysis_dir(root, analysis_id) / TARGETS_DIR / target_id
 
 
-def atomic_write_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_name(path.name + ".tmp")
-    temp.write_text(text, encoding="utf-8")
-    temp.replace(path)
-
-
-def manifest_path(root: Path) -> Path:
-    return root / "artifacts" / "manifest.json"
-
-
-def load_manifest(root: Path) -> Dict[str, object]:
-    path = manifest_path(root)
-    if not path.is_file():
-        raise StoreError("manifest not found: %s" % path)
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise StoreError("invalid manifest JSON: %s" % exc)
-    if not isinstance(data, dict):
-        raise StoreError("manifest root must be a JSON object")
-    return data
-
-
-def require_id(value: str, label: str) -> None:
-    if not ID_RE.fullmatch(value):
-        raise StoreError("%s must be lowercase and filesystem-safe: %r" % (label, value))
-
-
-def confined_path(root: Path, relative: str) -> Path:
-    rel = Path(relative)
-    if rel.is_absolute():
-        raise StoreError("artifact path must be relative: %s" % relative)
-    if any(part == ".." for part in rel.parts):
-        raise StoreError("artifact path must not contain '..': %s" % relative)
-    root_resolved = root.resolve()
-    candidate = (root / rel).resolve()
-    try:
-        candidate.relative_to(root_resolved)
-    except ValueError:
-        raise StoreError("artifact path escapes project root: %s" % relative)
-    return candidate
-
-
-def resolve_source_path(stored_path: str) -> Path:
-    return Path(stored_path).expanduser().resolve()
-
-
-def artifacts_list(manifest: Dict[str, object]) -> List[Dict[str, object]]:
-    artifacts = manifest.get("artifacts")
-    if not isinstance(artifacts, list):
-        raise StoreError("manifest.artifacts must be an array")
-    for index, item in enumerate(artifacts):
-        if not isinstance(item, dict):
-            raise StoreError("manifest.artifacts[%d] must be an object" % index)
-    return artifacts  # type: ignore[return-value]
-
-
-def sources_list(manifest: Dict[str, object]) -> List[Dict[str, object]]:
-    sources = manifest.get("sources", [])
-    if not isinstance(sources, list):
-        raise StoreError("manifest.sources must be an array")
-    for index, item in enumerate(sources):
-        if not isinstance(item, dict):
-            raise StoreError("manifest.sources[%d] must be an object" % index)
-    return sources  # type: ignore[return-value]
-
-
-def ensure_schema_v2(manifest: Dict[str, object]) -> None:
-    version = manifest.get("schema_version")
-    if version == 1:
-        manifest["schema_version"] = 2
-        manifest.setdefault("sources", [])
-    elif version == 2:
-        manifest.setdefault("sources", [])
-    else:
-        raise StoreError("unsupported schema_version: %r" % version)
-
-
-def validate_target(target: object, label: str, errors: List[str]) -> None:
-    if not isinstance(target, dict):
-        errors.append("%s target must be an object" % label)
-        return
-    for key in ("game_version", "build_id", "module", "module_sha256", "rva_or_range"):
-        value = target.get(key)
-        if not isinstance(value, str) or not value:
-            errors.append("%s target.%s must be a non-empty string" % (label, key))
-
-
-def validate_finding_refs(item: Dict[str, object], label: str, errors: List[str]) -> None:
-    refs = item.get("finding_refs")
-    if not isinstance(refs, list) or any(not isinstance(x, str) for x in refs):
-        errors.append("%s finding_refs must be an array of strings" % label)
-    elif len(refs) != len(set(refs)):
-        errors.append("%s finding_refs contains duplicates" % label)
-
-
-def validate_consumes_finding_refs(item: Dict[str, object], label: str, errors: List[str]) -> None:
-    refs = item.get("consumes_finding_refs", [])
-    if not isinstance(refs, list) or any(not isinstance(x, str) for x in refs):
-        errors.append("%s consumes_finding_refs must be an array of strings" % label)
-    elif len(refs) != len(set(refs)):
-        errors.append("%s consumes_finding_refs contains duplicates" % label)
-    else:
-        for ref in refs:
-            if not ID_RE.fullmatch(ref):
-                errors.append("%s has invalid consumes_finding_ref: %r" % (label, ref))
-
-
-def validate_manifest_shape(root: Path, manifest: Dict[str, object], verify_files: bool) -> List[str]:
-    errors: List[str] = []
-    schema = manifest.get("schema_version")
-    if schema not in (1, 2):
-        errors.append("schema_version must equal 1 or 2")
-    if not isinstance(manifest.get("project"), str) or not manifest.get("project"):
-        errors.append("project must be a non-empty string")
-
-    try:
-        artifacts = artifacts_list(manifest)
-        sources = sources_list(manifest)
-    except StoreError as exc:
-        return errors + [str(exc)]
-
-    if schema == 1 and "sources" in manifest and sources:
-        errors.append("schema_version 1 must not contain registered sources; upgrade to schema_version 2")
-
-    source_ids: Set[str] = set()
-    source_paths: Set[str] = set()
-    for item in sources:
-        source_id = item.get("id")
-        label = "source %r" % source_id
-        if not isinstance(source_id, str) or not ID_RE.fullmatch(source_id):
-            errors.append("invalid source id: %r" % source_id)
-        elif source_id in source_ids:
-            errors.append("duplicate source id: %s" % source_id)
-        else:
-            source_ids.add(source_id)
-
-        stored_path = item.get("path")
-        if not isinstance(stored_path, str) or not stored_path:
-            errors.append("%s has invalid path" % label)
-            continue
-        if stored_path in source_paths:
-            errors.append("duplicate source path: %s" % stored_path)
-        source_paths.add(stored_path)
-
-        if item.get("status") not in VALID_SOURCE_STATUSES:
-            errors.append("%s has invalid status: %r" % (label, item.get("status")))
-        validate_finding_refs(item, label, errors)
-        validate_target(item.get("target"), label, errors)
-
-        stored_size = item.get("size")
-        stored_hash = item.get("sha256")
-        if not isinstance(stored_size, int) or stored_size < 0:
-            errors.append("%s has invalid size" % label)
-        if not isinstance(stored_hash, str) or not HEX64_RE.fullmatch(stored_hash):
-            errors.append("%s has invalid sha256" % label)
-
-        if verify_files:
-            full = resolve_source_path(stored_path)
-            if not full.is_file():
-                if item.get("status") != "missing":
-                    errors.append("source file missing: %s" % stored_path)
-            else:
-                actual_size = full.stat().st_size
-                actual_hash = sha256_file(full)
-                if isinstance(stored_size, int) and stored_size != actual_size:
-                    errors.append("%s size mismatch: manifest=%s actual=%s" % (label, stored_size, actual_size))
-                if isinstance(stored_hash, str) and stored_hash.upper() != actual_hash:
-                    errors.append("%s sha256 mismatch" % label)
-
-    artifact_ids: Set[str] = set()
-    artifact_paths: Set[str] = set()
-    for item in artifacts:
-        artifact_id = item.get("id")
-        label = "artifact %r" % artifact_id
-        if not isinstance(artifact_id, str) or not ID_RE.fullmatch(artifact_id):
-            errors.append("invalid artifact id: %r" % artifact_id)
-        elif artifact_id in artifact_ids:
-            errors.append("duplicate artifact id: %s" % artifact_id)
-        else:
-            artifact_ids.add(artifact_id)
-
-        relative = item.get("path")
-        if not isinstance(relative, str) or not relative:
-            errors.append("%s has invalid path" % label)
-            continue
-        if relative in artifact_paths:
-            errors.append("duplicate artifact path: %s" % relative)
-        artifact_paths.add(relative)
-        try:
-            full = confined_path(root, relative)
-        except StoreError as exc:
-            errors.append(str(exc))
-            continue
-
-        status = item.get("status")
-        if status not in VALID_ARTIFACT_STATUSES:
-            errors.append("%s has invalid status: %r" % (label, status))
-
-        superseded_by = item.get("superseded_by")
-        if status == "superseded" and not isinstance(superseded_by, str):
-            errors.append("superseded %s must name superseded_by" % label)
-        if status != "superseded" and superseded_by is not None:
-            errors.append("%s has superseded_by but status is %r" % (label, status))
-
-        validate_finding_refs(item, label, errors)
-        validate_consumes_finding_refs(item, label, errors)
-        validate_target(item.get("target"), label, errors)
-
-        derived = item.get("derived_from")
-        if not isinstance(derived, list) or any(not isinstance(x, str) for x in derived):
-            errors.append("%s derived_from must be an array of artifact IDs" % label)
-        source_refs = item.get("source_refs", [])
-        if not isinstance(source_refs, list) or any(not isinstance(x, str) for x in source_refs):
-            errors.append("%s source_refs must be an array of source IDs" % label)
-
-        stored_size = item.get("size")
-        stored_hash = item.get("sha256")
-        if not isinstance(stored_size, int) or stored_size < 0:
-            errors.append("%s has invalid size" % label)
-        if not isinstance(stored_hash, str) or not HEX64_RE.fullmatch(stored_hash):
-            errors.append("%s has invalid sha256" % label)
-
-        if verify_files:
-            if not full.is_file():
-                if status != "missing":
-                    errors.append("artifact file missing: %s" % relative)
-            else:
-                actual_size = full.stat().st_size
-                actual_hash = sha256_file(full)
-                if isinstance(stored_size, int) and stored_size != actual_size:
-                    errors.append("%s size mismatch: manifest=%s actual=%s" % (label, stored_size, actual_size))
-                if isinstance(stored_hash, str) and stored_hash.upper() != actual_hash:
-                    errors.append("%s sha256 mismatch" % label)
-
-    for item in artifacts:
-        artifact_id = str(item.get("id"))
-        target = item.get("superseded_by")
-        if isinstance(target, str) and target not in artifact_ids:
-            errors.append("artifact %s superseded_by unknown artifact %s" % (artifact_id, target))
-        derived = item.get("derived_from", [])
-        if isinstance(derived, list):
-            for ref in derived:
-                if isinstance(ref, str) and ref not in artifact_ids:
-                    errors.append("artifact %s derived_from unknown artifact %s" % (artifact_id, ref))
-        source_refs = item.get("source_refs", [])
-        if isinstance(source_refs, list):
-            for ref in source_refs:
-                if isinstance(ref, str) and ref not in source_ids:
-                    errors.append("artifact %s source_refs unknown source %s" % (artifact_id, ref))
-
-    return errors
-
-
-def finding_dir(root: Path) -> Path:
+def legacy_finding_dir(root: Path) -> Path:
     return root / "notes" / "findings"
 
 
-def parse_evidence_token(token: str) -> Tuple[str, str]:
-    if token.startswith("source:"):
-        return "source", token[len("source:"):]
-    if token.startswith("artifact:"):
-        return "artifact", token[len("artifact:"):]
-    return "artifact", token  # v4.1 compatibility
+def canonical_finding_path(root: Path, analysis_id: str, target_id: str) -> Path:
+    return target_dir(root, analysis_id, target_id) / "finding.md"
 
 
-def canonical_evidence_token(kind: str, evidence_id: str) -> str:
-    return "%s:%s" % (kind, evidence_id)
+def canonical_role_path(root: Path, analysis_id: str, target_id: str, role: str,
+                        name: Optional[str] = None) -> Path:
+    if role not in CANONICAL_ROLES:
+        raise StoreError("unsupported canonical role: %s" % role)
+    base = target_dir(root, analysis_id, target_id) / role
+    return base if name is None else base / _local_name(name)
+
+
+def _local_name(name: str) -> str:
+    candidate = Path(name)
+    if candidate.name != name or name in ("", ".", ".."):
+        raise StoreError("local name must be one filesystem-safe sibling name: %r" % name)
+    return name
+
+
+def _read_json_object(path: Path, label: str) -> Dict[str, object]:
+    if not path.is_file():
+        raise StoreError("%s not found: %s" % (label, path))
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise StoreError("invalid %s JSON: %s" % (label, exc))
+    if not isinstance(value, dict):
+        raise StoreError("%s must be a JSON object: %s" % (label, path))
+    return value
+
+
+def _scope_metadata(root: Path, analysis_id: str, target_id: str) -> Tuple[Dict[str, object], Dict[str, object]]:
+    require_id(analysis_id, "analysis id")
+    require_id(target_id, "target id")
+    a_dir = analysis_dir(root, analysis_id)
+    t_dir = target_dir(root, analysis_id, target_id)
+    analysis = _read_json_object(a_dir / "analysis.json", "analysis metadata")
+    target = _read_json_object(t_dir / "target.json", "target metadata")
+    if analysis.get("id") != analysis_id:
+        raise StoreError("analysis metadata id does not match directory: %s" % analysis_id)
+    if target.get("id") != target_id:
+        raise StoreError("target metadata id does not match directory: %s" % target_id)
+    return analysis, target
+
+
+def _parse_finding_file(root: Path, path: Path) -> Tuple[Optional[str], Set[Tuple[str, str]], List[str]]:
+    errors: List[str] = []
+    text = path.read_text(encoding="utf-8")
+    finding_id: Optional[str] = None
+    cited: Set[Tuple[str, str]] = set()
+    in_evidence = False
+    for line in text.splitlines():
+        match = FINDING_ID_RE.match(line)
+        if match and finding_id is None:
+            finding_id = match.group(1)
+        if line.startswith("## "):
+            in_evidence = line.strip() == "## Evidence"
+            continue
+        if in_evidence:
+            match = EVIDENCE_REF_RE.match(line)
+            if not match:
+                continue
+            token = match.group(1)
+            kind, evidence_id = parse_evidence_token(token)
+            if not ID_RE.fullmatch(evidence_id):
+                errors.append("invalid evidence ref %r in %s" % (token, path.relative_to(root)))
+            else:
+                cited.add((kind, evidence_id))
+    if finding_id is None:
+        errors.append("finding missing '- ID: `...`': %s" % path.relative_to(root))
+    elif not ID_RE.fullmatch(finding_id):
+        errors.append("invalid finding id %r in %s" % (finding_id, path.relative_to(root)))
+    return finding_id, cited, errors
 
 
 def parse_findings(root: Path) -> Tuple[Dict[str, Path], Dict[str, Set[Tuple[str, str]]], List[str]]:
+    """Discover exact canonical findings plus the legacy recursive layout."""
     ids: Dict[str, Path] = {}
     evidence: Dict[str, Set[Tuple[str, str]]] = {}
     errors: List[str] = []
-    directory = finding_dir(root)
-    if not directory.exists():
-        return ids, evidence, errors
+    candidates: List[Path] = []
 
-    for path in sorted(directory.rglob("*.md")):
-        text = path.read_text(encoding="utf-8")
-        finding_id: Optional[str] = None
-        in_evidence = False
-        cited: Set[Tuple[str, str]] = set()
-        for line in text.splitlines():
-            match = FINDING_ID_RE.match(line)
-            if match and finding_id is None:
-                finding_id = match.group(1)
-            if line.startswith("## "):
-                in_evidence = line.strip() == "## Evidence"
-                continue
-            if in_evidence:
-                em = EVIDENCE_REF_RE.match(line)
-                if em:
-                    token = em.group(1)
-                    if token == "Independent check":
-                        continue
-                    kind, evidence_id = parse_evidence_token(token)
-                    if not ID_RE.fullmatch(evidence_id):
-                        errors.append("invalid evidence ref %r in %s" % (token, path.relative_to(root)))
-                    else:
-                        cited.add((kind, evidence_id))
+    analyses = root / ANALYSES_DIR
+    if analyses.exists():
+        candidates.extend(sorted(analyses.glob("*/targets/*/finding.md")))
+        canonical = {path.resolve() for path in candidates}
+        for path in sorted(analyses.rglob("finding.md")):
+            if path.resolve() not in canonical:
+                errors.append("finding is outside canonical analysis/target location: %s" % path.relative_to(root))
 
-        if finding_id is None:
-            errors.append("finding missing '- ID: `...`': %s" % path.relative_to(root))
-            continue
-        if not ID_RE.fullmatch(finding_id):
-            errors.append("invalid finding id %r in %s" % (finding_id, path.relative_to(root)))
+    legacy = legacy_finding_dir(root)
+    if legacy.exists():
+        candidates.extend(sorted(legacy.rglob("*.md")))
+
+    for path in candidates:
+        finding_id, cited, file_errors = _parse_finding_file(root, path)
+        errors.extend(file_errors)
+        if finding_id is None or not ID_RE.fullmatch(finding_id):
             continue
         if finding_id in ids:
             errors.append(
@@ -362,62 +171,7 @@ def parse_findings(root: Path) -> Tuple[Dict[str, Path], Dict[str, Set[Tuple[str
             continue
         ids[finding_id] = path
         evidence[finding_id] = cited
-
     return ids, evidence, errors
-
-
-def check_links(root: Path, manifest: Dict[str, object]) -> List[str]:
-    errors: List[str] = []
-    finding_ids, evidence, finding_errors = parse_findings(root)
-    errors.extend(finding_errors)
-    artifacts = artifacts_list(manifest)
-    sources = sources_list(manifest)
-    artifact_map = {str(item.get("id")): item for item in artifacts if isinstance(item.get("id"), str)}
-    source_map = {str(item.get("id")): item for item in sources if isinstance(item.get("id"), str)}
-
-    for kind, mapping in (("artifact", artifact_map), ("source", source_map)):
-        for evidence_id, item in mapping.items():
-            refs = item.get("finding_refs", [])
-            if not isinstance(refs, list):
-                continue
-            for finding_id in refs:
-                if finding_id not in finding_ids:
-                    errors.append("%s %s references missing finding %s" % (kind, evidence_id, finding_id))
-                elif (kind, evidence_id) not in evidence.get(finding_id, set()):
-                    errors.append(
-                        "%s %s -> finding %s is not reciprocated in the finding Evidence section"
-                        % (kind, evidence_id, finding_id)
-                    )
-
-    for finding_id, refs in evidence.items():
-        for kind, evidence_id in refs:
-            mapping = source_map if kind == "source" else artifact_map
-            item = mapping.get(evidence_id)
-            if item is None:
-                errors.append("finding %s cites unknown %s %s" % (finding_id, kind, evidence_id))
-                continue
-            finding_refs = item.get("finding_refs", [])
-            if not isinstance(finding_refs, list) or finding_id not in finding_refs:
-                errors.append(
-                    "finding %s -> %s %s is not reciprocated in manifest finding_refs"
-                    % (finding_id, kind, evidence_id)
-                )
-
-    for artifact_id, item in artifact_map.items():
-        refs = item.get("consumes_finding_refs", [])
-        if not isinstance(refs, list):
-            continue
-        for finding_id in refs:
-            if finding_id not in finding_ids:
-                errors.append(
-                    "artifact %s consumes missing finding %s" % (artifact_id, finding_id)
-                )
-            elif ("artifact", artifact_id) in evidence.get(finding_id, set()):
-                errors.append(
-                    "artifact %s consumes finding %s but also appears in its Evidence section"
-                    % (artifact_id, finding_id)
-                )
-    return errors
 
 
 def find_finding_path(root: Path, finding_id: str) -> Path:
@@ -430,83 +184,107 @@ def find_finding_path(root: Path, finding_id: str) -> Path:
     return path
 
 
-def upsert_finding_evidence(path: Path, kind: str, evidence_id: str, locator: str) -> None:
-    token = canonical_evidence_token(kind, evidence_id)
-    lines = path.read_text(encoding="utf-8").splitlines()
+def _canonical_artifact_context(relative: str) -> Optional[Tuple[str, str]]:
+    parts = Path(relative).parts
+    if len(parts) < 6 or parts[0] != ANALYSES_DIR or parts[2] != TARGETS_DIR or parts[4] != "artifacts":
+        return None
+    if not ID_RE.fullmatch(parts[1]) or not ID_RE.fullmatch(parts[3]):
+        return None
+    return parts[1], parts[3]
+
+
+def validate_canonical_structure(root: Path, manifest: Dict[str, object]) -> List[str]:
+    errors: List[str] = []
+    analyses = root / ANALYSES_DIR
+    if analyses.exists():
+        for a_dir in sorted(path for path in analyses.iterdir() if path.is_dir()):
+            analysis_id = a_dir.name
+            if not ID_RE.fullmatch(analysis_id):
+                errors.append("invalid canonical analysis id in path: %s" % analysis_id)
+                continue
+            metadata = a_dir / "analysis.json"
+            if metadata.exists():
+                try:
+                    value = _read_json_object(metadata, "analysis metadata")
+                    if value.get("id") != analysis_id:
+                        errors.append("analysis metadata id mismatch: %s" % metadata.relative_to(root))
+                except StoreError as exc:
+                    errors.append(str(exc))
+            targets = a_dir / TARGETS_DIR
+            if not targets.exists():
+                continue
+            for t_dir in sorted(path for path in targets.iterdir() if path.is_dir()):
+                target_id = t_dir.name
+                if not ID_RE.fullmatch(target_id):
+                    errors.append("invalid canonical target id in path: %s" % target_id)
+                    continue
+                metadata = t_dir / "target.json"
+                if not metadata.is_file():
+                    errors.append("canonical target is missing target.json: %s" % t_dir.relative_to(root))
+                    continue
+                try:
+                    target = _read_json_object(metadata, "target metadata")
+                    if target.get("id") != target_id:
+                        errors.append("target metadata id mismatch: %s" % metadata.relative_to(root))
+                except StoreError as exc:
+                    errors.append(str(exc))
+
+        for path in sorted(analyses.rglob("finding.md")):
+            parts = path.relative_to(root).parts
+            if len(parts) != 5 or parts[0] != ANALYSES_DIR or parts[2] != TARGETS_DIR or parts[4] != "finding.md":
+                errors.append("finding is outside canonical analysis/target location: %s" % path.relative_to(root))
+
     try:
-        start = lines.index("## Evidence")
-    except ValueError:
-        raise StoreError("finding has no '## Evidence' section: %s" % path)
-    end = len(lines)
-    for index in range(start + 1, len(lines)):
-        if lines[index].startswith("## "):
-            end = index
-            break
-
-    replacement = "- `%s`: %s" % (token, locator)
-    existing_index: Optional[int] = None
-    independent_index: Optional[int] = None
-    for index in range(start + 1, end):
-        if lines[index].startswith("- Independent check:") and independent_index is None:
-            independent_index = index
-        match = EVIDENCE_REF_RE.match(lines[index])
-        if not match:
+        artifacts = artifacts_list(manifest)
+    except StoreError as exc:
+        return errors + [str(exc)]
+    for item in artifacts:
+        relative = item.get("path")
+        if not isinstance(relative, str):
             continue
-        existing_kind, existing_id = parse_evidence_token(match.group(1))
-        if existing_kind == kind and existing_id == evidence_id:
-            existing_index = index
-            break
-
-    if existing_index is not None:
-        lines[existing_index] = replacement
-    else:
-        insert_at = independent_index if independent_index is not None else end
-        while insert_at > start + 1 and lines[insert_at - 1] == "":
-            insert_at -= 1
-        lines.insert(insert_at, replacement)
-
-    atomic_write_text(path, "\n".join(lines).rstrip() + "\n")
-
-
-def link_evidence(root: Path, manifest: Dict[str, object], finding_id: str, kind: str,
-                  evidence_id: str, locator: str) -> None:
-    require_id(finding_id, "finding id")
-    require_id(evidence_id, "%s id" % kind)
-    if not locator.strip():
-        raise StoreError("evidence locator must be non-empty")
-    path = find_finding_path(root, finding_id)
-    mapping = sources_list(manifest) if kind == "source" else artifacts_list(manifest)
-    item = next((entry for entry in mapping if entry.get("id") == evidence_id), None)
-    if item is None:
-        raise StoreError("%s id not found: %s" % (kind, evidence_id))
-    refs = item.setdefault("finding_refs", [])
-    if not isinstance(refs, list):
-        raise StoreError("%s %s finding_refs is not an array" % (kind, evidence_id))
-    if finding_id not in refs:
-        refs.append(finding_id)
-    upsert_finding_evidence(path, kind, evidence_id, locator)
+        context = _canonical_artifact_context(relative)
+        if context is not None:
+            analysis_id, target_id = context
+            manifest_analysis = item.get("analysis_id")
+            manifest_target = item.get("target_id")
+            if manifest_analysis is not None and manifest_analysis != analysis_id:
+                errors.append("artifact %s analysis_id disagrees with canonical path" % item.get("id"))
+            if manifest_target is not None and manifest_target != target_id:
+                errors.append("artifact %s target_id disagrees with canonical path" % item.get("id"))
+            target_path = target_dir(root, analysis_id, target_id) / "target.json"
+            if not target_path.is_file():
+                errors.append("artifact %s references canonical target without target.json" % item.get("id"))
+            else:
+                try:
+                    target_meta = _read_json_object(target_path, "target metadata")
+                except StoreError as exc:
+                    errors.append(str(exc))
+                    continue
+                legacy_target = item.get("target")
+                if isinstance(legacy_target, dict):
+                    for key in ("game_version", "build_id"):
+                        scoped = target_meta.get(key)
+                        recorded = legacy_target.get(key)
+                        if isinstance(scoped, str) and scoped and recorded != scoped:
+                            errors.append("artifact %s target.%s disagrees with target.json" % (item.get("id"), key))
+        elif relative.startswith(ANALYSES_DIR + "/"):
+            errors.append("artifact %s uses non-canonical analyses path: %s" % (item.get("id"), relative))
+        elif relative.startswith("shared/") and not relative.startswith("shared/artifacts/"):
+            errors.append("shared artifact %s must be under shared/artifacts/: %s" % (item.get("id"), relative))
+    return errors
 
 
-def parse_ref_locator(value: str, label: str) -> Tuple[str, str]:
-    if "=" not in value:
-        raise StoreError("%s must use ID=LOCATOR syntax: %r" % (label, value))
-    evidence_id, locator = value.split("=", 1)
-    require_id(evidence_id, label + " id")
-    if not locator.strip():
-        raise StoreError("%s locator must be non-empty" % label)
-    return evidence_id, locator
+def validate_manifest_shape(root: Path, manifest: Dict[str, object], verify_files: bool) -> List[str]:
+    return _ORIGINAL_VALIDATE_MANIFEST_SHAPE(root, manifest, verify_files) + validate_canonical_structure(root, manifest)
 
 
-def default_report(project: str) -> str:
+def default_index(project: str) -> str:
     return (
-        "# Analysis Report\n\n"
-        "- Project: `%s`\n"
-        "- Status: in progress\n\n"
-        "## Research question\n\n<Describe the concrete game-logic question.>\n\n"
-        "## Baseline\n\n<Record target version/build/hash and implementation boundary.>\n\n"
-        "## Conclusions\n\n<Summarize conclusions with finding/evidence references.>\n\n"
-        "## Validation\n\n<Record dynamic/static validation and limitations.>\n\n"
-        "## Unresolved next step\n\n<Record the highest-value unresolved step.>\n" % project
+        "# Analysis Index\n\n"
+        "- Project: `%s`\n\n"
+        "Canonical analysis work lives under `analyses/<analysis-id>/targets/<target-id>/`.\n"
+        "Use this file only as a project-level rollup/index; keep target-specific reports with their target scope.\n"
+        % project
     )
 
 
@@ -517,149 +295,105 @@ def cmd_init(args: argparse.Namespace) -> int:
     if path.exists() and not args.force:
         raise StoreError("manifest already exists; use --force only for an intentional reset")
     (root / "artifacts").mkdir(parents=True, exist_ok=True)
-    (root / "notes" / "findings").mkdir(parents=True, exist_ok=True)
+    (root / ANALYSES_DIR).mkdir(parents=True, exist_ok=True)
+    (root / SHARED_ARTIFACTS).mkdir(parents=True, exist_ok=True)
     (root / "reports").mkdir(parents=True, exist_ok=True)
     atomic_write_json(path, {"schema_version": 2, "project": args.project, "sources": [], "artifacts": []})
-    report = root / "reports" / "analysis.md"
+    report = root / "reports" / "index.md"
     if not report.exists():
-        atomic_write_text(report, default_report(args.project))
+        atomic_write_text(report, default_index(args.project))
     print("initialized %s" % path)
-    print("report %s" % report)
+    print("index %s" % report)
     return 0
 
 
-def target_from_args(args: argparse.Namespace) -> Dict[str, str]:
-    module_hash = args.module_sha256
-    if HEX64_RE.fullmatch(module_hash):
-        module_hash = module_hash.upper()
-    return {
+def cmd_init_analysis(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve()
+    load_manifest(root)
+    require_id(args.id, "analysis id")
+    directory = analysis_dir(root, args.id)
+    metadata = directory / "analysis.json"
+    if metadata.exists() and not args.force:
+        raise StoreError("analysis already exists: %s" % args.id)
+    (directory / TARGETS_DIR).mkdir(parents=True, exist_ok=True)
+    (directory / "scripts").mkdir(parents=True, exist_ok=True)
+    atomic_write_json(metadata, {"id": args.id, "title": args.title or args.id})
+    print("initialized analysis %s" % args.id)
+    return 0
+
+
+def cmd_init_target(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve()
+    load_manifest(root)
+    require_id(args.analysis_id, "analysis id")
+    require_id(args.target_id, "target id")
+    a_meta = analysis_dir(root, args.analysis_id) / "analysis.json"
+    if not a_meta.is_file():
+        raise StoreError("analysis not initialized: %s" % args.analysis_id)
+    directory = target_dir(root, args.analysis_id, args.target_id)
+    metadata = directory / "target.json"
+    if metadata.exists() and not args.force:
+        raise StoreError("target already exists: %s/%s" % (args.analysis_id, args.target_id))
+    for role in sorted(CANONICAL_ROLES):
+        (directory / role).mkdir(parents=True, exist_ok=True)
+    module_hash = args.module_sha256.upper() if _legacy.HEX64_RE.fullmatch(args.module_sha256) else args.module_sha256
+    atomic_write_json(metadata, {
+        "id": args.target_id,
         "game_version": args.game_version,
         "build_id": args.build_id,
+        "platform": args.platform,
+        "distribution": args.distribution,
         "module": args.module,
         "module_sha256": module_hash,
-        "rva_or_range": args.rva_or_range,
-    }
-
-
-def cmd_register_source(args: argparse.Namespace) -> int:
-    root = Path(args.root).resolve()
-    manifest = load_manifest(root)
-    pre_errors = validate_manifest_shape(root, manifest, verify_files=False)
-    if pre_errors:
-        raise StoreError("manifest must be repaired before registering sources: " + "; ".join(pre_errors))
-    ensure_schema_v2(manifest)
-    require_id(args.id, "source id")
-    full = Path(args.path).expanduser().resolve()
-    if not full.is_file():
-        raise StoreError("source file not found: %s" % full)
-    sources = sources_list(manifest)
-    if any(item.get("id") == args.id for item in sources):
-        raise StoreError("source id already exists: %s" % args.id)
-    stored_path = str(full)
-    if any(item.get("path") == stored_path for item in sources):
-        raise StoreError("source path already exists in manifest: %s" % stored_path)
-    source_hash = sha256_file(full)
-    target = target_from_args(args)
-    if target["module"] == "unknown":
-        target["module"] = full.name
-    if target["module_sha256"] == "unknown":
-        target["module_sha256"] = source_hash
-    entry: Dict[str, object] = {
-        "id": args.id,
-        "path": stored_path,
-        "kind": args.kind,
-        "description": args.description,
-        "size": full.stat().st_size,
-        "sha256": source_hash,
-        "target": target,
-        "finding_refs": [],
-        "status": "active",
-    }
-    for finding_id in args.finding_ref:
-        require_id(finding_id, "finding ref")
-        find_finding_path(root, finding_id)
-    sources.append(entry)
-    for finding_id in args.finding_ref:
-        link_evidence(root, manifest, finding_id, "source", args.id, "registered source; add a more specific locator if needed")
-    atomic_write_json(manifest_path(root), manifest)
-    print("registered source %s (%d bytes)" % (args.id, entry["size"]))
+    })
+    print("initialized target %s/%s" % (args.analysis_id, args.target_id))
     return 0
+
+
+def _apply_target_defaults(args: argparse.Namespace, target: Dict[str, object]) -> None:
+    for attr in ("game_version", "build_id", "module", "module_sha256"):
+        current = getattr(args, attr)
+        scoped = target.get(attr)
+        if current == "unknown" and isinstance(scoped, str) and scoped:
+            setattr(args, attr, scoped)
 
 
 def cmd_add_artifact(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
-    manifest = load_manifest(root)
-    require_id(args.id, "artifact id")
-    full = confined_path(root, args.path)
-    if not full.is_file():
-        raise StoreError("artifact file not found: %s" % full)
+    canonical = bool(args.analysis_id or args.target_id or args.local_name)
+    if args.shared:
+        if canonical and (args.analysis_id or args.target_id):
+            raise StoreError("--shared cannot be combined with --analysis-id/--target-id")
+        if args.path:
+            raise StoreError("use --local-name instead of --path with --shared")
+        if not args.local_name:
+            raise StoreError("--shared requires --local-name")
+        args.path = str(SHARED_ARTIFACTS / _local_name(args.local_name))
+    elif canonical:
+        if not args.analysis_id or not args.target_id or not args.local_name:
+            raise StoreError("canonical artifacts require --analysis-id, --target-id, and --local-name")
+        if args.path:
+            raise StoreError("use --local-name instead of --path for canonical artifacts")
+        _, target = _scope_metadata(root, args.analysis_id, args.target_id)
+        args.path = str(Path(ANALYSES_DIR) / args.analysis_id / TARGETS_DIR / args.target_id / "artifacts" / _local_name(args.local_name))
+        _apply_target_defaults(args, target)
+    elif not args.path:
+        raise StoreError("add-artifact requires --path, or canonical scope arguments")
 
-    pre_errors = validate_manifest_shape(root, manifest, verify_files=False)
-    if pre_errors:
-        raise StoreError("manifest must be repaired before adding artifacts: " + "; ".join(pre_errors))
-    artifacts = artifacts_list(manifest)
-    if any(item.get("id") == args.id for item in artifacts):
-        raise StoreError("artifact id already exists: %s" % args.id)
-    if any(item.get("path") == args.path for item in artifacts):
-        raise StoreError("artifact path already exists in manifest: %s" % args.path)
-
-    artifact_ids = {str(item.get("id")) for item in artifacts}
-    source_ids = {str(item.get("id")) for item in sources_list(manifest)}
-    for ref in args.derived_from:
-        require_id(ref, "derived_from id")
-        if ref not in artifact_ids:
-            raise StoreError("derived_from artifact id not found: %s" % ref)
-    for ref in args.source_ref:
-        require_id(ref, "source ref")
-        if ref not in source_ids:
-            raise StoreError("source ref not found: %s" % ref)
-    for finding_id in args.consumes_finding_ref:
-        require_id(finding_id, "consumes finding ref")
-        find_finding_path(root, finding_id)
-
-    entry: Dict[str, object] = {
-        "id": args.id,
-        "path": args.path,
-        "kind": args.kind,
-        "description": args.description,
-        "size": full.stat().st_size,
-        "sha256": sha256_file(full),
-        "producer": {"tool": args.tool, "version": args.tool_version},
-        "target": target_from_args(args),
-        "derived_from": list(args.derived_from),
-        "source_refs": list(args.source_ref),
-        "finding_refs": [],
-        "consumes_finding_refs": list(args.consumes_finding_ref),
-        "status": "active",
-        "superseded_by": None,
-    }
-    for finding_id in args.finding_ref:
-        require_id(finding_id, "finding ref")
-        find_finding_path(root, finding_id)
-    artifacts.append(entry)
-    for finding_id in args.finding_ref:
-        link_evidence(root, manifest, finding_id, "artifact", args.id, "registered artifact; add a more specific locator if needed")
-    atomic_write_json(manifest_path(root), manifest)
-    print("added artifact %s (%d bytes)" % (args.id, entry["size"]))
-    return 0
+    result = _ORIGINAL_CMD_ADD_ARTIFACT(args)
+    if args.analysis_id and args.target_id:
+        manifest = load_manifest(root)
+        item = next((entry for entry in artifacts_list(manifest) if entry.get("id") == args.id), None)
+        if item is None:
+            raise StoreError("artifact was added but could not be reloaded: %s" % args.id)
+        item["analysis_id"] = args.analysis_id
+        item["target_id"] = args.target_id
+        atomic_write_json(manifest_path(root), manifest)
+    return result
 
 
-def cmd_add_finding(args: argparse.Namespace) -> int:
-    root = Path(args.root).resolve()
-    manifest = load_manifest(root)
-    pre_errors = validate_manifest_shape(root, manifest, verify_files=False)
-    if pre_errors:
-        raise StoreError("manifest must be repaired before adding findings: " + "; ".join(pre_errors))
-    require_id(args.id, "finding id")
-    if args.status not in VALID_FINDING_STATUSES:
-        raise StoreError("invalid finding status: %s" % args.status)
-    ids, _, finding_errors = parse_findings(root)
-    if finding_errors:
-        raise StoreError("findings must be repaired before adding another: " + "; ".join(finding_errors))
-    if args.id in ids:
-        raise StoreError("finding id already exists: %s" % args.id)
-    path = finding_dir(root) / (args.id + ".md")
-    text = (
+def _finding_text(args: argparse.Namespace) -> str:
+    return (
         "# %s\n\n"
         "- ID: `%s`\n"
         "- Status: `%s`\n"
@@ -673,13 +407,36 @@ def cmd_add_finding(args: argparse.Namespace) -> int:
         "## Reusable detail\n\n%s\n\n"
         "## Dependencies\n\n%s\n\n"
         "## Validation and limitations\n\n%s\n"
-        % (
-            args.title, args.id, args.status, args.target, args.scope, args.supersedes,
-            args.claim, args.independent_check, args.reusable_detail, args.dependencies,
-            args.limitations,
-        )
+        % (args.title, args.id, args.status, args.target, args.scope, args.supersedes,
+           args.claim, args.independent_check, args.reusable_detail, args.dependencies,
+           args.limitations)
     )
-    atomic_write_text(path, text)
+
+
+def cmd_add_finding(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve()
+    if not args.analysis_id and not args.target_id:
+        if (root / ANALYSES_DIR).is_dir() and not legacy_finding_dir(root).exists():
+            raise StoreError("new-layout stores require --analysis-id and --target-id for add-finding")
+        return _ORIGINAL_CMD_ADD_FINDING(args)
+    if not args.analysis_id or not args.target_id:
+        raise StoreError("add-finding requires both --analysis-id and --target-id")
+
+    manifest = load_manifest(root)
+    pre_errors = validate_manifest_shape(root, manifest, verify_files=False)
+    if pre_errors:
+        raise StoreError("manifest must be repaired before adding findings: " + "; ".join(pre_errors))
+    require_id(args.id, "finding id")
+    _scope_metadata(root, args.analysis_id, args.target_id)
+    ids, _, finding_errors = parse_findings(root)
+    if finding_errors:
+        raise StoreError("findings must be repaired before adding another: " + "; ".join(finding_errors))
+    if args.id in ids:
+        raise StoreError("finding id already exists: %s" % args.id)
+    path = canonical_finding_path(root, args.analysis_id, args.target_id)
+    if path.exists():
+        raise StoreError("canonical target already has a primary finding: %s" % path.relative_to(root))
+    atomic_write_text(path, _finding_text(args))
     try:
         for spec in args.source_ref:
             evidence_id, locator = parse_ref_locator(spec, "source ref")
@@ -696,233 +453,176 @@ def cmd_add_finding(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_link(args: argparse.Namespace) -> int:
+def cmd_analysis_path(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
-    manifest = load_manifest(root)
-    pre_errors = validate_manifest_shape(root, manifest, verify_files=False)
-    if pre_errors:
-        raise StoreError("manifest must be repaired before linking: " + "; ".join(pre_errors))
-    if args.source_id:
-        kind, evidence_id = "source", args.source_id
-    else:
-        kind, evidence_id = "artifact", args.artifact_id
-    link_evidence(root, manifest, args.finding_id, kind, evidence_id, args.locator)
-    atomic_write_json(manifest_path(root), manifest)
-    print("linked %s:%s -> finding %s" % (kind, evidence_id, args.finding_id))
-    return 0
-
-
-def report_errors(errors: Iterable[str]) -> int:
-    items = list(errors)
-    if not items:
-        print("OK")
+    if args.kind == "shared-artifact":
+        if not args.name:
+            raise StoreError("shared-artifact path requires --name")
+        print(str(SHARED_ARTIFACTS / _local_name(args.name)))
         return 0
-    for item in items:
-        print("ERROR: %s" % item)
-    print("FAILED: %d error(s)" % len(items))
-    return 1
+    if not args.analysis_id:
+        raise StoreError("--analysis-id is required for %s paths" % args.kind)
+    require_id(args.analysis_id, "analysis id")
+    if args.kind == "analysis-script":
+        if not args.name:
+            raise StoreError("analysis-script path requires --name")
+        print(str(Path(ANALYSES_DIR) / args.analysis_id / "scripts" / _local_name(args.name)))
+        return 0
+    if not args.target_id:
+        raise StoreError("--target-id is required for %s paths" % args.kind)
+    _scope_metadata(root, args.analysis_id, args.target_id)
+    base = Path(ANALYSES_DIR) / args.analysis_id / TARGETS_DIR / args.target_id
+    if args.kind == "finding":
+        print(str(base / "finding.md"))
+    else:
+        if not args.name:
+            raise StoreError("%s path requires --name" % args.kind)
+        role = {"artifact": "artifacts", "script": "scripts", "report": "reports"}[args.kind]
+        print(str(base / role / _local_name(args.name)))
+    return 0
 
 
 def cmd_verify(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
     manifest = load_manifest(root)
-    return report_errors(validate_manifest_shape(root, manifest, verify_files=True))
+    _, _, finding_errors = parse_findings(root)
+    return report_errors(validate_manifest_shape(root, manifest, verify_files=True) + finding_errors)
 
 
 def cmd_check_links(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
     manifest = load_manifest(root)
     base_errors = validate_manifest_shape(root, manifest, verify_files=False)
-    return report_errors(base_errors + check_links(root, manifest))
+    return report_errors(base_errors + _legacy.check_links(root, manifest))
 
 
-def cmd_supersede(args: argparse.Namespace) -> int:
-    root = Path(args.root).resolve()
-    manifest = load_manifest(root)
-    if args.old_id == args.new_id:
-        raise StoreError("old and new artifact IDs must differ")
-    artifacts = artifacts_list(manifest)
-    by_id = {str(item.get("id")): item for item in artifacts if isinstance(item.get("id"), str)}
-    if args.old_id not in by_id:
-        raise StoreError("old artifact id not found: %s" % args.old_id)
-    if args.new_id not in by_id:
-        raise StoreError("new artifact id not found: %s" % args.new_id)
-    old = by_id[args.old_id]
-    old["status"] = "superseded"
-    old["superseded_by"] = args.new_id
-    atomic_write_json(manifest_path(root), manifest)
-    print("superseded %s -> %s" % (args.old_id, args.new_id))
-    return 0
-
-
-def run_self_test() -> None:
-    with tempfile.TemporaryDirectory(prefix="project-store-test-") as tmp:
-        base = Path(tmp)
-        source = base / "source.js"
-        source.write_text("function roll(){ return Math.random(); }\n", encoding="utf-8")
-        root = base / "analysis"
-        cmd_init(argparse.Namespace(root=str(root), project="sample-game", force=False))
-        report = root / "reports" / "analysis.md"
-        if not report.is_file():
-            raise AssertionError("init did not create reports/analysis.md")
-
-        manifest = load_manifest(root)
-        ensure_schema_v2(manifest)
-        source_entry: Dict[str, object] = {
-            "id": "game-source",
-            "path": str(source.resolve()),
-            "kind": "source-code",
-            "description": "self-test source",
-            "size": source.stat().st_size,
-            "sha256": sha256_file(source),
-            "target": {
-                "game_version": "unknown", "build_id": "unknown", "module": "source.js",
-                "module_sha256": sha256_file(source), "rva_or_range": "not-applicable",
-            },
-            "finding_refs": [], "status": "active",
-        }
-        sources_list(manifest).append(source_entry)
-
-        artifact = root / "artifacts" / "sample.txt"
-        artifact.write_text("evidence\n", encoding="utf-8")
-        artifact_entry: Dict[str, object] = {
-            "id": "sample-artifact", "path": "artifacts/sample.txt", "kind": "test",
-            "description": "self-test artifact", "size": artifact.stat().st_size,
-            "sha256": sha256_file(artifact), "producer": {"tool": "self-test", "version": "1"},
-            "target": {
-                "game_version": "unknown", "build_id": "unknown", "module": "source.js",
-                "module_sha256": sha256_file(source), "rva_or_range": "not-applicable",
-            },
-            "derived_from": [], "source_refs": ["game-source"], "finding_refs": [],
-            "consumes_finding_refs": [], "status": "active", "superseded_by": None,
-        }
-        artifacts_list(manifest).append(artifact_entry)
-        atomic_write_json(manifest_path(root), manifest)
-
-        finding = finding_dir(root) / "sample-finding.md"
-        finding.write_text(
-            "# Sample\n\n- ID: `sample-finding`\n- Status: `confirmed`\n\n"
-            "## Claim\n\nSample.\n\n## Evidence\n\n- Independent check: self-test\n\n"
-            "## Reusable detail\n\nnone\n\n## Dependencies\n\nnone\n\n"
-            "## Validation and limitations\n\nnone\n",
-            encoding="utf-8",
-        )
-        link_evidence(root, manifest, "sample-finding", "source", "game-source", "roll() definition")
-        link_evidence(root, manifest, "sample-finding", "artifact", "sample-artifact", "line 1")
-
-        dependency_file = root / "artifacts" / "application.txt"
-        dependency_file.write_text("derived application\n", encoding="utf-8")
-        dependency_entry: Dict[str, object] = {
-            "id": "application-artifact", "path": "artifacts/application.txt",
-            "kind": "test-application", "description": "self-test one-way finding dependency",
-            "size": dependency_file.stat().st_size, "sha256": sha256_file(dependency_file),
-            "producer": {"tool": "self-test", "version": "1"},
-            "target": {
-                "game_version": "unknown", "build_id": "unknown", "module": "source.js",
-                "module_sha256": sha256_file(source), "rva_or_range": "not-applicable",
-            },
-            "derived_from": [], "source_refs": [], "finding_refs": [],
-            "consumes_finding_refs": ["sample-finding"],
-            "status": "active", "superseded_by": None,
-        }
-        artifacts_list(manifest).append(dependency_entry)
-        atomic_write_json(manifest_path(root), manifest)
-        errors = validate_manifest_shape(root, manifest, verify_files=True)
-        errors.extend(check_links(root, manifest))
-        if ("artifact", "application-artifact") in parse_findings(root)[1].get("sample-finding", set()):
-            errors.append("one-way application dependency leaked into finding Evidence")
-        if errors:
-            raise AssertionError("; ".join(errors))
-    print("project_store self-test: OK")
-
-
-def add_target_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--game-version", default="unknown")
-    parser.add_argument("--build-id", default="unknown")
-    parser.add_argument("--module", default="unknown")
-    parser.add_argument("--module-sha256", default="unknown")
-    parser.add_argument("--rva-or-range", default="not-applicable")
+def _subparsers(parser: argparse.ArgumentParser) -> argparse._SubParsersAction:
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            return action
+    raise AssertionError("legacy parser has no subparsers")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Manage game-logic project knowledge stores")
-    parser.add_argument("--self-test", action="store_true", help="run pure-Python integrity tests")
-    sub = parser.add_subparsers(dest="command")
+    parser = _ORIGINAL_BUILD_PARSER()
+    sub = _subparsers(parser)
 
-    p_init = sub.add_parser("init", help="initialize manifest, directories, and reports/analysis.md")
-    p_init.add_argument("--root", required=True)
-    p_init.add_argument("--project", required=True)
-    p_init.add_argument("--force", action="store_true")
+    p_init = sub.choices["init"]
     p_init.set_defaults(func=cmd_init)
+    for choice in sub._choices_actions:
+        if choice.dest == "init":
+            choice.help = "initialize the canonical analysis/target project layout"
 
-    p_source = sub.add_parser("register-source", help="register an external read-only source file")
-    p_source.add_argument("--root", required=True)
-    p_source.add_argument("--id", required=True)
-    p_source.add_argument("--path", required=True, help="source path; stored as an absolute read-only reference")
-    p_source.add_argument("--kind", default="source-file")
-    p_source.add_argument("--description", required=True)
-    p_source.add_argument("--finding-ref", action="append", default=[], help="existing finding ID; reciprocal link is added")
-    add_target_args(p_source)
-    p_source.set_defaults(func=cmd_register_source)
-
-    p_add = sub.add_parser("add-artifact", help="hash and add one retained artifact under the project root")
-    p_add.add_argument("--root", required=True)
-    p_add.add_argument("--id", required=True)
-    p_add.add_argument("--path", required=True, help="artifact path relative to project root")
-    p_add.add_argument("--kind", required=True)
-    p_add.add_argument("--description", required=True)
-    p_add.add_argument("--tool", required=True)
-    p_add.add_argument("--tool-version", default="unknown")
-    add_target_args(p_add)
-    p_add.add_argument("--derived-from", action="append", default=[], help="artifact ID")
-    p_add.add_argument("--source-ref", action="append", default=[], help="registered source ID")
-    p_add.add_argument("--finding-ref", action="append", default=[], help="existing finding ID; reciprocal evidence link is added")
-    p_add.add_argument(
-        "--consumes-finding-ref", action="append", default=[],
-        help="existing finding ID consumed as a one-way dependency; does not alter finding Evidence",
-    )
+    p_add = sub.choices["add-artifact"]
+    for action in p_add._actions:
+        if "--path" in action.option_strings:
+            action.required = False
+            action.help = "legacy project-relative path; canonical stores should use scope args"
+            break
+    p_add.add_argument("--analysis-id")
+    p_add.add_argument("--target-id")
+    p_add.add_argument("--local-name", help="sibling-local artifact filename for canonical/shared storage")
+    p_add.add_argument("--shared", action="store_true", help="store under shared/artifacts instead of one analysis target")
     p_add.set_defaults(func=cmd_add_artifact)
 
-    p_finding = sub.add_parser("add-finding", help="create a reusable finding and optionally link evidence atomically")
-    p_finding.add_argument("--root", required=True)
-    p_finding.add_argument("--id", required=True)
-    p_finding.add_argument("--title", required=True)
-    p_finding.add_argument("--status", default="working-hypothesis", choices=sorted(VALID_FINDING_STATUSES))
-    p_finding.add_argument("--target", default="unknown")
-    p_finding.add_argument("--scope", default="unknown")
-    p_finding.add_argument("--supersedes", default="none")
-    p_finding.add_argument("--claim", required=True)
-    p_finding.add_argument("--independent-check", default="not yet established")
-    p_finding.add_argument("--reusable-detail", default="none")
-    p_finding.add_argument("--dependencies", default="none")
-    p_finding.add_argument("--limitations", default="not yet fully validated")
-    p_finding.add_argument("--source-ref", action="append", default=[], metavar="ID=LOCATOR")
-    p_finding.add_argument("--artifact-ref", action="append", default=[], metavar="ID=LOCATOR")
+    p_finding = sub.choices["add-finding"]
+    p_finding.add_argument("--analysis-id")
+    p_finding.add_argument("--target-id")
     p_finding.set_defaults(func=cmd_add_finding)
 
-    p_link = sub.add_parser("link", help="link one registered source/artifact to an existing finding on both sides")
-    p_link.add_argument("--root", required=True)
-    p_link.add_argument("--finding-id", required=True)
-    group = p_link.add_mutually_exclusive_group(required=True)
-    group.add_argument("--source-id")
-    group.add_argument("--artifact-id")
-    p_link.add_argument("--locator", required=True)
-    p_link.set_defaults(func=cmd_link)
-
-    p_verify = sub.add_parser("verify", help="verify manifest structure and source/artifact integrity")
-    p_verify.add_argument("--root", required=True)
+    p_verify = sub.choices["verify"]
     p_verify.set_defaults(func=cmd_verify)
-
-    p_links = sub.add_parser("check-links", help="verify source/artifact/finding reciprocal links")
-    p_links.add_argument("--root", required=True)
+    p_links = sub.choices["check-links"]
     p_links.set_defaults(func=cmd_check_links)
 
-    p_sup = sub.add_parser("supersede", help="mark one artifact superseded by another")
-    p_sup.add_argument("--root", required=True)
-    p_sup.add_argument("--old-id", required=True)
-    p_sup.add_argument("--new-id", required=True)
-    p_sup.set_defaults(func=cmd_supersede)
+    p_analysis = sub.add_parser("init-analysis", help="create one stable analysis scope")
+    p_analysis.add_argument("--root", required=True)
+    p_analysis.add_argument("--id", required=True)
+    p_analysis.add_argument("--title")
+    p_analysis.add_argument("--force", action="store_true")
+    p_analysis.set_defaults(func=cmd_init_analysis)
+
+    p_target = sub.add_parser("init-target", help="create target/build scope metadata and local role directories")
+    p_target.add_argument("--root", required=True)
+    p_target.add_argument("--analysis-id", required=True)
+    p_target.add_argument("--target-id", required=True)
+    p_target.add_argument("--game-version", default="unknown")
+    p_target.add_argument("--build-id", default="unknown")
+    p_target.add_argument("--platform", default="unknown")
+    p_target.add_argument("--distribution", default="unknown")
+    p_target.add_argument("--module", default="unknown")
+    p_target.add_argument("--module-sha256", default="unknown")
+    p_target.add_argument("--force", action="store_true")
+    p_target.set_defaults(func=cmd_init_target)
+
+    p_path = sub.add_parser("analysis-path", help="derive a canonical project-relative path")
+    p_path.add_argument("--root", required=True)
+    p_path.add_argument("--analysis-id")
+    p_path.add_argument("--target-id")
+    p_path.add_argument("--kind", required=True,
+                        choices=("artifact", "script", "report", "finding", "analysis-script", "shared-artifact"))
+    p_path.add_argument("--name")
+    p_path.set_defaults(func=cmd_analysis_path)
     return parser
+
+
+def run_self_test() -> None:
+    with tempfile.TemporaryDirectory(prefix="project-store-hierarchy-test-") as tmp:
+        root = Path(tmp) / "analysis"
+        cmd_init(argparse.Namespace(root=str(root), project="sample-game", force=False))
+        if (root / "notes" / "findings").exists():
+            raise AssertionError("new init unexpectedly created legacy notes/findings")
+        if not (root / "reports" / "index.md").is_file():
+            raise AssertionError("new init did not create reports/index.md")
+        cmd_init_analysis(argparse.Namespace(root=str(root), id="reload-timing", title=None, force=False))
+        cmd_init_target(argparse.Namespace(
+            root=str(root), analysis_id="reload-timing", target_id="build-1",
+            game_version="1.0", build_id="1", platform="pc", distribution="test",
+            module="game.exe", module_sha256="unknown", force=False,
+        ))
+        artifact = target_dir(root, "reload-timing", "build-1") / "artifacts" / "static.txt"
+        artifact.write_text("evidence\n", encoding="utf-8")
+        add_args = argparse.Namespace(
+            root=str(root), id="reload-static", path=None, analysis_id="reload-timing",
+            target_id="build-1", local_name="static.txt", shared=False, kind="test",
+            description="test", tool="self-test", tool_version="1", game_version="unknown",
+            build_id="unknown", module="unknown", module_sha256="unknown", rva_or_range="not-applicable",
+            derived_from=[], source_ref=[], finding_ref=[], consumes_finding_ref=[],
+        )
+        cmd_add_artifact(add_args)
+        finding_args = argparse.Namespace(
+            root=str(root), id="reload-result", title="Reload result", status="confirmed",
+            target="build-1", scope="reload timing", supersedes="none", claim="Sample.",
+            independent_check="self-test", reusable_detail="none", dependencies="none",
+            limitations="none", source_ref=[], artifact_ref=["reload-static=line 1"],
+            analysis_id="reload-timing", target_id="build-1",
+        )
+        cmd_add_finding(finding_args)
+        manifest = load_manifest(root)
+        errors = validate_manifest_shape(root, manifest, verify_files=True)
+        errors.extend(_legacy.check_links(root, manifest))
+        if errors:
+            raise AssertionError("; ".join(errors))
+
+        legacy = legacy_finding_dir(root)
+        legacy.mkdir(parents=True, exist_ok=True)
+        (legacy / "duplicate.md").write_text(
+            "# Duplicate\n\n- ID: `reload-result`\n\n## Evidence\n\n- Independent check: none\n",
+            encoding="utf-8",
+        )
+        _, _, duplicate_errors = parse_findings(root)
+        if not any("duplicate finding id reload-result" in item for item in duplicate_errors):
+            raise AssertionError("duplicate ID across canonical/legacy layouts was not rejected")
+    print("project_store hierarchy self-test: OK")
+
+
+def _install_legacy_hooks() -> None:
+    _legacy.parse_findings = parse_findings
+    _legacy.find_finding_path = find_finding_path
+    _legacy.validate_manifest_shape = validate_manifest_shape
+
+
+_install_legacy_hooks()
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:

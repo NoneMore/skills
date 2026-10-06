@@ -10,15 +10,29 @@ Keep three concepts separate:
 - **Artifact:** generated evidence worth retaining, such as a decompilation, trace, extracted table, or validation log.
 - **Finding:** a reusable interpretation that cites the source/artifact evidence supporting it.
 
-A useful project layout is:
+For new stores, let the filesystem carry stable analysis and target context:
 
+```text
 artifacts/manifest.json
-notes/findings/<finding-id>.md
-reports/analysis.md
+analyses/<analysis-id>/analysis.json
+analyses/<analysis-id>/targets/<target-id>/target.json
+analyses/<analysis-id>/targets/<target-id>/finding.md
+analyses/<analysis-id>/targets/<target-id>/artifacts/<local-name>
+analyses/<analysis-id>/targets/<target-id>/scripts/<local-name>
+analyses/<analysis-id>/targets/<target-id>/reports/<local-name>
+shared/artifacts/<local-name>
+reports/index.md
+```
+
+An analysis ID names the stable research/mechanic question. A target ID names one build/version observation scope. A finding belongs to a target scope but is not the identity of the analysis itself.
+
+Use local filenames only to distinguish siblings inside their scope. Keep evidence owned by one analysis under that target; put genuinely cross-analysis retained evidence under `shared/artifacts/` rather than copying it for locality. Analysis-wide cross-target helpers may live under `analyses/<analysis-id>/scripts/`. Project-level reports should be indexes or rollups, not the default home for target-specific analysis.
+
+Legacy `notes/findings/**/*.md` stores remain supported. Do not migrate or rearrange them implicitly. New and legacy findings may coexist, but duplicate finding IDs are invalid.
 
 The analysis root must be separate from the installed game directory. Deployed copies inside the game tree are never authoritative artifacts.
 
-## Baseline
+## Baseline and target scope
 
 Record only baseline facts material to reproducing the conclusion:
 
@@ -28,7 +42,7 @@ Record only baseline facts material to reproducing the conclusion:
 - engine/backend when material;
 - existing symbols, source maps, databases, or prior analysis artifacts when they materially affect reuse.
 
-Preserve conflicting version indicators instead of silently choosing one.
+For canonical stores, put facts shared by one target/build in its `target.json` instead of requiring the agent to restate them independently for every child file. Keep artifact-specific locators, content identity, producer information, dependency edges, finding links, supersession, and integrity state in the manifest where they can be verified independently. Preserve conflicting version indicators instead of silently choosing one.
 
 ## Findings
 
@@ -53,9 +67,9 @@ Before reusing a retained file, verify that it still exists and matches its reco
 
 ## Mechanical helper
 
-The bundled scripts/project_store.py helper is the source of truth for its current manifest schema, supported commands, lifecycle fields, and integrity checks. Prefer the helper for mechanical hashing and store maintenance when practical.
+The bundled `scripts/project_store.py` helper is the source of truth for its current manifest schema, supported commands, canonical path rules, lifecycle fields, and integrity checks. Prefer it for scope creation, path derivation, mechanical hashing, and store maintenance when practical.
 
-Do not copy its full CLI or JSON schema into agent instructions. Inspect its current --help or implementation when a specific store operation is required.
+Do not copy its full CLI or JSON schema into agent instructions. Inspect its current `--help` or implementation when a specific store operation is required.
 
 The semantic correctness of a gameplay finding remains an analysis responsibility; passing store integrity checks does not prove the interpretation.
 
@@ -63,4 +77,4 @@ The semantic correctness of a gameplay finding remains an analysis responsibilit
 
 Preserve expensive or lossy evidence promptly. For cheap deterministic source searches, first close the evidence loop, then persist the coherent finding and useful locators together.
 
-A later session should be able to identify the target, recover the authoritative evidence, understand the finding's confidence/limitations, and continue without relying on conversational memory. Anything beyond that should earn its complexity through demonstrated reuse.
+A later session should be able to identify the analysis question and target, recover the authoritative evidence, understand the finding's confidence/limitations, and continue without relying on conversational memory. Anything beyond that should earn its complexity through demonstrated reuse.
