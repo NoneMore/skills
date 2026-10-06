@@ -27,7 +27,7 @@ The wizard keeps **target intent** separate from **loader semantics**. An explic
 
 Inspection is focused and evidence-driven. The wizard reads the smallest maintained set needed to understand durable behavior, preserves existing instruction artifacts as prior human intent, avoids secret-bearing values during orientation, and does not let ordinary workspace content redirect the workflow.
 
-Workspace evidence may establish mechanics and maintained policy, but directory shape or plausible conventions do not become policy by implication. The wizard asks only when an unresolved choice would change the target, scope, or behavioral contract. Uncertain optional material is omitted rather than turned into an interview question.
+Workspace evidence may establish mechanics and maintained policy, but directory shape or plausible conventions do not become policy by implication. Runtime/system/tool constraints govern the current run but are not persisted as project policy unless the user or maintained project authority independently establishes them. The wizard asks only when an unresolved choice would change the target, scope, or behavioral contract. Uncertain optional material is omitted rather than turned into an interview question.
 
 For scoped instructions, the wizard uses **inherit / extend / narrow / override** only when the active loader actually composes broader and narrower instruction files. A local file contains genuine local deltas, not a shadow copy of broader policy.
 
@@ -56,6 +56,8 @@ Ordinary create/refresh/audit work should use `SKILL.md` alone. Load one concret
 ## Write behavior
 
 A separate approval round is **not** the default. If the user asked to create or update the artifact and the behavioral contract is grounded, the wizard writes and verifies it.
+
+A bare Skill invocation without a create, update, or audit outcome remains read-only until the user chooses the outcome; selecting the Skill alone does not grant write authority.
 
 The wizard stops before writing when:
 
