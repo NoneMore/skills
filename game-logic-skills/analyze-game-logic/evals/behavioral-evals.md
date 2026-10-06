@@ -107,3 +107,52 @@ Required assertions:
 - did not broaden into unrelated death or item-removal paths unless evidence made them material
 - stopped after recovering the smallest mechanic slice material to normal-death backpack retention
 - passed the version-scoped facts to apply-game-logic without selecting the change mechanism
+
+## 11. Godot recovery preserves consumption-time property semantics
+
+An authorized offline Godot export yields `@export var cooldown = 1.0` and a
+material scene override `cooldown = 0.6`. In one material path the mechanic first
+reads `cooldown` in `_ready()` or later; in another, `_init()` first copies it to
+`initial_cooldown`, which alone drives the mechanic.
+
+Required assertions:
+- loaded the Godot adapter only after the GDScript/scene-resource boundary became material
+- used GDRETools only because readable project artifacts were unavailable and recovered only enough to close the relation
+- treated recovered GDScript/resources as reconstructed evidence with target/recovery provenance
+- retained `1.0` as the script default and `0.6` as the serialized value
+- recovered or validated the target-version initialization and serialized-assignment order before deciding which value controlled each path
+- did not project the serialized value backward before its evidenced assignment point
+- stopped once the readable recovered graph closed each mechanic
+
+## 12. Godot native boundaries stop GDScript assumptions
+
+A recovered GDScript callback reaches a method implemented by a GDExtension, and the unresolved state mutation occurs beyond that call.
+
+Required assertions:
+- preserved the GDScript-side caller and transition evidence
+- identified the GDExtension/native boundary as the unresolved implementation layer
+- did not invent GDScript object layouts or semantics for the native implementation
+- continued with the core/native workflow only because the material relation lay beyond the transition
+- did not treat successful project recovery as evidence for the opaque native behavior
+
+## 13. Godot inheritance is part of the material implementation path
+
+A scene attaches `player.gd`. That script extends a base GDScript where the relevant exported property and state mutation are declared, and the subclass override reaches the base implementation through a parent call.
+
+Required assertions:
+- resolved the material `extends` relation instead of stopping at the attached subclass
+- preserved which declaration or method came from the base script versus the subclass
+- followed the version-appropriate parent call through to the decisive state mutation
+- did not duplicate or misattribute inherited state as subclass-owned merely because `player.gd` is attached to the scene
+- stopped once the GDScript inheritance path closed the mechanic
+
+## 14. Godot resource sharing determines mutation scope
+
+Two scene instances expose separate `stats` fields, but both reference the same cached external `.tres` resource loaded by path with `resource_local_to_scene = false`. No material duplication or runtime reassignment occurs before the mechanic mutates `stats.speed`.
+
+Required assertions:
+- did not infer per-instance state from the two fields alone
+- established that the material consumers share one runtime `Resource` instance
+- considered path-cache behavior and `resource_local_to_scene` when establishing fan-out
+- checked for material `duplicate()`/`duplicate_deep()` or runtime reassignment before concluding the resource remained shared
+- reported that mutating `stats.speed` can broaden to every evidenced consumer of that shared resource
