@@ -29,6 +29,8 @@ Preserve judgment where fixed rules add more complexity than value.
 
 A skill has a **complexity budget**. Add or retain durable structure only when it prevents a concrete failure, avoids meaningful repeated reasoning, or materially reduces behavioral variance, risk, or verification cost. Use a simpler mechanism when it provides the same benefit; remove structure whose absence causes no identifiable behavioral or verification regression.
 
+Defensive complexity carries the same burden of proof as any other complexity. Do not add guards, fallbacks, validation, abstraction, or branches merely because a failure is imaginable. Require a plausible failure with material consequences, and use the simplest reliable mechanism that can prevent or contain it.
+
 Completeness means enough structure to execute and verify the task—not exhaustive doctrine, cheaply re-derived analysis, or confirmation without behavior-changing uncertainty.
 
 ---
@@ -156,7 +158,7 @@ Before adding or changing a skill, ask:
 1. **Task fit** — Is this reusable behavior or knowledge worth skillizing?
 2. **Contract** — Where a workflow exists, are scope, decisions, completion, failure, and stopping conditions explicit?
 3. **Context** — Is each piece of information better encoded than recovered when needed?
-4. **Complexity budget** — Would removing any nontrivial durable structure cause an identifiable behavioral or verification regression? If not, simplify or remove it.
+4. **Complexity budget** — Would removing any nontrivial durable structure cause an identifiable behavioral or verification regression? For defensive structure, what plausible, material failure does it prevent, and why is a simpler mechanism insufficient? If these questions have no concrete answer, simplify or remove it.
 5. **Invocation and routing** — Who owns invocation? If model-invoked, can the right task discover the skill without excessive overlap? If user-invoked, is explicit human selection clear without unnecessary model-routing machinery?
 6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
