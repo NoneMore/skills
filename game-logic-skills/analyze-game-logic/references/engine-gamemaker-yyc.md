@@ -229,23 +229,6 @@ bytes/value, plausible argument count and runtime-value kind, stable
 Detaching instrumentation does not necessarily undo a raw memory write; state
 restoration limitations must be explicit.
 
-## 8. Application handoff facts
-
-When downstream application is requested, preserve the YYC facts that determine
-whether a candidate intervention would stay within the intended scope:
-
-- whether a numeric runtime value is uniquely referenced or shared;
-- which call sites or return sources reach a shared callee;
-- whether a script/event path is shared across gameplay sources;
-- the validated `RValue` kind, owner, lifetime, and reference-management rules
-  for any live global/instance state that could later be changed;
-- restoration limitations for any runtime state touched during validation.
-
-Shared refresh functions are a common source of overly broad changes, so record
-material callers and source discrimination when they affect scope. Do not choose
-or rank the downstream modification mechanism here; pass these facts to
-`$apply-game-logic`.
-
 ## 9. Version-sensitive assumptions
 
 Revalidate per runner/game version rather than hard-coding:
