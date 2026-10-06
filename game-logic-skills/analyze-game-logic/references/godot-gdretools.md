@@ -12,7 +12,8 @@ Upstream project: [GDRETools/gdsdecomp](https://github.com/GDRETools/gdsdecomp).
 Record the installed GDRETools version and consult that installation's current
 help before relying on commands or options. Treat exact flags, supported bytecode
 revisions, and recovery limitations as live tool state rather than cached skill
-knowledge.
+knowledge. If the installed tool is unavailable or does not support the target,
+stop this recovery path rather than inventing or forcing unsupported behavior.
 
 ## Recover only what the claim needs
 
