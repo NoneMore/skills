@@ -27,7 +27,7 @@ After behavioral scope is established, load only the matching engine/runtime app
 | GameMaker YYC | [change-gamemaker-yyc.md](change-gamemaker-yyc.md) |
 | Web / JavaScript | [change-web-javascript.md](change-web-javascript.md) |
 
-These application guides may rank engine-specific intervention choices. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
+This file remains authoritative for ordering across mechanism classes. Matching application guides refine engine-specific implementation points only within the selected class; they do not override this ordering. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
 
 ## Guard the target
 
@@ -37,7 +37,7 @@ If the installed target no longer matches the evidence, stop and revalidate the 
 
 ## Preserve control state
 
-Before destructive modification, record the original bytes/content, replacement, target hash, locator mapping, expected effect, known shared-use risk, and restoration procedure. If the original state or an integrity-verifiable backup cannot be captured well enough to support restoration, stop before modifying the installed target.
+Before destructive modification, satisfy the rollback precondition in [SKILL.md](../SKILL.md), then record the original bytes/content, replacement, target hash, locator mapping, expected effect, known shared-use risk, and restoration procedure.
 
 For retained/deployed changes follow [application-artifacts.md](application-artifacts.md).
 

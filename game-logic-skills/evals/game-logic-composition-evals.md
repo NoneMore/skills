@@ -42,3 +42,4 @@ Required assertions:
 - the analysis adapter does not rank or select a write, hook, wrapper, config, or patch mechanism
 - apply-game-logic loads engine-specific change guidance only after the material mechanic and behavioral scope are established
 - mechanism selection remains on the application side and is bound to the recovered version-scoped evidence
+- change-design remains authoritative across mechanism classes; engine-specific guidance only refines the selected class

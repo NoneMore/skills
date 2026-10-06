@@ -1,15 +1,14 @@
 # GameMaker YYC Change Guidance
 
-Load this reference only when `$apply-game-logic` is applying a recovered GameMaker YYC mechanic to an authorized local/offline gameplay change. The mechanic finding must already contain the YYC ownership, caller/source, type/lifetime, locator, and version facts material to scope.
+Load this reference only when `$apply-game-logic` is applying a recovered GameMaker YYC mechanic to an authorized local/offline gameplay change. Require only the YYC facts material to the currently viable mechanism and requested scope; do not demand unrelated ownership, caller, type/lifetime, or locator facts up front.
 
-## Choose a YYC intervention from recovered scope
+## Refine a YYC intervention from recovered scope
 
-After the generic mechanism ordering in [change-design.md](change-design.md), prefer the narrowest YYC intervention that matches the evidenced behavior:
+First select the mechanism class using [change-design.md](change-design.md); this guide does not override its cross-class ordering. Within the selected class, choose the narrowest YYC implementation point supported by the recovered facts:
 
-1. Change a uniquely referenced static numeric runtime value when the finding shows it controls only the intended source.
-2. Intercept one call site or discriminate by return address when a shared callee receives materially different values from different sources.
-3. Hook a shared script/event only when the requested behavior intentionally applies to every evidenced source that reaches it.
-4. Modify a live global/instance runtime value only after its `RValue` kind, owner, lifetime, reference-management behavior, and reset path are established.
+- For a reversible runtime data change, use a uniquely referenced static numeric runtime value when it controls only the intended source, or a live global/instance value only after its `RValue` kind, owner, lifetime, reference-management behavior, and reset path are established.
+- For a caller/event-limited hook, intercept one call site or discriminate by return address when a shared callee receives materially different values from different sources.
+- For a shared hook, use the shared script/event only when the requested behavior intentionally applies to every evidenced source that reaches it.
 
 Shared refresh functions are a common source of scope leakage. Do not choose a shared hook merely because it is convenient or reversible; caller/source evidence must justify the requested fan-out.
 
@@ -19,4 +18,4 @@ For writes or hooks, guard on the strongest available combination of exact targe
 
 Detaching instrumentation does not necessarily restore a raw memory write. Capture the control/original state and use an explicit restoration path appropriate to the selected mechanism.
 
-If the required YYC type, ownership, caller discrimination, or version relation is missing or stale, return only that relation to `$analyze-game-logic` before applying the change.
+If a relation required by the selected candidate mechanism is missing or stale, return only that relation to `$analyze-game-logic` before applying the change.
