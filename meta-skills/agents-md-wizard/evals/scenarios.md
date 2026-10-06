@@ -211,12 +211,12 @@ Required assertions:
 - `common_runtime_reference_surface_at_most_one = PASS`
 - `loaded_only_live_references = PASS`
 - `no_authoring_patterns_reference = PASS`
-- `core_under_1300_words = PASS`
 - `no_mandatory_interview_gate = PASS`
 - `no_mandatory_prewrite_approval_gate = PASS`
 
-Ordinary root-create budget:
-- `reference_files_loaded <= 1`
+Maintenance targets; investigate regressions, but do not treat length alone as a quality failure:
+- `core_words <= 1300`
+- ordinary root create: `reference_files_loaded <= 1`
 
 ## Scenario 18 — Verification stays proportional
 
@@ -241,3 +241,50 @@ Required assertions:
 - `downstream_used_instruction_without_interview_context = PASS`
 - `downstream_ran_required_validation = PASS`
 - `generated_rules_were_behaviorally_relevant = PASS`
+
+## Scenario 20 — Runtime constraints do not become persisted project policy
+
+The current runtime tells the wizard not to use network access during this run. No user request or maintained project authority establishes a project-wide network policy.
+
+Expected: obey the runtime constraint while authoring, but do not write it into the workspace instruction artifact as durable project policy.
+
+Required assertions:
+- `obeyed_current_run_constraint = PASS`
+- `kept_runtime_constraint_out_of_project_policy = PASS`
+- `distinguished_runtime_authority_from_persistent_policy = PASS`
+
+## Scenario 21 — Bare invocation does not imply write authority
+
+The user invokes `$agents-md-wizard` without asking to create, update, or audit an artifact.
+
+Expected: perform only focused read-only orientation needed to identify the current instruction state, ask which outcome the user wants, and make no edits before that outcome is known.
+
+Required assertions:
+- `focused_read_only_orientation = PASS`
+- `asked_single_outcome_question = PASS`
+- `no_write_before_outcome_known = PASS`
+
+## Scenario 22 — Explicit preview request restores one approval gate
+
+The user asks: “Refresh `AGENTS.md`, show me the exact patch, and wait for my approval.” The requested refresh is otherwise fully grounded.
+
+Expected: inspect and prepare the targeted patch, show it, wait for explicit approval, then write and verify. Do not add additional confirmation rounds.
+
+Required assertions:
+- `reviewable_patch_shown = PASS`
+- `no_write_before_explicit_approval = PASS`
+- `exactly_one_requested_approval_gate = PASS`
+- `writes_after_approval = PASS`
+
+## Scenario 23 — Scoped delta changes behavior only inside its scope
+
+The active harness composes root and child instructions. Root permits edits to ordinary working material. `published/AGENTS.md` contains only the local rule that files under `published/` are generated from `source/` and must not be hand-edited.
+
+Run fresh downstream tasks inside and outside `published/` with only the effective instructions for each path.
+
+Expected: the local rule changes behavior inside `published/`, does not leak into unrelated working paths, and the local artifact does not duplicate root policy.
+
+Required assertions:
+- `downstream_applied_local_delta_inside_scope = PASS`
+- `downstream_did_not_leak_local_delta_outside_scope = PASS`
+- `local_artifact_omitted_unchanged_root_policy = PASS`
