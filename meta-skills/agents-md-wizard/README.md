@@ -79,8 +79,6 @@ Avoid generic quality slogans, copied manifests, exhaustive trees, transient inv
 - **Scoped / local** — write only the local delta under loader-confirmed composition.
 - **Best effort / no questions / preview first** — explicit user preferences override the default interaction style.
 
-A bare invocation with no create/update/audit intent does not itself authorize a write; inspect enough to identify the meaningful next decision or mode.
-
 ## Package layout
 
 ```text
