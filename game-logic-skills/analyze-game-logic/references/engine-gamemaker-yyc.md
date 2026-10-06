@@ -229,20 +229,22 @@ bytes/value, plausible argument count and runtime-value kind, stable
 Detaching instrumentation does not necessarily undo a raw memory write; state
 restoration limitations must be explicit.
 
-## 8. Modification-point selection
+## 8. Application handoff facts
 
-Prefer the narrowest YYC state representing the requested behavior:
+When downstream application is requested, preserve the YYC facts that determine
+whether a candidate intervention would stay within the intended scope:
 
-1. Change a uniquely referenced static numeric runtime value when it controls
-   only the intended source.
-2. Intercept one call site or discriminate by return address when a shared
-   callee receives different values from different sources.
-3. Hook the shared script only when all sources should change together.
-4. Modify a live global/instance runtime value only after confirming type,
-   ownership, and lifetime.
+- whether a numeric runtime value is uniquely referenced or shared;
+- which call sites or return sources reach a shared callee;
+- whether a script/event path is shared across gameplay sources;
+- the validated `RValue` kind, owner, lifetime, and reference-management rules
+  for any live global/instance state that could later be changed;
+- restoration limitations for any runtime state touched during validation.
 
-Shared refresh functions are a common source of overly broad changes. Audit all
-callers before choosing the hook point.
+Shared refresh functions are a common source of overly broad changes, so record
+material callers and source discrimination when they affect scope. Do not choose
+or rank the downstream modification mechanism here; pass these facts to
+`$apply-game-logic`.
 
 ## 9. Version-sensitive assumptions
 

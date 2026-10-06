@@ -20,6 +20,15 @@ Among options with acceptable behavioral scope, prefer:
 
 Reversibility does not prove narrow scope.
 
+After behavioral scope is established, load only the matching engine/runtime application guide when one is available and material to mechanism choice:
+
+| Material implementation boundary | Application guide |
+| --- | --- |
+| GameMaker YYC | [change-gamemaker-yyc.md](change-gamemaker-yyc.md) |
+| Web / JavaScript | [change-web-javascript.md](change-web-javascript.md) |
+
+These application guides may rank engine-specific intervention choices. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
+
 ## Guard the target
 
 Bind the change to the exact target version/build/hash. For native interventions use stable module + RVA locators and verify address conversions before use. A raw runtime address is not a stable cross-launch locator.
