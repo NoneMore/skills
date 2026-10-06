@@ -14,21 +14,19 @@ For new stores, let the filesystem carry stable analysis and target context:
 
 ```text
 artifacts/manifest.json
-analyses/<analysis-id>/analysis.json
 analyses/<analysis-id>/targets/<target-id>/target.json
 analyses/<analysis-id>/targets/<target-id>/finding.md
 analyses/<analysis-id>/targets/<target-id>/artifacts/<local-name>
 analyses/<analysis-id>/targets/<target-id>/scripts/<local-name>
 analyses/<analysis-id>/targets/<target-id>/reports/<local-name>
 shared/artifacts/<local-name>
-reports/index.md
 ```
 
-An analysis ID names the stable research/mechanic question. A target ID names one build/version observation scope. A finding belongs to a target scope but is not the identity of the analysis itself.
+An analysis ID names the stable research/mechanic question. Its directory is the analysis scope. A target ID names one build/version observation scope, with shared target facts in `target.json`. A finding belongs to a target scope but is not the identity of the analysis itself.
 
-Use local filenames only to distinguish siblings inside their scope. Keep evidence owned by one analysis under that target; put genuinely cross-analysis retained evidence under `shared/artifacts/` rather than copying it for locality. Analysis-wide cross-target helpers may live under `analyses/<analysis-id>/scripts/`. Project-level reports should be indexes or rollups, not the default home for target-specific analysis.
+Use local filenames only to distinguish siblings inside their scope. Keep evidence owned by one analysis under that target; put genuinely cross-analysis retained evidence under `shared/artifacts/` rather than copying it for locality. Analysis-wide cross-target helpers may live under `analyses/<analysis-id>/scripts/`. Retain a project-level report only when a real rollup is useful; do not make it the default body for target-specific analysis.
 
-Legacy `notes/findings/**/*.md` stores remain supported. Do not migrate or rearrange them implicitly. New and legacy findings may coexist, but duplicate finding IDs are invalid.
+Legacy `notes/findings/**/*.md` stores remain supported without migration. Canonical and legacy findings may coexist, but duplicate finding IDs are invalid. Once a canonical analysis scope is established in a store, new findings and retained artifacts use canonical scope paths rather than falling back to flat legacy writes.
 
 The analysis root must be separate from the installed game directory. Deployed copies inside the game tree are never authoritative artifacts.
 
@@ -67,7 +65,7 @@ Before reusing a retained file, verify that it still exists and matches its reco
 
 ## Mechanical helper
 
-The bundled `scripts/project_store.py` helper is the source of truth for its current manifest schema, supported commands, canonical path rules, lifecycle fields, and integrity checks. Prefer it for scope creation, path derivation, mechanical hashing, and store maintenance when practical.
+The bundled `scripts/project_store.py` helper is the source of truth for its current manifest schema, supported commands, canonical retained-artifact paths, lifecycle fields, and integrity checks. Prefer it for target-scope creation, retained-artifact registration, hashing, and store maintenance when practical.
 
 Do not copy its full CLI or JSON schema into agent instructions. Inspect its current `--help` or implementation when a specific store operation is required.
 
