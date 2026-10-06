@@ -88,7 +88,8 @@ Required assertions:
 Two confirmed Godot findings exercise opposite sides of the same rule. In A, a
 scene/resource override uniquely controls the mechanic at the material
 consumption point. In B, `_init()` copies the script default into authoritative
-state before a later scene override. `change-design.md` has already selected an
+state before a later scene override, and that default/copy path is confirmed to
+match the requested fan-out. `change-design.md` has already selected an
 appropriate mechanism class for each requested scope.
 
 Required assertions:
