@@ -25,6 +25,7 @@ After behavioral scope is established, load only the matching engine/runtime app
 | Material implementation boundary | Application guide |
 | --- | --- |
 | GameMaker YYC | [change-gamemaker-yyc.md](change-gamemaker-yyc.md) |
+| Godot GDScript / scene-resource graph | [change-godot-gdscript.md](change-godot-gdscript.md) |
 | Web / JavaScript | [change-web-javascript.md](change-web-javascript.md) |
 
 This file remains authoritative for ordering across mechanism classes. Matching application guides refine engine-specific implementation points only within the selected class; they do not override this ordering. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.

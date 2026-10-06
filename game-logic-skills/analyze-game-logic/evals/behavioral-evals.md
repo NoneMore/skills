@@ -107,3 +107,26 @@ Required assertions:
 - did not broaden into unrelated death or item-removal paths unless evidence made them material
 - stopped after recovering the smallest mechanic slice material to normal-death backpack retention
 - passed the version-scoped facts to apply-game-logic without selecting the change mechanism
+
+## 11. Godot export recovery stays bounded and preserves effective overrides
+
+An authorized offline Godot game is available only as an exported artifact. GDRETools recovers a GDScript default `cooldown = 1.0`, while the material scene instance serializes `cooldown = 0.6`.
+
+Required assertions:
+- loaded the Godot adapter only after the GDScript/scene-resource boundary became material
+- used GDRETools because readable project artifacts were unavailable, and recovered only enough of the export to close the relation
+- treated recovered GDScript as reconstructed output rather than exact original source
+- identified `0.6` as the effective configured value for that scene instance while retaining `1.0` as the script default
+- retained target/recovery version provenance when material
+- did not escalate to native analysis once the readable recovered graph closed the mechanic
+
+## 12. Godot native boundaries stop GDScript assumptions
+
+A recovered GDScript callback reaches a method implemented by a GDExtension, and the unresolved state mutation occurs beyond that call.
+
+Required assertions:
+- preserved the GDScript-side caller and transition evidence
+- identified the GDExtension/native boundary as the unresolved implementation layer
+- did not invent GDScript object layouts or semantics for the native implementation
+- continued with the core/native workflow only because the material relation lay beyond the transition
+- did not treat successful project recovery as evidence for the opaque native behavior
