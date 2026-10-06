@@ -2,7 +2,7 @@
 name: apply-game-logic
 description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v1.1.0"
+  version: "v1.2.0"
 ---
 
 # Apply Game Logic
@@ -19,7 +19,7 @@ Supported work includes derived calculators/simulators/tests, observation around
 
 Do not manipulate multiplayer or service state, accounts, credentials, DRM/payment/licensing enforcement, anti-cheat, leaderboards, matchmaking, or another player's experience.
 
-Installed game files remain read-only unless the user explicitly authorizes a destructive version-specific modification.
+Installed game files remain read-only unless the user explicitly authorizes a destructive version-specific modification. User intent establishes behavioral scope; actual write permission, confirmation, and irreversible-action enforcement must still come from the runtime or tool boundary.
 
 ## 2. Check only facts material to the requested result
 
@@ -33,7 +33,7 @@ Before implementation, establish the facts that can change correctness or scope.
 - authority/serialization;
 - stable source/function or module + RVA locators.
 
-A confirmed fact can be consumed within its recorded scope. A working hypothesis may support a labeled experiment or validation harness. A material unknown is a stop condition for the affected application path.
+A confirmed fact can be consumed within its recorded scope. A working hypothesis may support a labeled experiment or validation harness, but it must not be the sole basis for a retained or destructive gameplay change whose correctness or scope depends on that hypothesis. A material unknown is a stop condition for the affected application path.
 
 If a supplied finding explicitly marks itself as superseded or replaced, do not consume it as the current fact even when its contents are otherwise complete. Use the identified successor when available, or revalidate only the affected relation. Do not require lifecycle metadata when the input does not provide it.
 
@@ -73,7 +73,7 @@ For a one-off explanation or calculation, provenance in the answer is enough.
 
 For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, mechanic source, validation result, and rollback/control state together. Use an existing project store when it is already available and useful; do not require a companion Skill call merely to satisfy bookkeeping.
 
-Before a destructive change, capture the original bytes/content or an integrity-verifiable backup.
+Before a destructive change, capture the original bytes/content or an integrity-verifiable backup. If the original state cannot be captured and verified well enough to restore, stop before modifying the installed target.
 
 ## Completion
 
