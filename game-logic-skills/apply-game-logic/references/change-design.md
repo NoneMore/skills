@@ -20,7 +20,7 @@ Among options with acceptable behavioral scope, prefer:
 
 Reversibility does not prove narrow scope.
 
-After behavioral scope is established, load only the matching engine/runtime application guide when one is available and material to mechanism choice:
+After behavioral scope and mechanism class are established, load only the matching engine/runtime application guide when one is available and material to selecting an implementation point within that class:
 
 | Material implementation boundary | Application guide |
 | --- | --- |
