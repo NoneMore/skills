@@ -268,6 +268,13 @@ def artifact_scope(path: str) -> Optional[Tuple[str, str]]:
     return parts[1], parts[3]
 
 
+def validate_refs(value: object, label: str, errors: List[str]) -> None:
+    if not isinstance(value, list) or any(not isinstance(ref, str) or not ID_RE.fullmatch(ref) for ref in value):
+        errors.append("%s must be an array of IDs" % label)
+    elif len(value) != len(set(value)):
+        errors.append("%s contains duplicates" % label)
+
+
 def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) -> List[str]:
     errors: List[str] = []
     if manifest.get("schema_version") != 3:
@@ -299,8 +306,7 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
         if path in source_paths:
             errors.append("duplicate source path: %s" % path)
         source_paths.add(path)
-        if not isinstance(item.get("finding_refs"), list):
-            errors.append("%s finding_refs must be an array" % label)
+        validate_refs(item.get("finding_refs"), label + " finding_refs", errors)
         if not isinstance(item.get("size"), int):
             errors.append("%s has invalid size" % label)
         digest = item.get("sha256")
@@ -360,9 +366,7 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
         if status != "superseded" and successor is not None:
             errors.append("%s has superseded_by while active" % label)
         for field in ("derived_from", "source_refs", "finding_refs", "consumes_finding_refs"):
-            value = item.get(field)
-            if not isinstance(value, list) or any(not isinstance(ref, str) for ref in value):
-                errors.append("%s %s must be an array of strings" % (label, field))
+            validate_refs(item.get(field), "%s %s" % (label, field), errors)
         if not isinstance(item.get("size"), int):
             errors.append("%s has invalid size" % label)
         digest = item.get("sha256")
@@ -399,6 +403,9 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
                 continue
             targets = a_dir / TARGETS
             if not targets.exists():
+                continue
+            if not targets.is_dir():
+                errors.append("targets path is not a directory: %s" % targets.relative_to(root))
                 continue
             for t_dir in sorted(path for path in targets.iterdir() if path.is_dir()):
                 try:
@@ -477,7 +484,10 @@ def cmd_init(args: argparse.Namespace) -> int:
 
 def cmd_init_target(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
-    load_manifest(root)
+    manifest = load_manifest(root)
+    errors = validate_store(root, manifest, False)
+    if errors:
+        raise StoreError("store must be repaired first: " + "; ".join(errors))
     require_id(args.analysis_id, "analysis id")
     require_id(args.target_id, "target id")
     directory = target_dir(root, args.analysis_id, args.target_id)
@@ -568,6 +578,8 @@ def cmd_add_artifact(args: argparse.Namespace) -> int:
         if ref not in source_ids:
             raise StoreError("source ref not found: %s" % ref)
     for finding_id in args.consumes_finding_ref:
+        find_finding(root, finding_id)
+    for finding_id in args.finding_ref:
         find_finding(root, finding_id)
 
     entry: Dict[str, object] = {
@@ -678,7 +690,8 @@ def cmd_verify(args: argparse.Namespace) -> int:
 def cmd_check_links(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
     manifest = load_manifest(root)
-    return report(validate_store(root, manifest, False) + check_links(root, manifest))
+    errors = validate_store(root, manifest, False)
+    return report(errors if errors else check_links(root, manifest))
 
 
 def build_parser() -> argparse.ArgumentParser:
