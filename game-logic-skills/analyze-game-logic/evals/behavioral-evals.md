@@ -8,6 +8,7 @@ Prompt: locate the function that decrements an offline game's dash cooldown.
 
 Required assertions:
 - selected a triage-sized path
+- stopped once the requested identity/location was version-scoped, evidence-backed, and distinguishable from nearby candidates
 - did not create durable-store ceremony without reusable output
 - did not load runtime validation for a location-only claim
 - reported a version-scoped locator rather than inventing broader mechanic semantics
@@ -31,7 +32,7 @@ Required assertions:
 - treated the inspected view as partial
 - did not claim exhaustive absence/presence from incomplete coverage
 - read the missing range only when the claim actually required completeness
-- did not restore the old mandatory disk-backed/chunking workflow
+- did not add disk-backed/chunking, persistence, or other recovery machinery unless exhaustive coverage or durable reuse materially required it
 
 ## 4. Runtime-sensitive claims keep evidence discipline
 
@@ -51,7 +52,7 @@ Required assertions:
 - retained target version/hash, the reusable finding, and the expensive artifact
 - did not create artifacts for every cheap grep/read result
 - used an observable current trigger for persistence rather than speculative future reuse
-- used project-store tooling as a mechanical helper rather than reproducing its full schema in the reasoning
+- kept mechanical storage bookkeeping out of task reasoning while leaving retained evidence integrity-checkable
 - a later session can identify the target, evidence, confidence, and limitations
 
 ## 6. Downstream application receives material mechanic knowledge without ceremony

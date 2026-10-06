@@ -2,7 +2,7 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.2.2"
+  version: "v5.3.0"
 ---
 
 # Analyze Game Logic
@@ -96,5 +96,7 @@ Match output size to the analysis depth. For focused/full analysis, include:
 When downstream application is requested, provide a compact version-scoped mechanic record containing the facts material to that application. A reusable finding with sufficient facts is valid input to $apply-game-logic; do not normalize it through an extra protocol step solely for ceremony. Existing game-logic-mechanic-handoff/v1 records remain valid compatibility inputs.
 
 ## Completion
+
+For triage, stop when the requested identity or location is version-scoped, evidence-backed, and specific enough to distinguish the intended implementation target. Do not infer or reconstruct broader mechanic semantics unless the question requires them.
 
 Before finishing focused/full work, verify that the claimed behavior is version-scoped, material unknowns are explicit, confidence matches the evidence, required practical runtime validation was not silently skipped, and the output contains enough mechanic detail for the user's next step without unrelated workflow machinery. When static-analysis refinement applied, verify that its annotations remain evidence-backed, uncertainty-preserving, and non-destructive.
