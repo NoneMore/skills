@@ -223,27 +223,6 @@ Do not infer server authority from a client-side prediction path. For a local
 Node.js backend supplied by the user, prefer a minimal test harness around the
 specific pure function/module over starting a complete service stack.
 
-## 8. Application handoff facts
-
-When downstream application is requested, preserve the Web/JS facts that
-constrain mechanism choice without choosing that mechanism during analysis:
-
-- whether the mechanic is controlled by configuration/data, a local pure
-  function, a narrow module/call site, or a broader shared update path;
-- which aliases, stores, workers, or event sources share the relevant state or
-  mutation;
-- whether initialization/order-sensitive behavior requires an order-preserving
-  representation rather than an inspection-oriented decomposition;
-- whether the authoritative rule is local, predicted, persisted, sent, or
-  received from a remote authority;
-- the exact bundle/chunk/module and version/hash provenance needed to guard a
-  later local change.
-
-If the mechanic is server-authoritative and the server artifact is not supplied,
-record that boundary explicitly. Do not choose or rank a client-side workaround
-as though it changed the authoritative rule; pass the material facts to
-`$apply-game-logic`.
-
 ## 9. Version-sensitive assumptions
 
 Revalidate bundler/chunk/runtime layouts, source-map completeness and bundle
