@@ -108,19 +108,21 @@ Required assertions:
 - stopped after recovering the smallest mechanic slice material to normal-death backpack retention
 - passed the version-scoped facts to apply-game-logic without selecting the change mechanism
 
-## 11. Godot export recovery stays bounded and preserves effective overrides
+## 11. Godot recovery preserves consumption-time property semantics
 
-An authorized offline Godot game is available only as an exported artifact. GDRETools recovers a GDScript default `cooldown = 1.0`, while the material scene instance serializes `cooldown = 0.6`. The mechanic first consumes `cooldown` in `_ready()` or later, with no earlier copy that controls the behavior.
+An authorized offline Godot export yields `@export var cooldown = 1.0` and a
+material scene override `cooldown = 0.6`. In one material path the mechanic first
+reads `cooldown` in `_ready()` or later; in another, `_init()` first copies it to
+`initial_cooldown`, which alone drives the mechanic.
 
 Required assertions:
 - loaded the Godot adapter only after the GDScript/scene-resource boundary became material
-- used GDRETools because readable project artifacts were unavailable, and recovered only enough of the export to close the relation
-- treated recovered GDScript as reconstructed output rather than exact original source
-- retained `1.0` as the script default and `0.6` as the serialized value rather than collapsing them into one fact
-- traced initialization/assignment ordering through the material consumption point before identifying `0.6` as the value controlling this mechanic
-- did not generalize the later `0.6` value backward to `_init()` or another earlier read
-- retained target/recovery version provenance when material
-- did not escalate to native analysis once the readable recovered graph closed the mechanic
+- used GDRETools only because readable project artifacts were unavailable and recovered only enough to close the relation
+- treated recovered GDScript/resources as reconstructed evidence with target/recovery provenance
+- retained `1.0` as the script default and `0.6` as the serialized value
+- identified `0.6` as controlling the later-read path without projecting it backward into `_init()`
+- identified `1.0` as controlling the cached `_init()` path unless evidenced setter/runtime assignments change that state
+- stopped once the readable recovered graph closed each mechanic
 
 ## 12. Godot native boundaries stop GDScript assumptions
 
@@ -133,18 +135,7 @@ Required assertions:
 - continued with the core/native workflow only because the material relation lay beyond the transition
 - did not treat successful project recovery as evidence for the opaque native behavior
 
-## 13. Godot initialization timing can preserve the script default
-
-A GDScript declares `@export var cooldown = 1.0`, a scene serializes `cooldown = 0.6`, and `_init()` copies `cooldown` into `initial_cooldown`. The mechanic later reads only `initial_cooldown`.
-
-Required assertions:
-- preserved `1.0` as the value observed by the material `_init()` copy for the target version
-- preserved `0.6` as the later serialized property value without treating it as the mechanic's controlling value
-- traced the copy from `cooldown` to `initial_cooldown` and reported the consumption-time relation
-- considered a property setter or later runtime assignment only when evidence showed it could change the copied state
-- did not report the later scene override as the semantic owner of the cached mechanic
-
-## 14. Godot inheritance is part of the material implementation path
+## 13. Godot inheritance is part of the material implementation path
 
 A scene attaches `player.gd`. That script extends a base GDScript where the relevant exported property and state mutation are declared, and the subclass override reaches the base implementation through a parent call.
 
@@ -155,7 +146,7 @@ Required assertions:
 - did not duplicate or misattribute inherited state as subclass-owned merely because `player.gd` is attached to the scene
 - stopped once the GDScript inheritance path closed the mechanic
 
-## 15. Godot resource sharing determines mutation scope
+## 14. Godot resource sharing determines mutation scope
 
 Two scene instances expose separate `stats` fields, but both reference the same external `.tres` resource loaded by path with `resource_local_to_scene = false`. No material duplication or runtime reassignment occurs before the mechanic mutates `stats.speed`.
 

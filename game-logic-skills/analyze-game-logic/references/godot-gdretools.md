@@ -1,96 +1,69 @@
 # Godot Recovery with GDRETools
 
-Load this reference only when a Godot mechanic cannot be closed from already
-readable project/source artifacts and exported-package recovery or binary
-resource conversion is material. GDRETools is an external dependency, not a
-bundled helper and not evidence of gameplay ownership by itself.
+Load this reference only when a Godot mechanic cannot be closed from readable
+project/source artifacts and exported-package recovery or binary-resource
+conversion is material. GDRETools is an external recovery dependency, not
+gameplay evidence.
 
 Upstream project: [GDRETools/gdsdecomp](https://github.com/GDRETools/gdsdecomp).
 
-## Use current tool behavior, not cached CLI recipes
+## Use current tool behavior
 
-GDRETools evolves independently from this skill. Before relying on a command or
-option, record the installed GDRETools version and consult that installation's
-current help. Prefer the tool's own version/help output over commands copied from
-old notes or examples.
-
-The upstream tool currently provides project recovery from Godot export
-artifacts, GDScript decompilation, PCK inspection/extraction/creation, and
-binary/text resource conversion. Treat exact flags, supported bytecode
-revisions, and recovery limitations as live tool state.
+Record the installed GDRETools version and consult that installation's current
+help before relying on commands or options. Treat exact flags, supported bytecode
+revisions, and recovery limitations as live tool state rather than cached skill
+knowledge.
 
 ## Recover only what the claim needs
 
 Use the smallest mechanical step that exposes the unresolved relation:
 
-1. Identify and hash the original target artifact before recovery.
+1. Identify and hash the original target artifact.
 2. Inspect the package/file listing when path discovery is enough.
-3. Recover only material scripts when the question is script-local.
+3. Recover only material scripts for script-local questions.
 4. Convert or recover the specific scene/resource layer when configuration,
    signal wiring, or serialized overrides are material.
-5. Perform full project recovery only when the mechanic genuinely depends on a
-   broader scene/resource graph or narrower recovery cannot close the relation.
+5. Recover the full project only when the broader graph is genuinely required.
 
-Write recovery output to a separate working directory. Analysis should not
-modify the installed game artifact.
+Write recovery output to a separate working directory rather than modifying the
+installed artifact.
 
-When recovery reports a detected Godot/bytecode version, retain that information
-with any reusable finding. If version auto-detection is uncertain and an override
-must be forced, treat semantic conclusions that depend on correct decompilation
-as a working hypothesis until independently corroborated.
+Retain detected Godot/bytecode version when material. If auto-detection is
+uncertain and a version override is forced, keep conclusions that depend on
+correct decompilation as working hypotheses until corroborated.
 
 ## Interpret recovered output conservatively
 
-A recovered `.gd` file is reconstructed source, not proof of the exact original
-source text. A recovered `project.godot`, scene, or resource likewise proves what
-the recovery tool reconstructed from the export artifact, not automatically how
-the shipped runtime used every value.
+Recovered `.gd`, project, scene, and resource files are reconstructed artifacts,
+not proof of exact original source text or shipped runtime behavior. Corroborate
+material relations using the recovered graph, callers/signals, effective values,
+and runtime behavior when the core workflow requires it.
 
-Corroborate material relations using the scene/resource graph, callers/signals,
-effective serialized values, and runtime behavior when the core workflow
-requires it. Keep the original artifact hash and recovery provenance so the
-result remains version-scoped.
+A recovered project may differ from the shipped environment because of missing
+plugins, imports, native extensions, export settings, or engine versions. Its
+ability to run does not prove behavioral identity.
 
-GDRETools can recover GDScript across multiple Godot generations, but a recovered
-project may still differ from the shipped environment because of missing plugins,
-imports, native extensions, export-only behavior, or engine-version differences.
-Do not promote "the recovered project runs" to proof that all target behavior is
-identical.
+## Respect implementation and protection boundaries
 
-## Respect implementation boundaries
+If recovery exposes a transition into C#/.NET, GDExtension/GDNative, or native
+code, preserve that transition and continue with the appropriate core workflow
+only when the unresolved fact lies beyond it.
 
-GDRETools recovery can expose where a GDScript path enters C#/.NET,
-GDExtension/GDNative, or another native component. That transition is evidence
-for a new boundary, not a reason to infer the opaque implementation from the
-GDScript side.
-
-Do not expect GDExtension/GDNative implementations to become GDScript simply
-because the surrounding project was recovered. Continue with the appropriate
-core/native workflow only when the unresolved fact actually lies beyond that
-transition.
-
-## Encrypted or protected artifacts
-
-Use an encryption key only when it is already legitimately available and its use
-is authorized for the local target. If proceeding would require recovering,
-extracting, guessing, or bypassing a key or protection mechanism, stop that
-recovery path.
-
-A custom decryptor is acceptable only when the user is authorized to access the
-content and the required scheme/key material is already available; do not use
-this workflow to derive secrets. This keeps tool capability separate from the
-core prohibition on DRM/licensing/protection bypass.
+Use encryption/decryption material only when it is already legitimately
+available and authorized for the local target. If recovery would require
+deriving, guessing, extracting, or bypassing a key or protection mechanism, stop
+that path and follow the core protection boundary.
 
 ## Evidence to retain when material
 
 Record only what affects reproducibility or confidence:
 
 - original target path/hash and detected Godot/export form;
-- GDRETools version and the bounded recovery action used;
-- recovery log details that determine engine/bytecode interpretation;
+- GDRETools version and bounded recovery action;
+- recovery details that determine engine/bytecode interpretation;
 - recovered `res://` locators used by the finding;
-- any forced version/bytecode override or recovery warning;
-- unresolved C#/.NET, GDExtension/GDNative, encryption, or native boundaries.
+- forced version/bytecode overrides or recovery warnings;
+- unresolved managed/native/protection boundaries.
 
-Do not preserve complete recovered projects merely for bookkeeping when the
-normal project-knowledge persistence triggers do not apply.
+Do not preserve complete recovered projects merely for bookkeeping when normal
+project-knowledge persistence triggers do not apply.

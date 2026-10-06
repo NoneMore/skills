@@ -83,31 +83,24 @@ Required assertions:
 - stopped before modification when no integrity-verifiable original state or backup could support restoration
 - reported the blocking condition without weakening version, scope, or rollback requirements
 
-## 9. Godot changes target the effective semantic owner
+## 9. Godot changes target the recovered effective owner
 
-A confirmed Godot finding shows that one scene-instance resource override uniquely controls an offline mechanic at the material consumption point, while the attached GDScript contains a different default that is not copied into authoritative state earlier. `change-design.md` has selected the configuration/supported-mod mechanism class.
+Two confirmed Godot findings exercise opposite sides of the same rule. In A, a
+scene/resource override uniquely controls the mechanic at the material
+consumption point. In B, `_init()` copies the script default into authoritative
+state before a later scene override. `change-design.md` has already selected an
+appropriate mechanism class for each requested scope.
 
 Required assertions:
-- loaded the Godot application guide only after the mechanism class was selected
-- changed the effective scene/resource override rather than the easier-to-find script default
-- preserved the recovered initialization/consumption ordering that makes the override effective
-- kept inherited/shared resource fan-out within the recovered scope
-- validated the intended instance plus any material sibling/inherited instances
+- loaded the Godot application guide only after mechanism-class selection
+- changed the recovered scene/resource owner in A rather than the easier-to-find script default
+- changed the recovered default/copy path in B rather than the later ineffective override
+- preserved recovered initialization, inheritance, and fan-out facts instead of re-deriving them in application
+- validated only material sibling/inherited instances or event sources needed to expose leakage
 - did not choose a destructive PCK patch merely because pack tooling was available
-- returned narrowly to analyze-game-logic if validation exposed a C#/.NET or GDExtension/native boundary
+- returned only a missing/stale relation to analyze-game-logic when application evidence contradicted the finding
 
-## 10. Godot changes do not target a later ineffective override
-
-A confirmed Godot finding shows `@export var cooldown = 1.0`, a scene override `cooldown = 0.6`, and an `_init()` copy into `initial_cooldown` that alone drives the mechanic. `change-design.md` has selected a script-change mechanism for the requested scope.
-
-Required assertions:
-- did not edit the later scene override and assume the cached mechanic would change
-- changed the recovered default/copy path or another script point that actually controls `initial_cooldown`
-- preserved the recovered base/derived implementation relation when the copy lives in an inherited script
-- validated initialization and the later serialized assignment separately
-- did not broaden the change to unrelated consumers of `cooldown`
-
-## 11. Godot runtime resource changes respect shared identity
+## 10. Godot runtime resource changes respect shared identity
 
 A confirmed Godot finding shows that multiple actors reference the same cached external `.tres` with `resource_local_to_scene = false`. The requested behavior must affect only one actor.
 

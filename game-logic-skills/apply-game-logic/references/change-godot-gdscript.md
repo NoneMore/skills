@@ -3,82 +3,53 @@
 Load this reference only when `$apply-game-logic` is applying a recovered Godot
 GDScript/scene/resource mechanic to an authorized local/offline gameplay change.
 Select the mechanism class first with [change-design.md](change-design.md); this
-guide refines Godot-specific implementation points within that class and does
-not override the cross-class ordering.
+guide only refines Godot-specific implementation within that class.
 
 ## Refine a Godot intervention from recovered scope
 
-Within the selected mechanism class, choose the narrowest semantic point that is
-already supported by the recovered ownership/fan-out facts:
+Choose the narrowest point supported by the recovered ownership, fan-out, and
+consumption-time facts:
 
-- For configuration or supported mod changes, prefer the specific project,
-  scene, resource, or mod-interface value that uniquely controls the requested
-  behavior.
-- For script changes, prefer the material callback, signal connection, emitter,
-  receiver, explicit call site, or inherited/base implementation whose evidenced
-  fan-out matches the requested scope.
-- For reversible runtime state changes, use a live Node/Resource/autoload value
-  only after its owner, instance sharing, reset/lifetime, and effective type are
-  established.
-- For shared receivers or helpers, narrow at the emitter/connection/caller when
-  different sources require different behavior. Use the shared point only when
-  the requested change intentionally applies to every evidenced source.
+- For configuration or supported mod changes, use the specific project, scene,
+  resource, or mod-interface value that uniquely controls the requested behavior.
+- For script changes, use the recovered callback, signal/caller edge, or
+  base/override implementation whose fan-out matches the requested scope.
+- For reversible runtime changes, use a live Node/Resource/autoload value only
+  when the finding establishes its identity, sharing, lifetime/reset behavior,
+  and effective type.
 
-For exported properties, distinguish the script default from serialized
-scene/resource values and runtime assignments, then preserve the recovered
-consumption-time relation. A scene override is the right target only when the
-mechanic consumes the post-assignment value; if `_init()` or another earlier path
-copies the default into authoritative state, do not edit the later override and
-expect that cached mechanic to change.
-
-When the material method/property is inherited, apply the change at the recovered
-base or overriding implementation that actually owns the behavior. Do not patch
-the attached subclass merely because it is the most visible script.
-
-For autoload-owned state, establish whether the requested behavior is intended
-to span scene changes and whether save/load logic persists the value. Session
-lifetime and save persistence are separate scope dimensions.
+Consume analysis facts rather than re-deriving them here. In particular, target
+the recovered consumption-time owner for exported properties, preserve recovered
+base/derived ownership, and do not treat a shared `Resource` mutation as
+per-instance unless the finding establishes locality or duplication. Apply the
+same recovered distinction between autoload session lifetime and save persistence.
 
 ## Scene/resource and pack changes
 
-A scene/resource override can be narrower and more semantic than a code change,
-but only when the recovered graph proves which instances consume it and when the
-value reaches the material read/copy. Validate inherited scenes, duplicated
-resources, and shared subresources when they can broaden the effect.
+A scene/resource override can be narrower than a code change only when the
+recovered graph establishes the consuming instances and scope. Preserve any
+material inherited-scene, shared-resource, or duplication relation from the
+finding.
 
-For mutable `Resource` changes, preserve the recovered runtime identity/fan-out.
-A field on two Nodes does not imply two resources: path-based loading can share a
-cached external resource, while `resource_local_to_scene`, explicit
-`duplicate()`/`duplicate_deep()`, or runtime reassignment can make the material
-instances diverge. Do not perform a supposedly per-instance mutation through a
-shared resource.
-
-The existence of PCK creation/patch tooling does not make an installed-pack edit
-the preferred mechanism. A destructive pack/executable change remains the last
-mechanism class in [change-design.md](change-design.md) and requires the core
-write-authorization and rollback preconditions before modification.
-
-Do not select a destructive patch merely because GDRETools or another pack tool
-can mechanically produce it.
+PCK creation or patch tooling does not make an installed-pack edit preferable.
+Destructive pack/executable modification remains the last mechanism class in
+[change-design.md](change-design.md) and still requires the core authorization
+and rollback preconditions.
 
 ## Runtime guards and restoration
 
 For runtime changes, guard on the strongest available combination of exact
-target hash/version, effective `res://` locator, expected original value/state,
-scene/resource identity, and the caller/emitter relation that establishes scope.
+target hash/version, `res://` locator, expected original value/state,
+scene/resource identity, and the caller/emitter relation establishing scope.
 
-Restoring one property value may not undo side effects already emitted through
-signals, scene transitions, saves, or spawned objects. Make restoration behavior
+Restoring one property may not undo side effects already emitted through
+signals, scene transitions, saves, or spawned objects; make restoration behavior
 explicit for the selected mechanism.
 
 ## Validation
 
-Compare control and modified behavior at the actual scene/resource instances and
-event sources that can expose leakage. When material, exercise initialization
-ordering (`_init()` versus later callbacks), base/derived script paths, scene
-reload, instance recreation, resource sharing/local-to-scene behavior, autoload
-lifetime, save/load, inherited scenes/resources, and alternate signal emitters.
-
-If validation shows that the recovered relation actually crosses into C#/.NET,
-GDExtension/GDNative, or engine-native logic, return only that missing boundary
-relation to `$analyze-game-logic` rather than patching around it.
+Compare control and modified behavior at the material instances and event
+sources, exercising only recovered scope edges that can reveal leakage or stale
+ownership. If validation exposes a missing ownership, timing, sharing, or
+C#/.NET/GDExtension/native relation, return only that relation to
+`$analyze-game-logic` rather than reconstructing it in the application guide.
