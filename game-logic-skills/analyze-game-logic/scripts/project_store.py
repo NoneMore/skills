@@ -149,12 +149,14 @@ def parse_finding(root: Path, path: Path) -> Tuple[Optional[str], Set[Tuple[str,
     cited: Set[Tuple[str, str]] = set()
     errors: List[str] = []
     in_evidence = False
+    has_evidence = False
     for line in path.read_text(encoding="utf-8").splitlines():
         match = FINDING_ID_RE.match(line)
         if match and finding_id is None:
             finding_id = match.group(1)
         if line.startswith("## "):
             in_evidence = line.strip() == "## Evidence"
+            has_evidence = has_evidence or in_evidence
             continue
         if in_evidence:
             match = EVIDENCE_REF_RE.match(line)
@@ -168,6 +170,8 @@ def parse_finding(root: Path, path: Path) -> Tuple[Optional[str], Set[Tuple[str,
         errors.append("finding missing '- ID: `...`': %s" % path.relative_to(root))
     elif not ID_RE.fullmatch(finding_id):
         errors.append("invalid finding id %r in %s" % (finding_id, path.relative_to(root)))
+    if not has_evidence:
+        errors.append("finding missing '## Evidence' section: %s" % path.relative_to(root))
     return finding_id, cited, errors
 
 
@@ -246,6 +250,8 @@ def link_evidence(root: Path, manifest: Dict[str, object], finding_id: str,
                   kind: str, evidence_id: str, locator: str) -> None:
     require_id(finding_id, "finding id")
     require_id(evidence_id, "%s id" % kind)
+    if not locator.strip():
+        raise StoreError("evidence locator must be non-empty")
     path = find_finding(root, finding_id)
     items = records(manifest, "sources" if kind == "source" else "artifacts")
     item = next((entry for entry in items if entry.get("id") == evidence_id), None)
@@ -307,7 +313,7 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
             errors.append("duplicate source path: %s" % path)
         source_paths.add(path)
         validate_refs(item.get("finding_refs"), label + " finding_refs", errors)
-        if not isinstance(item.get("size"), int):
+        if not isinstance(item.get("size"), int) or item.get("size", -1) < 0:
             errors.append("%s has invalid size" % label)
         digest = item.get("sha256")
         if not isinstance(digest, str) or not HEX64_RE.fullmatch(digest):
@@ -367,7 +373,7 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
             errors.append("%s has superseded_by while active" % label)
         for field in ("derived_from", "source_refs", "finding_refs", "consumes_finding_refs"):
             validate_refs(item.get(field), "%s %s" % (label, field), errors)
-        if not isinstance(item.get("size"), int):
+        if not isinstance(item.get("size"), int) or item.get("size", -1) < 0:
             errors.append("%s has invalid size" % label)
         digest = item.get("sha256")
         if not isinstance(digest, str) or not HEX64_RE.fullmatch(digest):
@@ -386,12 +392,16 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
         successor = item.get("superseded_by")
         if isinstance(successor, str) and successor not in artifact_ids:
             errors.append("artifact %s superseded_by unknown artifact %s" % (artifact_id, successor))
-        for ref in item.get("derived_from", []):
-            if isinstance(ref, str) and ref not in artifact_ids:
-                errors.append("artifact %s derived_from unknown artifact %s" % (artifact_id, ref))
-        for ref in item.get("source_refs", []):
-            if isinstance(ref, str) and ref not in source_ids:
-                errors.append("artifact %s source_refs unknown source %s" % (artifact_id, ref))
+        derived = item.get("derived_from")
+        if isinstance(derived, list):
+            for ref in derived:
+                if isinstance(ref, str) and ref not in artifact_ids:
+                    errors.append("artifact %s derived_from unknown artifact %s" % (artifact_id, ref))
+        source_refs = item.get("source_refs")
+        if isinstance(source_refs, list):
+            for ref in source_refs:
+                if isinstance(ref, str) and ref not in source_ids:
+                    errors.append("artifact %s source_refs unknown source %s" % (artifact_id, ref))
 
     analyses = root / ANALYSES
     if not analyses.is_dir():
@@ -569,6 +579,17 @@ def cmd_add_artifact(args: argparse.Namespace) -> int:
     if any(item.get("path") == relative for item in artifacts):
         raise StoreError("artifact path already exists: %s" % relative)
 
+    ref_errors: List[str] = []
+    for value, label in (
+        (args.derived_from, "derived_from"),
+        (args.source_ref, "source_ref"),
+        (args.finding_ref, "finding_ref"),
+        (args.consumes_finding_ref, "consumes_finding_ref"),
+    ):
+        validate_refs(value, label, ref_errors)
+    if ref_errors:
+        raise StoreError("; ".join(ref_errors))
+
     artifact_ids = {str(item.get("id")) for item in artifacts}
     source_ids = {str(item.get("id")) for item in records(manifest, "sources")}
     for ref in args.derived_from:
@@ -671,6 +692,9 @@ def cmd_link(args: argparse.Namespace) -> int:
 def cmd_supersede(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
     manifest = load_manifest(root)
+    errors = validate_store(root, manifest, False)
+    if errors:
+        raise StoreError("store must be repaired first: " + "; ".join(errors))
     artifacts = records(manifest, "artifacts")
     by_id = {str(item.get("id")): item for item in artifacts if isinstance(item.get("id"), str)}
     if args.old_id == args.new_id or args.old_id not in by_id or args.new_id not in by_id:
