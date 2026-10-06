@@ -37,7 +37,7 @@ If the installed target no longer matches the evidence, stop and revalidate the 
 
 ## Preserve control state
 
-Before destructive modification, record the original bytes/content, replacement, target hash, locator mapping, expected effect, known shared-use risk, and restoration procedure.
+Before destructive modification, record the original bytes/content, replacement, target hash, locator mapping, expected effect, known shared-use risk, and restoration procedure. If the original state or an integrity-verifiable backup cannot be captured well enough to support restoration, stop before modifying the installed target.
 
 For retained/deployed changes follow [application-artifacts.md](application-artifacts.md).
 
