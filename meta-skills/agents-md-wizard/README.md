@@ -1,91 +1,85 @@
 # AGENTS.md Wizard
 
-**Version: v0.6**
+A workspace-agnostic Meta Skill for creating, refreshing, or auditing `AGENTS.md` and equivalent workspace instruction artifacts.
 
-A workspace-agnostic Meta Skill for creating, refreshing, or auditing agent instruction artifacts. `AGENTS.md` is the generic fallback, but the authoring method is not tied to one runtime.
+The Skill focuses on the parts that are specific to instruction management: effective loader targeting, preservation of existing human policy, scoped composition, migration, and verification.
 
 The core contract is:
 
-**Inspect facts. Present choices. Ask decisions. Confirm the draft. Encode behavior.**
+**Inspect facts. Resolve only real decisions. Write the smallest effective instructions. Verify the result.**
 
-## What changed in v0.6
+## Design changes
 
-v0.6 changes the default from autonomous authoring to a user-controlled guided workflow:
+This revision removes ceremony that does not reliably change the resulting instructions:
 
-- a bare invocation authorizes focused inspection and interviewing, not a file write;
-- workspace observations are separated from human policy decisions;
-- authority, mutability, lifecycle, synchronization, ownership, and scope hypotheses require user confirmation;
-- the wizard presents facts, recommendations, open choices, target, and scope before drafting;
-- every create or refresh receives a reviewable draft/patch and explicit pre-write approval;
-- target substitution and nested artifact creation are recommendations, never silent autonomous choices;
-- best-effort, no-interview, and write-without-review remain explicit user-controlled exceptions;
-- verification stays proportional to the instruction artifact and avoids testing unchanged project code.
-
-The v0.5 runtime consolidation remains: ordinary runs use the self-contained core, with references loaded only for a live loader, composition, or drafting issue.
+- explicit create/update requests now authorize writing once target, scope, and policy are grounded;
+- policy questions are asked only when a non-discoverable unresolved choice would materially change the artifact;
+- the mandatory interview and mandatory pre-write approval gates are removed;
+- result-oriented setup uses the harness-effective target directly when loader semantics make it unambiguous;
+- existing human guardrails still require a decision before an unrequested material removal or override;
+- the common authoring-pattern reference is removed and the small amount of AGENTS-specific migration guidance stays in the core;
+- scoped-composition and concrete harness profiles remain on-demand references because they prevent real loader/composition failures;
+- evaluation coverage is consolidated around material regressions instead of protocol ceremony.
 
 ## Core behavior
 
-The wizard separates two concerns that are easy to conflate:
+The wizard keeps **target intent** separate from **loader semantics**. An explicitly requested filename remains the requested deliverable even if the active harness will not load it; the mismatch is diagnosed rather than silently substituted. A result-oriented request such as “put the project instructions wherever this harness will use them” is different: when the loader gives one clear effective target, the wizard uses it without asking a redundant filename question.
 
-- **target intent** — what artifact and scope the user asked for;
-- **loader semantics** — what the active harness actually loads and how applicable instructions compose.
+Inspection is focused and evidence-driven. The wizard reads the smallest maintained set needed to understand durable behavior, preserves existing instruction artifacts as prior human intent, avoids secret-bearing values during orientation, and does not let ordinary workspace content redirect the workflow.
 
-A user-requested filename does not redefine a harness loader. Conversely, a harness default does not erase an explicitly requested deliverable. For generic/result-oriented setup, the wizard recommends the effective harness target and asks the user to confirm it; an explicitly named inert file is diagnosed rather than silently replaced.
+Workspace evidence may establish mechanics and maintained policy, but directory shape or plausible conventions do not become policy by implication. The wizard asks only when an unresolved choice would change the target, scope, or behavioral contract. Uncertain optional material is omitted rather than turned into an interview question.
 
-The wizard inspects the workspace before interviewing. It uses maintained docs, configuration, code, notebooks, data/status structure, and existing instructions as evidence, but does not treat workspace shape as proof of human policy. It reports observed facts separately from recommended interpretations and asks the user to decide choices that affect authority, mutability, lifecycle, synchronization, ownership, approval, or scope. Typical rounds contain 1–3 questions.
+For scoped instructions, the wizard uses **inherit / extend / narrow / override** only when the active loader actually composes broader and narrower instruction files. A local file contains genuine local deltas, not a shadow copy of broader policy.
 
-A bare `$agents-md-wizard` invocation stops at a guided checkpoint. Before writing, the wizard shows the proposed target, scope, behavioral contract, material policy changes, and assumptions, then asks for approval. Zero policy questions is reserved for cases where the user already supplied the material contract or requested an evidence-based audit; pre-write approval still applies unless the user explicitly waived review.
-
-Existing instruction artifacts are prior human intent, not disposable boilerplate. Refreshes preserve valid guardrails, remove verified drift or duplication, and surface only unresolved material conflicts.
-
-For scoped work, the wizard writes a local delta only when the active instruction topology actually composes broader and narrower instructions. Local candidates are classified as **inherit / extend / narrow / override**; unchanged broader policy is omitted locally. Path nesting alone never proves inheritance.
+Refreshes are policy migrations rather than template rewrites: retain valid behavior, sharpen vague intent, remove verified stale/duplicated/no-op text, and stop for a human decision only when a material conflict or unrequested guardrail change remains.
 
 ## Runtime architecture
 
 ```text
 SKILL.md
-├── resolve target + effective loading
+├── target intent vs loader semantics
 ├── focused workspace inspection
-├── observation/policy separation
-├── guided decision interview
+├── consequential decision frontier
 ├── smallest effective instruction surface
-├── reviewable draft / migration preview
-└── user-approved write + proportional verification / audit
+├── policy-preserving create/refresh/audit
+└── proportional verification
 
 references/
-├── scoped-composition.md      # only for difficult composed scopes
-├── authoring-patterns.md      # only for difficult drafting/migration
+├── scoped-composition.md      # difficult composed scopes only
 └── harnesses/
     ├── codex.md               # concrete loader boundary
     └── pi.md                  # concrete loader boundary
 ```
 
-Ordinary create/refresh work should not preload the reference directory. When exact loader behavior matters, load only the matching concrete harness profile. The two common references are exception lookup, not required reading.
+Ordinary create/refresh/audit work should use `SKILL.md` alone. Load one concrete harness profile only when exact loader behavior matters. Load `scoped-composition.md` only when a real composition, override, or drift problem exceeds the inline four-way model.
 
-For an unknown harness, the core uses a conservative fallback: honor an explicit artifact, avoid inventing discovery/precedence/inheritance semantics, and ask only if the unknown loader behavior changes what must be written.
+## Write behavior
+
+A separate approval round is **not** the default. If the user asked to create or update the artifact and the behavioral contract is grounded, the wizard writes and verifies it.
+
+The wizard stops before writing when:
+
+- project evidence leaves a material policy conflict unresolved;
+- a proposed change would remove or override a still-valid human guardrail that the user did not ask to change; or
+- an unresolved target/scope choice materially changes where the instructions apply.
+
+Explicit requests for preview/review, best-effort, or no-interview behavior are honored as written. Audit/review mode never edits files.
 
 ## Authoring standard
 
-The output should be the smallest instruction surface that reliably changes downstream behavior. Good content includes non-obvious source-of-truth relationships, mutation/lifecycle rules, durable invariants, branch-specific pointers, surprising dependencies, and observable completion criteria.
+The output should be the smallest durable instruction surface that changes downstream behavior. Prefer non-obvious invariants, source-of-truth or lifecycle rules, precise task-triggered pointers, scoped deltas, and observable completion conditions.
 
-Avoid generic quality slogans, exhaustive trees, copied manifests, transient inventories, or duplicated maintained docs. When another document owns detailed truth, use a precise task-triggered pointer.
-
-Before writing, the wizard checks that the draft is:
-
-- **Grounded** — consequential rules come from evidence, governing context, or settled human decisions.
-- **Effective** — the chosen artifact is actually meaningful to the harness, unless the user deliberately requested otherwise.
-- **Scoped** — local rules are genuine deltas when composition exists.
-- **Lean** — no low-value duplication or cheap environmental facts.
-- **Observable** — important completion rules can be checked.
-- **Preserving** — valid existing human intent is not silently lost.
+Avoid generic quality slogans, copied manifests, exhaustive trees, transient inventories, and duplicated maintained documentation. A rule should earn its context and maintenance cost by preventing a plausible mistake, avoiding meaningful repeated reasoning, or lowering verification cost.
 
 ## Modes
 
-- **Create / setup** — inspect, interview, preview, obtain approval, then establish the effective project instruction artifact.
-- **Refresh / update** — inspect drift, preview the minimal policy migration, obtain approval, then patch.
-- **Audit / review** — report ranked findings without editing.
-- **Best effort / skip interview / write without review** — explicit exceptions that permit more autonomy within the user-supplied scope.
-- **Scoped / local** — create or refresh a narrower instruction surface using actual harness composition semantics.
+- **Create / setup** — inspect, resolve only real decisions, write the effective requested artifact, verify.
+- **Refresh / update** — preserve valid intent, remove grounded drift/duplication, stop only for unresolved material policy changes.
+- **Audit / review** — report ranked behavioral findings without editing.
+- **Scoped / local** — write only the local delta under loader-confirmed composition.
+- **Best effort / no questions / preview first** — explicit user preferences override the default interaction style.
+
+A bare invocation with no create/update/audit intent does not itself authorize a write; inspect enough to identify the meaningful next decision or mode.
 
 ## Package layout
 
@@ -95,7 +89,6 @@ agents-md-wizard/
 ├── agents/
 │   └── openai.yaml
 ├── references/
-│   ├── authoring-patterns.md
 │   ├── scoped-composition.md
 │   └── harnesses/
 │       ├── codex.md
@@ -107,32 +100,26 @@ agents-md-wizard/
 └── README.md
 ```
 
-Examples and evals remain in the source ZIP for development and regression testing. A registry can package only runtime-required files if it prefers a smaller distribution.
+Examples and evals are development/regression material; runtime packaging may omit them.
 
 ## Suggested prompts
 
 ```text
-Use $agents-md-wizard to inspect this workspace, ask me the policy decisions, and show me the proposed AGENTS.md before writing it.
+Use $agents-md-wizard to create the effective project instructions for this workspace. Ask only if a material policy decision cannot be grounded from the repo.
 ```
 
 ```text
-Use $agents-md-wizard to refresh the existing agent instructions. Show the proposed policy changes and wait for my approval before writing.
+Use $agents-md-wizard to refresh the existing agent instructions, preserving valid policy and removing verified drift or duplication.
 ```
 
 ```text
-Create local agent instructions for `analysis/`. Reuse broader rules only if this harness actually composes them.
+Create local agent instructions for `analysis/`. Include only genuine local deltas under the active harness's composition rules.
 ```
 
 ```text
 Audit our AGENTS.md, but don't edit anything.
 ```
 
-```text
-Use $agents-md-wizard in best-effort mode, write without review, and list material assumptions.
-```
-
 ## Installation and publishing
 
-Install/copy the `agents-md-wizard` directory wherever your harness loads Skills. `agents/openai.yaml` keeps invocation explicit by default; other harnesses should use their own invocation mechanism.
-
-Exact Skill installation paths vary by harness and version. No license is included in this ZIP; add the license appropriate for your project before publishing to a shared registry.
+Install/copy the `agents-md-wizard` directory wherever the target harness loads Skills. `agents/openai.yaml` keeps invocation explicit by default; other harnesses should use their own invocation mechanism.
