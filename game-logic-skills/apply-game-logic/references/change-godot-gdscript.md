@@ -15,8 +15,8 @@ already supported by the recovered ownership/fan-out facts:
   scene, resource, or mod-interface value that uniquely controls the requested
   behavior.
 - For script changes, prefer the material callback, signal connection, emitter,
-  receiver, or explicit call site whose evidenced fan-out matches the requested
-  scope.
+  receiver, explicit call site, or inherited/base implementation whose evidenced
+  fan-out matches the requested scope.
 - For reversible runtime state changes, use a live Node/Resource/autoload value
   only after its owner, instance sharing, reset/lifetime, and effective type are
   established.
@@ -24,9 +24,16 @@ already supported by the recovered ownership/fan-out facts:
   different sources require different behavior. Use the shared point only when
   the requested change intentionally applies to every evidenced source.
 
-For exported properties, distinguish the script default from serialized scene or
-resource overrides and runtime assignments. Modify the effective owner rather
-than whichever declaration is easiest to find.
+For exported properties, distinguish the script default from serialized
+scene/resource values and runtime assignments, then preserve the recovered
+consumption-time relation. A scene override is the right target only when the
+mechanic consumes the post-assignment value; if `_init()` or another earlier path
+copies the default into authoritative state, do not edit the later override and
+expect that cached mechanic to change.
+
+When the material method/property is inherited, apply the change at the recovered
+base or overriding implementation that actually owns the behavior. Do not patch
+the attached subclass merely because it is the most visible script.
 
 For autoload-owned state, establish whether the requested behavior is intended
 to span scene changes and whether save/load logic persists the value. Session
@@ -35,9 +42,16 @@ lifetime and save persistence are separate scope dimensions.
 ## Scene/resource and pack changes
 
 A scene/resource override can be narrower and more semantic than a code change,
-but only when the recovered graph proves which instances consume it. Validate
-inherited scenes, duplicated resources, and shared subresources when they can
-broaden the effect.
+but only when the recovered graph proves which instances consume it and when the
+value reaches the material read/copy. Validate inherited scenes, duplicated
+resources, and shared subresources when they can broaden the effect.
+
+For mutable `Resource` changes, preserve the recovered runtime identity/fan-out.
+A field on two Nodes does not imply two resources: path-based loading can share a
+cached external resource, while `resource_local_to_scene`, explicit
+`duplicate()`/`duplicate_deep()`, or runtime reassignment can make the material
+instances diverge. Do not perform a supposedly per-instance mutation through a
+shared resource.
 
 The existence of PCK creation/patch tooling does not make an installed-pack edit
 the preferred mechanism. A destructive pack/executable change remains the last
@@ -60,9 +74,10 @@ explicit for the selected mechanism.
 ## Validation
 
 Compare control and modified behavior at the actual scene/resource instances and
-event sources that can expose leakage. When material, exercise scene reload,
-instance recreation, autoload lifetime, save/load, inherited scenes/resources,
-and alternate signal emitters.
+event sources that can expose leakage. When material, exercise initialization
+ordering (`_init()` versus later callbacks), base/derived script paths, scene
+reload, instance recreation, resource sharing/local-to-scene behavior, autoload
+lifetime, save/load, inherited scenes/resources, and alternate signal emitters.
 
 If validation shows that the recovered relation actually crosses into C#/.NET,
 GDExtension/GDNative, or engine-native logic, return only that missing boundary

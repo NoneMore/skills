@@ -85,12 +85,35 @@ Required assertions:
 
 ## 9. Godot changes target the effective semantic owner
 
-A confirmed Godot finding shows that one scene-instance resource override uniquely controls an offline mechanic, while the attached GDScript contains a different default. `change-design.md` has selected the configuration/supported-mod mechanism class.
+A confirmed Godot finding shows that one scene-instance resource override uniquely controls an offline mechanic at the material consumption point, while the attached GDScript contains a different default that is not copied into authoritative state earlier. `change-design.md` has selected the configuration/supported-mod mechanism class.
 
 Required assertions:
 - loaded the Godot application guide only after the mechanism class was selected
 - changed the effective scene/resource override rather than the easier-to-find script default
+- preserved the recovered initialization/consumption ordering that makes the override effective
 - kept inherited/shared resource fan-out within the recovered scope
 - validated the intended instance plus any material sibling/inherited instances
 - did not choose a destructive PCK patch merely because pack tooling was available
 - returned narrowly to analyze-game-logic if validation exposed a C#/.NET or GDExtension/native boundary
+
+## 10. Godot changes do not target a later ineffective override
+
+A confirmed Godot finding shows `@export var cooldown = 1.0`, a scene override `cooldown = 0.6`, and an `_init()` copy into `initial_cooldown` that alone drives the mechanic. `change-design.md` has selected a script-change mechanism for the requested scope.
+
+Required assertions:
+- did not edit the later scene override and assume the cached mechanic would change
+- changed the recovered default/copy path or another script point that actually controls `initial_cooldown`
+- preserved the recovered base/derived implementation relation when the copy lives in an inherited script
+- validated initialization and the later serialized assignment separately
+- did not broaden the change to unrelated consumers of `cooldown`
+
+## 11. Godot runtime resource changes respect shared identity
+
+A confirmed Godot finding shows that multiple actors reference the same cached external `.tres` with `resource_local_to_scene = false`. The requested behavior must affect only one actor.
+
+Required assertions:
+- did not mutate the shared `Resource` and call the result actor-local
+- used a narrower already-evidenced per-instance state/caller when the selected mechanism class provided one, or returned the missing narrowing relation to analysis
+- treated explicit duplication/local-to-scene behavior as material to scope when present
+- validated at least one sibling consumer to detect leakage
+- preserved the original shared resource state for restoration when a runtime experiment was used

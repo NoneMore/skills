@@ -41,6 +41,7 @@ project settings / autoloads
 scene and resource graph
         -> instantiated Nodes / Resources
         -> attached GDScript
+        -> inheritance / base-script resolution
         -> callbacks, signals, Callables, explicit calls
         -> authoritative state mutation
 ```
@@ -79,19 +80,28 @@ Prefer anchors that preserve resource relationships:
 
 - `project.godot` main-scene and autoload entries;
 - scene/resource script attachments and `res://` paths;
-- `class_name`, `preload`, `load`, and explicit `PackedScene`/`Resource` paths;
+- `class_name`, `extends`, base-script/global-class relationships, `super`,
+  `preload`, `load`, and explicit `PackedScene`/`Resource` paths;
 - signal declarations plus scene/code connections;
 - exported properties and serialized scene/resource values;
 - input-action names, semantic node/resource names, and diagnostic strings.
 
-A script attachment proves association, not authoritative ownership. A signal
-receiver proves that one receiver exists, not which emitter or connection caused
-the observed event.
+A script attachment proves association, not authoritative ownership. Resolve
+the material GDScript inheritance chain before treating the attached script as
+the implementation owner: a declaration or method may live in a base global
+class, another script file, or an inner class, and an overriding method may
+delegate back to its parent through version-appropriate parent-call semantics.
+A signal receiver proves that one receiver exists, not which emitter or
+connection caused the observed event.
 
-For an exported property, inspect both the script default and the effective
-serialized/runtime value. A `.tscn`, `.tres`, inherited scene, instantiated
-resource, or runtime assignment can change the value that actually controls the
-mechanic.
+For an exported property, distinguish the script default, serialized
+scene/resource value, and the value at the point where gameplay consumes it.
+Saved scene/resource assignments can occur after object initialization, so an
+`_init()` read or copy can observe the script default even when the instance
+later receives a different serialized value. A property setter can also transform
+or react to that assignment. Follow the target-version initialization order,
+setters, later runtime assignments, and the first material read/copy before
+calling any value authoritative for the mechanic.
 
 If GDRETools was required, treat its recovered paths, scripts, and resources as
 reconstructed artifacts. Record the recovery/tool version when material and
@@ -108,6 +118,13 @@ Scene-tree parent/owner relationships are not automatically gameplay-state
 ownership. Likewise, reference-counted resource lifetime is not proof that a
 value is unique to one actor or scene instance.
 
+For a material `Resource`, establish runtime identity and fan-out rather than
+inferring isolation from the field that references it. Check whether it is an
+external or built-in resource, whether path-based loading can return a shared
+cached instance, whether `resource_local_to_scene` changes instancing behavior,
+and whether `duplicate()`/`duplicate_deep()` or runtime reassignment creates a
+distinct object before treating a mutation as per-instance.
+
 Do not invent native `Variant` layouts, object offsets, VM bytecode structures,
 or calling conventions. If a material relation crosses into C#/.NET,
 GDExtension/GDNative, or engine-native code, preserve the GDScript-side caller
@@ -121,15 +138,22 @@ For mechanic reconstruction, prefer:
 project/autoload/main-scene anchor
   -> relevant scene/resource instance
   -> attached script or configured property
+  -> material extends/base-script chain when present
   -> callback, signal connection, Callable, or explicit caller
   -> decisive state read/write
   -> reset, scene-reload, fan-out, and persistence paths when material
   -> controlled runtime validation when material
 ```
 
-For property-backed mechanics, establish the effective value rather than
-stopping at the script declaration. Check material serialized overrides and any
-runtime assignment before concluding which value controls behavior.
+For property-backed mechanics, establish the value at the material consumption
+point rather than stopping at either the script declaration or serialized
+override. Check initialization order, setters, `_init()`/`_ready()` reads or
+copies, material serialized overrides, and later runtime assignments before
+concluding which value controls behavior.
+
+For resource-backed mechanics, establish whether consumers share one `Resource`
+instance or receive local/duplicated instances before using a resource mutation
+to infer scope.
 
 For signal-driven mechanics, identify both emitter and receiver and the actual
 connection path. If the receiver is shared, establish which emitters or scene
@@ -150,9 +174,10 @@ Recovered GDScript is decompiler output, not guaranteed original source; keep
 that provenance visible when exact source form matters.
 
 Collapse boilerplate resource declarations and focus on script references,
-serialized property overrides, signal connections, autoloads, preload/load
-targets, and scene transitions. Do not escalate to native engine analysis while
-these layers already close the mechanic.
+`extends`/parent-call relationships, serialized property overrides, signal
+connections, autoloads, preload/load targets, resource identity/sharing, and
+scene transitions. Do not escalate to native engine analysis while these layers
+already close the mechanic.
 
 ## 7. Runtime-observation guidance
 
@@ -173,6 +198,9 @@ Revalidate per target rather than hard-coding:
 - Godot major/minor/patch version and GDScript bytecode revision;
 - export preset, pack/container layout, and script/resource representation;
 - textual versus binary scene/resource serialization;
+- exported-property assignment order, setter behavior, and lifecycle semantics;
+- GDScript inheritance/parent-call semantics;
+- `ResourceLoader` cache behavior, `resource_local_to_scene`, and duplication;
 - signal/lifecycle API details and engine-version semantics;
 - C#/.NET, GDExtension/GDNative, and engine-native transitions;
 - GDRETools recovery/decompilation behavior for the detected target version.
@@ -181,6 +209,12 @@ Revalidate per target rather than hard-coding:
 
 - Treating every Godot title as a GDScript target.
 - Reading an exported-property default but missing a scene/resource override.
+- Treating a serialized override as authoritative without checking whether the
+  mechanic consumed or copied the default earlier in initialization.
+- Stopping at the attached subclass and missing an inherited declaration,
+  override, or parent call that contains the material behavior.
+- Treating a `Resource` field as per-instance without checking path-cache sharing,
+  `resource_local_to_scene`, duplication, or runtime reassignment.
 - Treating a signal receiver as proof of the emitting source or requested scope.
 - Assuming an autoload value is save-persistent because it survives scene changes.
 - Treating AnimationPlayer or UI code as presentation-only without following
@@ -199,9 +233,12 @@ When material, supplement the core mechanic record with:
 - detected Godot version/export form and exact target hash;
 - GDRETools version/recovery provenance when recovery was required;
 - effective `res://` scene/resource/script locator;
-- script default versus serialized/runtime override relation;
+- material GDScript base-script/override/parent-call relation when present;
+- script default, serialized/runtime assignment, and material consumption-time
+  value relation;
 - callback/signal/caller path, including emitter and receiver when relevant;
-- Node/Resource/autoload owner, instance fan-out, reset, and save/load behavior;
+- Node/Resource/autoload owner, instance fan-out, resource sharing/locality,
+  reset, and save/load behavior;
 - explicit transition evidence into C#/.NET, GDExtension/GDNative, or native code.
 
 ## 12. Bundled tools
