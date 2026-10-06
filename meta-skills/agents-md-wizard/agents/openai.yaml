@@ -1,6 +1,6 @@
 interface:
   display_name: "AGENTS.md Wizard"
-  short_description: "Guide and confirm workspace agent rules"
-  default_prompt: "Use $agents-md-wizard to inspect this workspace, ask me the policy decisions, and show the proposed agent instructions for approval before writing."
+  short_description: "Create, refresh, or audit workspace agent instructions"
+  default_prompt: "Use $agents-md-wizard to inspect this workspace and create or refresh the effective agent instructions. Ask only if a consequential policy, target, or scope decision cannot be grounded; preserve valid existing policy and verify the result."
 policy:
   allow_implicit_invocation: false
