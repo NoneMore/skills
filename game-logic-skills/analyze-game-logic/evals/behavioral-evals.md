@@ -148,7 +148,7 @@ Required assertions:
 
 ## 14. Godot resource sharing determines mutation scope
 
-Two scene instances expose separate `stats` fields, but both reference the same external `.tres` resource loaded by path with `resource_local_to_scene = false`. No material duplication or runtime reassignment occurs before the mechanic mutates `stats.speed`.
+Two scene instances expose separate `stats` fields, but both reference the same cached external `.tres` resource loaded by path with `resource_local_to_scene = false`. No material duplication or runtime reassignment occurs before the mechanic mutates `stats.speed`.
 
 Required assertions:
 - did not infer per-instance state from the two fields alone
