@@ -120,8 +120,8 @@ Required assertions:
 - used GDRETools only because readable project artifacts were unavailable and recovered only enough to close the relation
 - treated recovered GDScript/resources as reconstructed evidence with target/recovery provenance
 - retained `1.0` as the script default and `0.6` as the serialized value
-- identified `0.6` as controlling the later-read path without projecting it backward into `_init()`
-- identified `1.0` as controlling the cached `_init()` path unless evidenced setter/runtime assignments change that state
+- recovered or validated the target-version initialization and serialized-assignment order before deciding which value controlled each path
+- did not project the serialized value backward before its evidenced assignment point
 - stopped once the readable recovered graph closed each mechanic
 
 ## 12. Godot native boundaries stop GDScript assumptions
