@@ -1,9 +1,6 @@
 # Math Agent Skills
 
-Source repository for installable Codex skills for mathematical reading,
-writing, note editing, and Lean-oriented formalization workflows.
-
-Repository slug: `math-agent-skills`.
+Installable Agent Skills for mathematical reading, writing, note editing, and Lean-oriented formalization workflows.
 
 ## Skills
 
@@ -11,9 +8,7 @@ Repository slug: `math-agent-skills`.
 
 Path: `skills/math-paper-reader`
 
-Reads mathematical papers and formulas with visual PDF checks, notation
-ledgers, theorem/proof interpretation, equation references, and ambiguity
-review. Use it when the task is understanding what a paper says.
+Reads mathematical papers and formulas with visual PDF checks, notation ledgers, theorem/proof interpretation, equation references, and ambiguity review. Use it when the task is understanding what a paper says.
 
 Default prompt:
 
@@ -25,10 +20,7 @@ Use $math-paper-reader to read this mathematical paper and explain the key formu
 
 Path: `skills/math-writing-editor`
 
-Creates, restructures, rewrites, or polishes mathematical `.tex` and `.md`
-notes. Use it for conservative copyediting, structural note rewrites, outline
-extraction, rebuilding a note from a framework, or user-authorized
-mathematical content edits.
+Creates, restructures, rewrites, or polishes mathematical `.tex` and `.md` notes. Use it for conservative copyediting, structural note rewrites, outline extraction, rebuilding a note from a framework, or user-authorized mathematical content edits.
 
 Default prompt:
 
@@ -40,9 +32,7 @@ Use $math-writing-editor to edit, restructure, or rewrite the specified mathemat
 
 Path: `skills/lean-blueprint-author`
 
-Generates insertion-ready leanblueprint LaTeX for a specified Lean
-formalization target from local reference materials. Use it for Lean blueprint
-routes, proof routes, dependency routes, and formalization roadmaps.
+Generates insertion-ready leanblueprint LaTeX for a specified Lean formalization target from local reference materials. Use it for Lean blueprint routes, proof routes, dependency routes, and formalization roadmaps.
 
 Default prompt:
 
@@ -76,24 +66,22 @@ skills/
     SKILL.md
     agents/openai.yaml
   lean-blueprint-author/
+    CHANGELOG.md
     SKILL.md
     agents/openai.yaml
-    references/create-workflow.md
-    references/foundations.md
-    references/modify-workflow.md
-    references/output-contract.md
-    references/update-workflow.md
+    references/leanblueprint-basics.md
+    references/workflows.md
 ```
 
-There is intentionally no root-level `SKILL.md`; each skill is installed from
-its own folder under `skills/`.
+There is intentionally no root-level `SKILL.md`; each skill is installed from its own folder under `skills/`.
 
 ## Validation
 
-Validate each skill folder with the skill-creator validator:
+If your Codex installation includes the `skill-creator` validator, validate each skill using its local installation path:
 
 ```sh
-python3 /home/raibunitsu/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/math-paper-reader
-python3 /home/raibunitsu/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/math-writing-editor
-python3 /home/raibunitsu/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/lean-blueprint-author
+VALIDATOR="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py"
+python3 "$VALIDATOR" skills/math-paper-reader
+python3 "$VALIDATOR" skills/math-writing-editor
+python3 "$VALIDATOR" skills/lean-blueprint-author
 ```
