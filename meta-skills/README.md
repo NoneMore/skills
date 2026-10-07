@@ -1,6 +1,6 @@
 # Meta Skills
 
-Agent Skills for shaping the agent environment, improving agent-facing instructions, clarifying decisions, and transferring work between sessions.
+Agent Skills for shaping the agent environment, clarifying decisions, and transferring work between sessions.
 
 Before materially changing a Skill, follow the repository-level [Skill Design Principles](../SKILL-DESIGN-PRINCIPLES.md).
 
@@ -13,10 +13,6 @@ Create, refresh, or audit `AGENTS.md` or an equivalent workspace instruction art
 ### `skill-prototype-forge`
 
 Derive the smallest defensible Agent Skill prototype from current conversations, relevant accessible prior conversations, or user-supplied interaction evidence.
-
-### `writing-for-agents`
-
-Design and edit documents consumed by agents, including skills and workspace instructions, with progressive disclosure, checkable completion, and one source of truth.
 
 ### `grilling`
 
