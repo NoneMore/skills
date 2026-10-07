@@ -229,21 +229,6 @@ bytes/value, plausible argument count and runtime-value kind, stable
 Detaching instrumentation does not necessarily undo a raw memory write; state
 restoration limitations must be explicit.
 
-## 8. Modification-point selection
-
-Prefer the narrowest YYC state representing the requested behavior:
-
-1. Change a uniquely referenced static numeric runtime value when it controls
-   only the intended source.
-2. Intercept one call site or discriminate by return address when a shared
-   callee receives different values from different sources.
-3. Hook the shared script only when all sources should change together.
-4. Modify a live global/instance runtime value only after confirming type,
-   ownership, and lifetime.
-
-Shared refresh functions are a common source of overly broad changes. Audit all
-callers before choosing the hook point.
-
 ## 9. Version-sensitive assumptions
 
 Revalidate per runner/game version rather than hard-coding:

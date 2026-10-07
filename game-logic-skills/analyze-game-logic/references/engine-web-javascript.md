@@ -179,7 +179,7 @@ semantic evidence.
 
 Load [web-recovery-tools.md](web-recovery-tools.md) only when detailed
 webcrack/Wakaru/Prettier ordering, CLI recipes, version caveats, or
-`web_js_triage.py` operation is needed.
+`scripts/web_js_triage.py` operation is needed.
 
 ## 6. Static-analysis guidance
 
@@ -222,20 +222,6 @@ For browser/Electron gameplay, useful read-only observation points include:
 Do not infer server authority from a client-side prediction path. For a local
 Node.js backend supplied by the user, prefer a minimal test harness around the
 specific pure function/module over starting a complete service stack.
-
-## 8. Modification-point selection
-
-For authorized offline/local analysis, prefer:
-
-1. existing config/data tables;
-2. a local source-level value or pure function;
-3. a narrow local module wrapper or call site;
-4. a broader shared state/update function only after side effects are mapped.
-
-Preserve original bundles. Make modifications in a copied analysis/build tree
-or through a reversible local override. If the mechanic is server-authoritative
-and the server artifact is not supplied, do not propose client-side changes as
-if they changed the authoritative rule.
 
 ## 9. Version-sensitive assumptions
 

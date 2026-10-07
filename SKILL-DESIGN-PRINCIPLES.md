@@ -1,0 +1,167 @@
+# Skill Design Principles
+
+A compact framework for designing, implementing, and maintaining agent skills.
+
+## Core Mental Model
+
+A skill does not change the model's parameters, base knowledge, or fundamental reasoning capacity. It extends the **effective capability of the agent system** by packaging task-specific instructions, knowledge, procedures, resources, and access paths.
+
+A skill is a **task-scoped cognitive and operational scaffold** that makes useful behavior more reliable, efficient, reusable, and verifiable.
+
+Its main sources of value are:
+
+1. **Lower reasoning and context cost** — avoid re-deriving recurring procedures or keeping specialized material always loaded.
+2. **Lower behavioral variance** — make similar tasks converge on similar execution and completion standards.
+3. **Lower verification cost** — end important work in explicit, checkable conditions.
+4. **Operational leverage** — move deterministic work to scripts, tools, and structured resources when probabilistic execution is unnecessary.
+
+> **Model capability is not system capability.** Skills improve the system around the model; they do not make the underlying model smarter.
+
+---
+
+## L0 — Purpose
+
+Ask first: **why should this exist as a skill?**
+
+A skill should encode reusable task knowledge or execution patterns that materially improve cost, consistency, reliability, or capability. Do not turn every preference, one-off instruction, or prompt pattern into a skill.
+
+Preserve judgment where fixed rules add more complexity than value.
+
+A skill has a **complexity budget**. Add or retain durable structure only when it prevents a concrete failure, avoids meaningful repeated reasoning, or materially reduces behavioral variance, risk, or verification cost. Use a simpler mechanism when it provides the same benefit; remove structure whose absence causes no identifiable behavioral or verification regression.
+
+Defensive complexity carries the same burden of proof as any other complexity. Do not add guards, fallbacks, validation, abstraction, or branches merely because a failure is imaginable. Require a plausible failure with material consequences, and use the simplest reliable mechanism that can prevent or contain it.
+
+Completeness means enough structure to execute and verify the task—not exhaustive doctrine, cheaply re-derived analysis, or confirmation without behavior-changing uncertainty.
+
+---
+
+## L1 — Scope and Placement
+
+Put information at the lowest level where it is reliably available when needed.
+
+| Content | Best home |
+|---|---|
+| Rules that apply to nearly every task | `AGENTS.md` or equivalent workspace instructions |
+| Reusable task knowledge or behavior | Skill |
+| Branch-specific stable knowledge | `references/` |
+| Deterministic computation or transformation | `scripts/` |
+| Live, external, or cheaply recoverable state | Tool / API / MCP |
+| Behavioral scope and permission expectations | Skill |
+| Actual authorization and access enforcement | Runtime / tool boundary |
+| Reusable output skeletons or artifacts | `assets/` |
+| One-off requirements | User prompt |
+
+Prefer recoverable information over cached information when retrieval is cheap and freshness matters. Documentation should add conventions, rationale, constraints, or non-obvious stable knowledge rather than duplicate state the environment can reveal directly.
+
+---
+
+## L2 — Behavioral Contract
+
+For workflow-oriented skills, use a behavioral contract:
+
+> **Task context → bounded decisions and actions → verifiable outcome**
+
+Make clear, when relevant:
+
+- **Inputs and preconditions** — what information and state are required.
+- **Behavioral scope and invariants** — what the agent should do and what must remain true.
+- **Decision points** — meaningful branches and how to resolve them.
+- **Output and completion** — what must be produced and what observable conditions mean “done.”
+- **Failure and stop behavior** — what to do when information, tools, or permissions are insufficient, and where the skill must stop.
+
+For model-invoked skills, routing intent should be explicit in discovery metadata before activation; the skill body may refine it once loaded.
+
+Prefer explicit, checkable conditions over vague instructions such as “be thorough.”
+
+---
+
+## L3 — Information Architecture
+
+Design for limited attention and context. Keep the common path in the main skill file and load specialized material only when the relevant branch is reached:
+
+```text
+metadata → SKILL.md → references / scripts / assets on demand
+```
+
+Use these rules:
+
+- **One authoritative source** — give each rule, definition, or invariant a canonical home; repeat critical constraints only when locality materially improves reliability.
+- **Useful pointers** — say what referenced material contains and when it should be loaded.
+- **Locality with justified indirection** — keep rules and completion conditions near the workflow that uses them; add files, references, or other indirection only when their benefit outweighs navigation and maintenance cost.
+- **Aggressive pruning** — remove stale, irrelevant, behaviorally inert, or cheaply recoverable instructions.
+
+Optimize for minimum sufficient context and procedure, not minimum length or maximum coverage.
+
+---
+
+## L4 — Routing and Composition
+
+Decide invocation ownership before designing routing. A model-invoked skill must be discoverable reliably from information available before activation. A user-invoked skill delegates selection to the human and should not carry model-facing routing machinery without another concrete need.
+
+For model-invoked skills, treat discovery metadata as an index, not marketing copy. It should explain both **what the skill does** and **when it should be selected** because routing-critical information must be available before the skill body is loaded. For user-invoked skills, optimize instead for clear human selection.
+
+When multiple skills coexist, prefer:
+
+- invocation ownership explicit before routing and composition are designed,
+- for model-invoked skills, distinct, discriminating triggers with minimal unnecessary overlap,
+- clear human selection for user-invoked skills without unnecessary model-routing machinery,
+- explicit dependencies where composition is intentional,
+- router skills only when they reduce real discovery cost,
+- granularity justified by independent discoverability or materially different context.
+
+Good execution cannot compensate for failed routing, and good routing cannot compensate for unreliable execution.
+
+---
+
+## L5 — Engineering, Trust, and Runtime
+
+Conceptual quality, package validity, and runtime enforcement are separate concerns.
+
+Where portability or compatible runtimes matter, use the open [Agent Skills specification](https://agentskills.io/specification) as a baseline packaging contract, then add runtime-specific extensions only where required.
+
+A practical extended structure is:
+
+```text
+skill-name/
+├── SKILL.md
+├── references/   # optional
+├── scripts/      # optional
+├── assets/       # optional
+├── evals/        # optional project convention; not core spec
+└── agents/       # runtime-specific convention; not core spec
+```
+
+`SKILL.md` should remain the canonical behavioral entry point. Runtime-specific metadata should extend the skill rather than redefine it.
+
+Engineering concerns include valid frontmatter and naming, stable relative references, minimal runtime assumptions, explicit dependencies, bounded tool permissions, deterministic mechanisms for deterministic work, and portable packaging where useful.
+
+A skill can declare behavioral scope, but **prompt text is not an authorization boundary**. Sensitive permissions, access control, and irreversible actions must be enforced by the runtime or tool layer. Treat bundled instructions, scripts, retrieved content, and tool outputs according to their trust level; external content should not gain authority merely because it appears in context.
+
+Format compliance is the floor, not the definition of a good skill.
+
+---
+
+## L6 — Inspectability and Maintenance
+
+A skill should be inspectable as an artifact. Prefer static inspection for properties that can be checked directly: ambiguous or conflicting rules, unnecessary discretion, unverifiable completion conditions, probabilistic work better made deterministic, and stale dependencies or runtime assumptions.
+
+Use dynamic eval only for important behavioral uncertainty that inspection cannot resolve, when useful cases can be derived from the contract or representative use, the behavior is reproducible enough to diagnose, plausible results would change a concrete decision, and the expected value justifies the setup and maintenance cost. Prefer small, targeted cases around boundaries, transitions, and regressions.
+
+Treat dynamic results as evidence about **skill × model × runtime × task distribution**, not as isolated skill scores. Real-use evidence helps reveal actual task distributions and unexpected failures; constructed cases help exercise known boundaries and rare regressions. Neither substitutes for deterministic enforcement where guarantees are required. Merge, simplify, or delete skills when they no longer earn their complexity.
+
+---
+
+## Design Test
+
+Before adding or changing a skill, ask:
+
+1. **Task fit** — Is this reusable behavior or knowledge worth skillizing?
+2. **Contract** — Where a workflow exists, are scope, decisions, completion, failure, and stopping conditions explicit?
+3. **Context** — Is each piece of information better encoded than recovered when needed?
+4. **Complexity budget** — Would removing any nontrivial durable structure cause an identifiable behavioral or verification regression? For defensive structure, what plausible, material failure does it prevent, and why is a simpler mechanism insufficient? If these questions have no concrete answer, simplify or remove it.
+5. **Invocation and routing** — Who owns invocation? If model-invoked, can the right task discover the skill without excessive overlap? If user-invoked, is explicit human selection clear without unnecessary model-routing machinery?
+6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
+7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
+8. **Inspectability** — Can artifact defects be found directly, and is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
+
+> **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**

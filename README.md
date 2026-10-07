@@ -1,183 +1,59 @@
 # Skills: Curated Agent Capabilities Collection
 
-A modular, evidence-driven, and composable collection of Agent Skills designed for modern AI coding harnesses and agentic workflows (e.g., [Pi](https://github.com/earendil-works/pi-coding-agent), [Codex](https://github.com/openai/codex), Claude Code, and compatible agent environments).
+A modular collection of reusable Agent Skills for modern coding agents and agentic workflows.
 
-This repository provides production-grade capabilities covering the **full software engineering lifecycle**, **game logic analysis, reverse engineering, and evidence-backed application**, **mathematics research and formalization**, **pragmatic engineering mental models**, and **meta-governance for agent instructions**.
+This repository treats skills as **task-scoped cognitive and operational scaffolds**: they do not make the underlying model intrinsically smarter, but they can make recurring work more reliable, efficient, constrained, and easier to verify.
 
----
-
-## Table of Contents
-
-- [Overview of Capabilities](#overview-of-capabilities)
-  - [1. Execution Skills (Engineering Lifecycle)](#1-execution-skills-engineering-lifecycle)
-  - [2. Matt Skills (Pragmatic Engineering & Mental Models)](#2-matt-skills-pragmatic-engineering--mental-models)
-  - [3. Math Skills (Mathematical Research & Lean Formalization)](#3-math-skills-mathematical-research--lean-formalization)
-  - [4. Game Logic Skills (Game Logic & Reverse Engineering)](#4-game-logic-skills-game-logic--reverse-engineering)
-  - [5. Meta Skills (Agent Instruction Governance)](#5-meta-skills-agent-instruction-governance)
-- [Repository Structure](#repository-structure)
-- [Installation & Usage](#installation--usage)
-- [Core Engineering Principles](#core-engineering-principles)
-- [Contributing & License](#contributing--license)
+The repository favors reusable workflows, progressive disclosure, bounded authority, explicit completion criteria, and evaluation over large always-loaded instruction sets.
 
 ---
 
-## Overview of Capabilities
+## Design & Authoring
 
-### 1. Execution Skills (Engineering Lifecycle)
-> **Directory**: [`execution-skills/`](execution-skills/) | Detailed guides: [README](execution-skills/README.md) & [Chinese Guide](execution-skills/GUIDE_CN.md)
+Before creating or materially changing a skill, read [Skill Design Principles](SKILL-DESIGN-PRINCIPLES.md).
 
-A composable engineering toolbox built for long-lived software systems. It enforces intent preservation, verified evidence loops, and systematic knowledge governance regardless of repository scale.
+The guide organizes skill design into seven layers:
 
-- **Foundations & Orchestration**:
-  - `engineering-initiative-shaping`: Shapes large, ambiguous initiatives into accepted, bounded medium-capacity requirements.
-  - `engineering-foundation-design`: Establishes or materially resets architectural foundations and governing contracts.
-  - `engineering-plan-and-delegate`: Deliberately evaluates task decomposition and coordinates concrete handoffs across sub-agents.
-  - `engineering-specification`: Drafts explicitly requested, unambiguous requirements and accepted designs.
-  - `engineering-execution-planning`: Sequences dependencies, verification protocols, and coordination from accepted specifications.
-- **Implementation & Review**:
-  - `engineering-implementation`: High-fidelity, test-backed code authoring, bug fixing, and refactoring under explicit authorization.
-  - `engineering-investigation`: Evidence-seeking diagnosis, root-cause analysis, reproducible benchmarks, and disposable experiments.
-  - `engineering-review`: Read-only, multi-perspective evaluation against specifications, regressions, and operational maintenance cost.
-  - `engineering-handoff`: Preserves reproducible runtime state, unblocking resumption of interrupted work across sessions.
-  - `engineering-knowledge-governance`: Manages document lifecycle, canonical truth reconciliation, and decision records.
+- **L0 — Metacognition:** understand what skills can and cannot improve.
+- **L1 — Scope and Placement:** decide whether knowledge belongs in a skill, workspace instructions, references, scripts, tools, or the user prompt.
+- **L2 — Behavioral Contract:** define triggers, authority, invariants, outputs, completion criteria, and stop boundaries.
+- **L3 — Information Architecture:** use progressive disclosure, locality, context pointers, and a single source of truth.
+- **L4 — Routing and Composition:** make skills discoverable without unnecessary overlap and compose them deliberately.
+- **L5 — Engineering and Runtime Specification:** follow the [Agent Skills specification](https://agentskills.io/specification) and add runtime-specific metadata only where needed.
+- **L6 — Evaluation and Governance:** test routing, behavior, outcomes, regressions, maintenance cost, and eventual deprecation.
 
-### 2. Matt Skills (Pragmatic Engineering & Mental Models)
-> **Directory**: [`matt-skills/`](matt-skills/)
+The central idea is simple:
 
-A comprehensive collection of agentic workflows inspired by Matt Pocock's software design philosophy, structured into global utility skills and project-level engineering workflows.
-
-- **Global Skills**:
-  - `grilling`: Relentless Socratic questioning to stress-test plans, architectures, assumptions, and critical decisions.
-  - `writing-for-agents`: Guidelines and heuristics for crafting concise, unambiguous instruction manuals and prompt context for AI agents.
-- **Project Workflows**:
-  - `ask-matt`: High-level consulting, idiomatic architectural advice, and opinionated technical guidance.
-  - `code-review`: Rigorous, adversarial code inspection focusing on readability, edge cases, and maintainability.
-  - `codebase-design`: Clean domain boundary mapping and architectural layout.
-  - `diagnosing-bugs`: Systematic, hypothesis-driven defect isolation and root-cause verification.
-  - `domain-modeling`: Ubiquitous language definition, type-level invariants, and domain boundary design.
-  - `grill-with-docs`: Document-grounded critical interrogation of proposals and specs.
-  - `handoff`: Context packaging and next-step capture for seamless handoffs.
-  - `implement`: Focused, disciplined implementation conforming strictly to established specs.
-  - `reconcile`: Verifies terminal implementation outcomes against parent specs and reconciles satisfied specs to originating artifacts.
-  - `improve-codebase-architecture`: Incremental refactoring and technical debt remediation.
-  - `prototype`: Rapid proof-of-concept exploration while isolating experimental code.
-  - `research`: Structured technology evaluations and tradeoff analyses.
-  - `setup-matt-pocock-skills`: Workspace bootstrapping for the Matt skills suite.
-  - `tdd`: Red-Green-Refactor test-driven development discipline.
-  - `to-spec`: Distills ambiguous requirements into actionable, structured engineering specifications.
-  - `to-tickets`: Decomposes large features into independently executable, atomic issues/tickets.
-  - `wayfinder`: Regains bearing and charts recovery steps when an agent is disoriented or stalled.
-
-### 3. Math Skills (Mathematical Research & Lean Formalization)
-> **Directory**: [`math-skills/`](math-skills/) | Detailed guide: [README](math-skills/README.md)
-
-Tailored for mathematical document processing, rigorous literature analysis, and interactive formal verification.
-
-- `math-paper-reader`: In-depth mathematical paper deconstruction, notation ledgers, equation reference tracking, and theorem/proof sanity checks.
-- `math-writing-editor`: Restructuring, copyediting, and polishing for mathematical `.tex` and `.md` documents with variable autonomy levels.
-- `lean-blueprint-author`: Generates insertion-ready `leanblueprint` LaTeX architectures, proof routes, and formalization roadmaps targeting Lean 4.
-
-### 4. Game Logic Skills (Game Logic & Reverse Engineering)
-> **Directory**: [`game-logic-skills/`](game-logic-skills/)
-
-Two focused skills separate mechanic recovery from downstream use without requiring a heavyweight handoff protocol.
-
-- `analyze-game-logic`: Mechanic-first, reproducible static and dynamic reverse engineering of authorized offline/single-player game logic. It recovers only the version-scoped facts needed to answer the question or support a downstream application.
-- `apply-game-logic`: Builds calculators, simulators, instrumentation, mods, tests, or scoped local gameplay changes from an existing finding, mechanic record, or compatible legacy handoff. It returns to analysis only for material facts that are missing or stale.
-
-Install both for cold-start analyze → apply workflows. `apply-game-logic` can also operate independently when the supplied mechanic knowledge is already sufficient.
-
-Both skills strictly exclude multiplayer/service manipulation, DRM or payment bypass, credential theft, piracy, and proprietary asset distribution.
-
-### 5. Meta Skills (Agent Instruction Governance)
-> **Directory**: [`meta-skills/`](meta-skills/) | Detailed guide: [README](meta-skills/agents-md-wizard/README.md)
-
-Meta-level capabilities for authoring and optimizing how agents behave across diverse runtimes.
-
-- `agents-md-wizard`: A workspace-agnostic wizard for generating, updating, and auditing `AGENTS.md` and related instruction files. Follows an interactive paradigm: *Inspect facts → Present choices → Ask decisions → Confirm draft → Encode behavior*, avoiding arbitrary autonomous file rewrites.
+> **Model capability is not the same as system capability. Skills improve the system around the model, not the model itself.**
 
 ---
 
-## Repository Structure
+## Core Design Principles
 
-```text
-.
-├── README.md                          # Repository overview and guide
-├── execution-skills/                  # Agentic Engineering Suite (v5-rc.1)
-│   ├── engineering-implementation/    # Verified coding & refactoring
-│   ├── engineering-investigation/     # Diagnosis & benchmarking
-│   ├── engineering-review/            # Read-only verification & review
-│   ├── engineering-specification/     # Precise requirements & specs
-│   ├── engineering-execution-planning/# Step sequencing & acceptance
-│   ├── engineering-handoff/           # Resumable session state handoffs
-│   ├── engineering-knowledge-governance/# Canonical truth reconciliation
-│   ├── engineering-foundation-design/ # Architectural reset & design
-│   ├── engineering-plan-and-delegate/ # Decomposition & sub-agent planning
-│   ├── engineering-initiative-shaping/# Macro-to-medium initiative shaping
-│   ├── routing-policy.yaml            # Capacity policy & routing contracts
-│   └── GUIDE_CN.md                    # Chinese supplementary handbook
-├── game-logic-skills/                # Game logic recovery & application
-│   ├── analyze-game-logic/            # Recover verified mechanic knowledge
-│   └── apply-game-logic/              # Consume mechanics for tools/changes
-├── math-skills/                       # Mathematical reading & formalization
-│   └── skills/
-│       ├── math-paper-reader/         # Paper interpretation & notation ledger
-│       ├── math-writing-editor/       # LaTeX/Markdown notes editing
-│       └── lean-blueprint-author/     # Lean 4 blueprint authoring
-├── matt-skills/                       # Matt Pocock skill collection
-│   ├── global/                        # Cross-project capabilities (grilling, etc.)
-│   └── project/                       # Project lifecycle (tdd, implement, etc.)
-└── meta-skills/                       # Agent meta-governance
-    └── agents-md-wizard/              # AGENTS.md authoring & auditing wizard
-```
+1. **Use skills only for reusable task behavior.** Do not turn every preference, project fact, or one-off prompt into a skill.
+2. **Load information only when it becomes relevant.** Keep common-path instructions close; move branch-specific material behind explicit pointers.
+3. **Maintain one source of truth.** Avoid duplicating rules across `AGENTS.md`, `SKILL.md`, references, and runtime metadata.
+4. **Bound authority and scope.** Make clear what the agent may read, change, execute, or delegate, and where the workflow must stop.
+5. **Prefer verifiable completion over vague emphasis.** Replace instructions like “be thorough” with observable coverage and completion criteria.
+6. **Delegate deterministic work to deterministic mechanisms.** Use scripts and tools when a reliable procedure should not depend on probabilistic generation.
+7. **Evaluate skills as behavior, not prose.** Test whether they trigger correctly, stay inactive when irrelevant, follow their contract, and produce acceptable outcomes.
 
----
-
-## Installation & Usage
-
-Each skill folder packages its own local instructions, references, scripts, and metadata; skills must not treat sibling filesystem paths as runtime APIs. Some workflows intentionally compose other installed skills by canonical skill name (for example Matt project flows and the two-stage game-logic workflow). Install individual standalone skills when their task is self-contained, or install the dependency-complete bundle when you want a composed workflow.
-
-### 1. Pi Agent (`~/.agents/skills/` or project `.agents/skills/`)
-
-```bash
-# Install a specific skill globally (e.g., grilling)
-mkdir -p ~/.agents/skills
-cp -r matt-skills/global/grilling ~/.agents/skills/
-
-# Install the entire execution skills suite into your active workspace
-mkdir -p .agents/skills
-cp -r execution-skills/engineering-* .agents/skills/
-```
-
-### 2. OpenAI Codex (`~/.codex/skills/`)
-
-```bash
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-
-# Install math skills
-cp -r math-skills/skills/* "${CODEX_HOME:-$HOME/.codex}/skills/"
-
-# Install the AGENTS.md wizard
-cp -r meta-skills/agents-md-wizard "${CODEX_HOME:-$HOME/.codex}/skills/"
-```
-
-### 3. Claude Code / Other Runtimes
-
-Copy desired skill directories to your harness's designated skill path (e.g., `~/.claude/skills/` or `.claude/skills/`).
-
----
-
-## Core Engineering Principles
-
-1. **Intent → Feedback → Evidence**: Every material change begins with established intent, generates positive and negative evidence (tests, diffs, execution logs), and ceases when the authorized boundary is satisfied.
-2. **Minimal Necessary Context**: Skills are loosely coupled. Detailed references are loaded strictly when specific triggers fire, keeping token overhead minimal.
-3. **Strict Authorization Boundaries**: Tools act only within the delegated authority. Explicit orchestrations require deliberate human confirmation.
-4. **Recoverable State & Clean Handoffs**: Long-horizon workflows maintain checkpoints and transparent evidence trails to withstand session interruption or handoff.
+For the full framework and design test, see [SKILL-DESIGN-PRINCIPLES.md](SKILL-DESIGN-PRINCIPLES.md).
 
 ---
 
 ## Contributing & License
 
-Contributions, new skills, and issue reports are welcome! Please ensure new skills follow the directory convention (`SKILL.md`, `evals/`, `references/`) and adhere to bounded authority patterns.
+Contributions, new skills, and issue reports are welcome.
+
+Every skill should have a clear `SKILL.md` entry point and a narrowly defined purpose. Add `references/`, `scripts/`, `assets/`, `evals/`, and runtime-specific metadata only when they serve a concrete need.
+
+New or substantially revised skills should:
+
+- follow the baseline [Agent Skills specification](https://agentskills.io/specification),
+- follow the principles in [SKILL-DESIGN-PRINCIPLES.md](SKILL-DESIGN-PRINCIPLES.md),
+- keep permissions and authority explicit and bounded,
+- avoid unnecessary duplication and always-loaded context, and
+- include routing or behavioral evaluations when the behavior is non-trivial or regression-prone.
 
 This repository is distributed under the [MIT License](LICENSE).

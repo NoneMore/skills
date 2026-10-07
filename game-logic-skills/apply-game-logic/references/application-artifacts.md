@@ -26,7 +26,7 @@ If an existing game-logic project store is already available and useful, registe
 
 Do not treat an application artifact as new evidence that the underlying mechanic is correct merely because it was derived from that mechanic.
 
-For destructive changes, capture the original bytes/content or an integrity-verifiable backup before modifying the installed target.
+For destructive changes that satisfy the rollback precondition in [SKILL.md](../SKILL.md), retain the captured original bytes/content or integrity-verifiable backup with the durable record.
 
 ## Recovery check
 

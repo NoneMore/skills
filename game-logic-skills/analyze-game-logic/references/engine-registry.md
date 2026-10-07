@@ -10,6 +10,9 @@ not preload unrelated engine references.
 | --- | --- | --- | --- |
 | GameMaker YYC | [engine-gamemaker-yyc.md](engine-gamemaker-yyc.md) | `scripts/yyc_triage.py` | bundled |
 | GameMaker VM | none | none | core workflow only |
+| Godot GDScript / scene-resource graph | [engine-godot-gdscript.md](engine-godot-gdscript.md) | none | bundled |
+| Godot C# / .NET | none | none | core workflow only |
+| Godot GDExtension / GDNative / engine-native code | none | none | core workflow only |
 | Unity Mono | none | none | core workflow only |
 | Unity IL2CPP | none | none | core workflow only |
 | Unreal native code | none | none | core workflow only |

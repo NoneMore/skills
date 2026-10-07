@@ -65,11 +65,6 @@ detach/restore limitations, and runtime observations that materially improve
 confidence. Runtime-action permissions and generic validation criteria remain in
 `SKILL.md`.
 
-## 8. Modification-point selection
-
-Describe engine-specific choices for the narrowest reversible intervention and
-the shared-state, lifetime, or fan-out hazards that affect scope.
-
 ## 9. Version-sensitive assumptions
 
 Keep a compact list of layouts, offsets, kind values, registration formats,
