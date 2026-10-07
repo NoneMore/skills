@@ -1,10 +1,19 @@
-# Project tracker
+# Project Skills
 
-A small backend-independent contract for tracked project work.
+Locally complete project capabilities plus a small optional tracker configuration skill. These are capabilities, not stages in a required software lifecycle.
 
-- [`setup-tracker/ISSUE-MODEL.md`](setup-tracker/ISSUE-MODEL.md) defines tracker semantics.
-- [`setup-tracker/github.md`](setup-tracker/github.md) and [`setup-tracker/local-markdown.md`](setup-tracker/local-markdown.md) define backend representation.
-- `setup-tracker` configures one backend and publishes the contract without adopting existing work.
-- Published contracts are versioned; setup stops on a version mismatch rather than inferring compatibility or migrating tracked work.
+Before materially changing a skill, follow the repository-level [Skill Design Principles](../SKILL-DESIGN-PRINCIPLES.md).
 
-Repository taxonomy, source-specific ingestion and triage, execution coordination, migration, delivery policy, public issue forms, additional tracker vendors, downstream workflow ports, and changes to the current Matt skills are outside this scope.
+## Capabilities
+
+- `design` — resolve material software, domain, architecture, and interface choices into a coherent direction.
+- `implement` — turn a requested production change into working, verified production behavior.
+- `review` — independently evaluate an existing result and report evidence-backed findings.
+- `specify` — turn sufficiently settled intent into a durable implementation-facing contract.
+- `decompose` — split concrete work into independently actionable pieces with truthful dependencies.
+
+These skills accept natural project inputs and do not require each other to have run first. Research, debugging, prototyping, testing, and similar techniques are used inside the capability that owns the requested outcome rather than forming a mandatory cross-skill pipeline.
+
+## Tracker setup
+
+`setup-tracker` remains an optional backend-independent configuration capability for projects that want the repository's tracker contract. The project capabilities above do not require that tracker merely to operate.
