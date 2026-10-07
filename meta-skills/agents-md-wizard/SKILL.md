@@ -1,6 +1,7 @@
 ---
 name: agents-md-wizard
 description: Create, refresh, or audit AGENTS.md or an equivalent workspace instruction artifact. Resolve effective loading, preserve existing human policy, keep scoped instructions minimal, and ask only when a consequential decision cannot be grounded.
+disable-model-invocation: true
 ---
 
 # AGENTS.md Wizard
