@@ -1,9 +1,7 @@
 # Math Agent Skills
 
-Source repository for installable Codex skills for mathematical reading,
-writing, note editing, and Lean-oriented formalization workflows.
-
-Repository slug: `math-agent-skills`.
+Installable Agent Skills for mathematical reading, writing, note editing, and
+Lean-oriented formalization workflows.
 
 ## Skills
 
@@ -76,13 +74,11 @@ skills/
     SKILL.md
     agents/openai.yaml
   lean-blueprint-author/
+    CHANGELOG.md
     SKILL.md
     agents/openai.yaml
-    references/create-workflow.md
-    references/foundations.md
-    references/modify-workflow.md
-    references/output-contract.md
-    references/update-workflow.md
+    references/leanblueprint-basics.md
+    references/workflows.md
 ```
 
 There is intentionally no root-level `SKILL.md`; each skill is installed from
@@ -90,10 +86,12 @@ its own folder under `skills/`.
 
 ## Validation
 
-Validate each skill folder with the skill-creator validator:
+If your Codex installation includes the `skill-creator` validator, validate each
+skill using its local installation path:
 
 ```sh
-python3 /home/raibunitsu/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/math-paper-reader
-python3 /home/raibunitsu/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/math-writing-editor
-python3 /home/raibunitsu/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/lean-blueprint-author
+VALIDATOR="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py"
+python3 "$VALIDATOR" skills/math-paper-reader
+python3 "$VALIDATOR" skills/math-writing-editor
+python3 "$VALIDATOR" skills/lean-blueprint-author
 ```
