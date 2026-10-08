@@ -31,7 +31,3 @@ Publishing the breakdown to a tracker is an optional integration step when the u
 ## Done when
 
 The requested scope is accounted for, each item has a clear deliverable and completion signal, dependencies represent real execution constraints, and no material work is left implicit between items.
-
-## Does not require
-
-A prior spec, a particular tracker backend, user approval rounds, a `ready-for-agent` state, or a prescribed implementation workflow.

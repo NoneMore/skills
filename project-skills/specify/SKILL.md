@@ -23,14 +23,10 @@ Conversation decisions, an issue or request, an existing design, project context
 - acceptance conditions that can distinguish a satisfying result from a non-satisfying one;
 - explicit material unresolved questions when the source material is not yet decision-complete.
 
-A specification is valuable because it persists a contract. Publish it to the project's natural source of truth or the destination the user requests; do not require a particular tracker or suite-specific role.
+A specification is valuable because it persists a contract. Persist it to the user's requested destination or an established project source of truth when one clearly applies. If neither applies, return the complete specification without inventing a new persistence convention.
 
 Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
 
 ## Done when
 
 The durable spec is clear enough that downstream work can act and verify against it without silently inventing material choices. If that condition cannot be met, the spec may still capture settled material, but it must clearly identify the unresolved decisions that block a reliable contract.
-
-## Does not require
-
-A prior grilling session, domain-modeling skill, tracker setup, fixed testing-seam doctrine, exhaustive user stories, ticket generation, or any prescribed next step.

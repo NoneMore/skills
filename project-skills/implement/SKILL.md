@@ -25,18 +25,15 @@ Do not leave exploratory shortcuts, fake dependencies, temporary instrumentation
 
 Choose verification that is proportionate to the behavior and risk. Testing before, during, or after implementation is a method choice, not a lifecycle requirement.
 
+If completion requires a material product, scope, or design choice that is neither established by the implementation contract nor delegated to the agent, keep that uncertainty explicit rather than silently encoding a choice in production behavior.
+
 ## Specialized guidance
 
 - [debugging.md](references/debugging.md) when the failure mechanism is unclear or a tight feedback loop would materially reduce uncertainty;
-- [testing.md](references/testing.md) when test placement or behavioral coverage needs explicit guidance;
-- [mocking.md](references/mocking.md) when boundary substitution is necessary.
+- [testing.md](references/testing.md) when test placement, coverage, or substitution needs explicit guidance.
 
 Research, experiments, prototypes, refactoring techniques, migrations, benchmarks, and self-review may be used directly when they help complete the requested production outcome.
 
 ## Done when
 
 The requested production behavior works, relevant preservation expectations hold, temporary exploratory artifacts are cleaned up, and there is proportionate evidence at the meaningful system boundary that the result is acceptable to keep.
-
-## Does not require
-
-TDD, a separate review skill, a tracker claim, a canonical implementation-result record, a commit, a pull request, reconciliation, or any prescribed successor capability unless the user or project explicitly requires that artifact or action.

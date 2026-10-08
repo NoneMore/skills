@@ -1,77 +1,11 @@
-# Good and Bad Tests
+# Testing
 
-## Good Tests
+Use this guidance when test placement, behavioral coverage, or dependency substitution is not obvious.
 
-**Integration-style**: Test through real interfaces, not mocks of internal parts.
+Prefer tests that verify observable behavior through a meaningful stable boundary. Use lower-level tests when they provide cheaper diagnosis or isolate logic with a clear contract; no test level is universally preferred.
 
-```typescript
-// GOOD: Tests observable behavior
-test("user can checkout with valid cart", async () => {
-  const cart = createCart();
-  cart.add(product);
-  const result = await checkout(cart, paymentMethod);
-  expect(result.status).toBe("confirmed");
-});
-```
+Avoid assertions about incidental internal collaboration when the behavior can be checked directly. Expected outcomes should be independent enough that the test does not merely reproduce the implementation by construction.
 
-Characteristics:
+Use fakes, mocks, or other substitutes when the real dependency would make a useful test impractical, unsafe, slow, or nondeterministic. Prefer narrow stable boundaries and avoid substitutions that force tests to mirror incidental call structure.
 
-- Tests behavior users/callers care about
-- Uses public API only
-- Survives internal refactors
-- Describes WHAT, not HOW
-- One logical assertion per test
-
-## Bad Tests
-
-**Implementation-detail tests**: Coupled to internal structure.
-
-```typescript
-// BAD: Tests implementation details
-test("checkout calls paymentService.process", async () => {
-  const mockPayment = jest.mock(paymentService);
-  await checkout(cart, payment);
-  expect(mockPayment.process).toHaveBeenCalledWith(cart.total);
-});
-```
-
-Red flags:
-
-- Mocking internal collaborators
-- Testing private methods
-- Asserting on call counts/order
-- Test breaks when refactoring without behavior change
-- Test name describes HOW not WHAT
-- Verifying through external means instead of interface
-
-```typescript
-// BAD: Bypasses interface to verify
-test("createUser saves to database", async () => {
-  await createUser({ name: "Alice" });
-  const row = await db.query("SELECT * FROM users WHERE name = ?", ["Alice"]);
-  expect(row).toBeDefined();
-});
-
-// GOOD: Verifies through interface
-test("createUser makes user retrievable", async () => {
-  const user = await createUser({ name: "Alice" });
-  const retrieved = await getUser(user.id);
-  expect(retrieved.name).toBe("Alice");
-});
-```
-
-**Tautological tests**: Expected value restates the implementation, so the test passes by construction.
-
-```typescript
-// BAD: Expected value is recomputed the way the code computes it
-test("calculateTotal sums line items", () => {
-  const items = [{ price: 10 }, { price: 5 }];
-  const expected = items.reduce((sum, i) => sum + i.price, 0);
-  expect(calculateTotal(items)).toBe(expected);
-});
-
-// GOOD: Expected value is an independent, known literal
-test("calculateTotal sums line items", () => {
-  expect(calculateTotal([{ price: 10 }, { price: 5 }])).toBe(15);
-});
-```
+Choose coverage proportionate to the changed behavior and risk rather than following a fixed test taxonomy.

@@ -19,4 +19,4 @@ An ADR should record a current architectural decision when both are true:
 1. future work in the area should know or normally follow the decision; and
 2. the rationale or tradeoff is not obvious from the code alone.
 
-Do not create an ADR merely because a choice occurred during a task. When a current architectural decision changes, update the natural source of truth rather than preserving a second active version for history; version control is the history.
+Do not create an ADR merely because a choice occurred during a task. Follow established project conventions for artifact location and format; do not invent repository-wide governance merely to persist a design result. When a current architectural decision changes, update the natural source of truth rather than preserving a second active version for history; version control is the history.

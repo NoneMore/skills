@@ -30,7 +30,3 @@ The handoff itself is the requested artifact. Use the destination the user speci
 ## Done when
 
 A fresh agent can identify what is being continued, what is already settled or completed, what remains material, where authoritative detail lives, and what can be done next without relying on suite-specific lifecycle state.
-
-## Does not require
-
-A specific tracker role, workflow phase, predecessor skill, successor skill, or canonical skill-routing section.

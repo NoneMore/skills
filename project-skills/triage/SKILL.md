@@ -31,10 +31,10 @@ Do not present reporter claims, producer explanations, or nearby code as verifie
 
 Do not make an item appear actionable by silently making unresolved product, scope, or architecture decisions on the next actor's behalf. Resolve those decisions when they are within the user's delegated authority; otherwise keep the blocker explicit.
 
-Do not require canonical triage labels, work-item roles, agent briefs, claim/release protocols, or a fixed readiness state. Existing project conventions may use such mechanisms; if so, treat them as project state rather than `triage` semantics.
+Do not introduce a tracker lifecycle, readiness vocabulary, or coordination protocol as part of triage semantics. When the project already uses such mechanisms, treat them as project state rather than `triage` semantics.
 
 Triage prepares or classifies incoming work. It may inspect or verify code and behavior, but it does not need to implement the requested production change in order to finish.
 
 ## Done when
 
-The item has a justified disposition, the next action and responsible party are clear, and any material uncertainty that still affects that action is explicit. If the user asked to update the tracker, the persisted item reflects that result using the project's own conventions.
+The item has a justified disposition, the next action and any material source of required input are clear, and any uncertainty that still affects that action is explicit. If the user asked to update the tracker, the persisted item reflects that result using the project's own conventions.

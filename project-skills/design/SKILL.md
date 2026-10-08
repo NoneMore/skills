@@ -26,19 +26,14 @@ The default result is the decisions and remaining material uncertainty in conver
 
 Load only what materially helps the current design problem:
 
-- [domain-modeling.md](references/domain-modeling.md) for domain language, `CONTEXT.md`, and ADR discipline;
+- [domain-modeling.md](references/domain-modeling.md) for domain language and durable architectural knowledge;
 - [deep-modules.md](references/deep-modules.md) for module/interface/seam vocabulary and deep-module design;
 - [deepening.md](references/deepening.md) when restructuring shallow module clusters;
 - [design-it-twice.md](references/design-it-twice.md) when materially different interface alternatives are worth comparing;
-- [decision-maps.md](references/decision-maps.md) when a large decision space benefits from a compact durable index;
-- [context-format.md](references/context-format.md) and [adr-format.md](references/adr-format.md) only when those project artifacts are actually being written.
+- [decision-maps.md](references/decision-maps.md) when a large decision space benefits from a compact durable index.
 
 Research, code reading, experiments, spikes, prototypes, and interactive pressure-testing are techniques available to design; none is a required stage.
 
 ## Done when
 
 The material choices needed for the requested design outcome are explicit and mutually coherent, and any remaining uncertainty is clearly bounded enough that it is not being silently passed downstream as an accidental design decision.
-
-## Does not require
-
-A tracker item, a prototype, a grilling session, an ADR, a domain glossary, or any prescribed next capability.
