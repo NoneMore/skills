@@ -25,8 +25,6 @@ Do not leave exploratory shortcuts, fake dependencies, temporary instrumentation
 
 Choose verification that is proportionate to the behavior and risk. Testing before, during, or after implementation is a method choice, not a lifecycle requirement.
 
-## Stop behavior
-
 If completion requires a material product, scope, or design choice that is neither established by the implementation contract nor delegated to the agent, do not silently encode that choice in production behavior. Resolve it from authoritative project evidence when that evidence genuinely settles the decision; otherwise make the blocker explicit and stop before work would predetermine the unresolved choice. Independent work that does not constrain that choice may still proceed.
 
 ## Specialized guidance
