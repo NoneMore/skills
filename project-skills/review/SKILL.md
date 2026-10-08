@@ -26,7 +26,7 @@ Review is evaluative by default. Do not modify the reviewed result or external p
 
 If the reviewed result, applicable expectations, or necessary evidence is insufficient to distinguish a violated expectation from preference or speculation, review the independently verifiable scope, identify the smallest missing input or decision, and stop where further conclusions would be speculative.
 
-Review may identify the condition a correction must satisfy or a material decision that remains unresolved, but does not need to choose the replacement design, specification, decomposition, or implementation unless that outcome is separately requested.
+Review may identify the condition a correction must satisfy or a material decision that remains unresolved, but does not choose the replacement design, specification, decomposition, or implementation unless that outcome is separately requested.
 
 Review may determine whether the result satisfies requested acceptance or quality criteria. Project disposition, prioritization, ownership, tracker state, or next-action decisions are outside review unless explicitly requested.
 
