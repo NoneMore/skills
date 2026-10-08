@@ -20,7 +20,7 @@ A design question, an architecture or domain problem, an interface or seam decis
 - coherence between the chosen direction and the constraints that motivated it;
 - a clear distinction between settled decisions and genuinely open design questions.
 
-The default result is the decisions and remaining material uncertainty in conversation. Persist only knowledge whose durability is part of the value, such as an existing domain glossary or a current architectural decision that future work should know.
+The default result is the decisions and remaining material uncertainty in conversation. Persist a design artifact only when the user requests one or durability is part of the requested outcome through an established project convention. When persisting, retain only knowledge whose future value justifies the artifact, such as shared domain language or a current architectural decision that later work should know.
 
 ## Specialized guidance
 
