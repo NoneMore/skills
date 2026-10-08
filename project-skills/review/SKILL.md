@@ -24,11 +24,19 @@ Code, diffs, pull requests, current implementations, designs, specifications, pl
 
 Review is evaluative by default. Do not modify the reviewed result or external project state unless the user also requests correction or mutation.
 
+If the reviewed result, applicable expectations, or necessary evidence is insufficient to distinguish a violated expectation from preference or speculation, review the independently verifiable scope, identify the smallest missing input or decision, and stop where further conclusions would be speculative.
+
+Review may identify the condition a correction must satisfy or a material decision that remains unresolved, but does not need to choose the replacement design, specification, decomposition, or implementation unless that outcome is separately requested.
+
+Review may determine whether the result satisfies requested acceptance or quality criteria. Project disposition, prioritization, ownership, tracker state, or next-action decisions are outside review unless explicitly requested.
+
 Report a finding only when the available evidence supports a concrete violated expectation or a plausible material failure mode. For ordinary or low-impact concerns, require enough evidence to state a realistic consequence or trigger rather than reporting suspicion. For potentially severe consequences, state any material uncertainty instead of presenting it as fact.
 
 When the intent or expected behavior is available, checking whether the existing result satisfies it is ordinary review.
 
 ## Specialized guidance
+
+Load guidance for the result actually being evaluated. An artifact used only as evidence, context, or review criteria is not itself under review unless the requested scope includes it.
 
 Load object-specific guidance only when relevant:
 
