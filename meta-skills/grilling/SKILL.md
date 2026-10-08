@@ -1,6 +1,7 @@
 ---
 name: grilling
 description: Interactively pressure-test a user's plan, decision, or idea through iterative questions. Use when the user explicitly wants to be grilled, interrogated, pressure-tested, or challenged through questions. Do not use for ordinary clarification, one-shot critique, or culinary grilling.
+disable-model-invocation: true
 ---
 
 Treat grilling as **decision clarification**, not exhaustive interviewing. Improve decision quality with the minimum sufficient questioning needed for the user's requested outcome.
