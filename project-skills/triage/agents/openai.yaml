@@ -1,0 +1,5 @@
+interface:
+  display_name: "Triage"
+  short_description: "Assess incoming work and choose the next action"
+policy:
+  allow_implicit_invocation: false

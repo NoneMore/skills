@@ -1,0 +1,5 @@
+interface:
+  display_name: "Design"
+  short_description: "Resolve material project design choices"
+policy:
+  allow_implicit_invocation: false

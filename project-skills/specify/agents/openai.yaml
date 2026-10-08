@@ -1,0 +1,5 @@
+interface:
+  display_name: "Specify"
+  short_description: "Turn settled intent into a durable spec"
+policy:
+  allow_implicit_invocation: false

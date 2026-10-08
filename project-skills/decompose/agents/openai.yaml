@@ -1,0 +1,5 @@
+interface:
+  display_name: "Decompose"
+  short_description: "Split concrete work into actionable pieces"
+policy:
+  allow_implicit_invocation: false

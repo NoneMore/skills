@@ -1,0 +1,5 @@
+interface:
+  display_name: "Review"
+  short_description: "Evaluate existing results with evidence"
+policy:
+  allow_implicit_invocation: false
