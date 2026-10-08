@@ -23,7 +23,7 @@ Conversation decisions, an issue or request, an existing design, project context
 - acceptance conditions that can distinguish a satisfying result from a non-satisfying one;
 - explicit material unresolved questions when the source material is not yet decision-complete.
 
-A specification is valuable because it persists a contract. Persist it to the user's requested destination or an established project source of truth when one clearly applies. If neither applies, return the complete specification without inventing a new persistence convention.
+A specification is valuable because it preserves a contract. When the user requests persistence, use the requested destination or an established project source of truth when one clearly applies. If the user has not requested a persistent project mutation, return the complete specification in conversation. Do not invent a new persistence convention merely to make the spec durable.
 
 Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
 
