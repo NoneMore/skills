@@ -24,8 +24,6 @@ A specification, plan, issue, conversation, design, or other sufficiently concre
 
 Prefer narrow end-to-end tracer bullets when they can land and be verified independently. Do not force that shape onto mechanical refactors, migrations, or other work whose affected subsets cannot remain valid independently.
 
-## Stop behavior
-
 If the source material is too unsettled to define truthful deliverables, acceptance signals, or dependencies without inventing material product, scope, or design decisions, do not manufacture a complete ticket set. Identify the smallest unresolved decisions or information that block reliable decomposition. Decompose independently settled scope only when doing so does not silently predetermine those blockers.
 
 Use [tracer-bullets.md](references/tracer-bullets.md) when slice boundaries or dependency edges need deeper guidance.
