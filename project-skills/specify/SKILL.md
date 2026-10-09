@@ -27,27 +27,26 @@ If a material product or design choice remains unresolved, do not silently resol
 
 ## Existing contracts
 
-When the project already has a durable contract for the relevant semantics, identify the artifact that owns those semantics from repository instructions, architecture guides, established documentation structure, or other authoritative project evidence before drafting a replacement.
+When relevant semantics already have an established durable owner, identify that source from authoritative project evidence and revise it rather than creating parallel contract truth. Do not infer authority from artifact type or mere existence.
 
-Do not invent a global precedence between documentation, tests, code, ADRs, tracker items, examples, or research artifacts. Determine their roles from the project's established conventions. If ownership is materially ambiguous or conflicting, make that ambiguity explicit rather than silently choosing a source of truth.
+When no owner is established and choosing a durable location is part of the delegated outcome, use the project's existing conventions and the smallest durable granularity that remains usable for downstream implementation and verification. Do not introduce a specification hierarchy or standalone artifact merely for uniformity.
 
-When revising an existing contract, distinguish the current contract from the proposed change, preserve settled semantics outside the requested change, and express the change as a delta when that makes review clearer. When persistence is requested, fold the accepted result into the established authoritative contract rather than creating a parallel current-state store.
-
-Keep normative behavior and durable decisions distinct from current implementation details, migration progress, historical explanation, and supporting evidence when mixing those roles would make future changes ambiguous.
-
-Artifacts may provide requirements, evidence, rationale, implementation, or proposed changes depending on project convention. Do not promote an artifact into contract authority merely because it exists.
+For revisions, distinguish the current contract from the proposed change, preserve settled semantics outside the requested change, and fold a persisted result into current truth. Keep material ownership conflicts explicit rather than silently choosing among conflicting artifacts.
 
 ## Persistence
 
-A specification is valuable because it preserves a contract. When the user requests persistence, use the requested destination or an established project source of truth when one clearly applies. If the user has not requested a persistent project mutation, return the complete specification in conversation. Do not invent a new persistence convention merely to make the spec durable.
+A specification is valuable because it preserves a contract. When the user requests persistence, use the requested destination or an established project source of truth when one clearly applies. If persistence requires establishing a new source and choosing that source is delegated, use the placement guidance below. Otherwise do not invent a new persistence convention merely to make the spec durable.
+
+If the user has not requested a persistent project mutation, return the complete specification in conversation.
 
 ## Specialized guidance
 
 - Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
+- Use [contract-placement.md](references/contract-placement.md) when a durable contract location or granularity is not already established.
 - Use [contract-maintenance.md](references/contract-maintenance.md) when revising, reconciling, or normalizing an existing durable project contract.
 
 ## Done when
 
 The durable spec is clear enough that downstream work can act and verify against it without silently inventing material choices. If that condition cannot be met, the spec may still capture settled material, but it must clearly identify the unresolved decisions that block a reliable contract.
 
-When persistence of an existing contract change is part of the requested outcome, the established source of truth should describe the resulting current contract without leaving an accidental parallel current-state specification behind.
+When persisted, the selected authoritative source should directly describe the resulting current contract without leaving an accidental parallel current-state specification behind.

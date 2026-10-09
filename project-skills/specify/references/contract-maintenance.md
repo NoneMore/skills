@@ -1,17 +1,19 @@
 # Maintaining an existing contract
 
-Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable specification.
+Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable project contract.
 
 ## Find ownership first
 
-Identify which existing artifact owns the semantics being changed.
+Identify which established source owns the semantics being changed.
+
+Ownership may be narrower than a whole file, such as an entry or section, or broader than one file, such as a contract set or external project-owned source. Do not widen or relocate the contract merely to normalize its shape.
 
 Prefer established project ownership over creating a new specification surface. A nearby document, test, implementation, issue, ADR, example, or research artifact is not automatically authoritative merely because it mentions the behavior.
 
 If multiple artifacts disagree, distinguish their roles where possible:
 
 - current intended contract;
-- proposed or accepted-but-undelivered change;
+- proposed or not-yet-incorporated change;
 - implementation reality;
 - executable evidence;
 - rationale or history;
@@ -28,11 +30,11 @@ When useful, describe only what changes relative to the current contract:
 - removed semantics;
 - explicitly unchanged semantics when needed to prevent likely ambiguity.
 
-Do not restate the whole system merely to describe a narrow change.
+Do not restate the whole system merely to describe a narrow change. No particular delta heading or syntax is required unless the project already requires one.
 
 ## Fold into current truth
 
-When persisting an accepted change, update the established authoritative contract so it directly describes the resulting current truth.
+When persistence of the requested change is authorized, update the established contract owner so it directly describes the resulting current truth.
 
 Do not leave the delta as a second current-state specification unless the project intentionally uses that convention.
 
@@ -42,17 +44,7 @@ A durable contract should emphasize semantics that downstream work must preserve
 
 Keep current implementation structure, migration status, historical narrative, temporary compatibility state, and supporting evidence separate when their presence would make it unclear whether they are requirements.
 
-Implementation details may remain in the same document when useful, but make their non-normative role clear.
-
-A useful document shape, when the existing structure does not already communicate the same boundaries, is:
-
-1. contract role or ownership;
-2. current contract;
-3. scope, unsupported behavior, or non-goals;
-4. current implementation notes, when useful;
-5. references or rationale.
-
-Do not mechanically rewrite documents into this shape.
+Implementation details may remain beside contract semantics when useful, but keep their role clear. Do not mechanically split or rewrite existing documents merely to produce a standard shape.
 
 ## Reconcile evidence
 
