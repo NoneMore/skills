@@ -1,24 +1,24 @@
 # Choosing contract persistence
 
-Use this guidance when the user wants a durable specification but has not yet chosen how it should be persisted.
+Use this guidance when the user wants a durable specification but the persistence target is not yet clear.
 
-## Require an explicit user choice
+## Resolve an existing convention or require an explicit choice
 
 Do not infer which existing artifact should become authoritative merely because it mentions the relevant behavior or appears to be the strongest candidate.
 
-Persist only when the user chooses one of these paths:
+Use one of these paths:
 
-1. designate an existing source to update; or
-2. designate a destination for a dedicated specification source using the unified specification shape described in [spec-shape.md](spec-shape.md).
+1. update an existing managed contract source designated by the user or unambiguously identified by the project's established contract-management convention; or
+2. when the user chooses to establish or normalize specification persistence, designate a destination for a dedicated specification source using the unified specification shape described in [spec-shape.md](spec-shape.md).
 
-If neither path has been chosen, return the complete specification in conversation and surface the missing persistence decision instead of creating repository structure.
+Repository evidence may identify the uniquely applicable managed source under an existing convention, but naming an arbitrary existing artifact does not promote it into a contract source. If multiple managed sources plausibly apply, or no established managed source applies and the user has not chosen the dedicated specification path, return the complete specification in conversation and surface the missing persistence decision instead of inventing repository structure or authority.
 
 ## Follow the selected path
 
-When the user designates an existing source, preserve its established shape unless the requested change explicitly includes restructuring it.
+When using an existing managed contract source, preserve its established shape and lifecycle unless the requested change explicitly includes restructuring that convention.
 
 When the user chooses a dedicated specification source, use [spec-shape.md](spec-shape.md) for its semantic shape while preserving the user-designated destination. The specification shape does not itself define repository placement, naming, hierarchy, or lifecycle.
 
 ## Done when
 
-The specification has either been persisted according to the user's explicit choice, or the complete contract has been returned without inventing a persistence decision on the user's behalf.
+The specification has either been persisted through an established managed contract convention or according to the user's explicit choice of a dedicated source, or the complete contract has been returned without inventing a persistence decision on the user's behalf.
