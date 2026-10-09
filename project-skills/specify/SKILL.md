@@ -23,7 +23,7 @@ Conversation decisions, an issue or request, an existing design, project context
 - acceptance conditions that can distinguish a satisfying result from a non-satisfying one;
 - explicit material unresolved questions when the source material is not yet decision-complete.
 
-If a material product or design choice remains unresolved, do not silently resolve it as part of specification. Preserve it as an unresolved decision, and do not present the result as implementation-ready unless the user explicitly delegates that decision.
+If a material product or design choice remains unresolved, do not silently resolve it as part of specification. Preserve it as an unresolved decision unless the user explicitly delegates resolution of the choice; if delegated, explicitly resolve and record it before presenting the result as implementation-ready.
 
 A specification is valuable because it preserves a contract. When the user requests persistence, use the requested destination or an established project source of truth when one clearly applies. If the user has not requested a persistent project mutation, return the complete specification in conversation. Do not invent a new persistence convention merely to make the spec durable.
 
