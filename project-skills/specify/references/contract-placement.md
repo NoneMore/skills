@@ -9,7 +9,7 @@ Do not infer which existing artifact should become authoritative merely because 
 Persist only when the user chooses one of these paths:
 
 1. designate an existing source to update; or
-2. establish or normalize persistence using the unified specification convention.
+2. designate a destination for a dedicated specification source using the unified specification shape described in [spec-shape.md](spec-shape.md).
 
 If neither path has been chosen, return the complete specification in conversation and surface the missing persistence decision instead of creating repository structure.
 
@@ -17,7 +17,7 @@ If neither path has been chosen, return the complete specification in conversati
 
 When the user designates an existing source, preserve its established shape unless the requested change explicitly includes restructuring it.
 
-When the user chooses the unified specification convention, use that convention without silently substituting another placement model or creating a broader hierarchy as a side effect.
+When the user chooses a dedicated specification source, use [spec-shape.md](spec-shape.md) for its semantic shape while preserving the user-designated destination. The specification shape does not itself define repository placement, naming, hierarchy, or lifecycle.
 
 ## Done when
 
