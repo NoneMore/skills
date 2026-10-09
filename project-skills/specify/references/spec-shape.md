@@ -2,6 +2,10 @@
 
 Use only the sections that help preserve the contract.
 
+## Contract role / ownership
+
+When this specification participates in a larger documentation system, state what semantics it owns and important adjacent semantics it does not own when that boundary would otherwise be ambiguous.
+
 ## Problem / outcome
 
 What problem is being solved or what outcome is required, in terms meaningful to the requester or affected system.
@@ -9,6 +13,10 @@ What problem is being solved or what outcome is required, in terms meaningful to
 ## Intended behavior
 
 Observable behavior, important interactions, and material constraints.
+
+## Change from current contract
+
+For revisions to an existing contract, describe added, modified, or removed semantics when doing so makes the proposed change easier to review. This is a working shape for the change, not a requirement to maintain a second permanent delta artifact.
 
 ## Scope and non-goals
 
