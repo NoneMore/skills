@@ -29,23 +29,23 @@ If a material product or design choice remains unresolved, do not silently resol
 
 A specification is valuable because it preserves a contract. Do not infer a project's authoritative contract source from artifact type, proximity, or repository evidence alone.
 
-When the user requests persistence, use one of these explicitly chosen paths:
+When the user requests persistence, use one of these paths:
 
-- update an existing durable source designated by the user; or
+- update an existing managed contract source designated by the user or unambiguously identified by the project's established contract-management convention; or
 - when the user chooses to establish or normalize specification persistence, use the unified specification shape described in [spec-shape.md](references/spec-shape.md) at a destination designated by the user.
 
-Do not create a new contract source, choose among competing existing sources, or introduce a persistence convention unless the user has chosen that path. If the user has not designated an existing source or chosen a destination for the unified specification shape, return the complete specification in conversation and make the missing persistence decision explicit.
+Do not create a new contract source, choose among competing existing sources, or introduce a persistence convention unless the user has chosen that path. Repository evidence may establish that a source participates in an existing contract-management convention and may identify the uniquely applicable source under that convention; it does not by itself promote an arbitrary artifact into a contract source or authorize choosing among ambiguous candidates. If no managed source can be resolved and the user has not chosen a destination for the unified specification shape, return the complete specification in conversation and make the missing persistence decision explicit.
 
-For revisions, distinguish the current contract from the proposed change, preserve settled semantics outside the requested change, and when persistence is authorized fold the resulting semantics into the designated current contract rather than leaving an accidental parallel current-state specification.
+For revisions, distinguish the current contract from the proposed change, preserve settled semantics outside the requested change, and when persistence is authorized follow the selected contract source's established lifecycle so the resulting current contract remains unambiguous rather than leaving an accidental competing current-state specification.
 
 ## Specialized guidance
 
 - Use [spec-shape.md](references/spec-shape.md) as the unified specification shape when that persistence path is chosen, and as a starting structure when useful otherwise; it is not a mandatory template.
-- Use [contract-placement.md](references/contract-placement.md) when persistence requires the user's explicit source-or-destination choice.
-- Use [contract-maintenance.md](references/contract-maintenance.md) when revising an existing user-designated durable contract source.
+- Use [contract-placement.md](references/contract-placement.md) when persistence requires resolving an existing managed source or choosing a new destination.
+- Use [contract-maintenance.md](references/contract-maintenance.md) when revising an existing managed contract source.
 
 ## Done when
 
 The durable spec is clear enough that downstream work can act and verify against it without silently inventing material choices. If that condition cannot be met, the spec may still capture settled material, but it must clearly identify the unresolved decisions that block a reliable contract.
 
-When persisted, the designated source should directly describe the resulting current contract without leaving an accidental parallel current-state specification behind.
+When persisted, the project's contract-management convention should identify the resulting current contract without an accidental competing current-state specification.
