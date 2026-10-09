@@ -1,6 +1,6 @@
 # Maintaining an existing contract
 
-Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable project contract whose source has been designated by the user or established project policy.
+Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable project contract whose source the user has designated.
 
 ## Use the designated source
 
@@ -17,13 +17,13 @@ When useful, describe only what changes relative to the current contract:
 - removed semantics;
 - explicitly unchanged semantics when needed to prevent likely ambiguity.
 
-No particular delta heading or syntax is required unless the designated source or project convention requires one.
+No particular delta heading or syntax is required unless the designated source requires one.
 
 ## Fold into current truth
 
-When persistence of the requested change is authorized, update the designated contract source so it directly describes the resulting current truth.
+When persistence of the requested change is authorized, update the user-designated contract source so it directly describes the resulting current truth.
 
-Do not leave the delta as a second current-state specification unless the project intentionally uses that convention.
+Do not leave the delta as a second current-state specification unless the user explicitly chooses such a convention.
 
 ## Keep roles clear
 
