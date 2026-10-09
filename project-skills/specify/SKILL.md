@@ -29,6 +29,8 @@ A specification is valuable because it preserves a contract. When the user reque
 
 Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
 
+Use [governance-design.md](references/governance-design.md) only when the user explicitly asks to establish or materially redesign specification governance; otherwise do not load governance design into ordinary specification work.
+
 ## Contract integrity
 
 Follow an established project source of truth and specification lifecycle when one clearly applies.
