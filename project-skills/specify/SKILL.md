@@ -29,20 +29,20 @@ If a material product or design choice remains unresolved, do not silently resol
 
 A specification is valuable because it preserves a contract. Do not infer a project's authoritative contract source from artifact type, proximity, or repository evidence alone.
 
-When the user requests persistence, use one of these explicitly delegated paths:
+When the user requests persistence, use one of these explicitly chosen paths:
 
-- update an existing durable source designated by the user or established project policy; or
-- when the user explicitly chooses to establish a specification source, persist the contract using the designated or selected specification convention.
+- update an existing durable source designated by the user; or
+- when the user chooses to establish or normalize specification persistence, use the selected unified specification convention.
 
-Do not create a new contract source, choose among competing existing sources, or introduce a persistence convention merely because durable specification was requested. If no persistence source or convention has been designated, return the complete specification in conversation and make the missing placement decision explicit.
+Do not create a new contract source, choose among competing existing sources, or introduce a persistence convention unless the user has chosen that path. If the user has not designated an existing source or chosen the unified specification convention, return the complete specification in conversation and make the missing persistence decision explicit.
 
 For revisions, distinguish the current contract from the proposed change, preserve settled semantics outside the requested change, and when persistence is authorized fold the resulting semantics into the designated current contract rather than leaving an accidental parallel current-state specification.
 
 ## Specialized guidance
 
 - Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
-- Use [contract-placement.md](references/contract-placement.md) when persistence requires an explicit source or specification-convention decision.
-- Use [contract-maintenance.md](references/contract-maintenance.md) when revising an existing designated durable contract source.
+- Use [contract-placement.md](references/contract-placement.md) when persistence requires the user's explicit source-or-convention choice.
+- Use [contract-maintenance.md](references/contract-maintenance.md) when revising an existing user-designated durable contract source.
 
 ## Done when
 
