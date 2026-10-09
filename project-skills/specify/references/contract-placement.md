@@ -1,53 +1,25 @@
-# Choosing contract placement and granularity
+# Choosing contract persistence
 
-Use this guidance when durable specification is part of the requested outcome but the project does not already establish where the relevant contract should live or how large that contract surface should be.
+Use this guidance when the user wants a durable specification but the persistence source or convention is not yet explicit.
 
-## Preserve the smallest usable durable contract
+## Require an explicit persistence choice
 
-Choose the smallest durable granularity that remains usable for future implementation, verification, and change.
+Do not infer which existing artifact should become authoritative merely because it mentions the relevant behavior or appears to be the strongest candidate.
 
-Granularity is not a maturity level and does not imply a required hierarchy. A durable contract may be a single entry or section, a document, a directory or contract set, or an external project-owned source when project convention makes that source authoritative.
+Persist only when one of these choices is established:
 
-Do not create a standalone specification, directory, or new source-of-truth hierarchy merely because a larger structure is possible.
+1. the user designates an existing source to update;
+2. established project policy designates the source; or
+3. the user explicitly chooses to establish a specification source or convention.
 
-## Reuse before creating
+If none applies, return the complete specification in conversation and surface the missing persistence decision instead of creating repository structure.
 
-Prefer, in order:
+## Follow the designated convention
 
-1. a destination explicitly requested by the user;
-2. an established project source that already owns the relevant semantics;
-3. when establishing a new source is genuinely part of the delegated outcome, the smallest new surface that fits existing project conventions.
+When an existing source is designated, preserve its established shape unless the requested change explicitly includes restructuring it.
 
-Do not move or split an existing contract merely to normalize its shape.
-
-## Keep the contract small when possible
-
-An entry or section is often sufficient when the behavior is narrow, locally owned, easy to find, and unlikely to require independent navigation or coordination.
-
-A standalone document may be useful when the contract contains several related requirements, needs stable independent reference, or would make its containing document materially harder to use.
-
-A directory or contract set is justified only when the contract has enough independent structure that one document becomes difficult to navigate, review, or evolve safely.
-
-These are heuristics, not required levels.
-
-## Expand only when the current surface stops working
-
-A larger contract surface can be warranted when, for example:
-
-- the same contract is repeatedly changed by independent work;
-- multiple independently meaningful requirements need stable reference or ownership;
-- several modules, interfaces, or teams rely on the same semantics;
-- compatibility, security, data, protocol, or operational constraints make omissions materially risky;
-- the current document creates recurring navigation, merge-conflict, or review problems.
-
-Do not expand preemptively for hypothetical future complexity.
-
-## Avoid unnecessary persistent specs
-
-A new persistent contract source is usually unnecessary when the requested work is implementation-only, the relevant durable semantics are already owned elsewhere, or the user only asked for an in-conversation specification.
-
-When persistence is not requested, return the complete contract in conversation rather than creating project structure solely for durability.
+When the user explicitly chooses to establish a specification source, use the designated or selected specification convention. Do not silently substitute another placement model or create a broader hierarchy as a side effect.
 
 ## Done when
 
-The chosen location is durable enough that future work can find, understand, and update the contract without maintaining a second current source of truth, while introducing no more structure than the contract actually needs.
+The specification has either been persisted to an explicitly designated source/convention, or the complete contract has been returned without inventing a persistence decision on the user's behalf.
