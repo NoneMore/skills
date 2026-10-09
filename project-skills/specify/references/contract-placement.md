@@ -1,25 +1,24 @@
 # Choosing contract persistence
 
-Use this guidance when the user wants a durable specification but the persistence source or convention is not yet explicit.
+Use this guidance when the user wants a durable specification but has not yet chosen how it should be persisted.
 
-## Require an explicit persistence choice
+## Require an explicit user choice
 
 Do not infer which existing artifact should become authoritative merely because it mentions the relevant behavior or appears to be the strongest candidate.
 
-Persist only when one of these choices is established:
+Persist only when the user chooses one of these paths:
 
-1. the user designates an existing source to update;
-2. established project policy designates the source; or
-3. the user explicitly chooses to establish a specification source or convention.
+1. designate an existing source to update; or
+2. establish or normalize persistence using the unified specification convention.
 
-If none applies, return the complete specification in conversation and surface the missing persistence decision instead of creating repository structure.
+If neither path has been chosen, return the complete specification in conversation and surface the missing persistence decision instead of creating repository structure.
 
-## Follow the designated convention
+## Follow the selected path
 
-When an existing source is designated, preserve its established shape unless the requested change explicitly includes restructuring it.
+When the user designates an existing source, preserve its established shape unless the requested change explicitly includes restructuring it.
 
-When the user explicitly chooses to establish a specification source, use the designated or selected specification convention. Do not silently substitute another placement model or create a broader hierarchy as a side effect.
+When the user chooses the unified specification convention, use that convention without silently substituting another placement model or creating a broader hierarchy as a side effect.
 
 ## Done when
 
-The specification has either been persisted to an explicitly designated source/convention, or the complete contract has been returned without inventing a persistence decision on the user's behalf.
+The specification has either been persisted according to the user's explicit choice, or the complete contract has been returned without inventing a persistence decision on the user's behalf.
