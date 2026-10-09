@@ -1,6 +1,6 @@
 # Maintaining an existing contract
 
-Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable project contract whose managed source has been designated by the user or unambiguously resolved from the project's established contract-management convention.
+Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable project contract whose source has been explicitly designated by the user or unambiguously resolved from the project's established contract-management convention.
 
 ## Use the managed source
 
@@ -21,9 +21,9 @@ No particular delta heading or syntax is required unless the managed source requ
 
 ## Preserve the contract lifecycle
 
-When persistence of the requested change is authorized, maintain the resulting contract according to the project's established contract-management convention. If that convention updates the managed source in place, fold the resulting semantics into it; if it versions, supersedes, or otherwise preserves change history, follow that lifecycle instead.
+When persistence of the requested change is authorized, maintain the resulting contract according to the selected source's established lifecycle when one exists. If that lifecycle updates the source in place, fold the resulting semantics into it; if it versions, supersedes, or otherwise preserves change history, follow that lifecycle instead. If the user explicitly designated the source but no lifecycle exists, update that source in place rather than inventing one.
 
-Do not leave an accidental competing current-state specification outside that convention.
+Do not leave an accidental competing current-state specification outside the selected contract role or convention.
 
 ## Keep roles clear
 
