@@ -31,8 +31,10 @@ A specification is valuable because it preserves a contract. Do not infer a proj
 
 When the user requests persistence, use one of these paths:
 
-- update an existing managed contract source designated by the user or unambiguously identified by the project's established contract-management convention; or
+- update a contract source explicitly designated by the user as authoritative for the relevant scope, or unambiguously identified by the project's established contract-management convention; or
 - when the user chooses to establish or normalize specification persistence, use the unified specification shape described in [spec-shape.md](references/spec-shape.md) at a destination designated by the user.
+
+A path or filename alone designates a destination, not an authoritative contract role. A user designation is sufficient when it explicitly assigns the source that role for the relevant scope. Treat a project convention as established only when maintained project authority or an enforced or maintained index/manifest explicitly assigns the relevant contract role or lifecycle; filenames, proximity, content similarity, implementation, tests, or history alone are not sufficient.
 
 Do not create a new contract source, choose among competing existing sources, or introduce a persistence convention unless the user has chosen that path. Repository evidence may establish that a source participates in an existing contract-management convention and may identify the uniquely applicable source under that convention; it does not by itself promote an arbitrary artifact into a contract source or authorize choosing among ambiguous candidates. If no managed source can be resolved and the user has not chosen a destination for the unified specification shape, return the complete specification in conversation and make the missing persistence decision explicit.
 
