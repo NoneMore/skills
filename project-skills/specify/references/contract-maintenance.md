@@ -1,32 +1,40 @@
-# Maintaining an existing contract
+# Modifying and organizing existing specifications
 
-Use this guidance when the requested outcome modifies, reconciles, or clarifies an existing durable project contract whose source has been explicitly designated by the user or unambiguously resolved from the project's established contract-management convention.
+Use this guidance when the requested outcome changes or reorganizes an existing durable project specification.
 
-## Use the managed source
+## Choose the target safely
 
-Do not choose a different source because another document, test, implementation, issue, ADR, example, or research artifact appears more authoritative.
+Use the source the user designates. Otherwise, modify an existing specification only when the relevant source can be identified unambiguously from the project context.
 
-Other artifacts may reveal inconsistencies or useful evidence. Report material conflicts rather than silently changing which source owns the persisted contract.
+If multiple plausible specifications overlap, disagree, or leave it materially unclear which one should be changed, do not guess. Surface the ambiguity instead of modifying a possibly wrong source.
 
-## Specify the delta
+Other artifacts such as code, tests, issues, ADRs, examples, or documentation may reveal useful evidence or conflicts. They do not justify silently switching to a different specification source.
 
-When useful, describe only what changes relative to the current contract:
+## Modify without collateral change
+
+Apply the requested semantic change and preserve settled semantics outside its scope.
+
+When useful, distinguish:
 
 - added semantics;
 - modified semantics;
 - removed semantics;
 - explicitly unchanged semantics when needed to prevent likely ambiguity.
 
-No particular delta heading or syntax is required unless the managed source requires one.
+Preserve the existing specification's useful structure unless restructuring is part of the request. If other project evidence conflicts with the specification, report or reconcile the discrepancy only within the requested scope rather than silently rewriting unrelated requirements.
 
-## Preserve the contract lifecycle
+## Organize without changing meaning
 
-When persistence of the requested change is authorized, maintain the resulting contract according to the selected source's established lifecycle when one exists. If that lifecycle updates the source in place, fold the resulting semantics into it; if it versions, supersedes, or otherwise preserves change history, follow that lifecycle instead. If the user explicitly designated the source but no lifecycle exists, update that source in place rather than inventing one.
+When organizing existing specifications:
 
-Do not leave an accidental competing current-state specification outside the selected contract role or convention.
+- improve headings, ordering, references, and local clarity;
+- consolidate duplicated material when the meaning is equivalent;
+- keep distinct requirements distinct when merging them would lose meaning;
+- surface conflicts or ambiguous overlaps instead of silently choosing a winner;
+- preserve settled semantics unless the user explicitly asks to change them.
 
-## Keep roles clear
+Do not invent a new repository hierarchy, versioning scheme, lifecycle, manifest, or governance mechanism merely to make the specifications look more organized.
 
-A durable contract should emphasize semantics that downstream work must preserve. Keep implementation details, migration state, history, rationale, and supporting evidence distinguishable when mixing them would make requirements ambiguous.
+## Done when
 
-If code, tests, documentation, or other evidence conflicts with the managed contract source, report or reconcile that discrepancy within the requested scope. Do not silently promote the conflicting artifact into a replacement contract source.
+The intended specification source was changed rather than a plausible but wrong alternative, requested semantic changes are represented without unrelated semantic drift, and organizational cleanup preserves meaning while making unresolved conflicts explicit.
