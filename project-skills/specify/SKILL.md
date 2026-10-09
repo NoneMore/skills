@@ -29,20 +29,13 @@ A specification is valuable because it preserves a contract. When the user reque
 
 Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
 
-## Governance
+## Contract integrity
 
-Follow established project specification governance when it exists. Explicit user direction takes precedence over the fallback rules below.
+Follow an established project source of truth and specification lifecycle when one clearly applies.
 
-When no applicable governance exists, preserve contract integrity using these minimal rules:
+When changing an existing contract, keep material semantic deltas reviewable and do not present conflicting or not-yet-adopted requirements as part of the current contract. Preserve useful references when they are needed to understand why the contract exists or changed. If authority, adoption, or a conflict is genuinely ambiguous, keep that ambiguity explicit rather than inferring authority from recency or inventing a governance mechanism.
 
-- Separate authority from change. Treat an established authoritative specification as the current contract. Material modifications to that contract are proposed changes until they are explicitly accepted through an established project process or by the user.
-- Specify behavior before implementation. Specifications describe observable behavior, interfaces, constraints, and acceptance conditions. Keep incidental implementation detail outside the contract unless that implementation constraint is itself a settled requirement.
-- Make contract changes explicit. When changing an existing specification, identify what is added, modified, removed, or renamed when doing so materially improves reviewability. Do not make reviewers infer semantic changes from a rewritten document.
-- Do not infer authority from recency. A newer file, timestamp, or proposal does not automatically supersede an existing authoritative specification. Supersession or promotion must be explicit.
-- Do not silently reconcile conflicts. When authoritative material or concurrent proposed changes conflict, preserve the conflict as an unresolved material decision unless the user explicitly delegates its resolution.
-- Preserve useful provenance. Keep references to authoritative issues, designs, decisions, or prior specifications when they are needed to understand why the contract exists or changed.
-
-These are semantic fallback rules, not a repository workflow. Do not invent directory layouts, numbering schemes, approval stages, archival structures, or mandatory artifact types unless the project already defines them or the user explicitly asks to establish them.
+These are contract-integrity constraints, not a repository workflow. Do not invent directory layouts, numbering schemes, approval stages, archival structures, or mandatory artifact types unless the project already defines them or the user explicitly asks to establish them.
 
 ## Done when
 
