@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4"
+  short_description: "Work reliably with Lean 4 and mathlib"
+  default_prompt: "Use $lean4 for this Lean 4 task and load only the relevant workflow and references."
