@@ -13,7 +13,7 @@ not preload unrelated engine references.
 | Godot GDScript / scene-resource graph | [engine-godot-gdscript.md](engine-godot-gdscript.md) | none | bundled |
 | Godot C# / .NET | none | none | core workflow only |
 | Godot GDExtension / GDNative / engine-native code | none | none | core workflow only |
-| Unity Mono | none | none | core workflow only |
+| Unity Mono | [engine-unity-mono.md](engine-unity-mono.md) | none | bundled |
 | Unity IL2CPP | none | none | core workflow only |
 | Unreal native code | none | none | core workflow only |
 | Web / JavaScript bundle or local Node.js logic | [engine-web-javascript.md](engine-web-javascript.md) | `scripts/web_js_triage.py` | bundled |
