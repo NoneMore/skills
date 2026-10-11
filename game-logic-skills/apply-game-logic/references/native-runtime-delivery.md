@@ -46,7 +46,7 @@ For nontrivial injected logic, static or assembler acceptance alone is insuffici
 Before calling a retained native runtime delivery complete, verify that:
 
 - the retained locator satisfies the main Skill's native locator policy;
-- material target, locator, and original-state assumptions fail closed;
+- material target, locator, original-state, and any identified safety-critical runtime assumptions required before mutation or dereference fail closed;
 - restoration is implemented for code, mutable state, and mechanism-owned resources where applicable;
 - nontrivial injected logic has execution evidence for the material branches and machine-state invariants required by the claim;
 - validation applies to the exact retained implementation being delivered;
