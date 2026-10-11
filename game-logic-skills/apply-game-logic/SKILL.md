@@ -55,7 +55,7 @@ When the requested deliverable is a Cheat Engine table or Auto Assembler script,
 
 Every application should state which mechanic record/finding and target version it consumes.
 
-For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, retain target identity + module + RVA as the canonical address domain. Bare preferred/runtime VAs may be used transiently inside a tool or adapter but should not cross Skill or tool boundaries. When a surface needs an absolute address, derive it from the retained module + RVA and validate the exact emitted implementation before writing or hooking. Never rely on a raw launch-specific address across builds.
+For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, retain target identity + module + RVA as the canonical address domain. A tool or adapter may transiently accept or report a bare preferred/runtime VA, but normalize it before the locator is persisted, handed to another Skill or tool, or emitted into a retained implementation. When a surface needs an absolute address, derive it from the retained module + RVA and validate the exact emitted implementation before writing or hooking. Never rely on a raw launch-specific address across builds.
 
 If the installed version/hash no longer matches the evidence, stop and revalidate only the material relation with $analyze-game-logic.
 
