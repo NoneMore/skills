@@ -4,31 +4,25 @@ Use this guidance only when a specification is being persisted as a durable proj
 
 ## Goal
 
-Surface the smallest governance decisions needed for this contract to remain identifiable, reviewable, and safely evolvable. The user resolves any new governance choice explicitly; this bootstrap is not a request for the agent to design a general specification lifecycle or infer conventional answers.
+Surface the smallest governance decisions needed for this contract to remain identifiable, reviewable, and safely evolvable. Reuse clearly established project mechanisms; for any new governance choice, require explicit user resolution rather than inferring a conventional answer.
 
-Start from concrete failure modes. Ask for a governance decision only when omitting it could plausibly cause a material problem such as changing the wrong source, treating unsettled material as authoritative, silently choosing between conflicting requirements, or leaving obsolete material apparently current.
+Ask for a governance decision only when omitting it could plausibly cause a material problem such as changing the wrong source, treating unsettled material as authoritative, silently choosing between conflicting requirements, or leaving obsolete material apparently current.
 
-Reuse existing project mechanisms whenever they provide the needed property. Ordinary files, version control, pull requests, reviews, ownership rules, and issue links are often sufficient without specification-specific states or artifacts. Following a clearly established mechanism does not require a new governance decision; creating or choosing a new one does.
-
-Do not persist bootstrap governance by mutating project state beyond the user's authorized scope. If a needed governance choice would require such a mutation, keep it unresolved until the user explicitly authorizes it.
+Do not persist bootstrap governance by mutating project state beyond the user's authorized scope. Keep any choice that would require such a mutation unresolved until the user explicitly authorizes it.
 
 ## Minimum questions
 
-Ask the user to resolve only the questions needed to keep the contract reliable. Keep any materially unresolved choice explicit rather than filling it with a conventional answer.
+Ask the user to resolve only the questions needed to keep the contract reliable. Keep materially unresolved choices explicit.
 
 ### Authority
 
-Make it possible for a future reader to identify the authoritative contract for the relevant scope.
-
-Use an existing project location or convention when it is clearly established. Otherwise require the user to identify the authority needed for the contract. If several sources may be authoritative, define scope or precedence only where ambiguity would otherwise be material and require explicit resolution of any new precedence rule.
+Use an existing project location or convention when it is clearly established. Otherwise require the user to identify the authority needed for the contract. If several sources may be authoritative, require explicit resolution of any materially necessary scope or precedence rule.
 
 Do not infer authority from recency, naming, or location unless the project explicitly makes that property authoritative.
 
 ### Change boundary
 
-Make material semantic changes reviewable, and identify what existing project action makes revised contract text authoritative when that distinction matters.
-
-Use an existing boundary such as merging the ordinary project change when it is clearly established. Otherwise require the user to resolve the boundary. Do not invent proposal, approval, adoption, or promotion states when an existing mechanism already makes the change boundary clear.
+Use an existing change boundary when it is clearly established. Otherwise require the user to resolve what makes revised contract text authoritative when that distinction matters. Do not invent proposal, approval, adoption, or promotion states when an existing mechanism already makes the boundary clear.
 
 ### Conflict and supersession
 
@@ -44,9 +38,7 @@ Do not create a mandatory history log when the information is cheaply recoverabl
 
 ### Placement and history
 
-Add naming rules, indexes, archival behavior, or historical retention only when they are needed to find authoritative material reliably, prevent ambiguity, satisfy a concrete maintenance or audit need, or fit an established project workflow. Require explicit user resolution before introducing any new project convention.
-
-Prefer existing repository conventions over specification-specific structure.
+Prefer existing repository conventions. Add naming rules, indexes, archival behavior, or historical retention only when a concrete need makes them necessary, and require explicit user resolution before introducing any new project convention.
 
 ## Check the bootstrap
 
