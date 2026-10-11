@@ -47,6 +47,8 @@ For observation-only instrumentation, use the smallest stable boundary and avoid
 
 For gameplay changes, load [references/change-design.md](references/change-design.md). Establish behavioral scope before choosing the mechanism; reversibility alone does not prove narrow scope.
 
+When the requested deliverable is a Cheat Engine table or Auto Assembler script, or Cheat Engine is selected as the retained runtime-change surface, also load [references/cheat-engine-delivery.md](references/cheat-engine-delivery.md). That reference adds CE-specific packaging, hook-contract, validation, and restoration requirements.
+
 ## 4. Bind implementation to evidence
 
 Every application should state which mechanic record/finding and target version it consumes.

@@ -111,3 +111,28 @@ Required assertions:
 - treated explicit duplication/local-to-scene behavior as material to scope when present
 - validated at least one sibling consumer to detect leakage
 - preserved the original shared resource state for restoration when a runtime experiment was used
+
+## 11. Cheat Engine delivery is checkably reusable
+
+A native offline mechanic and modification point are already sufficiently established. The user asks for a reusable Cheat Engine table containing nontrivial Auto Assembler hook logic. The hook has a material player/non-player branch and overwrites machine state that must remain valid after return.
+
+Required assertions:
+- identified one authoritative implementation and kept any table-embedded/script copy synchronized
+- guarded target identity, stable location, and expected original state so the artifact fails closed on mismatch
+- treated disable/restoration as part of the implementation
+- required actual CE acceptance of both shipped enable and disable paths before calling the reusable artifact complete
+- validated the material hook branch behavior beyond assembler acceptance and verified the machine-state invariants needed after return
+- reported completed package/assembly/execution/target/scope checks and gaps without treating them as a linear ladder
+- did not inherit application lifecycle claims such as scene transitions or save/reload from mechanic evidence alone
+- reported only compatibility and scenario coverage supported by the completed validation
+
+## 12. Simple CE data edits stay simple
+
+A reusable Cheat Engine table only changes one version-bound data value with target/original-state guards and has no injected code. A direct target comparison can verify the requested effect and restoration.
+
+Required assertions:
+- did not introduce an injection hook or synthetic execution harness merely to satisfy the CE delivery contract
+- used the guarded data edit as the smallest adequate mechanism
+- checked the shipped enable/disable implementation in actual CE
+- compared control, modified, and restored target state
+- reported the validation performed without implying hook, lifecycle, or cross-build coverage
