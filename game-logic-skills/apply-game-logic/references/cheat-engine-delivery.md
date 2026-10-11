@@ -1,8 +1,10 @@
 # Cheat Engine Delivery
 
-Load this reference only when the requested deliverable is a Cheat Engine table or Auto Assembler script, or Cheat Engine has already been selected as the retained runtime-change surface. For gameplay changes, it complements `change-design.md`. It does not replace mechanic recovery or general application validation.
+Load this reference when the requested deliverable is a Cheat Engine table or Auto Assembler script, or Cheat Engine is the retained runtime surface. When the artifact writes process memory or installs/replaces executable code, `native-runtime-delivery.md` remains the source of truth for guarded mutation, hook correctness, restoration, and execution evidence.
 
-## Keep one authoritative implementation
+For gameplay changes, this reference complements `change-design.md`. It does not replace mechanic recovery, general application validation, or durable application provenance.
+
+## Keep one authoritative Auto Assembler implementation
 
 When Auto Assembler is material to the change, designate one authoritative script source. That source may live in a standalone file or in the table itself.
 
@@ -10,52 +12,34 @@ If both a standalone script and a `.CT` exist, derive one from the other or veri
 
 Use the normal durable-application rules for target identity, consumed mechanic knowledge, validation evidence, and rollback. Do not duplicate that provenance contract here.
 
-## Fail closed on the target
+## Keep CE-specific target claims narrow
 
-A reusable CE artifact should guard the assumptions that make the mutation safe:
+Use the native locator policy from the main Skill and the fail-closed mutation requirements from `native-runtime-delivery.md` when the CE artifact mutates the target.
 
-- exact executable/module identity and architecture when material;
-- the stable native locator required by the main Skill rather than a launch-specific address;
-- expected original bytes/value/state before mutation when practical;
-- pointer, object-lifetime, or container assumptions before dereference when they affect correctness.
+If an AoB/signature is also used, treat uniqueness only as evidence within the supported target scope. A unique match does not prove cross-version compatibility.
 
-If a unique signature is also used, treat uniqueness only as evidence within the supported target scope, not as proof of cross-version compatibility. Refuse to enable when a material guard no longer matches.
+## Require CE-native acceptance
 
-## Preserve the overwritten machine contract
+For shipped Auto Assembler, actual Cheat Engine must accept the implementation paths the artifact exposes. When the artifact has enable and disable paths, check both before calling the CE deliverable complete.
 
-For injected code or instruction replacement, preserve the behavior the surrounding code still relies on.
+CE acceptance is only a delivery check. It does not prove that injected logic executes correctly, that target behavior changed as intended, or that the artifact survives broader lifecycle events. Use `native-runtime-delivery.md` and the main Skill for those claims.
 
-Check the material invariants for the hook site, such as complete instruction boundaries, replay of overwritten semantics, correct return address, required registers and flags, floating-point/vector state, stack balance, and shared-state ownership.
+If Cheat Engine is unavailable, the artifact may still be delivered as an unvalidated draft, but name the missing CE acceptance check explicitly.
 
-Do not add a dynamic hook merely because it is easy to express in CE. Use the smallest mechanism that preserves the requested behavioral scope.
+## Clean up CE-owned resources
 
-The disable path is part of the implementation. Restore the documented original code or mutable state, unregister symbols, and release owned allocations where applicable. If generated gameplay state cannot be undone by disabling the script, say so explicitly.
+The disable path should unregister CE symbols and release CE-owned allocations where applicable, in addition to the restoration requirements owned by `native-runtime-delivery.md`.
 
-## Report validation checks
-
-Keep packaging, assembly, execution, and gameplay validation distinct. These are checks, not a linear ladder:
-
-- **Package check** — the table/script parses, authoritative source is synchronized, and required guards/restoration logic are present.
-- **CE assembly check** — the actual CE assembler accepts the shipped enable and disable implementation.
-- **Synthetic execution** — nontrivial hook logic is exercised in a controlled process or harness, including material branches and machine-state invariants.
-- **Target smoke test** — control and modified behavior are compared in the supported game build.
-- **Scope/lifecycle validation** — broader scenario or lifecycle coverage claimed for the artifact is exercised. Existing mechanic evidence may support semantic scope such as ownership or fan-out, but application-level lifecycle claims such as scene transitions, save/reload, or object recreation require application evidence.
-
-Report the checks actually completed and the important gaps. Assembly success does not prove hook behavior. Synthetic execution does not prove in-game behavior. One in-game scenario does not prove cross-scenario or cross-build compatibility.
-
-Use the cheapest checks that can support the claim. A simple guarded data edit does not need a synthetic execution harness when a direct target comparison is safer and more informative.
-
-For a shipped Auto Assembler implementation, actual CE must accept both enable and disable paths before calling the reusable artifact complete. For nontrivial injected logic, assembly alone is insufficient: require execution evidence covering the material branches and machine-state invariants needed by the claim. If the required CE or execution environment is unavailable, deliver the artifact as an unvalidated draft and name the missing checks rather than calling it complete.
+Do not imply that disabling a CE script reverses gameplay state already generated while the script was active when that state is not actually restorable.
 
 ## Completion
 
 Before calling a reusable CE delivery complete, verify that:
 
-- the requested user-facing table/script exists and its authoritative implementation is identifiable;
+- the requested user-facing table/script exists and its authoritative Auto Assembler implementation is identifiable;
 - duplicate script representations, if any, are synchronized;
-- material target and original-state guards fail closed;
-- shipped Auto Assembler enable and disable paths pass the actual CE assembly check;
-- nontrivial injected logic exercises every material branch required by the claim and verifies the relevant machine-state invariants;
-- any claimed application lifecycle coverage is supported by application-level evidence rather than mechanic evidence alone;
-- the reported compatibility and validation scope does not exceed the evidence;
+- actual Cheat Engine accepts the shipped implementation paths required by the artifact, including enable and disable when present;
+- CE-owned symbols and allocations are cleaned up where applicable;
+- AoB/signature evidence is not presented as broader compatibility proof;
+- any native runtime mutation also satisfies `native-runtime-delivery.md`;
 - retained artifacts satisfy the normal application provenance and rollback requirements.
