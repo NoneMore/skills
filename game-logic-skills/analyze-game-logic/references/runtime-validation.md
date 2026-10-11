@@ -38,6 +38,25 @@ stubs.
 For compiled/runtime-only logic, prefer logging reads, calls, arguments, returns,
 and state transitions before writing memory or changing control flow.
 
+## Keep controlled interventions material
+
+Use a write or hook only when it is materially needed to distinguish the live
+behavior under test. Guard only the preconditions required for a safe, semantically
+correct intervention.
+
+For code or instruction replacement, verify the expected original bytes before
+mutation. For mutable runtime data, require an exact prior value only when equality
+is itself a material precondition; a snapshot retained for restoration does not
+become a compare-and-swap guard merely because it exists. Validate pointer,
+object/container identity, lifetime, or comparable runtime assumptions when they
+are material to a safe dereference or write.
+
+If a material precondition fails, stop that intervention rather than weakening the
+guard, substituting a nearby site, or broadening compatibility. Capture the state
+needed to restore temporary code/data changes and release instrumentation-owned
+resources where applicable. State explicitly when behavior already produced by
+the experiment cannot be undone by detaching or restoring the mechanism.
+
 ## Controlled observation protocol
 
 Use a fixed save/checkpoint and reproduction path when practical. Record relevant
