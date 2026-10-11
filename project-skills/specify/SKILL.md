@@ -31,9 +31,9 @@ Use [spec-shape.md](references/spec-shape.md) as a starting structure when usefu
 
 ## Contract integrity
 
-When persisting a specification, follow an established project source of truth and specification lifecycle when one clearly applies.
+When persisting a specification, follow an established project source of truth and specification lifecycle when one clearly applies. Do not treat governance as absent merely because it is not already present in context; inspect the accessible project instructions and natural sources of truth needed to determine whether one applies.
 
-If no clearly applicable governance exists and the specification is intended to become a durable project contract, use [governance-bootstrap.md](references/governance-bootstrap.md) to establish only the minimum governance needed for future readers to identify the authoritative contract and evolve it without silent ambiguity. Do not bootstrap governance for a conversation-only specification or when existing project mechanisms already provide those properties.
+If no clearly applicable governance can be established and the specification is intended to become a durable project contract, use [governance-bootstrap.md](references/governance-bootstrap.md) to surface only the minimum governance decisions that require resolution. Do not choose bootstrap answers on the user's behalf: require explicit user resolution before treating any new governance choice as authoritative. Do not bootstrap governance for a conversation-only specification, when existing project mechanisms already provide the needed properties, or by mutating project state beyond the user's authorized scope.
 
 When changing an existing contract, keep material semantic deltas reviewable. Do not silently choose between materially conflicting sources, present materially unsettled requirements as settled, or infer authority from recency, naming, or location unless the project's governance makes that property authoritative. Preserve references when they are needed to establish authority, understand a material constraint, or explain a material change.
 
