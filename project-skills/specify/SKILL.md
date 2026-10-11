@@ -39,8 +39,6 @@ When changing an existing contract, keep material semantic deltas reviewable. Do
 
 These are contract-integrity constraints, not a repository workflow. Do not invent directory layouts, numbering schemes, approval stages, archival structures, mandatory artifact types, or specification-specific states unless a concrete contract-integrity failure requires them and existing project mechanisms are insufficient.
 
-If the requested outcome is to materially redesign an existing specification-governance system, treat that as a design problem rather than stretching bootstrap guidance into a general lifecycle framework.
-
 ## Done when
 
 The durable spec is clear enough that downstream work can act and verify against it without silently inventing material choices. If that condition cannot be met, the spec may still capture settled material, but it must clearly identify the unresolved decisions that block a reliable contract.
