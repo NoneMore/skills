@@ -29,7 +29,7 @@ After behavioral scope and mechanism class are established, load only the matchi
 
 This file remains authoritative for ordering across mechanism classes. Matching application guides refine engine-specific implementation points only within the selected class; they do not override this ordering. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
 
-Native-code boundaries without independent application semantics, including GameMaker YYC, consume recovered engine-specific facts through the shared native delivery contract rather than an engine-specific application guide.
+Native-code boundaries without independent application semantics, including GameMaker YYC, consume recovered engine-specific facts through the shared application contracts rather than an engine-specific application guide. When the selected mechanism is a retained native runtime mutation, the main Skill routes to `native-runtime-delivery.md`.
 
 ## Guard the target
 

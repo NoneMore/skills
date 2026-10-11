@@ -41,7 +41,7 @@ Required assertions:
 - analyze-game-logic records engine-specific ownership, caller/source, type/lifetime, authority, provenance, and version facts only when material
 - the analysis adapter does not rank or select a write, hook, wrapper, config, or patch mechanism
 - apply-game-logic consumes the recovered engine-specific facts without re-deriving them
-- a GameMaker YYC/native application uses the shared change-design and native-runtime-delivery contracts rather than a separate YYC application guide or duplicate mutation policy
+- a GameMaker YYC application does not require a separate YYC application guide; retained native runtime mutations use the shared native-runtime-delivery contract, while other mechanism classes remain governed by the shared core/change-design rules
 - Web/JavaScript application guidance is loaded only after the material mechanic, behavioral scope, and mechanism class make that guide relevant
 - mechanism selection remains on the application side and is bound to the recovered version-scoped evidence
 - change-design remains authoritative across mechanism classes; any remaining engine-specific application guide only refines a selected class
