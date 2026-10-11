@@ -47,11 +47,13 @@ For observation-only instrumentation, use the smallest stable boundary and avoid
 
 For gameplay changes, load [references/change-design.md](references/change-design.md). Establish behavioral scope before choosing the mechanism; reversibility alone does not prove narrow scope.
 
+For retained native runtime mechanisms that write process memory or install/replace executable code, load [references/native-runtime-delivery.md](references/native-runtime-delivery.md). If the deliverable is a Cheat Engine table/Auto Assembler script or CE is the retained runtime surface, also load [references/cheat-engine-delivery.md](references/cheat-engine-delivery.md).
+
 ## 4. Bind implementation to evidence
 
 Every application should state which mechanic record/finding and target version it consumes.
 
-For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, use stable module + RVA locators and verify address conversions before writing or hooking. Never rely on a raw launch-specific address across builds.
+For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, persist and hand off target identity + module + RVA. Tool-local preferred/runtime VAs are transient and adapters own conversion. Retained implementations may use symbolic, site-relative, or other tool-native forms when they map unambiguously to the canonical site; derive absolute addresses from module + RVA when needed. Validate the exact emitted implementation before writing or hooking.
 
 If the installed version/hash no longer matches the evidence, stop and revalidate only the material relation with $analyze-game-logic.
 

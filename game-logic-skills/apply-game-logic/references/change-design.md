@@ -13,7 +13,7 @@ When scope is missing, recover only that relation before choosing the change mec
 Among options with acceptable behavioral scope, prefer:
 
 1. existing configuration or supported mod interface;
-2. reversible runtime data change with version/value guards;
+2. reversible runtime data change with material target and runtime guards;
 3. hook limited to the relevant caller/event source;
 4. shared hook with evidence-backed filtering;
 5. destructive installed-file modification only with explicit authorization.
@@ -24,15 +24,16 @@ After behavioral scope and mechanism class are established, load only the matchi
 
 | Material implementation boundary | Application guide |
 | --- | --- |
-| GameMaker YYC | [change-gamemaker-yyc.md](change-gamemaker-yyc.md) |
 | Godot GDScript / scene-resource graph | [change-godot-gdscript.md](change-godot-gdscript.md) |
 | Web / JavaScript | [change-web-javascript.md](change-web-javascript.md) |
 
 This file remains authoritative for ordering across mechanism classes. Matching application guides refine engine-specific implementation points only within the selected class; they do not override this ordering. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
 
+Native-code boundaries without independent application semantics, including GameMaker YYC, consume recovered engine-specific facts through the shared application contracts rather than an engine-specific application guide. When the selected mechanism is a retained native runtime mutation, the main Skill routes to `native-runtime-delivery.md`.
+
 ## Guard the target
 
-Bind the change to the exact target version/build/hash. For native interventions use stable module + RVA locators and verify address conversions before use. A raw runtime address is not a stable cross-launch locator.
+Bind the change to the exact target version/build/hash. For native interventions, use the native locator policy from the main Skill.
 
 If the installed target no longer matches the evidence, stop and revalidate the material relation before applying the change.
 

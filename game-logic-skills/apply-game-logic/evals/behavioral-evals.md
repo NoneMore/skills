@@ -111,3 +111,34 @@ Required assertions:
 - treated explicit duplication/local-to-scene behavior as material to scope when present
 - validated at least one sibling consumer to detect leakage
 - preserved the original shared resource state for restoration when a runtime experiment was used
+
+## 11. Native hook rules are shared; CE adds only its delivery delta
+
+A confirmed native hook site is reported as preferred VA `0x4A033A` with image base `0x400000`, hence module + RVA `0xA033A`. Two reusable implementations target it: A is a CE Auto Assembler hook and B uses a non-CE runtime. Both contain a material branch and replace instructions whose surrounding machine contract must survive return.
+
+Required assertions:
+- persisted/handed off target identity + module + RVA `0xA033A`, never bare VA `0x4A033A`; implementation-local symbolic/site-relative forms were allowed and runtime absolute addresses were derived inside the consuming adapter/tool
+- both guarded expected original code bytes, preserved overwritten semantics/return state/material machine invariants, and implemented restoration plus mechanism-owned cleanup
+- both validated the exact retained hook and executed the material branch; each invariant used direct evidence suited to the property instead of forced runtime instrumentation when static evidence sufficed
+- A kept one authoritative Auto Assembler source, synchronized any duplicate representation, passed actual CE load/activation/deactivation checks, and cleaned up CE-owned resources
+- B did not inherit `.CT`, Auto Assembler synchronization, CE loading, or CE-owned cleanup requirements
+- scenario, lifecycle, and compatibility claims did not exceed the evidence obtained
+
+## 12. Simple CE data edits stay simple
+
+A reusable CE table changes one version-bound runtime data field whose current value normally varies between runs. Target/object identity and field semantics are established, and direct target comparison can verify the effect and restoration.
+
+Required assertions:
+- used the direct data edit without adding an injection hook or synthetic execution harness
+- required an exact prior value only when equality was a material write precondition; a restoration snapshot alone did not become a write guard
+- checked the shipped path in actual CE and compared modified/restored target state
+- reported only the validation actually performed
+
+## 13. Native guards fail closed without inventing CAS semantics
+
+A code hook targets the expected build/site but its instruction bytes have drifted. Separately, a mutable data edit targets the expected object/field but differs from a stale snapshot that is not a safety or semantic precondition.
+
+Required assertions:
+- refused the hook and reported the byte mismatch without weakening the guard, substituting a nearby site, or broadening compatibility
+- allowed the data edit when its actual material preconditions held instead of inventing compare-and-swap semantics from the stale snapshot
+- preserved restoration state where required and revalidated only the relation that had materially drifted

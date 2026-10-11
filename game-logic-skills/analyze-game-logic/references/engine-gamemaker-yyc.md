@@ -221,13 +221,12 @@ reads/writes, timer refresh/expiry paths, and distinct callers of shared
 state-transition functions. Apply the core rules for deciding when runtime
 validation is required.
 
-For a Frida write or hook, guard on the strongest available combination of
-module identity/size, exact target hash when available, expected original
-bytes/value, plausible argument count and runtime-value kind, stable
-`module + RVA` or validated signature, and a reversible restore path.
-
-Detaching instrumentation does not necessarily undo a raw memory write; state
-restoration limitations must be explicit.
+When a reversible runtime intervention is material to analysis, use the
+controlled-intervention rules in [runtime-validation.md](runtime-validation.md).
+This adapter contributes only YYC-specific facts needed to interpret or safely
+scope the probe, such as validated `RValue` kind/ownership/lifetime, argument
+shape, object identity, caller/source relation, and the canonical module + RVA
+site. Do not define a separate YYC mutation or delivery policy here.
 
 ## 9. Version-sensitive assumptions
 

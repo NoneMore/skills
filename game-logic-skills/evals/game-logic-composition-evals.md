@@ -33,13 +33,15 @@ Required assertions:
 - workspace refinement does not invoke apply-game-logic by itself
 - apply-game-logic is invoked only when the user also requests a downstream tool, instrumentation, test, mod, or gameplay change
 
-## 4. Engine adapters pass scope facts without selecting the change mechanism
+## 4. Engine adapters pass facts without forcing application adapters
 
 A cold-start gameplay-change request reaches a GameMaker YYC or Web/JavaScript implementation boundary and analysis loads the matching engine adapter.
 
 Required assertions:
 - analyze-game-logic records engine-specific ownership, caller/source, type/lifetime, authority, provenance, and version facts only when material
 - the analysis adapter does not rank or select a write, hook, wrapper, config, or patch mechanism
-- apply-game-logic loads engine-specific change guidance only after the material mechanic and behavioral scope are established
+- apply-game-logic consumes the recovered engine-specific facts without re-deriving them
+- a GameMaker YYC application does not require a separate YYC application guide; retained native runtime mutations use the shared native-runtime-delivery contract, while other mechanism classes remain governed by the shared core/change-design rules
+- Web/JavaScript application guidance is loaded only after the material mechanic, behavioral scope, and mechanism class make that guide relevant
 - mechanism selection remains on the application side and is bound to the recovered version-scoped evidence
-- change-design remains authoritative across mechanism classes; engine-specific guidance only refines the selected class
+- change-design remains authoritative across mechanism classes; any remaining engine-specific application guide only refines a selected class
