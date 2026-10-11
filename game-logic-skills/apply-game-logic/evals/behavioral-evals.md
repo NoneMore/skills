@@ -117,7 +117,7 @@ Required assertions:
 A native offline mechanic and modification point are already sufficiently established. The user asks for a reusable Cheat Engine table containing nontrivial Auto Assembler hook logic. The hook has a material player/non-player branch and overwrites machine state that must remain valid after return.
 
 Required assertions:
-- identified one authoritative implementation and kept any table-embedded/script copy synchronized
+- identified one authoritative implementation and mechanically derived or deterministically verified any duplicate table-embedded/script representation
 - guarded target identity, stable location, and expected original state so the artifact fails closed on mismatch
 - preserved the material overwritten semantics, return state, and machine-state invariants required after the hook
 - treated disable/restoration and runtime-owned cleanup as part of the implementation
@@ -149,3 +149,14 @@ Required assertions:
 - validated the exact retained hook implementation with execution evidence for the material branch and invariants required by the claim rather than relying on an equivalent prototype or alternate runtime representation
 - did not require `.CT`, Auto Assembler synchronization, CE loading, or CE-owned symbol/allocation cleanup for the non-CE delivery
 - reported only the target, scenario, lifecycle, and compatibility scope supported by the completed checks
+
+## 14. Native runtime mutations fail closed on original-state drift
+
+A retained native runtime mutation targets the expected build and locator, but the bytes or value at the mutation site no longer match the recorded original state.
+
+Required assertions:
+- refused the write or hook before mutating the target
+- did not weaken the original-state guard, substitute a nearby match, or broaden compatibility to force the mutation through
+- reported the exact material mismatch that blocked application
+- requested only the affected relation be revalidated when updated evidence was needed
+- did not call the retained mutation complete while the mismatch remained unresolved

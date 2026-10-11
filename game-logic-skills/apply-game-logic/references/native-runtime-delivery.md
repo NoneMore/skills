@@ -2,11 +2,9 @@
 
 Load this reference for retained native runtime mechanisms that write process memory or install/replace executable code. For gameplay changes, it complements `change-design.md`. It does not replace mechanic recovery, the main Skill's locator policy, or durable application provenance.
 
-If the requested deliverable is a Cheat Engine table or Auto Assembler script, or Cheat Engine is the retained runtime surface, also load `cheat-engine-delivery.md` for CE-specific packaging and acceptance requirements.
-
 ## Fail closed on material assumptions
 
-Use the native locator and target-version rules from the main Skill. Keep module + RVA as the retained address domain across Skill and tool boundaries. When a runtime surface requires an absolute address, have its tool or adapter derive that address from the loaded module base + retained RVA rather than manually carrying a bare preferred/runtime VA across boundaries. Prefer symbolic or site-relative destinations inside the retained implementation when they avoid re-encoding an address.
+Use the native locator and target-version rules from the main Skill. Prefer symbolic or site-relative destinations inside the retained implementation when they avoid re-encoding an address.
 
 A retained runtime mutation should also verify the material state assumptions that make the write or hook safe, such as expected original bytes/value/state and pointer, object-lifetime, or container assumptions before dereference.
 
@@ -47,7 +45,7 @@ For nontrivial injected logic, static or assembler acceptance alone is insuffici
 
 Before calling a retained native runtime delivery complete, verify that:
 
-- the retained locator stays in canonical module + RVA form across Skill/tool boundaries and any required absolute address is derived inside the consuming tool or adapter;
+- the retained locator satisfies the main Skill's native locator policy;
 - material target, locator, and original-state assumptions fail closed;
 - restoration is implemented for code, mutable state, and mechanism-owned resources where applicable;
 - nontrivial injected logic has execution evidence for the material branches and machine-state invariants required by the claim;

@@ -8,7 +8,7 @@ For gameplay changes, this reference complements `change-design.md`. It does not
 
 When Auto Assembler is material to the change, designate one authoritative script source for each independently shipped feature. That source may live in a standalone file or in the table itself.
 
-If both a standalone script and a `.CT` exist for the same feature, derive one from the other or verify that the embedded script round-trips exactly. Do not maintain two independent copies of the same implementation.
+If both a standalone script and a `.CT` exist for the same feature, derive one from the other when practical. Otherwise extract the embedded script and compare it deterministically against the authoritative source after only explicitly defined text normalization. Do not maintain two independent copies of the same implementation.
 
 Use the normal durable-application rules for target identity, consumed mechanic knowledge, validation evidence, and rollback. Do not duplicate that provenance contract here.
 
@@ -37,7 +37,7 @@ Do not imply that disabling a CE script reverses gameplay state already generate
 Before calling a reusable CE delivery complete, verify that:
 
 - the requested user-facing table/script exists and, when Auto Assembler is material, each shipped Auto Assembler feature has an identifiable authoritative source;
-- duplicate script representations, if any, are synchronized;
+- duplicate script representations, if any, are mechanically derived or deterministically verified as synchronized;
 - actual Cheat Engine accepts the shipped delivery surface required by the artifact, including table loading and enable/disable when applicable;
 - CE-owned symbols and allocations are cleaned up where applicable;
 - AoB/signature evidence is not presented as broader compatibility proof;

@@ -32,7 +32,7 @@ This file remains authoritative for ordering across mechanism classes. Matching 
 
 ## Guard the target
 
-Bind the change to the exact target version/build/hash. For native interventions use stable module + RVA locators and verify address conversions before use. A raw runtime address is not a stable cross-launch locator.
+Bind the change to the exact target version/build/hash. For native interventions, use the native locator policy from the main Skill.
 
 If the installed target no longer matches the evidence, stop and revalidate the material relation before applying the change.
 
