@@ -29,15 +29,17 @@ A specification is valuable because it preserves a contract. When the user reque
 
 Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
 
-Use [governance-design.md](references/governance-design.md) only when the user explicitly asks to establish or materially redesign specification governance; otherwise do not load governance design into ordinary specification work.
-
 ## Contract integrity
 
-Follow an established project source of truth and specification lifecycle when one clearly applies.
+When persisting a specification, follow an established project source of truth and specification lifecycle when one clearly applies.
 
-When changing an existing contract, keep material semantic deltas reviewable and do not present conflicting or not-yet-adopted requirements as part of the current contract. Preserve useful references when they are needed to understand why the contract exists or changed. If authority, adoption, or a conflict is genuinely ambiguous, keep that ambiguity explicit rather than inferring authority from recency or inventing a governance mechanism.
+If no clearly applicable governance exists and the specification is intended to become a durable project contract, use [governance-bootstrap.md](references/governance-bootstrap.md) to establish only the minimum governance needed for future readers to identify the authoritative contract and evolve it without silent ambiguity. Do not bootstrap governance for a conversation-only specification or when existing project mechanisms already provide those properties.
 
-These are contract-integrity constraints, not a repository workflow. Do not invent directory layouts, numbering schemes, approval stages, archival structures, or mandatory artifact types unless the project already defines them or the user explicitly asks to establish them.
+When changing an existing contract, keep material semantic deltas reviewable. Do not silently choose between materially conflicting sources, present materially unsettled requirements as settled, or infer authority from recency, naming, or location unless the project's governance makes that property authoritative. Preserve references when they are needed to establish authority, understand a material constraint, or explain a material change.
+
+These are contract-integrity constraints, not a repository workflow. Do not invent directory layouts, numbering schemes, approval stages, archival structures, mandatory artifact types, or specification-specific states unless a concrete contract-integrity failure requires them and existing project mechanisms are insufficient.
+
+If the requested outcome is to materially redesign an existing specification-governance system, treat that as a design problem rather than stretching bootstrap guidance into a general lifecycle framework.
 
 ## Done when
 
