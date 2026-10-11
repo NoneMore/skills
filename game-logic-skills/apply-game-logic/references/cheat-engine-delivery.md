@@ -4,11 +4,11 @@ Load this reference when the requested deliverable is a Cheat Engine table or Au
 
 For gameplay changes, this reference complements `change-design.md`. It does not replace mechanic recovery, general application validation, or durable application provenance.
 
-## Keep one authoritative Auto Assembler implementation
+## Keep one authoritative source per Auto Assembler feature
 
-When Auto Assembler is material to the change, designate one authoritative script source. That source may live in a standalone file or in the table itself.
+When Auto Assembler is material to the change, designate one authoritative script source for each independently shipped feature. That source may live in a standalone file or in the table itself.
 
-If both a standalone script and a `.CT` exist, derive one from the other or verify that the embedded script round-trips exactly. Do not maintain two independent copies of the same implementation.
+If both a standalone script and a `.CT` exist for the same feature, derive one from the other or verify that the embedded script round-trips exactly. Do not maintain two independent copies of the same implementation.
 
 Use the normal durable-application rules for target identity, consumed mechanic knowledge, validation evidence, and rollback. Do not duplicate that provenance contract here.
 
@@ -20,7 +20,7 @@ If an AoB/signature is also used, treat uniqueness only as evidence within the s
 
 ## Require CE-native acceptance
 
-For shipped Auto Assembler, actual Cheat Engine must accept the implementation paths the artifact exposes. When the artifact has enable and disable paths, check both before calling the CE deliverable complete.
+For a shipped `.CT`, actual Cheat Engine must load the delivered table. For each shipped Auto Assembler feature material to the requested behavior, exercise the activation and deactivation paths the artifact exposes on the supported target; when the feature has enable and disable paths, check both before calling the CE deliverable complete.
 
 CE acceptance is only a delivery check. It does not prove that injected logic executes correctly, that target behavior changed as intended, or that the artifact survives broader lifecycle events. Use `native-runtime-delivery.md` and the main Skill for those claims.
 
@@ -36,9 +36,9 @@ Do not imply that disabling a CE script reverses gameplay state already generate
 
 Before calling a reusable CE delivery complete, verify that:
 
-- the requested user-facing table/script exists and its authoritative Auto Assembler implementation is identifiable;
+- the requested user-facing table/script exists and, when Auto Assembler is material, each shipped Auto Assembler feature has an identifiable authoritative source;
 - duplicate script representations, if any, are synchronized;
-- actual Cheat Engine accepts the shipped implementation paths required by the artifact, including enable and disable when present;
+- actual Cheat Engine accepts the shipped delivery surface required by the artifact, including table loading and enable/disable when applicable;
 - CE-owned symbols and allocations are cleaned up where applicable;
 - AoB/signature evidence is not presented as broader compatibility proof;
 - any native runtime mutation also satisfies `native-runtime-delivery.md`;
