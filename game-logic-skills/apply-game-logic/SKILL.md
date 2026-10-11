@@ -47,7 +47,7 @@ For observation-only instrumentation, use the smallest stable boundary and avoid
 
 For gameplay changes, load [references/change-design.md](references/change-design.md). Establish behavioral scope before choosing the mechanism; reversibility alone does not prove narrow scope.
 
-For retained native runtime instrumentation or changes that write process memory or install/replace executable code, load [references/native-runtime-delivery.md](references/native-runtime-delivery.md). That reference owns guarded mutation, machine-contract preservation, restoration, and execution-evidence requirements.
+For retained native runtime mechanisms that write process memory or install/replace executable code, load [references/native-runtime-delivery.md](references/native-runtime-delivery.md). That reference owns guarded mutation, machine-contract preservation, restoration, and execution-evidence requirements.
 
 When the requested deliverable is a Cheat Engine table or Auto Assembler script, or Cheat Engine is selected as the retained runtime surface, also load [references/cheat-engine-delivery.md](references/cheat-engine-delivery.md). That reference adds only CE-specific packaging, acceptance, and cleanup requirements.
 
@@ -55,7 +55,7 @@ When the requested deliverable is a Cheat Engine table or Auto Assembler script,
 
 Every application should state which mechanic record/finding and target version it consumes.
 
-For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, use stable module + RVA locators and verify address conversions before writing or hooking. Never rely on a raw launch-specific address across builds.
+For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, retain target identity + module + RVA as the canonical address domain. Bare preferred/runtime VAs may be used transiently inside a tool or adapter but should not cross Skill or tool boundaries. When a surface needs an absolute address, derive it from the retained module + RVA and validate the exact emitted implementation before writing or hooking. Never rely on a raw launch-specific address across builds.
 
 If the installed version/hash no longer matches the evidence, stop and revalidate only the material relation with $analyze-game-logic.
 

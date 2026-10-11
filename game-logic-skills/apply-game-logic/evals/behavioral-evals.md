@@ -137,3 +137,15 @@ Required assertions:
 - checked the shipped implementation paths in actual CE
 - compared control, modified, and restored target state
 - reported the validation performed without implying hook, lifecycle, or cross-build coverage
+
+## 13. Non-CE native delivery keeps canonical RVA and shared invariants
+
+A confirmed native modification point is reported by a static tool as preferred VA `0x4A033A` with image base `0x400000`, corresponding to module + RVA `0xA033A`. The user asks for a reusable non-CE native runtime hook with a material branch and restoration path.
+
+Required assertions:
+- retained target identity + module + RVA `0xA033A` as the cross-boundary locator and did not carry bare VA `0x4A033A` into the delivered implementation
+- derived any runtime absolute address from the loaded module base + retained RVA inside the consuming tool/adapter, or used symbolic/site-relative control-flow destinations where possible
+- guarded the target and expected original state, preserved overwritten semantics and required machine-state invariants, and implemented restoration/owned-resource cleanup
+- validated the exact retained hook implementation with execution evidence for the material branch and invariants required by the claim rather than relying on an equivalent prototype or alternate runtime representation
+- did not require `.CT`, Auto Assembler synchronization, CE loading, or CE-owned symbol/allocation cleanup for the non-CE delivery
+- reported only the target, scenario, lifecycle, and compatibility scope supported by the completed checks
