@@ -112,50 +112,33 @@ Required assertions:
 - validated at least one sibling consumer to detect leakage
 - preserved the original shared resource state for restoration when a runtime experiment was used
 
-## 11. A native hook delivered through CE is checkably reusable
+## 11. Native hook rules are shared; CE adds only its delivery delta
 
-A native offline mechanic and modification point are already sufficiently established. The user asks for a reusable Cheat Engine table containing nontrivial Auto Assembler hook logic. The hook has a material player/non-player branch and replaces instructions whose surrounding machine contract must remain valid after return.
+A confirmed native hook site is reported as preferred VA `0x4A033A` with image base `0x400000`, hence module + RVA `0xA033A`. Two reusable implementations target it: A is a CE Auto Assembler hook and B uses a non-CE runtime. Both contain a material branch and replace instructions whose surrounding machine contract must survive return.
 
 Required assertions:
-- kept one authoritative implementation and mechanically derived or deterministically verified any duplicate table-embedded/script representation
-- guarded target identity, stable location, and expected original code bytes before replacement
-- preserved the material overwritten semantics, return state, and machine-contract invariants required after the hook
-- treated disable/restoration and runtime-owned cleanup as part of the implementation
-- required actual CE acceptance of the shipped implementation paths before calling the CE artifact complete
-- executed the exact shipped hook across the material branch behavior beyond assembler acceptance
-- verified each material machine-contract invariant with appropriate direct evidence rather than requiring runtime instrumentation when the property was already statically provable
-- limited scenario, lifecycle, and compatibility claims to the evidence actually obtained
+- persisted/handed off target identity + module + RVA `0xA033A`, never bare VA `0x4A033A`; implementation-local symbolic/site-relative forms were allowed and runtime absolute addresses were derived inside the consuming adapter/tool
+- both guarded expected original code bytes, preserved overwritten semantics/return state/material machine invariants, and implemented restoration plus mechanism-owned cleanup
+- both validated the exact retained hook and executed the material branch; each invariant used direct evidence suited to the property instead of forced runtime instrumentation when static evidence sufficed
+- A kept one authoritative Auto Assembler source, synchronized any duplicate representation, passed actual CE load/activation/deactivation checks, and cleaned up CE-owned resources
+- B did not inherit `.CT`, Auto Assembler synchronization, CE loading, or CE-owned cleanup requirements
+- scenario, lifecycle, and compatibility claims did not exceed the evidence obtained
 
 ## 12. Simple CE data edits stay simple
 
-A reusable Cheat Engine table changes one version-bound runtime data field and has no injected code. The target/object identity and field semantics are established, but the field's current value is expected to vary normally between runs. A direct target comparison can verify the requested effect and restoration.
+A reusable CE table changes one version-bound runtime data field whose current value normally varies between runs. Target/object identity and field semantics are established, and direct target comparison can verify the effect and restoration.
 
 Required assertions:
-- did not introduce an injection hook or synthetic execution harness merely to satisfy the runtime delivery contract
-- did not require the current field value to equal a previously recorded value unless that equality was a material precondition of the requested operation
-- captured the current value when needed for restoration without turning that snapshot into an unnecessary write guard
-- checked the shipped implementation paths in actual CE
-- compared modified and restored target state and reported only the validation actually performed
+- used the direct data edit without adding an injection hook or synthetic execution harness
+- required an exact prior value only when equality was a material write precondition; a restoration snapshot alone did not become a write guard
+- checked the shipped path in actual CE and compared modified/restored target state
+- reported only the validation actually performed
 
-## 13. Non-CE native delivery keeps canonical RVA and shared invariants
+## 13. Native guards fail closed without inventing CAS semantics
 
-A confirmed native modification point is reported by a static tool as preferred VA `0x4A033A` with image base `0x400000`, corresponding to module + RVA `0xA033A`. The user asks for a reusable non-CE native runtime hook with a material branch and restoration path.
-
-Required assertions:
-- retained target identity + module + RVA `0xA033A` as the persisted/cross-boundary locator and did not carry bare VA `0x4A033A` across tool or Skill boundaries
-- allowed the retained implementation to use a symbolic or site-relative form when it mapped unambiguously to the canonical site; any runtime absolute address was derived inside the consuming adapter/tool
-- guarded the expected original code bytes, preserved overwritten semantics and material machine-contract invariants, and implemented restoration/owned-resource cleanup
-- validated the exact retained hook implementation and executed its material branch rather than relying on an equivalent prototype or alternate runtime representation
-- used static, assembler, or runtime evidence for machine-contract invariants according to which form directly established each property
-- did not inherit `.CT`, Auto Assembler synchronization, CE loading, or CE-owned cleanup requirements for the non-CE delivery
-
-## 14. Native guards fail closed without inventing CAS semantics
-
-Two retained native mutations exercise different preconditions. In A, a code hook targets the expected build and locator but the instruction bytes no longer match the recorded original bytes. In B, a mutable data edit targets the expected object/field, but its current value differs from a previous snapshot and that exact value is not a semantic or safety precondition of the requested write.
+A code hook targets the expected build/site but its instruction bytes have drifted. Separately, a mutable data edit targets the expected object/field but differs from a stale snapshot that is not a safety or semantic precondition.
 
 Required assertions:
-- refused A before replacing code and reported the original-byte mismatch
-- did not weaken A's site guard, substitute a nearby match, or broaden compatibility to force the hook through
-- allowed B to proceed when its actual material target/runtime preconditions still held instead of inventing compare-and-swap semantics from the stale snapshot
-- preserved or captured the state needed to restore B when restoration was part of the retained implementation
-- revalidated only the material relation that had actually drifted and did not convert unrelated observations into new mandatory guards
+- refused the hook and reported the byte mismatch without weakening the guard, substituting a nearby site, or broadening compatibility
+- allowed the data edit when its actual material preconditions held instead of inventing compare-and-swap semantics from the stale snapshot
+- preserved restoration state where required and revalidated only the relation that had materially drifted
