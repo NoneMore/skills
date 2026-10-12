@@ -34,9 +34,11 @@ placement rather than retargeting to a more convenient surface member.
 
 ## Respect mutation and delivery boundaries
 
-If the retained implementation crosses into a native mutation surface or
-materially depends on a native/private runtime layout, use the recovered
-transition evidence and the shared native delivery contract.
+Managed patches delivered through a supported managed plugin surface remain
+within this guide even when that surface uses native/JIT detours internally. If
+the retained application itself writes JIT/native executable code or materially
+depends on a native/private runtime layout, use the recovered transition evidence
+and the shared native delivery contract.
 
 For a BepInEx 5 regular plugin, also load
 [bepinex-delivery.md](bepinex-delivery.md); it does not change the selected
