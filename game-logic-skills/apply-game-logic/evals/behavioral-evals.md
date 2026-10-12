@@ -148,27 +148,22 @@ Required assertions:
 A confirmed Unity Mono finding shows that a declaration default is overridden before material consumption, one runtime component instance is in scope, and a referenced `ScriptableObject` is shared. `change-design.md` has already selected a reversible runtime data change.
 
 Required assertions:
-- changed the recovered effective runtime state rather than the declaration default
-- did not mutate the shared `ScriptableObject` and call the result instance-local
-- preserved recovered identity/fan-out instead of re-deriving Unity ownership in application
-- validated the intended instance and a material sibling/shared consumer capable of exposing leakage
+- targeted the recovered effective state for the intended instance, not the declaration default or shared `ScriptableObject`
+- preserved the recovered fan-out and validated a sibling/shared consumer capable of exposing leakage
 
 ## 15. BepInEx/HarmonyX delivery preserves the selected managed hook
 
 A confirmed Unity Mono finding places decisive behavior in a generated member, and `change-design.md` has already selected a managed hook. The retained deliverable is a BepInEx 5 regular plugin implemented with HarmonyX.
 
 Required assertions:
-- patched the recovered decisive generated member rather than a more convenient surface member
-- treated HarmonyX as an implementation of the selected hook rather than a reason to prefer hooking
-- built and deployed the plugin, confirmed actual BepInEx 5 load, and exercised the material patched path before calling delivery complete
-- scoped any claimed patch cleanup/restoration to plugin-owned patches
+- patched the recovered generated member, with HarmonyX implementing rather than selecting the hook
+- confirmed actual BepInEx 5 load and exercised the material path before calling delivery complete
+- limited any claimed patch cleanup/restoration to plugin-owned patches
 
 ## 16. BepInEx delivery distinguishes evidence binding from build success
 
 Two retained plugin attempts exercise separate failures. In A, a game assembly whose exact binary identity is material to the consumed finding has hash `B` while the finding is bound to hash `A`, although the source still compiles. In B, material build inputs match and the project builds, but the supported game/BepInEx 5 runtime is unavailable.
 
 Required assertions:
-- A did not treat compilation against hash `B` as preserving the finding bound to hash `A`
-- A stopped only the affected path until that material relation was rebound or narrowly revalidated
-- B preserved the build result but labeled it an unvalidated BepInEx draft rather than delivery-complete
-- B named actual BepInEx 5 load and material path validation as the missing acceptance checks
+- A did not treat compilation as preserving the finding and stopped only the affected path until rebinding or narrow revalidation
+- B remained an unvalidated BepInEx draft and named actual BepInEx 5 load plus material-path validation as the missing checks
