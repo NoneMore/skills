@@ -142,3 +142,39 @@ Required assertions:
 - refused the hook and reported the byte mismatch without weakening the guard, substituting a nearby site, or broadening compatibility
 - allowed the data edit when its actual material preconditions held instead of inventing compare-and-swap semantics from the stale snapshot
 - preserved restoration state where required and revalidated only the relation that had materially drifted
+
+## 14. Unity Mono changes target the recovered effective runtime owner
+
+A confirmed Unity Mono finding shows that a managed declaration default is overridden by serialized prefab state before material consumption, and that only one recovered runtime component instance is in the requested scope. A referenced `ScriptableObject` used elsewhere is confirmed shared. `change-design.md` has already selected a reversible runtime data change, and the retained delivery is a BepInEx 5 regular plugin.
+
+Required assertions:
+- loaded the Unity Mono application guide only after mechanism-class selection
+- changed the recovered effective runtime component state rather than the easier declaration default
+- did not mutate the confirmed shared `ScriptableObject` and call the result instance-local
+- preserved the recovered runtime identity/fan-out relation instead of re-deriving Unity ownership in application
+- bound the retained implementation to the supported target and material managed assembly hash plus semantic member identity
+- validated the intended instance and at least one sibling or shared consumer capable of exposing leakage
+- did not imply that direct prefab/asset rewriting was a guaranteed BepInEx delivery surface
+
+## 15. Unity Mono managed hooks retain semantic targets through BepInEx/HarmonyX delivery
+
+A confirmed Unity Mono finding binds a mechanic to an exact managed assembly hash and semantic method identity, with the decisive behavior in a generated coroutine/state-machine member. `change-design.md` has already selected a managed hook. The requested retained deliverable is a BepInEx 5 regular plugin implemented with HarmonyX.
+
+Required assertions:
+- preserved the recovered user-facing-to-generated implementation relation and patched the decisive generated member rather than a more convenient surface method
+- treated HarmonyX as an implementation of the already-selected hook rather than as a reason to prefer hooking over a narrower mechanism
+- kept material build references consistent with the consumed assembly hash and did not substitute compile success against a different build for evidence binding
+- built and deployed the regular plugin to the supported BepInEx 5 target, confirmed actual plugin load, and exercised the material patched path before calling delivery complete
+- scoped any claimed patch cleanup/restoration to plugin-owned patch identity without removing unrelated Harmony patches
+- did not require hot unload when the retained plugin made no such lifecycle claim
+
+## 16. BepInEx delivery fails closed on stale build inputs or missing runtime acceptance
+
+Two retained Unity Mono plugin attempts exercise separate delivery failures. In A, the source still compiles but a material game assembly reference has hash `B` while the consumed finding is bound to hash `A`. In B, all material build inputs match and the project builds, but the supported game/BepInEx 5 runtime is unavailable for actual load and behavior validation.
+
+Required assertions:
+- A did not claim compatibility with or consumption of the original finding merely because compilation succeeded
+- A stopped the affected delivery path until the material assembly relation was rebound or narrowly revalidated
+- B preserved the build result but labeled the output an unvalidated BepInEx draft rather than delivery-complete
+- B named actual BepInEx 5 target load and material behavior/scope validation as the missing acceptance checks
+- neither case broadened compatibility claims, invented a new handoff format, or distributed proprietary target assemblies merely because they were build inputs
