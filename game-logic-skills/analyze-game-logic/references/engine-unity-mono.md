@@ -13,18 +13,17 @@ IL, metadata-token, JIT, or runtime assumptions across that boundary.
 
 ## 1. Applicability and detection
 
-Use mutually supporting indicators before classifying a material boundary as
-Unity Mono, such as:
+Classify a material boundary as Unity Mono from mutually supporting indicators,
+such as:
 
 - a Unity player data directory with managed assemblies under `Managed`;
-- game-specific managed assemblies such as `Assembly-CSharp.dll` or equivalent
-  project assemblies;
+- game-specific assemblies such as `Assembly-CSharp.dll` or equivalent project
+  assemblies;
 - Mono runtime artifacts consistent with the player platform and build;
 - Unity engine managed assemblies and metadata consistent with the same target.
 
-Do not classify the mechanic as Mono from one managed-looking artifact alone.
 Corroborate both the shipped backend and the implementation path responsible for
-the mechanic.
+the mechanic; one managed-looking artifact is insufficient.
 
 ## 2. Implementation model
 
@@ -42,8 +41,8 @@ Inspect only the surfaces needed to close the claim.
 
 ### Gameplay semantic mapping
 
-Use Unity constructs as search and evidence anchors, not automatic proof of
-ownership or causality:
+Use Unity constructs as search/evidence anchors, not automatic proof of ownership
+or causality:
 
 - **Lifecycle/update:** `Awake`, `OnEnable`, `Start`, `Update`, `FixedUpdate`,
   `LateUpdate`, disable/destroy callbacks, and coroutines.
@@ -62,33 +61,25 @@ ownership or causality:
 
 ## 3. Semantic anchors
 
-For managed implementation identity, prefer:
+Prefer exact relevant assembly hash plus semantic managed identity:
 
-- exact relevant assembly hash;
 - assembly name + namespace/type + member/full managed signature;
 - field/property names and declaring types;
 - strongly typed call sites, delegate/event subscriptions, and diagnostic strings;
 - generated state-machine/closure relationships when they contain decisive logic.
 
 Scope findings to the target build and relevant assembly hash. Use the managed
-signature as the primary reusable locator; metadata tokens and IL offsets are
-supporting locators for that exact assembly only.
+signature as the primary reusable locator; metadata tokens and IL offsets support
+only that exact assembly.
 
-When serialized configuration is material, retain the smallest evidence that
-closes the relation: serialized field/member identity, relevant scene/prefab/asset
-or local object identity, object references/overrides, configured callback target,
-and provenance from declaration default through serialized/runtime assignment to
-the material read or copy.
+When serialization matters, retain the smallest relevant field/member,
+scene/prefab/asset or local-object identity, reference/override, configured
+callback target, and assignment-to-consumption provenance.
 
-A serialized declaration proves only that a value/reference can participate in
-serialization; it does not prove which value or object the shipped mechanic
-consumes.
-
-For engine dispatch, absence of a conventional managed xref does not prove a Unity
-message or serialized-configured callback is unreachable. Conversely, a
-lifecycle-shaped method name does not prove scenario-specific dispatch. Distinguish
-ordinary managed calls, engine-dispatched messages, and serialized-configured
-callbacks when the invocation source matters.
+For invocation, distinguish ordinary managed calls, engine-dispatched messages,
+and serialized-configured callbacks. Absence of a conventional managed xref does
+not make the latter two unreachable, and a lifecycle-shaped name alone does not
+prove scenario-specific dispatch.
 
 ## 4. Managed fidelity and Unity object model
 
@@ -128,18 +119,18 @@ managed semantic anchor
   -> unmanaged boundary only when the unresolved fact crosses it
 ```
 
-For serialized fields and Unity object references, recover only the relation that
-can change the claim: effective value, referenced object/asset identity, sharing
-or instance scope, composition relevant to ownership, or configured callback
-wiring. Do not recover an entire scene/prefab/asset graph when a smaller relation
-is sufficient.
+For serialized fields and Unity object references, recover only what can change
+the claim: effective value, referenced object/asset identity, sharing/instance
+scope, ownership-relevant composition, or configured callback wiring. A serialized
+declaration alone does not establish the consumed value/object, and a whole
+scene/prefab/asset graph is unnecessary when a smaller relation closes the claim.
 
 Common pivots:
 
 - **Field-backed:** resolve the value at material consumption and the actual
   instance only when ownership/fan-out matters.
-- **Event/lifecycle-backed:** identify the invocation class and resolve the
-  emitter/source or receiving instances only when caller/scope matters.
+- **Event/lifecycle-backed:** resolve invocation class and emitter/source or
+  receiving instances only when caller/scope matters.
 - **`ScriptableObject`-backed:** distinguish shared asset from clone/runtime
   instance only when identity changes the conclusion.
 
@@ -147,29 +138,25 @@ Common pivots:
 
 Inspect game-specific managed assemblies and metadata before escalating to native
 analysis. Prefer targeted type/member/data-flow relationships over broad
-assembly-wide decompilation.
-
-Treat ordinary managed call graphs as partial evidence because engine dispatch,
-reflection, serialized callbacks, delegates, and native bridges can create
-material edges outside conventional xrefs.
+assembly-wide decompilation. Treat ordinary managed call graphs as partial where
+engine dispatch, reflection, serialized callbacks, delegates, or native bridges
+can supply material edges.
 
 ## 7. Runtime-observation guidance
 
 Apply the core runtime-validation gate. When live Unity realization remains
 material, useful observation points include lifecycle/message or event entry,
 values around the decisive mutation, coroutine progression, object
-creation/clone/pooling/replacement, and scene/lifetime transitions.
-
-Record enough context to distinguish material runtime instances, but keep runtime
-instance identifiers and JIT/native addresses session-scoped.
+creation/clone/pooling/replacement, and scene/lifetime transitions. Record enough
+context to distinguish material runtime instances.
 
 ## 9. Version-sensitive assumptions
 
-Revalidate only version-sensitive Unity/Mono details used by the claim, including:
+Revalidate only Unity/Mono details used by the claim, including:
 
 - Mono/runtime packaging and managed assembly layout;
 - assembly splitting/code generation when it affects identity or recovery;
-- serialization behavior relevant to a material field/reference/wiring relation;
+- material serialization behavior;
 - lifecycle, scene, domain/reload, or activation behavior when it affects
   dispatch, lifetime, or reset;
 - generated shapes, metadata tokens, stripping, or optimization when used as
@@ -181,28 +168,23 @@ Revalidate only version-sensitive Unity/Mono details used by the claim, includin
 
 - Classifying the material path as Mono from one managed-looking artifact.
 - Treating reconstructed C# as exact source when compiler behavior is material.
-- Treating absence from managed xrefs as proof that an engine-dispatched or
-  serialized-configured callback is unreachable.
+- Treating managed xrefs as a complete invocation graph.
 - Reading a declaration default while missing a material serialized/runtime
   override.
-- Recovering a whole prefab/scene graph when one serialized relation is enough.
 - Inferring per-instance ownership from containment or a `ScriptableObject` field.
-- Treating `static` or `DontDestroyOnLoad` state as save-persistent.
 - Extending Mono assumptions across IL2CPP or an unmanaged boundary.
 
 ## 11. Evidence checklist
 
 When material, supplement the core mechanic record with:
 
-- exact relevant managed assembly hash;
-- managed semantic locator plus optional same-assembly token/IL-offset support;
+- exact relevant managed assembly hash and semantic locator;
+- optional token/IL-offset support scoped to that assembly;
 - serialized value/reference/wiring provenance at material consumption;
 - invocation class/source when it affects the claim;
 - generated implementation relation when it carries decisive behavior;
-- explicit managed-to-unmanaged transition evidence when the claim crosses it.
+- managed-to-unmanaged transition evidence when the claim crosses it.
 
 ## 12. Bundled tools
 
-No Unity Mono helper is bundled. Treat recovery, decompilation, debugging, and
-instrumentation tools as mechanical capabilities rather than gameplay-semantic
-evidence.
+No Unity Mono helper is bundled.
