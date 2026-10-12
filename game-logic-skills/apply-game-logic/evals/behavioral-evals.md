@@ -142,3 +142,29 @@ Required assertions:
 - refused the hook and reported the byte mismatch without weakening the guard, substituting a nearby site, or broadening compatibility
 - allowed the data edit when its actual material preconditions held instead of inventing compare-and-swap semantics from the stale snapshot
 - preserved restoration state where required and revalidated only the relation that had materially drifted
+
+## 14. Unity Mono changes preserve recovered owner and scope
+
+A confirmed Unity Mono finding shows that a declaration default is overridden before material consumption, one runtime component instance is in scope, and a referenced `ScriptableObject` is shared. `change-design.md` has already selected a reversible runtime data change.
+
+Required assertions:
+- targeted the recovered effective state for the intended instance, not the declaration default or shared `ScriptableObject`
+- preserved the recovered fan-out and validated a sibling/shared consumer capable of exposing leakage
+
+## 15. BepInEx/HarmonyX delivery preserves the selected managed hook
+
+A confirmed Unity Mono finding places decisive behavior in a generated member, and `change-design.md` has already selected a managed hook. The retained deliverable is a BepInEx 5 regular plugin implemented with HarmonyX.
+
+Required assertions:
+- patched the recovered generated member, with HarmonyX implementing rather than selecting the hook
+- kept the managed HarmonyX patch on the Unity/BepInEx delivery path; its internal detour implementation alone did not trigger the native runtime delivery contract
+- confirmed actual BepInEx 5 load and exercised the material path before calling delivery complete
+- limited any claimed patch cleanup/restoration to plugin-owned patches
+
+## 16. BepInEx delivery distinguishes evidence binding from build success
+
+Two retained plugin attempts exercise separate failures. In A, a game assembly whose exact binary identity is material to the consumed finding has hash `B` while the finding is bound to hash `A`, although the source still compiles. In B, material build inputs match and the project builds, but the supported game/BepInEx 5 runtime is unavailable.
+
+Required assertions:
+- A did not treat compilation as preserving the finding and stopped only the affected path until rebinding or narrow revalidation
+- B remained an unvalidated BepInEx draft and named actual BepInEx 5 load plus material-path validation as the missing checks
