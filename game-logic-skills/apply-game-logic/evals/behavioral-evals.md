@@ -157,6 +157,7 @@ A confirmed Unity Mono finding places decisive behavior in a generated member, a
 
 Required assertions:
 - patched the recovered generated member, with HarmonyX implementing rather than selecting the hook
+- kept the managed HarmonyX patch on the Unity/BepInEx delivery path; its internal detour implementation alone did not trigger the native runtime delivery contract
 - confirmed actual BepInEx 5 load and exercised the material path before calling delivery complete
 - limited any claimed patch cleanup/restoration to plugin-owned patches
 
