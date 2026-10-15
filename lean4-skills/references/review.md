@@ -20,4 +20,4 @@ When the target is upstream mathlib, load `references/branches/mathlib-upstream.
 
 Return prioritized findings with file/location, evidence, impact, and a concrete recommendation. Distinguish blockers from advisory style suggestions. If there are no material findings, say so rather than inventing nits.
 
-For a review-only request, files remain unchanged. If fixes are also requested, substantiate a finding before editing, use the relevant proof/repair/optimization guidance, and verify the resulting change.
+For a review-only request, files remain unchanged. If fixes are also requested, substantiate a finding before editing, use the relevant proof, diagnostic, trust, or optimization guidance, and verify the resulting change.
