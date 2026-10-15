@@ -1,6 +1,6 @@
 # Diagnostic and Trust Repair Workflow
 
-Use when the task is to repair a Lean/Lake diagnostic that is not primarily a proof search problem, or to inspect/remove unwanted trust assumptions in formal-mathematics code. The shared invariants in `SKILL.md` remain in force.
+Use when the task is to repair a Lean/Lake diagnostic that is not primarily a proof-search problem, or to inspect/remove unwanted trust assumptions in formal-mathematics code. The shared invariants in `SKILL.md` remain in force.
 
 ## Contract
 
@@ -9,15 +9,6 @@ Use when the task is to repair a Lean/Lake diagnostic that is not primarily a pr
 3. Make the smallest coherent change that addresses the identified cause rather than masking the symptom.
 4. Verify the repaired target with the lightest sufficient gate; load `references/verification.md` when file, dependency, or integration scope matters. Verify trust properties separately when they are part of the request.
 5. Continue only while new evidence supports a materially different bounded repair avenue.
-
-## Handoffs
-
-Change ownership explicitly when the problem changes:
-
-- closing an actual proof goal or proof hole -> `references/prove.md`;
-- the statement/API itself needs redesign -> `references/formalize.md`;
-- credible evidence indicates the target proposition is false -> `references/disprove.md`;
-- correctness is established and the remaining task is proof quality or performance -> `references/optimize.md`.
 
 ## Stop and completion
 
