@@ -1,6 +1,6 @@
 # Axiom and Trust-Basis Cleanup
 
-Use with the repair workflow when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. The acceptable trust basis is project- and task-specific.
+Use when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. The acceptable trust basis is project- and task-specific.
 
 ## Inspect first
 
