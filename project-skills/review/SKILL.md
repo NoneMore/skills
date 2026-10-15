@@ -24,6 +24,10 @@ Code, diffs, pull requests, current implementations, designs, specifications, pl
 
 Review is evaluative by default. Do not modify the reviewed result or external project state unless the user also requests correction or mutation.
 
+Establish the reviewed object and requested scope before evaluating it. Distinguish sources that define review criteria from sources that are only evidence or context. If materially relevant criteria conflict and no governing precedence resolves them, surface the conflict rather than silently choosing one.
+
+For each material area in scope, identify the applicable expectation, inspect the smallest evidence needed to test it, challenge candidate findings against contrary evidence or alternate explanations, and report only substantiated findings.
+
 Report a finding only when the available evidence supports a concrete violated expectation or a plausible material failure mode. If evidence is insufficient to distinguish a violation from preference or speculation, review the independently verifiable scope, state what materially prevents further verification, and stop where additional conclusions would be speculative. For ordinary or low-impact concerns, require enough evidence to state a realistic consequence or trigger rather than reporting suspicion. For potentially severe consequences, state any material uncertainty instead of presenting it as fact.
 
 When the intent or expected behavior is available, checking whether the existing result satisfies it is ordinary review.
@@ -39,4 +43,4 @@ Load object-specific guidance only for the result actually being evaluated. An a
 
 ## Done when
 
-Material findings relevant to the requested review are substantiated with enough evidence to explain what expectation is met or violated, where the evidence comes from, and why the issue matters. State any material part of the requested scope that could not be inspected or verified. If no material findings remain, say so without implying that unreviewed scope was clean.
+Material findings relevant to the requested review are substantiated with enough evidence to explain what expectation is met or violated, where the evidence comes from, and why the issue matters. State any material part of the requested scope that could not be inspected or verified, and distinguish direct verification from inference when that difference is material. If no material findings remain, say so without implying that unreviewed scope was clean.
