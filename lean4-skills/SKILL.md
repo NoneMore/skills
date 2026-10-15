@@ -1,5 +1,5 @@
 ---
-name: lean4
+name: lean4-skills
 description: "Use for formal mathematics in Lean 4 and mathlib: proving or repairing theorems, filling sorries, formalizing or refuting mathematical statements, debugging Lean/Lake diagnostics, searching mathlib, reviewing proofs, simplifying proofs, and explaining formalized mathematics. Do not use for general Lean application development, compiler internals, FFI, custom syntax/DSL authoring, JSON tooling, linter infrastructure, Coq/Rocq, Agda, Isabelle, HOL, Mizar, Idris, or other theorem provers."
 license: MIT
 ---
@@ -28,6 +28,7 @@ Select a workflow when one clearly owns the current task. Do not preload unrelat
 | Fill a proof hole, repair a proof failure, or make the smallest supporting edits needed for a proof | [prove](references/workflows/prove.md) |
 | Design a Lean statement from an informal claim or explicitly revise statement shape | [formalize](references/workflows/formalize.md) |
 | Search for and certify a counterexample or negation | [disprove](references/workflows/disprove.md) |
+| Repair non-proof Lean/Lake diagnostics or inspect/remove unwanted trust assumptions | [repair](references/workflows/repair.md) |
 | Review Lean code without modifying it | [review](references/workflows/review.md) |
 | Improve an already-correct proof for structure, directness, size, or performance | [optimize](references/workflows/optimize.md) |
 | Explain Lean, mathlib, project code, or a formal mathematical idea | [learn](references/workflows/learn.md) |
