@@ -1,6 +1,6 @@
 # Proving Workflow
 
-Use for filling proof holes, repairing proof failures, or making the smallest supporting edits needed to complete an agreed proof target. The shared invariants in `SKILL.md` remain in force.
+Use for filling proof holes, repairing proof failures, or making the smallest supporting edits needed to complete an agreed proof target. The shared invariants and scope rules in `SKILL.md` remain in force.
 
 ## Contract
 
@@ -10,8 +10,6 @@ Use for filling proof holes, repairing proof failures, or making the smallest su
 4. Apply the smallest coherent passing change.
 5. Verify the changed target and any affected dependency boundary with the lightest sufficient gate; load `references/verification.md` when the distinction matters.
 6. Continue only while new evidence suggests a materially different bounded avenue.
-
-Cross-file edits are allowed when they are necessary to complete the agreed target. Do not modify generated caches or dependency checkouts such as `.lake/packages` unless the task specifically concerns them, and do not widen into unrelated refactoring or architecture work.
 
 If evidence shows that the real task is statement design, certified refutation, or post-correctness optimization, use `references/formalize.md`, `references/disprove.md`, or `references/optimize.md` respectively.
 
