@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Added a bundled read-only `scripts/blueprint.py` mechanical layer with `check`, `inspect`, and normalized-state `diff` commands.
+- Reused the project's real plasTeX/leanblueprint dependency graph instead of reintroducing a regex/static parser emulator.
+- Added deterministic checks for projection failures such as repeated single-value `\uses`/`\lean`/`\proves`, unresolved or invalid dependency targets, proof-association conflicts, duplicate labels across objects, dependency cycles, conflicting status, and raw/upstream projection mismatch.
+- Added source file/line capture and a small normalized JSON state that keeps statement/proof dependencies separate without copying mathematical prose or adding planning/readiness heuristics.
+- Added ordinary unit tests for the mechanical layer plus an integration test that runs when a leanblueprint runtime is installed.
+- Refocused `SKILL.md` and workflows so the model owns mathematical/semantic judgment while repeatable project-state collection and structural verification are delegated to deterministic tooling.
+- Tightened Update scope: synchronization no longer silently rewrites mathematical content merely to make metadata fit.
+
 ## v4.1
 
 - Kept the `v4.0-slim` information architecture: a short operational `SKILL.md` plus focused basics/workflow references.
