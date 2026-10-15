@@ -77,7 +77,7 @@ Prompt C: Prove this theorem in Coq.
 
 Prompt D: Give me an informal proof of the Bolzano-Weierstrass theorem.
 
-Prompt E: Fix `failed to synthesize Repr MyType` in the logging code of this Lean CLI application. This is ordinary application code, not a theorem or formal-mathematics task.
+Prompt E: Fix `failed to synthesize Repr MyType` in the logging code of this Lean CLI application.
 
 Required assertions:
 - `lean_formal_math_prompt_routed_to_lean4_skills = PASS`
