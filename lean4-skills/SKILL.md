@@ -1,39 +1,34 @@
 ---
 name: lean4-skills
-description: "Use for formal mathematics in Lean 4 and mathlib: proving or repairing theorems, filling sorries, formalizing or refuting mathematical statements, debugging Lean/Lake diagnostics, searching mathlib, reviewing proofs, simplifying proofs, and explaining formalized mathematics. Do not use for general Lean application development, compiler internals, FFI, custom syntax/DSL authoring, JSON tooling, linter infrastructure, Coq/Rocq, Agda, Isabelle, HOL, Mizar, Idris, or other theorem provers."
+description: "Use for formal mathematics in Lean 4 and mathlib: proving or repairing theorems, filling proof holes, formalizing or refuting mathematical statements, debugging Lean/Lake diagnostics, searching mathlib, reviewing or simplifying proofs, and explaining formalized mathematics. Do not use for general Lean application development or other theorem provers."
 license: MIT
 ---
 
 # Lean 4
 
-This is the portable behavioral entry point for formal mathematics in Lean 4 and mathlib. Keep shared behavior here; load a workflow only when that workflow actually owns the current task, and load specialized knowledge only when the mathematical formalization task requires it.
+This is the portable entry point for formal mathematics in Lean 4 and mathlib. Load only the workflow and specialized references relevant to the current task.
 
 ## Shared invariants
 
-Unless the user explicitly authorizes otherwise:
-
-- Preserve existing theorem statements, declaration signatures, and public API. If the statement itself is the problem, hand responsibility to the formalization or refutation workflow rather than silently weakening it.
-- Preserve existing docstrings on declarations being edited. New declarations may receive new documentation.
-- Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the trust basis to make a proof or repair succeed. Surface existing assumptions explicitly. If the user explicitly accepts a partial result or trust-basis change, report it as partial or changed rather than as ordinary verified completion.
-- Keep unrelated files and unrelated working-tree changes untouched. Cross-file edits stay within user/project-owned source by default; treat toolchain files, package caches, external dependencies, and third-party vendored or submodule sources as read-only unless the user explicitly puts that dependency in scope.
-- Do not commit, push, open a PR, or perform destructive version-control operations unless the user explicitly requests that operation.
+- Preserve existing theorem statements, declaration signatures, and public API unless statement design is explicitly in scope. If the statement itself is the blocker, surface that rather than silently weakening it.
+- Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the trust basis to make a proof or repair succeed. Surface existing assumptions explicitly. If the user accepts a partial result or trust-basis change, report it as partial or changed rather than as ordinary verified completion.
 - Follow local project conventions. For work intended for upstream mathlib, also load [references/branches/mathlib-upstream.md](references/branches/mathlib-upstream.md).
 
-## Workflow ownership
+## Task guide
 
-Select a workflow when one clearly owns the current task. Do not preload unrelated workflows.
+Use the workflow that matches the current task. Do not preload unrelated workflows.
 
-| Current responsibility | Workflow |
+| Task | Workflow |
 |---|---|
 | Fill a proof hole, repair a proof failure, or make the smallest supporting edits needed for a proof | [prove](references/prove.md) |
 | Design a Lean statement from an informal claim or explicitly revise statement shape | [formalize](references/formalize.md) |
 | Search for and certify a counterexample or negation | [disprove](references/disprove.md) |
 | Repair non-proof Lean/Lake diagnostics or inspect/remove unwanted trust assumptions | [repair](references/repair.md) |
-| Review Lean code without modifying it | [review](references/review.md) |
+| Review Lean code | [review](references/review.md) |
 | Improve an already-correct proof for structure, directness, size, or performance | [optimize](references/optimize.md) |
 | Explain Lean, mathlib, project code, or a formal mathematical idea | [learn](references/learn.md) |
 
-A workflow is the **current owner**, not a permanent mode for the whole request. It may explicitly hand off when responsibility changes, for example `formalize -> prove`, `prove -> formalize`, `prove -> disprove`, or `prove -> optimize`.
+If the task materially changes, use the corresponding workflow rather than carrying rules from the earlier task forward.
 
 ## Capability and verification policy
 
@@ -49,10 +44,10 @@ Do not hard-code host adapter paths, helper-runtime locations, command aliases, 
 
 ## Scope and stopping
 
-Make the smallest coherent change that satisfies the agreed formalization task. Cross-file edits are allowed when they are the smallest necessary way to complete the target; they do not require a separate "deep" mode. Do not widen a proof task into open-ended refactoring or repository cleanup without user authorization.
+Make the smallest coherent change that satisfies the task. Cross-file edits are allowed when necessary; do not modify generated caches or dependency checkouts such as `.lake/packages` unless the task specifically concerns them. Do not widen a local proof or repair into unrelated refactoring or repository cleanup.
 
-Do not repeat the same failed avenue without new evidence. When a bounded path is exhausted, either hand off to the workflow that now owns the problem or stop with the blocker, evidence already gathered, and the smallest useful next action.
+Do not repeat the same failed avenue without new evidence. When no materially new bounded avenue remains, stop with the blocker, evidence already gathered, and the smallest useful next action.
 
 ## Knowledge on demand
 
-Use [references/INDEX.md](references/INDEX.md) as the map for specialized Lean/mathlib knowledge. References supplement the current owner; they do not redefine workflow behavior.
+Use [references/INDEX.md](references/INDEX.md) for specialized Lean/mathlib knowledge that is not already covered by the selected workflow.
