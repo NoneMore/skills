@@ -1,6 +1,6 @@
 # Axiom and Trust-Basis Cleanup
 
-Use under the repair workflow when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. This is not a rule that every project must avoid every kernel axiom; the acceptable trust basis is project- and task-specific.
+Use with the repair workflow when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. The acceptable trust basis is project- and task-specific.
 
 ## Inspect first
 
@@ -28,7 +28,7 @@ Work bottom-up when several unwanted assumptions depend on one another.
 
 ## Statement problems
 
-Sometimes elimination reveals that the theorem is actually too strong. Do not hide that by replacing one axiom with another or by weakening an existing statement silently. Hand statement design to the formalization workflow, or refutation to the disprove workflow when there is credible evidence of falsity.
+Sometimes elimination reveals that the theorem is actually too strong. Do not hide that by replacing one axiom with another or by weakening an existing statement silently. Use `references/formalize.md` when statement design is required, or `references/disprove.md` when there is credible evidence of falsity.
 
 ## Evidence to return
 
