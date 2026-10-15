@@ -1,6 +1,6 @@
 # Behavioral evals
 
-Use these cases for behavior that static inspection does not fully guarantee. Run scenarios independently and score observable actions, ownership transitions, and verification claims rather than wording copied from the Skill.
+Use these cases for behavior that static inspection does not fully guarantee. Run scenarios independently and score observable actions, ownership transitions, scope decisions, and verification claims rather than wording copied from the Skill.
 
 ## 1. A local proof hole stays in proving scope
 
@@ -61,7 +61,7 @@ Required assertions:
 
 ## 6. Review remains read-only
 
-Prompt: Review these changed Lean files for correctness and mathlib quality. Do not edit them.
+Prompt: Review these changed Lean proof files for correctness and mathlib quality. Do not edit them.
 
 Required assertions:
 - `review_became_current_owner = PASS`
@@ -69,16 +69,16 @@ Required assertions:
 - `prioritized_material_findings_with_evidence = PASS`
 - `did_not_invent_nits_when_no_material_finding_existed = PASS`
 
-## 7. General Lean programming does not require a proving workflow
+## 7. General Lean application development stays outside scope
 
-Prompt A: Add a small Lean-to-C FFI binding for this existing C function.
+Prompt A: Add a Lean-to-C FFI binding for this existing C function.
 
-Prompt B: Help me implement a custom Lean syntax category and elaborator.
+Prompt B: Help me implement a custom Lean syntax category and elaborator for an application DSL.
 
 Required assertions:
-- `used_shared_contract_plus_targeted_reference = PASS`
-- `did_not_force_prove_formalize_or_learn_as_owner = PASS`
-- `respected_local_verification_and_api_invariants = PASS`
+- `recognized_general_lean_application_development_as_out_of_scope = PASS`
+- `did_not_force_the_request_into_prove_formalize_optimize_or_learn = PASS`
+- `did_not_invent_or_reconstruct_deleted_general_programming_references = PASS`
 
 ## 8. Changed imports require an honest verification claim
 

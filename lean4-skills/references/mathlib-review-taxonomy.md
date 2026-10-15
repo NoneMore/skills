@@ -1,16 +1,14 @@
 # Mathlib Review Taxonomy
 
-Use this vocabulary when reviewing work intended for upstream mathlib. The review workflow decides whether a finding is material; this file only names common review surfaces. Use `branches/mathlib-upstream.md` for the current authoritative style, naming, and documentation sources.
+Use this vocabulary when reviewing work intended for upstream mathlib. The review workflow decides whether a finding is material; this file only names common review surfaces.
 
 ## Surface style and naming
 
-Check local formatting, line width, tactic idiom, declaration naming, namespace placement, and whether dot notation is natural. Resolve concrete convention questions against the current Lean Community normative documents rather than a cached local summary.
+Check local formatting, line width, tactic idiom, declaration naming, namespace placement, and whether dot notation is natural. For normative style or naming decisions, load `branches/mathlib-upstream.md` and consult the current Lean Community contribution guidance.
 
 ## Documentation
 
-Public API should have appropriate declaration/module documentation, while private proof scaffolding should not accumulate unnecessary docstrings. Check that comments explain mathematical or design intent rather than development history.
-
-For Verso-specific inline documentation, load [verso-docs.md](verso-docs.md).
+Public API should have appropriate declaration/module documentation, while private proof scaffolding should not accumulate unnecessary docstrings. Check that comments explain mathematical or design intent rather than development history. For normative documentation conventions or Verso role syntax, consult the current upstream documentation rather than cached local role tables.
 
 ## Existing results, placement, and imports
 
@@ -28,11 +26,11 @@ Check `@[simp]`, `@[ext]`, reducibility, coercions, and other attributes as glob
 
 ## Instances
 
-When instance design is actually in scope, look for diamonds, loops, accidental local-instance selection, unnecessary global instances, and APIs that make typeclass inference fragile. Diagnose concrete failures from the current goal and diagnostics rather than loading a standing instance-design guide.
+Look for instance diamonds, loops, accidental local-instance selection, unnecessary global instances, and API designs that make typeclass inference fragile. When several instances of the same class are involved, inspect which instance relevant terms were elaborated against and make the intended one explicit at the smallest useful boundary.
 
 ## Module-system and generated-file obligations
 
-Check current repository requirements for module headers, public visibility/imports, and generated root/import files. Recover these requirements from the repository and current upstream guidance rather than assuming a cached command or layout.
+Check current repository requirements for module headers, public visibility/imports, and generated root/import files. Recover these requirements from the repository rather than assuming a cached command or layout.
 
 ## Findings
 

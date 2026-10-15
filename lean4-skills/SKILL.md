@@ -1,12 +1,12 @@
 ---
 name: lean4
-description: "Use for Lean 4 and mathlib tasks: editing .lean files, filling proofs or sorries, debugging Lean/Lake diagnostics, searching mathlib, formalizing or refuting mathematical statements, reviewing or simplifying Lean proofs, and explaining or extending Lean code. Do not use for Coq/Rocq, Agda, Isabelle, HOL, Mizar, Idris, or other theorem provers."
+description: "Use for formal mathematics in Lean 4 and mathlib: proving or repairing theorems, filling sorries, formalizing or refuting mathematical statements, debugging Lean/Lake diagnostics, searching mathlib, reviewing proofs, simplifying proofs, and explaining formalized mathematics. Do not use for general Lean application development, compiler internals, FFI, custom syntax/DSL authoring, JSON tooling, linter infrastructure, Coq/Rocq, Agda, Isabelle, HOL, Mizar, Idris, or other theorem provers."
 license: MIT
 ---
 
 # Lean 4
 
-This is the portable behavioral entry point for Lean 4 work. Keep shared behavior here; load a workflow only when that workflow actually owns the current task, and load specialized knowledge only when the topic requires it.
+This is the portable behavioral entry point for formal mathematics in Lean 4 and mathlib. Keep shared behavior here; load a workflow only when that workflow actually owns the current task, and load specialized knowledge only when the mathematical formalization task requires it.
 
 ## Shared invariants
 
@@ -34,8 +34,6 @@ Select a workflow when one clearly owns the current task. Do not preload unrelat
 
 A workflow is the **current owner**, not a permanent mode for the whole request. It may explicitly hand off when responsibility changes, for example `formalize -> prove`, `prove -> formalize`, `prove -> disprove`, or `prove -> optimize`.
 
-Some Lean programming tasks do not need a workflow. For example, FFI, custom syntax, compiler internals, JSON, or linter work may use this shared contract plus the relevant reference directly.
-
 ## Capability and verification policy
 
 Prefer the strongest available feedback loop without assuming a particular host or plugin installation:
@@ -50,7 +48,7 @@ Do not hard-code host adapter paths, helper-runtime locations, command aliases, 
 
 ## Scope and stopping
 
-Make the smallest coherent change that satisfies the agreed task. Cross-file edits are allowed when they are the smallest necessary way to complete the target; they do not require a separate "deep" mode. Do not widen a proof task into open-ended refactoring or repository cleanup without user authorization.
+Make the smallest coherent change that satisfies the agreed formalization task. Cross-file edits are allowed when they are the smallest necessary way to complete the target; they do not require a separate "deep" mode. Do not widen a proof task into open-ended refactoring or repository cleanup without user authorization.
 
 Do not repeat the same failed avenue without new evidence. When a bounded path is exhausted, either hand off to the workflow that now owns the problem or stop with the blocker, evidence already gathered, and the smallest useful next action.
 
