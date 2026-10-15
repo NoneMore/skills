@@ -54,8 +54,7 @@ Load only when material to the task:
 
 - [mathlib search and integration](references/mathlib-guide.md)
 - [verification gates](references/verification.md)
-- [upstream mathlib policy](references/branches/mathlib-upstream.md)
+- [upstream mathlib policy and review bar](references/branches/mathlib-upstream.md)
 - [proof strategy simplification](references/proof-simplification.md)
 - [performance optimization](references/performance-optimization.md)
 - [`simp` and simp-lemma design](references/simp-reference.md)
-- [mathlib review taxonomy](references/mathlib-review-taxonomy.md)
