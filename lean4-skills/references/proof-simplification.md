@@ -32,4 +32,4 @@ Before manual pointwise/case reasoning, search for `congr`, `EqOn`, `EventuallyE
 5. re-verify correctness and compare readability/maintenance cost;
 6. stop when remaining complexity is the mathematical content rather than proof engineering.
 
-For local term/tactic shortening without a strategy change, use [proof-golfing.md](proof-golfing.md). For measured elaboration/build cost, use [performance-optimization.md](performance-optimization.md).
+For local term/tactic shortening without a strategy change, stay in the local-simplification surface of `workflows/optimize.md`. For measured elaboration/build cost, use [performance-optimization.md](performance-optimization.md).
