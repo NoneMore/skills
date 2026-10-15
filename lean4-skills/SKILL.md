@@ -6,7 +6,7 @@ license: MIT
 
 # Lean 4
 
-This is the portable entry point for formal mathematics in Lean 4 and mathlib. Load only the workflow and specialized references relevant to the current task.
+This is the portable entry point for formal mathematics in Lean 4 and mathlib. Load only the guidance relevant to the current task.
 
 ## Shared invariants
 
@@ -16,19 +16,19 @@ This is the portable entry point for formal mathematics in Lean 4 and mathlib. L
 
 ## Task guide
 
-Use the workflow that matches the current task. Do not preload unrelated workflows.
+Load only what the task needs:
 
-| Task | Workflow |
+| Task | Guidance |
 |---|---|
-| Fill a proof hole, repair a proof failure, or make the smallest supporting edits needed for a proof | [prove](references/prove.md) |
-| Design a Lean statement from an informal claim or explicitly revise statement shape | [formalize](references/formalize.md) |
+| Fill a proof hole or repair a proof failure | [prove](references/prove.md) |
+| Design or explicitly revise a Lean statement | [formalize](references/formalize.md) |
 | Search for and certify a counterexample or negation | [disprove](references/disprove.md) |
-| Repair non-proof Lean/Lake diagnostics or inspect/remove unwanted trust assumptions | [repair](references/repair.md) |
-| Review Lean code | [review](references/review.md) |
-| Improve an already-correct proof for structure, directness, size, or performance | [optimize](references/optimize.md) |
-| Explain Lean, mathlib, project code, or a formal mathematical idea | [learn](references/learn.md) |
+| Diagnose a non-proof Lean/Lake failure | [compilation errors](references/compilation-errors.md) |
+| Inspect or remove unwanted trust assumptions | [axiom elimination](references/axiom-elimination.md) |
+| Review Lean proof code | [review](references/review.md) |
+| Improve an already-correct proof | [optimize](references/optimize.md) |
 
-If the task materially changes, use the corresponding workflow rather than carrying rules from the earlier task forward.
+For explanation or exploration, use only the narrower references needed by the question; there is no separate learning mode.
 
 ## Capability and verification policy
 
@@ -50,4 +50,4 @@ Do not repeat the same failed avenue without new evidence. When no materially ne
 
 ## Knowledge on demand
 
-Use [references/INDEX.md](references/INDEX.md) for specialized Lean/mathlib knowledge that is not already covered by the selected workflow.
+Use [references/INDEX.md](references/INDEX.md) for narrower Lean/mathlib knowledge not already linked above.
