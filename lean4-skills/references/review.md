@@ -1,6 +1,6 @@
 # Review Workflow
 
-Use for code review of Lean proofs. **Review is read-only:** do not edit, stage, commit, or restore files as part of the review.
+Use for code review of Lean proofs. **Review is read-only:** do not edit, stage, commit, or restore files while review owns the task.
 
 ## Scope
 
@@ -16,8 +16,8 @@ Prefer the smallest scope that answers the request: one goal/declaration, one fi
 
 When the target is upstream mathlib, load `references/branches/mathlib-upstream.md` and use `references/mathlib-review-taxonomy.md` as the additional review bar.
 
-## Output
+## Output and handoff
 
 Return prioritized findings with file/location, evidence, impact, and a concrete recommendation. Distinguish blockers from advisory style suggestions. If there are no material findings, say so rather than inventing nits.
 
-Completion is the report itself; files must remain unchanged.
+For a review-only request, completion is the report itself and files remain unchanged. If the user also requested fixes, keep the review phase read-only, substantiate the finding first, then explicitly hand ownership to `references/prove.md`, `references/repair.md`, or `references/optimize.md` according to the required mutation. The mutation workflow, not review, owns any edits and their verification.
