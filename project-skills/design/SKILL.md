@@ -19,8 +19,8 @@ A design question, an architecture or domain problem, an interface or seam decis
 - explicit material design decisions rather than silent delegation to later implementation;
 - coherence between the chosen direction and the constraints that motivated it;
 - a clear distinction between settled decisions and genuinely open design questions;
-- evidence discipline around decision-changing factual uncertainty: investigate it when proportionate, otherwise keep it explicit instead of silently resolving it by assumption;
-- intentional deferral when a material choice cannot yet be resolved, including what uncertainty blocks it and what evidence or event would make it decidable when known.
+- decision-changing factual uncertainty is investigated when proportionate or kept explicit rather than silently assumed;
+- intentionally deferred material choices name what blocks them and, when knowable, what would make them decidable.
 
 The default result is the decisions and remaining material uncertainty in conversation. Persist a design artifact only when the user requests one or durability is part of the requested outcome through an established project convention. When persisting, retain only knowledge whose future value justifies the artifact, such as shared domain language or a current architectural decision that later work should know.
 
@@ -43,4 +43,4 @@ Research, code reading, experiments, spikes, prototypes, and interactive pressur
 
 ## Done when
 
-The material choices needed for the requested design outcome are explicit and mutually coherent, and any remaining uncertainty is clearly bounded enough that it is not being silently passed downstream as an accidental design decision. A deferred material choice names the uncertainty that blocks it and, when knowable, the evidence or event that would make it decidable.
+The material choices needed for the requested design outcome are explicit and mutually coherent, and any remaining uncertainty is clearly bounded enough that it is not being silently passed downstream as an accidental design decision.
