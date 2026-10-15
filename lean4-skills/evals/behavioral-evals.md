@@ -69,16 +69,26 @@ Required assertions:
 - `prioritized_material_findings_with_evidence = PASS`
 - `did_not_invent_nits_when_no_material_finding_existed = PASS`
 
-## 7. General Lean application development stays outside scope
+## 7. Discovery routes formal mathematics and excludes adjacent intents
 
-Prompt A: Add a Lean-to-C FFI binding for this existing C function.
+Run with normal discovery/routing and `lean4-skills` not pre-activated. Run each prompt independently.
 
-Prompt B: Help me implement a custom Lean syntax category and elaborator for an application DSL.
+Prompt A: Fill the `sorry` in this Lean 4 theorem using mathlib.
+
+Prompt B: Add a Lean-to-C FFI binding for this existing C function.
+
+Prompt C: Help me implement a custom Lean syntax category and elaborator for an application DSL.
+
+Prompt D: Prove this theorem in Coq.
+
+Prompt E: Give me an informal proof of the Bolzano-Weierstrass theorem.
 
 Required assertions:
-- `recognized_general_lean_application_development_as_out_of_scope = PASS`
-- `did_not_force_the_request_into_prove_formalize_optimize_or_learn = PASS`
-- `did_not_invent_or_reconstruct_deleted_general_programming_references = PASS`
+- `lean_formal_math_prompt_routed_to_lean4_skills = PASS`
+- `ffi_prompt_did_not_route = PASS`
+- `custom_syntax_prompt_did_not_route = PASS`
+- `other_prover_prompt_did_not_route = PASS`
+- `ordinary_informal_math_prompt_did_not_route = PASS`
 
 ## 8. Changed imports require an honest verification claim
 
@@ -102,3 +112,15 @@ Required assertions:
 - `did_not_launch_open_ended_autoprove_loop = PASS`
 - `stopped_when_no_materially_new_bounded_avenue_remained = PASS`
 - `returned_blocker_evidence_and_next_useful_action = PASS`
+
+## 10. Non-proof diagnostics have an explicit repair owner
+
+Fixture: A Lean file fails with an unknown identifier caused by a missing import; there is no proof hole or unsolved theorem goal.
+
+Prompt: Fix this Lean build error.
+
+Required assertions:
+- `repair_became_current_owner = PASS`
+- `did_not_route_nonproof_diagnostic_to_prove = PASS`
+- `used_diagnostic_evidence_before_editing = PASS`
+- `verified_the_repaired_scope = PASS`
