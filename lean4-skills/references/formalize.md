@@ -1,6 +1,6 @@
 # Formalization Workflow
 
-Use when translating an informal claim into Lean or when statement design is explicitly in scope. Revise only declarations created for the task or declarations the user has authorized for statement work; do not silently rewrite pre-existing declarations.
+Use when translating an informal claim into Lean or when statement design is explicitly in scope.
 
 ## Contract
 
@@ -8,11 +8,12 @@ Use when translating an informal claim into Lean or when statement design is exp
 2. Search mathlib for canonical types, definitions, theorem shapes, and existing results before choosing an encoding.
 3. Draft the weakest faithful statement with explicit hypotheses and no hidden axioms.
 4. Check that the declaration itself elaborates. A draft may contain an explicitly reported proof hole.
-5. When a checked proof is required, use `references/prove.md` for the generated declaration.
-6. If proving exposes a statement mismatch, revise only task-created or explicitly authorized declarations; otherwise report the mismatch rather than changing the statement.
+5. If proving exposes a statement mismatch, revise only declarations created for the task or explicitly authorized for statement work; otherwise report the mismatch rather than changing the statement.
+
+When a checked proof is required, use `references/prove.md` for the generated declaration.
 
 ## Completion
 
 - **Draft:** the intended claim is represented in Lean and the declaration skeleton elaborates apart from explicitly reported proof holes.
-- **Checked:** the generated declaration elaborates with no unresolved proof holes in scope and no unreported trust assumptions.
-- **Partial:** every unresolved item is surfaced and the result is not presented as verified.
+- **Checked:** the generated declaration satisfies the checked-proof completion rule in `references/prove.md`.
+- Any unresolved item makes the result partial under the shared reporting rules in `SKILL.md`.

@@ -1,6 +1,6 @@
 # Proving Workflow
 
-Use for filling proof holes, repairing proof failures, or making the smallest supporting edits needed to complete an agreed proof target. The shared invariants and scope rules in `SKILL.md` remain in force.
+Use for filling proof holes, repairing proof failures, or making the smallest supporting edits needed to complete an agreed proof target.
 
 ## Contract
 
@@ -9,12 +9,9 @@ Use for filling proof holes, repairing proof failures, or making the smallest su
 3. Try a small set of materially different candidates. Test candidates against the live goal when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change.
 5. Verify the changed target and any affected dependency boundary with the lightest sufficient gate; load `references/verification.md` when the distinction matters.
-6. Continue only while new evidence suggests a materially different bounded avenue.
 
 If evidence shows that the real task is statement design, certified refutation, or post-correctness optimization, use `references/formalize.md`, `references/disprove.md`, or `references/optimize.md` respectively.
 
-## Stop and completion
+## Completion
 
-Stop when no materially new bounded avenue remains. Report the blocker, useful searches or attempts already ruled out, and the smallest next action that could change the result.
-
-A checked proof task is complete when the agreed target elaborates, the agreed proof scope has no unresolved `sorry`/`admit`, affected files satisfy the chosen verification gate, the agreed statement/API is preserved, and no new axiom or other trust-basis weakening was introduced to make the proof succeed. If the user accepts a partial result or trust-basis change, report that outcome as partial or changed rather than as a completed checked proof.
+A checked proof is complete when the agreed target elaborates, the agreed proof scope has no unresolved `sorry`/`admit`, and the affected scope satisfies the chosen verification gate.

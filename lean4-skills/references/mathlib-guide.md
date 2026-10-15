@@ -35,7 +35,7 @@ This often produces a better proof than searching only by surface words from the
 
 Add the narrowest import consistent with local project style. Do not copy an import from a search result without checking that it is appropriate for the target project.
 
-For work intended for upstream mathlib, file placement and import hygiene are review concerns; load [references/branches/mathlib-upstream.md](references/branches/mathlib-upstream.md) and [references/mathlib-review-taxonomy.md](references/mathlib-review-taxonomy.md).
+For upstream mathlib work, load `references/branches/mathlib-upstream.md` for the current contribution policy and review bar.
 
 ## Stop condition
 

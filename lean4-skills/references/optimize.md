@@ -1,6 +1,6 @@
 # Proof Optimization Workflow
 
-Use only after correctness is established and the user wants a clearer, more maintainable, shorter, or faster proof. Preserve statements and signatures.
+Use only after correctness is established and the user wants a clearer, more maintainable, shorter, or faster proof.
 
 Choose the smallest optimization surface that matches the request:
 

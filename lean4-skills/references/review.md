@@ -14,10 +14,10 @@ Prefer the smallest scope that answers the request: one goal/declaration, one fi
 4. Maintainability: proof structure, naming, comments/docstrings, local style.
 5. Optimization opportunities only when they materially improve directness, determinism, performance, or clarity.
 
-When the target is upstream mathlib, load `references/branches/mathlib-upstream.md` and use `references/mathlib-review-taxonomy.md` as the additional review bar.
+For upstream mathlib work, load `references/branches/mathlib-upstream.md` as the additional review bar.
 
 ## Output
 
 Return prioritized findings with file/location, evidence, impact, and a concrete recommendation. Distinguish blockers from advisory style suggestions. If there are no material findings, say so rather than inventing nits.
 
-For a review-only request, files remain unchanged. If fixes are also requested, substantiate a finding before editing, use the relevant proof, diagnostic, trust, or optimization guidance, and verify the resulting change.
+If fixes are also requested, substantiate a finding before editing, use the relevant proof, diagnostic, trust, or optimization guidance, and verify the resulting change.

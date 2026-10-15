@@ -15,14 +15,12 @@ Distinguish:
 
 Do not label a dependency "custom" or "unacceptable" merely because it appears in `#print axioms`; interpret the result against the requested policy.
 
-## Cleanup procedure
+## Cleanup
 
-1. Identify the exact declaration whose trust basis matters.
-2. Inspect the unwanted assumption and the declarations that depend on it.
-3. Search local code and mathlib for an existing theorem that provides the needed fact without that assumption.
-4. If none exists, prove the smallest missing lemma from accepted hypotheses.
-5. Replace the dependency without strengthening the theorem statement or silently adding a different assumption.
-6. Re-run the relevant elaboration/integration gate and re-check the target's trust basis.
+1. Trace the unwanted assumption through the target and dependent declarations.
+2. Search local code and mathlib for an accepted replacement; if none exists, prove the smallest missing lemma from accepted hypotheses.
+3. Replace the dependency without strengthening the theorem statement or silently introducing another unacceptable assumption.
+4. Re-run the relevant semantic/integration gate and re-check the target's trust basis.
 
 Work bottom-up when several unwanted assumptions depend on one another.
 

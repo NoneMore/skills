@@ -39,13 +39,10 @@ Replace expensive search tactics with known lemmas once the desired result is id
 
 ## Measurement loop
 
-1. reproduce the slowdown on the smallest useful target;
-2. record a baseline;
-3. enable the narrowest useful timing/profile/trace when localization is still uncertain;
-4. identify the dominant tactic, reduction, or synthesis region;
-5. change one mechanism;
-6. rerun the same measurement and semantic verification gate;
-7. keep the change only if it improves the requested performance property without unacceptable readability/API cost.
+1. Reproduce the slowdown on the smallest useful target and record a baseline.
+2. Profile only as needed to isolate the dominant tactic, reduction, or synthesis region.
+3. Change one mechanism.
+4. Rerun the same measurement and semantic verification gate; keep the change only if it improves the requested performance property without unacceptable readability/API cost.
 
 When available, compare wall-clock observations with heartbeats or another deterministic work counter to separate machine noise from elaboration complexity. Whole-project timing is useful for regression impact but poor for locating a proof hotspot.
 

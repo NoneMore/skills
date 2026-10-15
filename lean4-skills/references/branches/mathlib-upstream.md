@@ -1,30 +1,25 @@
-# Upstream Mathlib Branch
+# Upstream Mathlib
 
-Load when the repository is mathlib or the user explicitly says the work is intended for an upstream mathlib contribution. Do not impose this branch merely because mathlib is a dependency.
+Load when the repository is mathlib or the user explicitly says the work is intended for an upstream mathlib contribution. Do not impose this guidance merely because mathlib is a dependency.
 
-## Authoritative contribution policy
+## Current contribution policy
 
-Treat the current Lean Community contribution documentation as authoritative instead of caching a local copy of its rules.
-
-Normative pages:
+Consult the current Lean Community documentation for normative decisions instead of caching local copies:
 
 - [Library Style Guidelines](https://leanprover-community.github.io/contribute/style.html)
 - [Mathlib naming conventions](https://leanprover-community.github.io/contribute/naming.html)
 - [Documentation style](https://leanprover-community.github.io/contribute/doc.html)
 
-Source Markdown in the Lean Community website repository:
+If the authoritative source is unavailable, inspect nearby current mathlib code and keep material uncertainty explicit rather than claiming normative compliance.
 
-- [style.md](https://github.com/leanprover-community/leanprover-community.github.io/blob/lean4/templates/contribute/style.md)
-- [naming.md](https://github.com/leanprover-community/leanprover-community.github.io/blob/lean4/templates/contribute/naming.md)
-- [doc.md](https://github.com/leanprover-community/leanprover-community.github.io/blob/lean4/templates/contribute/doc.md)
+## Review bar
 
-When a style, naming, module/import, or documentation decision matters, consult the current source rather than relying on remembered or vendored rules. If the authoritative source is unavailable, inspect nearby current mathlib code and keep any material uncertainty explicit rather than claiming normative compliance.
+For upstream-targeted work, additionally review:
 
-## Additional expectations
+- **Existing results and API:** equivalent or more general results, weakest useful hypotheses, representation choices, public/private surface, argument order, and whether new API is substantive rather than speculative.
+- **Placement, imports, and modules:** the lowest sensible module, narrow imports, public/private visibility, and current generated root/import obligations.
+- **Style and documentation:** formatting, naming, namespace placement, natural dot notation, appropriate module/declaration docs, and comments that explain mathematical or design intent rather than development history.
+- **Attributes and simplification:** `@[simp]`, `@[ext]`, reducibility, coercions, and similar attributes as global API decisions. A locally useful rewrite is not automatically a good global simp lemma; use `references/simp-reference.md` when normal-form decisions matter.
+- **Instances:** diamonds, loops, unnecessary global instances, accidental instance selection, and fragile inference. When several instances of the same class are relevant, inspect which instance terms were elaborated against.
 
-- Search for an existing or more general result before adding a new public declaration.
-- Review API generality, file placement, imports, attributes, instances, and documentation using `references/mathlib-review-taxonomy.md`.
-- For new files, respect the repository's current module/root-file generation requirements rather than caching assumptions about them.
-- Treat mathlib-specific review findings as blockers only when the task is actually targeting upstream mathlib; otherwise they are advisory.
-
-Local Lean projects may intentionally choose different style or API tradeoffs. The common skill follows the local project unless this branch is active.
+Treat these expectations as blockers only when the task actually targets upstream mathlib; otherwise local project conventions take precedence.

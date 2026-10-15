@@ -23,13 +23,4 @@ A helper is not valuable just because a block is long. Keep arguments inline whe
 
 Before manual pointwise/case reasoning, search for `congr`, `EqOn`, `EventuallyEq`, or `ext`-style theorems appropriate to the structure. They often preserve the intended abstraction and reduce definitional bookkeeping.
 
-## Process
-
-1. establish a verified baseline;
-2. identify one structural source of complexity;
-3. search for the library-level alternative;
-4. apply one strategy change;
-5. re-verify correctness and compare readability/maintenance cost;
-6. stop when remaining complexity is the mathematical content rather than proof engineering.
-
-For local term/tactic shortening without a strategy change, stay in the local-simplification surface of `references/optimize.md`. For measured elaboration/build cost, use [references/performance-optimization.md](references/performance-optimization.md).
+Use `references/optimize.md` for the common baseline, verification, and stopping process. For measured elaboration/build cost, use `references/performance-optimization.md`.
