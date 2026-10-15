@@ -1,6 +1,6 @@
 # Reference Map
 
-`SKILL.md` links the task workflows. Use this index only for narrower Lean/mathlib knowledge that changes the current task.
+`SKILL.md` links the primary task guidance. Use this index only for narrower Lean/mathlib knowledge that changes the current task.
 
 ## Verification and project policy
 
