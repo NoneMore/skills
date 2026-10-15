@@ -1,0 +1,33 @@
+# Axiom and Trust-Basis Cleanup
+
+Use when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. The acceptable trust basis is project- and task-specific.
+
+## Inspect first
+
+For a named declaration, use Lean's own environment to inspect its dependencies and, when relevant, `#print axioms <declaration>` in the project context. A successful theorem elaboration does not by itself mean that the theorem has the trust basis the user expects.
+
+Distinguish:
+
+- explicit project `axiom` declarations;
+- unresolved `sorry`/`admit` placeholders;
+- ordinary proved theorems that transitively depend on assumptions;
+- Lean/kernel principles such as choice, propositional extensionality, or quotient soundness, whose acceptability depends on the project's policy.
+
+Do not label a dependency "custom" or "unacceptable" merely because it appears in `#print axioms`; interpret the result against the requested policy.
+
+## Cleanup
+
+1. Trace the unwanted assumption through the target and dependent declarations.
+2. Search local code and mathlib for an accepted replacement; if none exists, prove the smallest missing lemma from accepted hypotheses.
+3. Replace the dependency without strengthening the theorem statement or silently introducing another unacceptable assumption.
+4. Re-run the relevant semantic/integration gate and re-check the target's trust basis.
+
+Work bottom-up when several unwanted assumptions depend on one another.
+
+## Statement problems
+
+Sometimes elimination reveals that the theorem is actually too strong. Do not hide that by replacing one axiom with another or by weakening an existing statement silently. Use `references/formalize.md` when statement design is required, or `references/disprove.md` when there is credible evidence of falsity.
+
+## Evidence to return
+
+Report the declaration checked, the unwanted assumptions removed or still present, the verification gate that ran, and any remaining trust-policy uncertainty.
