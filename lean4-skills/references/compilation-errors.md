@@ -20,7 +20,7 @@ First determine whether the required instance truly does not exist or whether it
 
 If an instance really is missing, provide actual evidence or import the module that defines it. Writing `inferInstance` only repeats synthesis; it does not create evidence that was absent.
 
-When several instances of the same class are in scope, load [instance-pollution.md](instance-pollution.md). Measure-theory cases may also need [measure-theory.md](measure-theory.md).
+When several instances of the same class are in scope, inspect which instance each relevant term was elaborated against and make the intended one explicit at the smallest boundary. Do not broaden into general instance redesign unless the task actually requires it.
 
 ## Recursion depth and heartbeat/timeouts
 
@@ -49,7 +49,7 @@ An earlier tactic already closed the goal. Remove the redundant later tactic rat
 
 ## Imports and module-system diagnostics
 
-Import placement and visibility are semantic in Lean. In module-system code, public/private visibility and `public import` affect what downstream modules can use. For upstream mathlib conventions, load [mathlib-style.md](mathlib-style.md).
+Import placement and visibility are semantic in Lean. In module-system code, public/private visibility and `public import` affect what downstream modules can use. For work intended for upstream mathlib, load `branches/mathlib-upstream.md` and consult the current authoritative contribution guidance.
 
 After changing an imported source file, distinguish a file-local check from dependency-aware verification; see [verification.md](verification.md).
 

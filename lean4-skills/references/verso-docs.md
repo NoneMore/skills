@@ -20,4 +20,4 @@ When a doc diagnostic fires:
 3. qualify ambiguous names enough to resolve in the documentation environment;
 4. verify with the project's actual documentation/lint gate.
 
-For broader upstream mathlib documentation and file conventions, load [mathlib-style.md](mathlib-style.md).
+For broader upstream mathlib documentation and file conventions, load `branches/mathlib-upstream.md` and consult the current authoritative documentation guidance.

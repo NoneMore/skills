@@ -16,13 +16,12 @@ Treat one workflow as the current owner. A workflow may explicitly hand off when
 ## Verification and project policy
 
 - `verification.md` — live, file-local, dependency-aware, and project integration gates
-- `branches/mathlib-upstream.md` — additional expectations only for work intended for upstream mathlib
+- `branches/mathlib-upstream.md` — authoritative current mathlib contribution policy and upstream-only expectations
 
 ## Search, diagnostics, and trust
 
 - `mathlib-guide.md` — finding and validating existing declarations before reproving them
 - `compilation-errors.md` — diagnostic triage by failure class
-- `instance-pollution.md` — multiple local typeclass instances and elaboration hazards
 - `axiom-elimination.md` — trust-basis inspection and removal of unwanted assumptions
 
 ## Proof quality and performance
@@ -35,9 +34,7 @@ Treat one workflow as the current owner. A workflow may explicitly hand off when
 
 ## Mathlib-focused knowledge
 
-- `mathlib-style.md` — mathlib source conventions
 - `mathlib-review-taxonomy.md` — review vocabulary for upstream-oriented work
-- `measure-theory.md` — measure/probability-specific APIs and pitfalls
 - `verso-docs.md` — Verso roles in Lean documentation
 
 ## Advanced Lean programming
