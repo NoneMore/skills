@@ -1,6 +1,6 @@
 # Axiom and Trust-Basis Cleanup
 
-Use when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. This is not a rule that every project must avoid every kernel axiom; the acceptable trust basis is project- and task-specific.
+Use under the repair workflow when a task explicitly concerns unwanted axioms, assumptions, `sorry`/`admit`, or the trust basis of a declaration. This is not a rule that every project must avoid every kernel axiom; the acceptable trust basis is project- and task-specific.
 
 ## Inspect first
 
@@ -15,7 +15,7 @@ Distinguish:
 
 Do not label a dependency "custom" or "unacceptable" merely because it appears in `#print axioms`; interpret the result against the requested policy.
 
-## Elimination workflow
+## Cleanup procedure
 
 1. Identify the exact declaration whose trust basis matters.
 2. Inspect the unwanted assumption and the declarations that depend on it.
@@ -30,6 +30,6 @@ Work bottom-up when several unwanted assumptions depend on one another.
 
 Sometimes elimination reveals that the theorem is actually too strong. Do not hide that by replacing one axiom with another or by weakening an existing statement silently. Hand statement design to the formalization workflow, or refutation to the disprove workflow when there is credible evidence of falsity.
 
-## Completion
+## Evidence to return
 
 Report the declaration checked, the unwanted assumptions removed or still present, the verification gate that ran, and any remaining trust-policy uncertainty.
