@@ -1,68 +1,23 @@
-# Verso Docs
+# Verso Documentation Roles
 
-> **Scope:** Not part of the prove/autoprove default loop. Consulted when writing or fixing Lean doc comments that use Verso roles.
+Use when Lean doc comments use Verso roles or when documentation diagnostics indicate an inline code element is ambiguous or unresolved.
 
-> **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.27.0`
-> - **Last validated:** 2026-02-17
-> - **Confidence:** medium (docs reviewed; snippets not batch-compiled)
+Prefer semantic roles that preserve links and hover information:
 
-## When to Use
+- `{name}` for declared names;
+- `{lean}` for Lean expressions/snippets;
+- `{lit}` for literal pseudo-code that should not be resolved;
+- `{given}` when introducing a variable for later Lean snippets, where supported by the current documentation setup.
 
-- Fixing `doc.verso` warnings about unresolved code elements or roles
-- Writing `/-- ... -/` doc comments with inline code
-- Ensuring hoverable references are precise
+Use `{lit}` as an intentional escape hatch, not the default way to silence a resolution problem.
 
-## Role Priority
+## Debugging
 
-1. `{name}` for declared names (constants, structures, namespaces, theorems)
-2. `{lean}` for Lean expressions or snippets
-3. `{lit}` for literal code that should not resolve (last resort)
+When a doc diagnostic fires:
 
-## Composable Fixups
+1. decide whether the inline text is a declaration name, Lean expression, or literal notation;
+2. use the corresponding role;
+3. qualify ambiguous names enough to resolve in the documentation environment;
+4. verify with the project's actual documentation/lint gate.
 
-Use these small transforms in sequence:
-
-1. `RoleForIdent`: if the snippet is a declared name, wrap with `{name}`
-2. `RoleForExpr`: if it is an expression, wrap with `{lean}`
-3. `RoleForLiteral`: for pseudo-code or undefined vars, use `{lit}`
-4. `RoleForGiven`: introduce variables with `{given}` before use
-
-## Quick Rules
-
-- Wrap inline code in backticks and add a role:
-  - `{name}``TensorLayout.transpose``
-  - `{lean}``fun x ↦ x + 1``
-  - `{lit}``x[i,j]``
-- Use `{given}` to declare variables, then reference with `{lean}`:
-  - `{given}``n`` then `{lean}``#[n]``
-- Use `{lit}` for examples with undefined variables or pseudo-code
-
-## Fixing Common Warnings
-
-- **"code element is not specific":**
-  - Replace `` `foo` `` with `{name}``foo`` if it is a declared identifier
-  - Replace `` `foo x` `` with `{lean}``foo x`` if it is an expression
-- **"unknown role":**
-  - Use one of the standard roles `{name}`, `{lean}`, `{lit}`, `{given}`
-  - If a custom role is required, define it in your doc prelude
-
-## Examples
-
-```lean
-/--
-Returns {name}``TensorLayout.transpose`` for {given}``n``.
-Use {lean}``#[n]`` for a rank-1 shape literal.
-Prefer {lit}``x[i,j]`` when writing pseudo-indexing.
--/
-```
-
-## Checklist
-
-- All inline code has an explicit role
-- `{lit}` is used only when resolution should be disabled
-- Variables referenced in prose are introduced with `{given}`
-
-## See Also
-
-- [mathlib-style.md](mathlib-style.md) — general style conventions
+For broader upstream mathlib documentation and file conventions, load [mathlib-style.md](mathlib-style.md).

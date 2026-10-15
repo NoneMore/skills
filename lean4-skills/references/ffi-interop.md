@@ -1,206 +1,31 @@
-# FFI Interop Reference
+# Lean FFI Interop
 
-> **Scope:** Not part of the prove/autoprove default loop. Consulted when binding Lean 4 to C/C++ libraries or debugging FFI issues.
+Use for Lean/C/C++ boundaries, external symbols, exported Lean functions, and Lake link configuration. Treat the foreign boundary as an ABI and trust boundary, not merely syntax.
 
-> **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.27.0`
-> - **Last validated:** 2026-03-28
-> - **Confidence:** medium (content derived from PR #24 and existing ffi-patterns.md, vetted against current docs)
+## Direction
 
-## When to Use
+- Lean calling foreign code: use the toolchain's `@[extern]` mechanism with an appropriate declaration.
+- Foreign code calling Lean: use `@[export]` on a Lean definition intended as an entry point.
 
-- Adding a C/C++ dependency
-- Exposing Lean functions to a C host
-- Debugging symbol, link, or initialization issues
-- Needing C-compatible struct layout for pointer-based interop
-- Embedding Lean in a C/C++ application (reverse FFI)
+Keep boundary modules small so symbol ownership, initialization, and unsafe assumptions remain inspectable.
 
-## Direction Selection
+## ABI discipline
 
-- **Lean calling C:** use `@[extern]` with an `opaque` declaration
-- **C calling Lean:** use `@[export]` on a Lean `def`
-- **Both directions:** keep each boundary in a dedicated module so symbol maps stay obvious
+- Match native widths, ownership, calling convention, and pointer/value layout deliberately.
+- Borrowed parameters such as `@&` change runtime ownership behavior; keep Lean and foreign prototypes consistent.
+- Use C-layout structures only where the active Lean FFI supports the intended representation; avoid assuming arbitrary Lean structures are C-compatible.
+- Prefer byte-oriented buffers plus explicit lengths for raw memory boundaries.
 
-## Lean Calling C (`@[extern]`)
+Logical verification in Lean does not prove a foreign implementation is memory-safe or behaviorally equivalent. Test the actual compiled boundary.
 
-```lean
-@[extern "my_add"]
-opaque myAdd : UInt32 -> UInt32 -> UInt32
-```
+## Lake integration
 
-Guidelines:
-- Match Lean type and native ABI exactly (`UInt32`, `USize`, `Float`, etc.)
-- Prefer explicit symbol names (`@[extern "symbol"]`) over ad-hoc defaults
-- Keep wrappers small and total on the Lean side
+Use the project's Lake configuration to build/link required object or library artifacts. Follow the active toolchain's APIs for external libraries and interpreter/precompiled-module support rather than copying stale build snippets blindly.
 
-For opaque handle patterns:
+## Reverse embedding
 
-```lean
-opaque MyHandle : Type
+When a C/C++ host initializes Lean, treat runtime initialization, module initialization order, reference counting/ownership, and shutdown as part of the interface contract. A function that works when called from a Lean executable may still require additional runtime setup when embedded.
 
-@[extern "my_open"]
-constant myOpen (flags : UInt32) : IO MyHandle
-```
+## Completion
 
-## C Calling Lean (`@[export]`)
-
-```lean
-@[export my_length]
-def myLength (s : String) : UInt64 :=
-  s.length.toUInt64
-```
-
-The export name is an identifier (no quotes). On the C side:
-
-```c
-extern uint64_t my_length(lean_obj_arg);
-```
-
-Guidelines:
-- Export names must be valid C/C++ identifiers
-- Keep exported entry points free of implicit global state where possible
-- If exposing many functions, keep an "exports" module with only boundary symbols
-
-## Borrowed Parameters (`@&`)
-
-Prefix a parameter type with `@&` to mark it as borrowed — the function will not consume or deallocate the value:
-
-```lean
-@[extern "my_fill"]
-constant myFill (buf : @& ByteArray) (len : USize) : IO Unit
-```
-
-Key points:
-- `@&` affects ABI and runtime behavior only, not Lean's logical type system
-- `@&` only applies to `@[extern]` declarations; `@[export]` parameters and return values are currently always owned
-- Use for read-only object parameters crossing FFI boundaries
-- Reduces unnecessary reference-count traffic in hot FFI paths
-- Keep extern Lean signature and foreign prototype ownership conventions aligned
-- Do not assume borrow inference will fix exported ABI boundaries — treat exported functions as explicit ownership contracts
-
-## Struct Layout
-
-Use `@[cstruct]` for C-compatible memory layout (pointer-based access from foreign code):
-
-```lean
-@[cstruct]
-structure CPoint where
-  x : Int32
-  y : Int32
-```
-
-Keep fields concrete and avoid Lean-level invariants inside the struct. Note that passing or returning C structs by value across the FFI boundary is not currently supported — use pointers.
-
-## ByteArray-Based Buffers
-
-Prefer `ByteArray` for raw buffers and pass sizes explicitly:
-
-```lean
-@[extern "my_fill"]
-constant myFill (buf : @& ByteArray) (len : USize) : IO Unit
-```
-
-## Lake Wiring
-
-For external C/C++ artifacts:
-- Build object targets with `buildO`
-- Build library targets with `buildStaticLib` or `buildSharedLib`
-- Attach via `moreLinkObjs` / `moreLinkLibs` on the Lean library or executable config
-
-```lean
-extern_lib mylib pkg := do
-  buildStaticLib (pkg.staticLibDir / nameToStaticLib "mylib") oFiles
-```
-
-For interpreter/metaprogram use of extern functions:
-- Enable precompiled module loading: `precompileModules := true` in the relevant Lean lib/exe config
-
-For ObjC on macOS, compile `.m` with system clang and `-framework` flags.
-
-## Reverse-FFI Host Initialization
-
-When embedding Lean in a C host, the common initialization sequence is:
-
-1. `lean_initialize_runtime_module()` — initialize the Lean runtime
-2. Call generated module initializer(s), e.g. `initialize_pkg_Module(...)` — initialize your Lean modules
-3. Check result with `lean_io_result_is_ok()` — verify initialization succeeded
-4. `lean_io_mark_end_initialization()` — signal that init is complete
-5. Call exported Lean functions — only safe after step 4
-
-Skipping or reordering these steps causes hard-to-debug runtime failures (missing global state, extension lookup failures, crashes).
-
-**Caveats:**
-- Some embedders need `lean_initialize()` instead of `lean_initialize_runtime_module()` — consult the official FFI docs for your use case
-- If using process/libuv functionality, call `lean_setup_args(argc, argv)` before initialization
-- Code using `Task` or non-Lean-managed threads may require additional init hooks
-
-## Initialization Mechanisms
-
-> This section covers initialization internals. Most FFI users only need the reverse-FFI sequence above.
-
-Three mechanisms exist:
-- **`initialize` command** — default path for registering refs/extensions and one-time setup. Prefer this.
-- **`[init]` attribute** — explicit initialization for declarations run on import.
-- **`builtin_initialize` / `[builtin_init]`** — compiler/runtime bootstrap path, not for general-purpose app setup.
-
-### Debugging Init-Order Issues
-
-When behavior differs between interpreted and compiled execution:
-1. Confirm the initializer is attached to the expected declaration
-2. Confirm whether the code path is interpreted or native
-3. Confirm module initialization for every imported module has run
-4. Check whether one-time global side effects are skipped by duplicate-avoidance state
-
-Symptoms that point to initialization rather than logic errors:
-- Exported symbol callable but behaves as if global state is unset
-- Extension lookup fails only in host executable
-- Behavior differs between `lake env lean` and compiled binary
-
-## Symbol Linkage
-
-> This section covers compiler-level symbol naming. Most FFI users only need explicit `@[extern "name"]` / `@[export name]` and will not encounter these details.
-
-Symbol generation depends on:
-- Declaration name mangling (e.g., `Name.mangle`)
-- Package-aware prefixing
-- Init symbol naming (`initialize_` prefix plus mangled module name)
-- Boxed-name variants (e.g., `___boxed` suffix)
-- Explicit `@[export]` overrides (bypasses standard naming)
-
-### Debug Order for Linker Issues
-
-1. Check `@[extern]` / `@[export]` attributes on the declaration
-2. Check whether the export name bypasses standard stem naming
-3. Check Lake linking targets (`moreLinkObjs` / `moreLinkLibs`)
-4. Check module initialization function names
-5. Inspect generated C output for expected symbols
-
-## Common Failure Modes
-
-| Symptom | Likely cause |
-|---------|-------------|
-| `unknown symbol` at runtime | Symbol name mismatch or library not linked |
-| Works in `lake build`, fails in eval | Missing `precompileModules` for interpreter |
-| Crash when calling exported Lean from C | Runtime/module initialization order wrong |
-| Global state appears unset in host exe | Missing or misordered `initialize_` call |
-| Behavior differs between modes | Init paths mismatched (native vs interpreter) |
-
-## Pitfalls
-
-- Missing `-fPIC` on non-Windows platforms
-- Mismatched integer sizes (`Int` vs `Int32` vs `USize`)
-- Forgetting to keep buffers alive across FFI calls
-- Not exporting symbols with `LEAN_EXPORT` when needed
-
-## Checklist
-
-- Extern name matches the C symbol
-- ABI types are exact (`UInt32`, `USize`, `Float`, etc.)
-- Structs that cross the boundary use `@[cstruct]`
-- Lake builds the static lib for all platforms you support
-- `@&` annotations match foreign prototype ownership
-
-## See Also
-
-- [Lean 4 Reference: FFI](https://lean-lang.org/doc/reference/latest/Run-Time-Code/Foreign-Function-Interface/) — official documentation
-- [compiler-internals](compiler-internals.md) — compiler attributes, specialization, pipeline
+A delivered FFI change should elaborate, link, and run through the actual boundary exercised by the user. Report any ABI or lifetime assumptions that are not mechanically checked.
