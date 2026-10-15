@@ -7,6 +7,7 @@
 - `workflows/prove.md` — proof holes and proof failures
 - `workflows/formalize.md` — statement design and informal-to-Lean formalization
 - `workflows/disprove.md` — certified refutation and counterexample search
+- `workflows/repair.md` — non-proof diagnostics and explicit trust-basis repair
 - `workflows/review.md` — read-only code review
 - `workflows/optimize.md` — proof strategy, local simplification, and performance improvement
 - `workflows/learn.md` — teaching and exploration
