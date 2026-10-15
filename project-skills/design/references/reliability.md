@@ -1,6 +1,6 @@
 # Reliability design
 
-Use this guidance when failure behavior, recovery, availability, or degradation can materially change the design.
+Use this guidance when failure behavior, recovery, availability, or degradation can materially change the design. This lens owns how system behavior should remain bounded under failure; use [distributed-state.md](distributed-state.md) when the core question becomes correctness across independent state or ordering boundaries, and [operability.md](operability.md) when recovery depends on operator diagnosis or control.
 
 ## Start from failure assumptions
 
