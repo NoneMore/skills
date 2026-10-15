@@ -1,6 +1,6 @@
 # Lean 4 Diagnostic Triage
 
-Use this reference after obtaining the exact current diagnostic and nearby source context. Diagnose the class of failure before changing code; avoid treating every elaboration failure as a proof-search problem.
+Use this reference under the workflow that owns the current task after obtaining the exact current diagnostic and nearby source context. Diagnose the class of failure before changing code; avoid treating every elaboration failure as a proof-search problem.
 
 ## Type mismatch
 
@@ -55,4 +55,4 @@ After changing an imported source file, distinguish a file-local check from depe
 
 ## Debugging rule
 
-Use the smallest source change that tests the current hypothesis, then re-read the diagnostic. If the same error persists with no new evidence, stop repeating that repair avenue.
+Use the smallest source change that tests the current hypothesis, then re-read the diagnostic. If the same error persists with no new evidence, stop repeating that repair avenue. Proof failures remain owned by `workflows/prove.md`; other diagnostic repair is owned by `workflows/repair.md`.
