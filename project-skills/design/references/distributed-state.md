@@ -1,6 +1,6 @@
 # Distributed state
 
-Use this guidance when authoritative state, replicas, caches, messages, or concurrent writers cross a process or asynchronous boundary.
+Use this guidance when authoritative state, replicas, caches, messages, or concurrent writers cross a process or asynchronous boundary. This lens owns correctness semantics across independent state and ordering boundaries; use [reliability.md](reliability.md) when the primary question is service behavior under failure, and [operability.md](operability.md) when the primary question is human or tooling intervention.
 
 ## Establish ownership and guarantees
 
