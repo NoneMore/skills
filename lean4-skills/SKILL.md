@@ -48,6 +48,14 @@ Make the smallest coherent change that satisfies the task. Cross-file edits are 
 
 Do not repeat the same failed avenue without new evidence. When no materially new bounded avenue remains, stop with the blocker, evidence already gathered, and the smallest useful next action.
 
-## Knowledge on demand
+## Specialized references
 
-Use [references/INDEX.md](references/INDEX.md) for narrower Lean/mathlib knowledge not already linked above.
+Load only when material to the task:
+
+- [mathlib search and integration](references/mathlib-guide.md)
+- [verification gates](references/verification.md)
+- [upstream mathlib policy](references/branches/mathlib-upstream.md)
+- [proof strategy simplification](references/proof-simplification.md)
+- [performance optimization](references/performance-optimization.md)
+- [`simp` and simp-lemma design](references/simp-reference.md)
+- [mathlib review taxonomy](references/mathlib-review-taxonomy.md)
