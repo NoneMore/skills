@@ -40,7 +40,7 @@ Prefer the strongest available feedback loop without assuming a particular host 
 - Use the lightest verification gate that establishes the property the task requires. Load [references/verification.md](references/verification.md) when file, dependency, or integration scope matters.
 - State what actually ran. If a required gate cannot run, distinguish a locally checked result from an integration-verified result.
 
-Do not hard-code host adapter paths, helper-runtime locations, command aliases, rate limits, or implementation-specific tool inventories into portable behavior.
+Portable behavior depends on available capabilities, not a particular host or plugin implementation.
 
 ## Scope and stopping
 
