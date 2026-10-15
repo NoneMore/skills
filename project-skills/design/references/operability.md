@@ -1,6 +1,6 @@
 # Operability
 
-Use this guidance when production diagnosis, repair, or operational control can materially change the architecture.
+Use this guidance when production diagnosis, repair, or operational control can materially change the architecture. This lens owns how humans and operational tooling understand and intervene in the system; use [reliability.md](reliability.md) for autonomous behavior under failure and [distributed-state.md](distributed-state.md) for authoritative state, ordering, and reconciliation semantics.
 
 ## Treat operations as an interface
 
