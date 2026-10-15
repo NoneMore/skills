@@ -55,4 +55,4 @@ After changing an imported source file, distinguish a file-local check from depe
 
 ## Debugging rule
 
-Use the smallest source change that tests the current hypothesis, then re-read the diagnostic. If the same error persists with no new evidence, stop repeating that repair avenue. Use `references/prove.md` for proof failures and `references/repair.md` for other diagnostic repair.
+Use the smallest source change that tests the current hypothesis, then re-read the diagnostic. If the same error persists with no new evidence, stop repeating that repair avenue. Use `references/prove.md` when the remaining problem is proof search; otherwise continue from the diagnostic evidence here.
