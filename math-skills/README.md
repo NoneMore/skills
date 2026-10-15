@@ -38,14 +38,15 @@ Use $math-writing-editor to edit, restructure, or rewrite the specified mathemat
 
 Path: `skills/lean-blueprint-author`
 
-Generates insertion-ready leanblueprint LaTeX for a specified Lean
-formalization target from local reference materials. Use it for Lean blueprint
-routes, proof routes, dependency routes, and formalization roadmaps.
+Creates, modifies, and synchronizes leanblueprint blueprints. For real projects
+it includes read-only mechanical tooling that projects/checks the upstream
+plasTeX dependency model so the model can focus on mathematical routes,
+dependency semantics, and Lean/blueprint correspondence.
 
 Default prompt:
 
 ```text
-Use $lean-blueprint-author to generate a leanblueprint route for the specified theorem from these reference materials.
+Use $lean-blueprint-author to create, modify, or synchronize this Lean project's blueprint.
 ```
 
 ## Installation
@@ -79,6 +80,8 @@ skills/
     agents/openai.yaml
     references/leanblueprint-basics.md
     references/workflows.md
+    scripts/blueprint.py
+    scripts/tests/test_blueprint.py
 ```
 
 There is intentionally no root-level `SKILL.md`; each skill is installed from
@@ -94,4 +97,12 @@ VALIDATOR="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quic
 python3 "$VALIDATOR" skills/math-paper-reader
 python3 "$VALIDATOR" skills/math-writing-editor
 python3 "$VALIDATOR" skills/lean-blueprint-author
+```
+
+The deterministic tests for the lean blueprint helper do not require a Lean
+project. The parse integration test runs automatically when the leanblueprint /
+plasTeX runtime is installed and otherwise skips explicitly:
+
+```sh
+python3 -m unittest discover -s skills/lean-blueprint-author/scripts/tests -v
 ```
