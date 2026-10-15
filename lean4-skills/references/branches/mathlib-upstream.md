@@ -4,8 +4,9 @@ Load when the repository is mathlib or the user explicitly says the work is inte
 
 ## Current contribution policy
 
-Consult the current Lean Community documentation for normative decisions instead of caching local copies:
+Consult the current Lean Community documentation for normative decisions instead of caching local copies. Start with the repository-wide contribution policy, then use the specialized pages for decisions in their scope:
 
+- [Contributing to mathlib](https://leanprover-community.github.io/contribute/index.html)
 - [Library Style Guidelines](https://leanprover-community.github.io/contribute/style.html)
 - [Mathlib naming conventions](https://leanprover-community.github.io/contribute/naming.html)
 - [Documentation style](https://leanprover-community.github.io/contribute/doc.html)
