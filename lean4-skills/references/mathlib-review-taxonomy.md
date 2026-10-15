@@ -1,6 +1,6 @@
 # Mathlib Review Taxonomy
 
-Use this vocabulary when reviewing work intended for upstream mathlib. The review workflow decides whether a finding is material; this file only names common review surfaces.
+Use this vocabulary when reviewing work intended for upstream mathlib. This file names common review surfaces; whether a finding is material depends on the actual review task.
 
 ## Surface style and naming
 
