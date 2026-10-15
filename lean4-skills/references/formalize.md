@@ -16,4 +16,4 @@ When a checked proof is required, use `references/prove.md` for the generated de
 
 - **Draft:** the intended claim is represented in Lean and the declaration skeleton elaborates apart from explicitly reported proof holes.
 - **Checked:** the generated declaration satisfies the checked-proof completion rule in `references/prove.md`.
-- Any unresolved item makes the result partial under the shared reporting rules in `SKILL.md`.
+- Any unresolved item makes the result partial; surface it explicitly and do not present the result as checked.
