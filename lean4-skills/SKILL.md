@@ -14,8 +14,8 @@ Unless the user explicitly authorizes otherwise:
 
 - Preserve existing theorem statements, declaration signatures, and public API. If the statement itself is the problem, hand responsibility to the formalization or refutation workflow rather than silently weakening it.
 - Preserve existing docstrings on declarations being edited. New declarations may receive new documentation.
-- Do not silently introduce axioms, `sorry`, `admit`, or another change to the trust basis. Surface assumptions explicitly.
-- Keep unrelated files and unrelated working-tree changes untouched.
+- Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the trust basis to make a proof or repair succeed. Surface existing assumptions explicitly. If the user explicitly accepts a partial result or trust-basis change, report it as partial or changed rather than as ordinary verified completion.
+- Keep unrelated files and unrelated working-tree changes untouched. Cross-file edits stay within user/project-owned source by default; treat toolchain files, package caches, external dependencies, and third-party vendored or submodule sources as read-only unless the user explicitly puts that dependency in scope.
 - Do not commit, push, open a PR, or perform destructive version-control operations unless the user explicitly requests that operation.
 - Follow local project conventions. For work intended for upstream mathlib, also load [references/branches/mathlib-upstream.md](references/branches/mathlib-upstream.md).
 
