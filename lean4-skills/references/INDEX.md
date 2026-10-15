@@ -1,18 +1,6 @@
 # Reference Map
 
-`SKILL.md` owns shared behavior. Workflow files own task-specific behavior. The references below are loaded only when their knowledge changes the current formalization task.
-
-## Workflows
-
-- `references/prove.md` — proof holes and proof failures
-- `references/formalize.md` — statement design and informal-to-Lean formalization
-- `references/disprove.md` — certified refutation and counterexample search
-- `references/repair.md` — non-proof diagnostics and explicit trust-basis repair
-- `references/review.md` — read-only code review
-- `references/optimize.md` — proof strategy, local simplification, and performance improvement
-- `references/learn.md` — teaching and exploration
-
-Treat one workflow as the current owner. A workflow may explicitly hand off when responsibility changes.
+`SKILL.md` links the task workflows. Use this index only for narrower Lean/mathlib knowledge that changes the current task.
 
 ## Verification and project policy
 
@@ -35,4 +23,4 @@ Treat one workflow as the current owner. A workflow may explicitly hand off when
 
 - `references/mathlib-review-taxonomy.md` — review vocabulary for upstream-oriented work
 
-Do not treat this index as a preload list. Start from the current task and load the smallest relevant reference.
+Load only references whose knowledge is material to the task.
