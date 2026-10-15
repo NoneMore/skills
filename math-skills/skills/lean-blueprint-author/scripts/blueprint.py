@@ -8,7 +8,6 @@ import contextlib
 import glob
 import json
 import os
-import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,7 +15,6 @@ from typing import Any, Iterator, Sequence
 
 SCHEMA_VERSION = 1
 CALLBACK_CUTOFF = 110  # current upstream graph construction completes here
-MACROS = ("label", "lean", "uses", "leanok", "mathlibok", "notready", "proves")
 
 
 class ProviderError(RuntimeError):
@@ -167,7 +165,7 @@ def parse_project(root: Path, entrypoint: Path | None = None, config: Path | Non
     if not entrypoint.is_file():
         raise ProviderError(f"entrypoint not found: {entrypoint}")
 
-    with _cwd(entrypoint.parent), _instrument(root) as labels:
+    with _cwd(entrypoint.parent):
         document = plasTeX.TeXDocument(config=_config(config))
         tex = TeX(document, file=entrypoint.name)
         tex.toplevel = False  # do not auto-run all post-parse callbacks
@@ -181,7 +179,9 @@ def parse_project(root: Path, entrypoint: Path | None = None, config: Path | Non
                 if os.path.basename(fname) != pauxname:
                     document.context.restore(fname, renderer)
 
-        tex.parse()
+        with _instrument(root) as labels:
+            tex.parse()
+
         names = {
             getattr(cb, "__name__", "")
             for cbs in document.postParseCallbacks.values()
