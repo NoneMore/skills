@@ -11,7 +11,7 @@ Use for filling proof holes, repairing proof failures, or making the smallest su
 5. Verify the changed target and any affected dependency boundary with the lightest sufficient gate; load `references/verification.md` when the distinction matters.
 6. Continue only while new evidence suggests a materially different bounded avenue.
 
-Cross-file edits are allowed when they are the smallest necessary way to complete the agreed target, for example adding a genuinely necessary helper or import in an owned dependency. Do not widen into open-ended refactoring, cleanup, or architecture work.
+Cross-file edits are allowed when they are the smallest necessary way to complete the agreed target, for example adding a genuinely necessary helper or import in user/project-owned source. Toolchain files, package caches, external dependencies, and third-party vendored or submodule sources remain read-only unless the user explicitly puts that dependency in scope. Do not widen into open-ended refactoring, cleanup, or architecture work.
 
 ## Handoffs
 
@@ -27,4 +27,4 @@ A handoff is not permission to preload all workflows.
 
 Stop when no materially new bounded avenue remains. Report the blocker, useful searches or attempts already ruled out, and the smallest next action that could change the result.
 
-A proof task is complete when the agreed target elaborates, the agreed proof scope has no unresolved `sorry`/`admit` unless the user explicitly accepted a partial result, affected files satisfy the chosen verification gate, and the statement/trust basis was not silently changed.
+A checked proof task is complete when the agreed target elaborates, the agreed proof scope has no unresolved `sorry`/`admit`, affected files satisfy the chosen verification gate, the agreed statement/API is preserved, and no new axiom or other trust-basis weakening was introduced to make the proof succeed. If the user explicitly accepts a partial result or trust-basis change, report that outcome as partial or changed rather than as a completed checked proof.
