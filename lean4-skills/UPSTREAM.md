@@ -9,3 +9,5 @@ This package was imported from `cameronfreer/lean4-skills`.
 The first commit that introduces `lean4-skills/` in this repository is an object-identical copy of that subtree. That commit is the inspectable upstream baseline.
 
 Later commits intentionally refactor the package as an independent portable Skill. They do **not** preserve upstream reference paths, slash-command behavior, plugin-runtime machinery, helper protocols, or subagent orchestration. Upstream material is retained only when it continues to provide portable behavioral value or durable Lean/mathlib knowledge.
+
+The retained upstream MIT notice is in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
