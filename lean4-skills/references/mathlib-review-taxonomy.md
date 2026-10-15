@@ -4,7 +4,7 @@ Use this vocabulary when reviewing work intended for upstream mathlib. The revie
 
 ## Surface style and naming
 
-Check local formatting, line width, tactic idiom, declaration naming, namespace placement, and whether dot notation is natural. For normative style or naming decisions, load `branches/mathlib-upstream.md` and consult the current Lean Community contribution guidance.
+Check local formatting, line width, tactic idiom, declaration naming, namespace placement, and whether dot notation is natural. For normative style or naming decisions, load `references/branches/mathlib-upstream.md` and consult the current Lean Community contribution guidance.
 
 ## Documentation
 
@@ -22,7 +22,7 @@ Do not generalize merely because a more abstract statement is imaginable; the ge
 
 ## Attributes and simplification
 
-Check `@[simp]`, `@[ext]`, reducibility, coercions, and other attributes as global API decisions. A locally useful rewrite is not automatically a good global simp lemma. Load [simp-reference.md](simp-reference.md) for simp-normal-form decisions.
+Check `@[simp]`, `@[ext]`, reducibility, coercions, and other attributes as global API decisions. A locally useful rewrite is not automatically a good global simp lemma. Load [references/simp-reference.md](references/simp-reference.md) for simp-normal-form decisions.
 
 ## Instances
 

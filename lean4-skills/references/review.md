@@ -14,7 +14,7 @@ Prefer the smallest scope that answers the request: one goal/declaration, one fi
 4. Maintainability: proof structure, naming, comments/docstrings, local style.
 5. Optimization opportunities only when they materially improve directness, determinism, performance, or clarity.
 
-When the target is upstream mathlib, load `../branches/mathlib-upstream.md` and use `../mathlib-review-taxonomy.md` as the additional review bar.
+When the target is upstream mathlib, load `references/branches/mathlib-upstream.md` and use `references/mathlib-review-taxonomy.md` as the additional review bar.
 
 ## Output
 

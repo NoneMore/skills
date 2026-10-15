@@ -25,13 +25,13 @@ Select a workflow when one clearly owns the current task. Do not preload unrelat
 
 | Current responsibility | Workflow |
 |---|---|
-| Fill a proof hole, repair a proof failure, or make the smallest supporting edits needed for a proof | [prove](references/workflows/prove.md) |
-| Design a Lean statement from an informal claim or explicitly revise statement shape | [formalize](references/workflows/formalize.md) |
-| Search for and certify a counterexample or negation | [disprove](references/workflows/disprove.md) |
-| Repair non-proof Lean/Lake diagnostics or inspect/remove unwanted trust assumptions | [repair](references/workflows/repair.md) |
-| Review Lean code without modifying it | [review](references/workflows/review.md) |
-| Improve an already-correct proof for structure, directness, size, or performance | [optimize](references/workflows/optimize.md) |
-| Explain Lean, mathlib, project code, or a formal mathematical idea | [learn](references/workflows/learn.md) |
+| Fill a proof hole, repair a proof failure, or make the smallest supporting edits needed for a proof | [prove](references/prove.md) |
+| Design a Lean statement from an informal claim or explicitly revise statement shape | [formalize](references/formalize.md) |
+| Search for and certify a counterexample or negation | [disprove](references/disprove.md) |
+| Repair non-proof Lean/Lake diagnostics or inspect/remove unwanted trust assumptions | [repair](references/repair.md) |
+| Review Lean code without modifying it | [review](references/review.md) |
+| Improve an already-correct proof for structure, directness, size, or performance | [optimize](references/optimize.md) |
+| Explain Lean, mathlib, project code, or a formal mathematical idea | [learn](references/learn.md) |
 
 A workflow is the **current owner**, not a permanent mode for the whole request. It may explicitly hand off when responsibility changes, for example `formalize -> prove`, `prove -> formalize`, `prove -> disprove`, or `prove -> optimize`.
 

@@ -4,9 +4,9 @@ Use only after correctness is established and the user wants a clearer, more mai
 
 Choose the smallest optimization surface that matches the request:
 
-- **Strategy simplification:** replace an indirect proof with a more direct mathematical/library argument or extract a genuinely useful helper. Load `../proof-simplification.md`.
+- **Strategy simplification:** replace an indirect proof with a more direct mathematical/library argument or extract a genuinely useful helper. Load `references/proof-simplification.md`.
 - **Local simplification:** shorten or clarify an already-correct proof without redesigning surrounding API. Prefer direct terms and exact discovered lemmas over ceremony or broad automation when that improves clarity and stability; shorter source is not automatically better.
-- **Performance:** diagnose elaboration/build cost before changing code. Load `../performance-optimization.md`.
+- **Performance:** diagnose elaboration/build cost before changing code. Load `references/performance-optimization.md`.
 
 Do not combine all three by default.
 

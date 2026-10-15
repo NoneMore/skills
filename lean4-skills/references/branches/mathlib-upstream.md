@@ -23,7 +23,7 @@ When a style, naming, module/import, or documentation decision matters, consult 
 ## Additional expectations
 
 - Search for an existing or more general result before adding a new public declaration.
-- Review API generality, file placement, imports, attributes, instances, and documentation using `../mathlib-review-taxonomy.md`.
+- Review API generality, file placement, imports, attributes, instances, and documentation using `references/mathlib-review-taxonomy.md`.
 - For new files, respect the repository's current module/root-file generation requirements rather than caching assumptions about them.
 - Treat mathlib-specific review findings as blockers only when the task is actually targeting upstream mathlib; otherwise they are advisory.
 

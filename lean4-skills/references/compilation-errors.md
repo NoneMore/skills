@@ -29,7 +29,7 @@ These are different failures.
 - recursion-depth errors usually indicate elaboration/reduction depth;
 - heartbeat or tactic/typeclass timeouts indicate too much work or search.
 
-Do not reflexively increase limits. First narrow broad `simp`, automation, typeclass search, or deeply nested terms; make polymorphic parameters explicit; or split a large elaboration problem into smaller checked lemmas. Load [performance-optimization.md](performance-optimization.md) when the failure is performance-driven.
+Do not reflexively increase limits. First narrow broad `simp`, automation, typeclass search, or deeply nested terms; make polymorphic parameters explicit; or split a large elaboration problem into smaller checked lemmas. Load [references/performance-optimization.md](references/performance-optimization.md) when the failure is performance-driven.
 
 ## Unknown identifier / invalid field
 
@@ -49,10 +49,10 @@ An earlier tactic already closed the goal. Remove the redundant later tactic rat
 
 ## Imports and module-system diagnostics
 
-Import placement and visibility are semantic in Lean. In module-system code, public/private visibility and `public import` affect what downstream modules can use. For work intended for upstream mathlib, load `branches/mathlib-upstream.md` and consult the current authoritative contribution guidance.
+Import placement and visibility are semantic in Lean. In module-system code, public/private visibility and `public import` affect what downstream modules can use. For work intended for upstream mathlib, load `references/branches/mathlib-upstream.md` and consult the current authoritative contribution guidance.
 
-After changing an imported source file, distinguish a file-local check from dependency-aware verification; see [verification.md](verification.md).
+After changing an imported source file, distinguish a file-local check from dependency-aware verification; see [references/verification.md](references/verification.md).
 
 ## Debugging rule
 
-Use the smallest source change that tests the current hypothesis, then re-read the diagnostic. If the same error persists with no new evidence, stop repeating that repair avenue. Proof failures remain owned by `workflows/prove.md`; other diagnostic repair is owned by `workflows/repair.md`.
+Use the smallest source change that tests the current hypothesis, then re-read the diagnostic. If the same error persists with no new evidence, stop repeating that repair avenue. Proof failures remain owned by `references/prove.md`; other diagnostic repair is owned by `references/repair.md`.

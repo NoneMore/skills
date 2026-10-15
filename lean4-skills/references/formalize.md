@@ -8,7 +8,7 @@ Use when translating an informal claim into Lean or when the user explicitly aut
 2. Search mathlib for canonical types, definitions, theorem shapes, and existing results before choosing an encoding.
 3. Draft the weakest faithful statement with explicit hypotheses and no hidden axioms.
 4. Check that the declaration itself elaborates. A draft may contain an explicitly reported proof hole.
-5. When a checked proof is required, hand ownership to `prove.md` for the generated declaration.
+5. When a checked proof is required, hand ownership to `references/prove.md` for the generated declaration.
 6. If proving exposes a statement mismatch, revise session-generated declarations or other declarations the user explicitly authorized for statement work. Preserve pre-existing declarations otherwise.
 
 ## Completion
