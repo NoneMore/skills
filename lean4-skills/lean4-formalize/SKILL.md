@@ -1,6 +1,6 @@
 ---
 name: lean4-formalize
-description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate an informal mathematical claim into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Do not use when a concrete Lean declaration is already fixed and only its proof needs completion, or when the main task is open-ended reconnaissance before the intended formal object is known."
+description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate an informal mathematical claim into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, and generality choices needed to deliver that declaration remain part of this skill. Do not use when a concrete Lean declaration is already fixed and only its proof needs completion, or when choosing among formal directions has been explicitly separated into its own requested outcome."
 license: MIT
 ---
 
@@ -26,7 +26,9 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 
 ## Composition
 
-If the main uncertainty precedes statement design—what object, abstraction, library API, assumption boundary, or generalization should be pursued—use `lean4-explore` to reduce that uncertainty first. Once the intended encoding is selected, this skill owns the durable declaration.
+Statement-design decisions required to produce the requested declaration stay here by default, including choosing canonical types, hypotheses, generality, and an appropriate existing API. Do not invoke `lean4-explore` merely because those choices require search or comparison.
+
+Use `lean4-explore` when direction selection has become a distinct requested outcome rather than an internal formalization decision—for example, the task would be complete with an evidence-backed recommendation among materially different formal objects, abstractions, API families, assumption boundaries, generalizations, or dual formulations even before any durable declaration is produced. Once the intended encoding is selected and a Lean declaration is requested, this skill owns that declaration.
 
 When the user also requires a checked proof, hand the settled declaration to `lean4-prove`. If evidence instead supports falsity, use `lean4-refute` to certify that result rather than mutating the statement to make it provable.
 

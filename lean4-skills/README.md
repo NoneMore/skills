@@ -19,7 +19,11 @@ Before materially changing this collection, follow the repository-level [Skill D
 
 Choose the primary capability by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, and explanatory substeps normally remain inside the capability that already owns the task.
 
-`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Compose it only when multiple materially different formal directions remain plausible and choosing among them becomes a distinct requested outcome. A standalone explanation of existing code with no evaluation request and no open formal-design decision does not require a specialized Lean 4 Skill.
+`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Compose it only when multiple materially different formal directions remain plausible and choosing among them becomes a distinct requested outcome. Different proof strategies for a fixed concrete goal do not by themselves create an exploration outcome. A standalone explanation of existing code with no evaluation request and no open formal-design decision does not require a specialized Lean 4 Skill.
+
+Use the requested deliverable as the commitment test at the `lean4-explore` / `lean4-formalize` boundary. If the task is complete once an evidence-backed formal direction has been chosen, exploration may own that outcome. If the requested deliverable is a Lean declaration, the ordinary choices needed to produce that declaration remain inside `lean4-formalize` unless direction selection is explicitly separated into its own outcome.
+
+When capabilities compose, the primary outcome owner also owns the governing invariants. A supporting capability may gather evidence or resolve a bounded subproblem, but it must not broaden the primary owner's mutation permissions, trust basis, scope, or verification claims. In particular, exploratory scratch work does not override a read-only review contract or become a durable edit merely because it informed another capability.
 
 When a real outcome boundary is crossed, hand off explicitly: exploration may settle an encoding for formalization, diagnosis may reduce to ordinary proof search, review may identify a change owned by proof/trust/optimization, and exploration may support an optimization decision without owning the durable edit.
 

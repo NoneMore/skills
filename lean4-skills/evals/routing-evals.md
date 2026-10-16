@@ -2,7 +2,7 @@
 
 Run each prompt independently with none of the Lean 4 skills pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
-Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal directions remain plausible and choosing among them is a distinct requested outcome. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
+Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, proof-strategy comparison, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal-design directions remain plausible and choosing among them is a distinct requested outcome. Supporting capabilities must not broaden the primary owner's mutation, trust, scope, or verification contract. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
 
 ## Positive routing
 
@@ -26,9 +26,15 @@ Prompt: Prove in Lean that every finite subgroup of a torsion-free group is triv
 - `lean4_prove_may_compose_after_declaration_is_settled = PASS`
 - `lean4_explore_not_selected_merely_because_library_search_is_useful = PASS`
 
-Prompt: Before formalizing this construction, investigate whether it is really an instance of a generic fixed-point API, whether a dual theorem should exist, and whether any hypotheses can be dropped.
+Prompt: Formalize this theorem in Lean using the canonical encoding; choose the best types, hypotheses, and available mathlib API as needed.
+- `lean4_formalize_primary_for_requested_declaration = PASS`
+- `ordinary_encoding_and_api_choices_stay_inside_formalize = PASS`
+- `lean4_explore_not_selected_merely_because_statement_design_requires_comparison = PASS`
+
+Prompt: Before formalizing this construction, investigate whether it is really an instance of a generic fixed-point API, whether a dual theorem should exist, and whether any hypotheses can be dropped. I want a direction recommendation before any declaration is committed.
 - `lean4_explore_selected = PASS`
 - `exploration_may_branch_across_abstraction_duality_and_assumption_tests = PASS`
+- `direction_recommendation_is_a_sufficient_outcome = PASS`
 - `no_durable_statement_or_proof_change_required = PASS`
 
 Prompt: Find the exact mathlib declaration for this fact, compare the nearby alternatives, and explain which abstraction is canonical in this project. Do not change code.
@@ -39,10 +45,15 @@ Prompt: Find the exact mathlib declaration for this fact. I only need its name a
 - `lean4_explore_not_selected_for_lookup_alone = PASS`
 - `no_specialized_lean4_skill_required_without_an_owned_outcome = PASS`
 
+Prompt: This theorem statement is fixed. Compare induction, rewriting, a direct order-theoretic argument, and automation if useful, then finish the proof without changing the statement.
+- `lean4_prove_primary = PASS`
+- `materially_different_proof_strategies_remain_proving_work = PASS`
+- `lean4_explore_not_selected_for_strategy_diversity_alone = PASS`
+
 Prompt: Find a suitable existing lemma and use it to finish this existing proof goal.
 - `lean4_prove_primary = PASS`
 - `ordinary_goal_directed_search_did_not_route_to_explore = PASS`
-- `lean4_explore_may_compose_only_if_reconnaissance_becomes_a_distinct_subproblem = PASS`
+- `lean4_explore_may_compose_only_if_reconnaissance_becomes_a_distinct_formal_design_subproblem = PASS`
 
 Prompt: Why does this existing `simpa [foo]` proof work?
 - `no_specialized_lean4_skill_required = PASS`
@@ -54,9 +65,15 @@ Prompt: Is this working `simpa [foo]` proof brittle or inappropriate for mathlib
 - `lean4_review_selected = PASS`
 - `lean4_explore_not_primary = PASS`
 
+Prompt: Review this Lean file read-only and tell me whether its local stabilization predicate should instead use the generic fixed-point API.
+- `lean4_review_primary_for_requested_evaluation = PASS`
+- `lean4_explore_may_support_formal_direction_reconnaissance = PASS`
+- `supporting_exploration_does_not_relax_review_read_only_constraint = PASS`
+
 Prompt: This proof works; replace it with the canonical library theorem if that is better.
 - `lean4_optimize_selected = PASS`
 - `lean4_explore_may_support_reconnaissance_but_does_not_own_the_durable_change = PASS`
+- `optimization_verification_contract_remains_governing = PASS`
 
 ## Other outcome boundaries
 

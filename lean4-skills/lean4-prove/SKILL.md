@@ -1,6 +1,6 @@
 ---
 name: lean4-prove
-description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or current proof goal already exists and the requested outcome is to complete or repair its proof with the statement held fixed unless explicitly authorized otherwise. Do not use when the main uncertainty is statement design, open-ended abstraction/API exploration, certified refutation, review-only work, or post-correctness optimization."
+description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or current proof goal already exists and the requested outcome is to complete or repair its proof with the statement held fixed unless explicitly authorized otherwise. Comparing materially different proof strategies for that fixed target remains part of this skill. Do not use when the main uncertainty is statement design, a separate formal-design decision about the object/API/hypotheses, certified refutation, review-only work, or post-correctness optimization."
 license: MIT
 ---
 
@@ -20,7 +20,7 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing.
 2. Search local declarations and mathlib when an existing result may solve or materially simplify the goal; use [mathlib search and integration](references/mathlib-guide.md) when useful.
-3. Try a small set of materially different candidates. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
+3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives remain ordinary proving work while the formal target stays fixed. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
 5. Verify the changed target and affected dependency boundary with the lightest sufficient gate; use [verification gates](references/verification.md) whenever file, dependency, or integration scope matters.
 
@@ -29,7 +29,7 @@ Load [`simp` guidance](references/simp-reference.md) or [performance guidance](r
 ## Boundaries
 
 - If an informal mathematical claim still needs a Lean declaration or the statement itself must be designed or revised, use `lean4-formalize`.
-- If the main uncertainty is what abstraction, existing API, assumption boundary, generalization, or approach should be pursued, use `lean4-explore`. Ordinary theorem lookup needed to finish this known goal remains part of this skill.
+- Use `lean4-explore` only when the blocker is a distinct formal-design decision whose resolution could change the chosen formal object, abstraction, API family, hypothesis boundary, generality, symmetry, or dependency strategy. Multiple proof strategies for the same fixed target do not by themselves cross this boundary. Ordinary theorem lookup and candidate comparison needed to finish the known goal remain part of this skill.
 - If there is credible evidence that the proposition is false and the requested outcome is a certified counterexample or negation, use `lean4-refute`.
 - If the target is already correct and the requested outcome is simplification or speed, use `lean4-optimize`.
 - If the blocker is a concrete non-proof Lean/Lake diagnostic whose class is not yet understood, use `lean4-diagnose`.
