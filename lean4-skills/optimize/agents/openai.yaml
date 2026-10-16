@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Optimize"
+  short_description: "Improve an already-correct Lean proof"
+  default_prompt: "Use $lean4-optimize to improve this already-correct Lean proof while preserving correctness, trust, and maintainability."

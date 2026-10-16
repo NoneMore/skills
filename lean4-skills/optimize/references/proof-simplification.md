@@ -1,6 +1,6 @@
 # Proof Strategy Simplification
 
-Use when an already-correct proof is structurally more complicated than the mathematical/library argument needs to be.
+Use when an already-correct proof is structurally more complicated than the mathematical or library argument needs to be.
 
 ## Highest-leverage questions
 
@@ -21,6 +21,6 @@ A helper is not valuable just because a block is long. Keep arguments inline whe
 
 ## Congruence and extensionality
 
-Before manual pointwise/case reasoning, search for `congr`, `EqOn`, `EventuallyEq`, or `ext`-style theorems appropriate to the structure. They often preserve the intended abstraction and reduce definitional bookkeeping.
+Before manual pointwise or case reasoning, search for `congr`, `EqOn`, `EventuallyEq`, or `ext`-style theorems appropriate to the structure. They often preserve the intended abstraction and reduce definitional bookkeeping.
 
-Use `references/optimize.md` for the common baseline, verification, and stopping process. For measured elaboration/build cost, use `references/performance-optimization.md`.
+Use the parent `lean4-optimize` skill for baseline, verification, and stopping behavior. For measured elaboration/build cost, use the family [performance guidance](../../references/performance-optimization.md).

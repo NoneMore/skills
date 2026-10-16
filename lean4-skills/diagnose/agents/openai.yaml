@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Diagnose"
+  short_description: "Diagnose Lean/Lake failures in formal-math work"
+  default_prompt: "Use $lean4-diagnose to classify this Lean/Lake failure in its formal-mathematics context and verify the smallest justified fix."

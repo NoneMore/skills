@@ -35,8 +35,8 @@ This often produces a better proof than searching only by surface words from the
 
 Add the narrowest import consistent with local project style. Do not copy an import from a search result without checking that it is appropriate for the target project.
 
-For upstream mathlib work, load `references/branches/mathlib-upstream.md` for the current contribution policy and review bar.
+For upstream mathlib work, load [upstream mathlib guidance](branches/mathlib-upstream.md) for the current contribution policy and review bar.
 
 ## Stop condition
 
-Search is complete when a candidate has been validated or additional search is no longer likely to change the proof strategy. "Search before prove" does not mean exhaustive unbounded searching.
+Search is complete when a candidate has been validated or additional search is no longer likely to change the strategy. "Search before prove" does not mean exhaustive unbounded searching.
