@@ -14,7 +14,7 @@ Independently evaluate existing Lean proof code and return prioritized, evidence
 
 Prefer the smallest scope that answers the request: one declaration, one file, changed files, or an explicitly requested project review. Do not silently widen a local review to the whole project.
 
-Review-only requests are read-only with respect to project source. Verification may use the project's normal Lean/Lake gates and their generated build artifacts when needed to establish a material claim. If fixes are also requested, substantiate the finding first, then compose with the capability that owns the change (`lean4-prove`, `lean4-diagnose`, `lean4-trust`, or `lean4-optimize`) rather than turning review into an unbounded implementation workflow.
+Review-only requests are read-only with respect to project source. Verification may use the project's normal Lean/Lake gates and their generated build artifacts when needed to establish a material claim. If fixes are also explicitly requested, substantiate each material finding before making the corresponding bounded change.
 
 ## Review order
 
@@ -26,7 +26,7 @@ Review-only requests are read-only with respect to project source. Verification 
 
 For upstream mathlib work, consult current authoritative contribution policy and nearby current mathlib code. Treat project-specific simplification policy as authoritative when global simp behavior is material.
 
-A standalone request to explain how existing code works, with no evaluation request and no open design decision, does not require a specialized Lean 4 Skill. If the question instead asks which abstraction, API, or formal direction should be pursued, use `lean4-explore` for that decision.
+Search, abstraction comparison, diagnostic checks, and other reconnaissance needed to substantiate a review finding remain part of review; they do not create separate routing outcomes.
 
 ## Output and completion
 

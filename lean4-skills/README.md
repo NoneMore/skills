@@ -17,15 +17,15 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-review` — independently review Lean proof code and report evidence-backed findings.
 - `lean4-optimize` — improve an already-correct proof for clarity, robustness, maintainability, or measured performance.
 
-## Routing and composition
+## Routing
 
-Choose the primary capability by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, and explanatory substeps normally remain inside the capability that already owns the task.
+Choose a Skill by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, helper proofs, and local diagnostic work stay inside the selected Skill when they are merely means to that outcome.
+
+Do not select another Skill just because the task uses behavior associated with it. Use more than one Skill only when the request itself contains multiple independently meaningful outcomes that no single Skill owns.
 
 `lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Different proof strategies for a fixed concrete goal remain `lean4-prove` work. An ordinary proof hole remains `lean4-prove` work even when the source contains `sorry` or `admit`; use `lean4-trust` when the trust basis itself is the requested outcome.
 
-When capabilities compose, the primary outcome owner keeps the governing mutation, trust, scope, and verification contract. A supporting capability may gather evidence or resolve a bounded subproblem, but it must not broaden that contract.
-
-Each capability is directly discoverable from its own metadata. There is no family router or compatibility Skill. Cross-skill composition happens only when the requested outcome genuinely crosses a boundary.
+Each capability is directly discoverable from its own metadata. There is no family router or compatibility Skill.
 
 ## Knowledge placement
 

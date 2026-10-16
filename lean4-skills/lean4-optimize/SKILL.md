@@ -33,6 +33,6 @@ Do not combine all three by default.
 5. Reject changes that regress correctness, diagnostics, trust, or maintainability without a compensating requested benefit.
 6. Stop when remaining opportunities are marginal, speculative, or outside the requested surface.
 
-If choosing the improvement requires substantial open-ended reconnaissance across abstractions, APIs, generalizations, or alternatives, `lean4-explore` may support that investigation; this skill still owns the durable change to an already-correct proof.
+Library search, abstraction comparison, and small experiments needed to choose an improvement remain part of optimization when the requested outcome is a durable improvement to an already-correct proof.
 
 Correctness and maintainability outrank token or line count.

@@ -35,8 +35,8 @@ Work bottom-up when unwanted assumptions depend on one another.
 
 ## Boundaries and completion
 
-An ordinary request to fill a proof hole in an already-fixed declaration belongs to `lean4-prove`, even if the current source spells that hole as `sorry` or `admit`. This skill owns the task when the user is asking what the declaration trusts, whether a placeholder or axiom contaminates that trust basis, or how to remove an unacceptable dependency under a stated policy. Trust cleanup may compose with `lean4-prove`, but the audit/cleanup outcome remains the reason this skill was selected.
+An ordinary request to fill a proof hole in an already-fixed declaration is proof-completion work, even if the current source spells that hole as `sorry` or `admit`. This skill owns the task when the requested outcome is the trust basis itself or cleanup under an explicit trust policy. Small replacement proofs needed for that cleanup remain part of this outcome.
 
-If cleanup reveals that the theorem is too strong, use `lean4-formalize` for authorized statement design or `lean4-refute` when there is credible evidence of falsity; do not swap one unacceptable assumption for another.
+If cleanup shows that the theorem is not derivable under the accepted trust policy, report that blocker rather than replacing one unacceptable assumption with another or silently revising the statement.
 
 Return the declaration checked, the policy used, assumptions removed or still present, verification gate that ran, and any remaining trust-policy uncertainty.

@@ -24,19 +24,19 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 4. Check that the declaration itself elaborates. A draft may contain an explicitly reported proof hole when the requested outcome is only statement design.
 5. If proving exposes a statement mismatch, revise only declarations created for the task or existing declarations the user explicitly authorized for statement work.
 
-## Composition
+## Boundaries
 
-Statement-design decisions required to produce the requested declaration stay here by default, including choosing canonical types, hypotheses, generality, and an appropriate existing API. Do not invoke `lean4-explore` merely because those choices require search or comparison.
+Statement-design decisions required to produce the requested declaration stay here, including ordinary choices of canonical types, hypotheses, generality, and API. Search or comparison needed for those choices does not by itself make exploration a separate outcome.
 
-Use `lean4-explore` when direction selection has become a distinct requested outcome rather than an internal formalization decision—for example, the task would be complete with an evidence-backed recommendation among materially different formal objects, abstractions, API families, assumption boundaries, generalizations, or dual formulations even before any durable declaration is produced. Once the intended encoding is selected and a Lean declaration is requested, this skill owns that declaration.
+If the request is only for a direction recommendation before committing to a declaration, this is not a formalization outcome. If a concrete declaration is already fixed and only its proof remains, this is not a statement-design outcome.
 
-When the user also requires a checked proof, hand the settled declaration to `lean4-prove`. If evidence instead supports falsity, use `lean4-refute` to certify that result rather than mutating the statement to make it provable.
+If the same request also requires a checked proof, settle the declaration first, then complete and verify that proof without silently changing the statement. If evidence instead shows the requested claim may be false, report that rather than weakening the statement to make it provable.
 
 When the declaration spans files, changed imports, or project integration boundaries, load [verification guidance](../references/verification.md) and use the lightest gate that establishes the required scope.
 
 ## Completion
 
 - **Draft:** the intended claim is represented faithfully in Lean and the declaration skeleton elaborates apart from explicitly reported proof holes.
-- **Checked:** the generated declaration is subsequently completed under the `lean4-prove` checked-proof contract.
+- **Checked:** the declaration and requested proof elaborate under the required verification gate.
 
 Any unresolved statement ambiguity or proof hole makes the result partial; report it explicitly.
