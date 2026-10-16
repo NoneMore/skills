@@ -22,7 +22,7 @@ Produce a checked proof for an existing concrete formal target without silently 
 2. Search local declarations and active imports before widening to mathlib. Search by mathematical meaning and type shape rather than guessed declaration names, and validate candidates in the actual project context.
 3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives remain ordinary proving work while the formal target stays fixed. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
-5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. After changing an imported source file, do not treat a passing `lake env lean` check as dependency-aware. Load [verification guidance](../references/verification.md) when the distinction between live, file-local, dependency-aware, or project-level verification matters, and state what actually ran.
+5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. `lake env lean path/to/File.lean` is a fast file-local check and does not rebuild changed imports. After changing an imported source, use a dependency-aware check such as `lake lean path/to/File.lean`, or the repository's configured build/test gate when integration scope matters. Repository-configured gates take precedence, and state what actually ran.
 
 ## Boundaries
 

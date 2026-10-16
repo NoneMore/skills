@@ -26,10 +26,10 @@ Do not combine all three by default.
 
 ## Contract
 
-1. Record the verified baseline and the concrete property to improve.
+1. Record the verified baseline and the concrete property to improve. The baseline gate must match the correctness scope the task intends to preserve.
 2. Search local code and active imports before widening to mathlib when an existing direct theorem may remove complexity; validate candidate declarations in the actual project context.
 3. Apply one coherent change at a time.
-4. Re-run the same semantic verification gate after each change; for performance work, rerun the same measurement as well. Load [verification guidance](../references/verification.md) when dependency or project integration scope matters.
+4. Re-run the same semantic verification gate after each change; for performance work, rerun the same measurement as well. If an optimization changes an imported source and the baseline was only file-local, strengthen the check to the dependency or repository integration scope before claiming correctness was preserved.
 5. Reject changes that regress correctness, diagnostics, trust, or maintainability without a compensating requested benefit.
 6. Stop when remaining opportunities are marginal, speculative, or outside the requested surface.
 

@@ -29,7 +29,7 @@ Do not label a dependency unacceptable merely because it appears in `#print axio
 2. Search local code and active imports before widening to mathlib for an accepted replacement; validate candidate declarations in the actual project context.
 3. If necessary, prove the smallest missing lemma from accepted hypotheses.
 4. Replace the dependency without strengthening the theorem statement or silently introducing another unacceptable assumption.
-5. Re-run the relevant semantic/integration gate. Load [verification guidance](../references/verification.md) when dependency or project scope matters, then re-check the target's trust basis.
+5. Re-run the semantic or integration gate required for the edited scope, then re-check the target's trust basis with `#print axioms` or the equivalent inspection. Successful elaboration alone is not a trust result; if cleanup changes dependency files, use a repository gate that rebuilds the affected dependency boundary before concluding the cleanup holds.
 
 Work bottom-up when unwanted assumptions depend on one another.
 

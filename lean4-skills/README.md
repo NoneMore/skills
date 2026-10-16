@@ -31,7 +31,7 @@ Each capability is directly discoverable from its own metadata. There is no fami
 
 Keep knowledge at the lowest level where it materially improves execution or verification.
 
-The family has one shared runtime reference: [verification guidance](references/verification.md). It captures Lean/Lake verification semantics that are easy to get materially wrong, including the difference between file-local and dependency-aware checks after changed imports.
+Runtime guidance is self-contained within each routable Skill. Verification rules are repeated locally only where they materially change that Skill's evidence or completion contract; the family does not require cross-Skill runtime references.
 
 Specialized optimization knowledge stays with `lean4-optimize`:
 

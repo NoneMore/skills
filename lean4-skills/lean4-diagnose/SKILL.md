@@ -39,7 +39,7 @@ If the only viable repair would revise a fixed statement or trust basis, report 
 
 ## Verification and stop behavior
 
-After each hypothesis-driven edit, re-read the diagnostic. When file-local, dependency-aware, or project-level scope matters, load [verification guidance](../references/verification.md) and report the gate that actually ran.
+After each hypothesis-driven edit, re-read the exact diagnostic. For a source-local elaboration failure, rerun the smallest check that reproduces it. For an import, build, or integration failure, rerun the command or repository gate that exercises the failing boundary; a passing file-local check is not evidence that changed imports or the build are fixed. Report what actually ran.
 
 Do not broaden a local diagnostic into general architecture or application refactoring. If the task leaves formal mathematics and becomes general Lean application development, stop using this skill.
 

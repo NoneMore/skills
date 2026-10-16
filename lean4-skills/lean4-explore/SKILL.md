@@ -42,7 +42,7 @@ Load [the exploration playbook](references/exploration-playbook.md) when the tas
 5. Compare surviving branches by evidence, canonicality, generality, downstream leverage, implementation cost, and risk.
 6. Converge when one direction is sufficiently supported, when several genuinely viable options remain with an explicit tradeoff, or when choosing among formal directions is no longer the primary uncertainty.
 
-For claims that depend on actual elaboration, changed imports, or project integration, load [verification guidance](../references/verification.md) and use the lightest gate that establishes the claim. Exploration does not upgrade a scratch success into a project-level verification claim.
+For claims based on actual elaboration, report the check that ran and the scope it establishes. A scratch declaration or file-local success establishes only that local experiment against the artifacts it used; do not promote it to a changed-import or project-integration claim. If the comparison itself depends on integration behavior, run the repository gate that exercises that boundary.
 
 ## Stop boundary
 

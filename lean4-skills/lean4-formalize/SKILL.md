@@ -32,7 +32,7 @@ If the request is only for a direction recommendation before committing to a dec
 
 If the same request also requires a checked proof, settle the declaration first, then complete and verify that proof without silently changing the statement. If evidence instead shows the requested claim may be false, report that rather than weakening the statement to make it provable.
 
-When the declaration spans files, changed imports, or project integration boundaries, load [verification guidance](../references/verification.md) and use the lightest gate that establishes the required scope.
+A statement-design-only result needs the declaration skeleton to elaborate in its intended context. When the requested deliverable also includes a checked proof across changed files or project boundaries, run the repository-configured gate appropriate to that affected scope and report what ran; do not label a file-local elaboration check as project verification.
 
 ## Completion
 

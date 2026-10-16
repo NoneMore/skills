@@ -18,7 +18,7 @@ Review-only requests are read-only with respect to project source. Verification 
 
 ## Review order
 
-1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration, changed imports, or project integration, load [verification guidance](../references/verification.md) and report what actually ran; a file-local pass is not dependency-aware when changed imported artifacts may be stale.
+1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration or integration, run the check appropriate to that scope and report what ran. If an imported source changed, a passing `lake env lean` check against possibly stale built artifacts is not dependency-aware; use a dependency-aware or project gate before treating the result as conclusive.
 2. **Proof robustness:** unnecessary automation, brittle rewrites, typeclass/coercion sensitivity, accidental definitional dependence.
 3. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports. Search local declarations and active imports before widening outward and validate candidate APIs in the actual project context.
 4. **Maintainability:** proof structure, naming, comments/docstrings, and local style.
