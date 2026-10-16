@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Explore"
+  short_description: "Explore Lean/mathlib abstractions, APIs, assumptions, and approaches"
+  default_prompt: "Use $lean4-explore to investigate the right Lean/mathlib abstraction, API, assumptions, generalization, or approach before committing to a durable implementation."
