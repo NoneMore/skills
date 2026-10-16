@@ -14,17 +14,17 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 - Preserve existing theorem statements, declaration signatures, and public API unless the user explicitly expands the task to statement design.
 - Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the accepted trust basis to claim proof completion.
-- Follow local project conventions and applicable repository Lean guidance. For upstream mathlib work, also follow current upstream policy and any repository upstream-mathlib guidance.
+- Follow local project conventions and applicable repository Lean guidance. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
 
 ## Workflow
 
 1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing.
-2. Search local declarations and mathlib when an existing result may solve or materially simplify the goal. Follow applicable repository mathlib-search guidance when present.
+2. Search local declarations and active imports before widening to mathlib. Search by mathematical meaning and type shape rather than guessed declaration names, and validate candidates in the actual project context.
 3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives remain ordinary proving work while the formal target stays fixed. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
-5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. Follow the repository's verification guidance when present and state what actually ran.
+5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. After changing an imported source file, do not treat a passing `lake env lean` check as dependency-aware. Load [verification guidance](../references/verification.md) when the distinction between live, file-local, dependency-aware, or project-level verification matters, and state what actually ran.
 
-When simplification policy or performance is material, follow the repository's corresponding Lean guidance when present. Its absence is not a reason to invoke `lean4-install` implicitly; continue under this Skill's core contract and the actual project conventions.
+If a performance or simplification concern becomes a separate post-correctness improvement outcome, use `lean4-optimize` rather than widening proof completion into optimization.
 
 ## Boundaries
 

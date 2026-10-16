@@ -1,10 +1,10 @@
 # Lean 4 collection routing evals
 
-Run each prompt independently with all eight routable Lean 4 Skills installed and none pre-activated. `lean4-install` may also be installed, but its runtime metadata forbids implicit invocation; it is outside ordinary model routing. Score discovery decisions from metadata, not hidden workflow labels.
+Run each prompt independently with all eight Lean 4 Skills installed and none pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
 Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, proof-strategy comparison, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal-design directions remain plausible and choosing among them is a distinct requested outcome. Select `lean4-trust` when the trust basis itself is being inspected or changed, not merely because an ordinary proof hole is represented by `sorry`/`admit`. Supporting capabilities must not broaden the primary owner's mutation, trust, scope, or verification contract. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
 
-Installed repository documentation is project context, not another Skill composition edge. Missing reusable Lean docs must never trigger `lean4-install` implicitly.
+Shared references are runtime guidance, not routing targets. Loading `references/verification.md` must not select another Skill. In a composed task, supporting capabilities reuse shared guidance already established by the primary outcome owner rather than treating the same reference as a second outcome.
 
 ## Positive routing
 
@@ -21,16 +21,12 @@ Installed repository documentation is project context, not another Skill composi
 
 Required assertion for each row: exactly the expected primary skill is selected unless the prompt explicitly requests a composed outcome.
 
-## Installer boundary
+## Shared-reference boundary
 
-Prompt: This repository has no Lean agent documentation yet. Fill the `sorry` in this theorem and verify it.
+Prompt: I changed an imported Lean module and now need to fill this existing theorem's `sorry` and verify the result.
 - `lean4_prove_selected = PASS`
-- `lean4_install_not_selected_for_missing_docs = PASS`
-- `no_repository_documentation_written_without_explicit_install_request = PASS`
-
-Prompt: Use `$lean4-install` to install the reusable Lean guidance into this repository's normal docs structure.
-- `lean4_install_selected_by_explicit_user_invocation = PASS`
-- `no_outcome_skill_selected_unless_separately_requested = PASS`
+- `verification_reference_may_be_loaded_without_additional_skill_routing = PASS`
+- `file_local_pass_not_treated_as_dependency_aware_after_changed_import = PASS`
 
 ## Explore boundaries
 

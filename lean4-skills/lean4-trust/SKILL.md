@@ -28,10 +28,10 @@ Do not label a dependency unacceptable merely because it appears in `#print axio
 ## Cleanup
 
 1. Trace each unwanted assumption through the target and dependent declarations.
-2. Search local code and mathlib for an accepted replacement; follow applicable repository mathlib-search guidance when present.
+2. Search local code and active imports before widening to mathlib for an accepted replacement; validate candidate declarations in the actual project context.
 3. If necessary, prove the smallest missing lemma from accepted hypotheses.
 4. Replace the dependency without strengthening the theorem statement or silently introducing another unacceptable assumption.
-5. Re-run the relevant semantic/integration gate under repository verification guidance when present, then re-check the target's trust basis.
+5. Re-run the relevant semantic/integration gate. Load [verification guidance](../references/verification.md) when dependency or project scope matters, then re-check the target's trust basis.
 
 Work bottom-up when unwanted assumptions depend on one another.
 

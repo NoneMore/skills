@@ -1,4 +1,3 @@
-<!-- lean4-install: managed-guidance -->
 # Lean Verification
 
 Repository-specific verification policy and configured project gates take precedence over this generic guidance.

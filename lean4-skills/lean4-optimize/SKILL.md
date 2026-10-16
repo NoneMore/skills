@@ -21,17 +21,17 @@ Follow applicable repository Lean guidance when present; stronger project policy
 ## Choose one optimization surface
 
 - **Strategy simplification:** replace an indirect proof with a more direct mathematical/library argument or extract a genuinely useful helper. Load [proof strategy simplification](references/proof-simplification.md).
-- **Local simplification:** remove ceremony or redundant steps when the result becomes clearer and at least as stable. Shorter source is not automatically better. Follow repository simplification guidance when present.
-- **Performance:** localize and measure elaboration/build cost before changing code. Follow repository Lean performance guidance when present.
+- **Local simplification:** remove ceremony or redundant steps when the result becomes clearer and at least as stable. Shorter source is not automatically better. Load [simp and simp-lemma design](references/simplification.md) when global simp policy, rewrite orientation, or simproc design is material.
+- **Performance:** localize and measure elaboration/build cost before changing code. Load [performance guidance](references/performance.md).
 
 Do not combine all three by default.
 
 ## Contract
 
 1. Record the verified baseline and the concrete property to improve.
-2. Search local code/mathlib when an existing direct theorem may remove complexity; follow applicable repository mathlib-search guidance when present.
+2. Search local code and active imports before widening to mathlib when an existing direct theorem may remove complexity; validate candidate declarations in the actual project context.
 3. Apply one coherent change at a time.
-4. Re-run the same semantic verification gate after each change; for performance work, rerun the same measurement as well. Follow repository verification guidance when present.
+4. Re-run the same semantic verification gate after each change; for performance work, rerun the same measurement as well. Load [verification guidance](../references/verification.md) when dependency or project integration scope matters.
 5. Reject changes that regress correctness, diagnostics, trust, or maintainability without a compensating requested benefit.
 6. Stop when remaining opportunities are marginal, speculative, or outside the requested surface.
 

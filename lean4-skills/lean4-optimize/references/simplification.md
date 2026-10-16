@@ -1,4 +1,3 @@
-<!-- lean4-install: managed-guidance -->
 # `simp` and Simp-Lemma Design
 
 Repository-specific simplification policy takes precedence over this generic guidance.

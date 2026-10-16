@@ -1,4 +1,3 @@
-<!-- lean4-install: managed-guidance -->
 # Lean Performance Optimization
 
 Repository-specific performance requirements take precedence over this generic guidance.

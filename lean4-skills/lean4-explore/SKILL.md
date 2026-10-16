@@ -17,11 +17,11 @@ Use this skill when the question is primarily **which formal direction should we
 - Production source is observational by default. Disposable scratch declarations, `example`s, `#check`, `#synth`, minimal test files, or temporary local edits are allowed when they materially test a branch, but do not silently turn exploratory candidates into durable project changes.
 - When exploration supports another capability that owns the requested outcome, preserve that owner's stricter mutation, trust, scope, and verification invariants. Exploratory permission never broadens the primary owner's contract.
 - Distinguish verified facts, working hypotheses, and material rejected or deferred branches. Do not preserve branch history that does not affect the decision.
-- Search by mathematical meaning, type shape, structure, and neighborhood before guessing declaration names. Follow applicable repository Lean/mathlib search guidance when present.
+- Search by mathematical meaning, type shape, structure, and neighborhood before guessing declaration names. Inspect local declarations and active imports before widening outward, and validate candidate declarations in the actual project context.
 - Prefer Lean/project evidence over verbal plausibility when an inexpensive experiment can discriminate between branches.
 - Diverge only while a branch is likely to reveal materially new information; prune branches once evidence makes them dominated, irrelevant, or outside scope.
 
-For work aimed at upstream mathlib, follow applicable repository upstream-mathlib guidance and current authoritative contribution policy in addition to this Skill.
+For work aimed at upstream mathlib, consult current authoritative contribution policy and nearby current mathlib code in addition to this Skill.
 
 ## Exploration directions
 
@@ -45,7 +45,7 @@ Load [the exploration playbook](references/exploration-playbook.md) when the tas
 5. Compare surviving branches by evidence, canonicality, generality, downstream leverage, implementation cost, and risk.
 6. Converge when one direction is sufficiently supported, when several genuinely viable options remain with an explicit tradeoff, or when choosing among formal directions is no longer the primary uncertainty.
 
-For claims that depend on actual elaboration, imports, or project integration, follow the repository's verification guidance when present and otherwise use the lightest gate that establishes the claim. Exploration does not upgrade a scratch success into a project-level verification claim.
+For claims that depend on actual elaboration, changed imports, or project integration, load [verification guidance](../references/verification.md) and use the lightest gate that establishes the claim. Exploration does not upgrade a scratch success into a project-level verification claim.
 
 ## Handoff
 

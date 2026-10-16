@@ -21,9 +21,9 @@ Produce a Lean-certified logical refutation of a target proposition while preser
 
 1. Resolve the exact proposition and inspect its logical shape.
 2. Choose the cheapest promising bounded route: a concrete witness, a small decidable/finite search, contradiction with existing facts, or a direct proof of the negation.
-3. Search local declarations and mathlib before building specialized machinery; follow applicable repository mathlib-search guidance when present.
+3. Search local declarations and active imports before widening to mathlib. Search by meaning/type rather than guessed names and validate candidates in the actual project context.
 4. Encode the candidate witness or negation as a separate result and ask Lean to certify it.
-5. Verify the checked result with the lightest gate that establishes the requested scope, following repository verification guidance when present.
+5. Verify the checked result with the lightest gate that establishes the requested scope. Load [verification guidance](../references/verification.md) when dependency or project integration scope matters.
 
 Keep search bounded. If the proposition instead needs redesign, use `lean4-formalize`; if the user wants to keep proving the fixed target, use `lean4-prove`. If the user is only exploring whether an assumption may be unnecessary or probing examples/counterexamples to understand the boundary, use `lean4-explore` until certified falsity becomes the requested outcome.
 

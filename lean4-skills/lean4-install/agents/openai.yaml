@@ -1,6 +1,0 @@
-interface:
-  display_name: "Lean 4 Docs Installer"
-  short_description: "Install reusable Lean guidance into repository docs"
-  default_prompt: "Use $lean4-install to inspect this repository's documentation conventions and install or update the reusable Lean 4/mathlib guidance as ordinary project documentation."
-policy:
-  allow_implicit_invocation: false

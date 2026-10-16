@@ -20,13 +20,13 @@ Follow applicable repository Lean guidance when present; project policy and esta
 
 ## Review order
 
-1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration, changed imports, or project integration, use the lightest sufficient gate, follow repository verification guidance when present, and report what actually ran; a file-local pass is not dependency-aware when changed imported artifacts may be stale.
+1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration, changed imports, or project integration, load [verification guidance](../references/verification.md) and report what actually ran; a file-local pass is not dependency-aware when changed imported artifacts may be stale.
 2. **Proof robustness:** unnecessary automation, brittle rewrites, typeclass/coercion sensitivity, accidental definitional dependence.
-3. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports; follow repository mathlib-search guidance when present.
+3. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports. Search local declarations and active imports before widening outward and validate candidate APIs in the actual project context.
 4. **Maintainability:** proof structure, naming, comments/docstrings, and local style.
 5. **Optimization opportunities:** only when they materially improve directness, determinism, performance, or clarity.
 
-For upstream mathlib work, follow current authoritative contribution policy and applicable repository upstream-mathlib guidance. Follow repository simplification guidance when global simp policy is material.
+For upstream mathlib work, consult current authoritative contribution policy and nearby current mathlib code. Treat project-specific simplification policy as authoritative when global simp behavior is material.
 
 A standalone request to explain how existing code works, with no evaluation request and no open design decision, does not require a specialized Lean 4 Skill. If the question instead asks which abstraction, API, or formal direction should be pursued, use `lean4-explore` for that decision.
 
