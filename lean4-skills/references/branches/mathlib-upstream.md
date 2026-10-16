@@ -20,7 +20,7 @@ For upstream-targeted work, additionally review:
 - **Existing results and API:** equivalent or more general results, weakest useful hypotheses, representation choices, public/private surface, argument order, and whether new API is substantive rather than speculative.
 - **Placement, imports, and modules:** the lowest sensible module, narrow imports, public/private visibility, and current generated root/import obligations.
 - **Style and documentation:** formatting, naming, namespace placement, natural dot notation, appropriate module/declaration docs, and comments that explain mathematical or design intent rather than development history.
-- **Attributes and simplification:** `@[simp]`, `@[ext]`, reducibility, coercions, and similar attributes as global API decisions. A locally useful rewrite is not automatically a good global simp lemma. Load simp-specific guidance only when the active Skill explicitly routes to it.
+- **Attributes and simplification:** `@[simp]`, `@[ext]`, reducibility, coercions, and similar attributes as global API decisions. A locally useful rewrite is not automatically a good global simp lemma; use [`simp` guidance](../simp-reference.md) when normal-form decisions matter.
 - **Instances:** diamonds, loops, unnecessary global instances, accidental instance selection, and fragile inference. When several instances of the same class are relevant, inspect which instance terms were elaborated against.
 
 Treat these expectations as blockers only when the task actually targets upstream mathlib; otherwise local project conventions take precedence.

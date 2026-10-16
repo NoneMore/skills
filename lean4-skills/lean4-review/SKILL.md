@@ -18,13 +18,13 @@ Review-only requests are read-only with respect to project source. Verification 
 
 ## Review order
 
-1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration, changed imports, or project integration, use the lightest sufficient gate from [verification guidance](references/verification.md) and report what actually ran; a file-local pass is not dependency-aware when changed imported artifacts may be stale.
+1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration, changed imports, or project integration, use the lightest sufficient gate from [verification guidance](../references/verification.md) and report what actually ran; a file-local pass is not dependency-aware when changed imported artifacts may be stale.
 2. **Proof robustness:** unnecessary automation, brittle rewrites, typeclass/coercion sensitivity, accidental definitional dependence.
-3. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports; use [mathlib search guidance](references/mathlib-guide.md) when useful.
+3. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports; use [mathlib search guidance](../references/mathlib-guide.md) when useful.
 4. **Maintainability:** proof structure, naming, comments/docstrings, and local style.
 5. **Optimization opportunities:** only when they materially improve directness, determinism, performance, or clarity.
 
-For upstream mathlib work, load [upstream guidance](references/branches/mathlib-upstream.md) as an additional review bar. Use [`simp` guidance](references/simp-reference.md) when global simplification policy is material.
+For upstream mathlib work, load [upstream guidance](../references/branches/mathlib-upstream.md) as an additional review bar. Use [`simp` guidance](../references/simp-reference.md) when global simplification policy is material.
 
 A standalone request to explain how existing code works, with no evaluation request and no open design decision, does not require a specialized Lean 4 Skill. If the question instead asks which abstraction, API, or formal direction should be pursued, use `lean4-explore` for that decision.
 
