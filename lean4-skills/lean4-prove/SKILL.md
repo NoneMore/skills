@@ -14,17 +14,17 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 - Preserve existing theorem statements, declaration signatures, and public API unless the user explicitly expands the task to statement design.
 - Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the accepted trust basis to claim proof completion.
-- Follow local project conventions. For work intended for upstream mathlib, load [upstream mathlib guidance](../references/branches/mathlib-upstream.md).
+- Follow local project conventions and applicable repository Lean guidance. For upstream mathlib work, also follow current upstream policy and any repository upstream-mathlib guidance.
 
 ## Workflow
 
 1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing.
-2. Search local declarations and mathlib when an existing result may solve or materially simplify the goal; use [mathlib search and integration](../references/mathlib-guide.md) when useful.
+2. Search local declarations and mathlib when an existing result may solve or materially simplify the goal. Follow applicable repository mathlib-search guidance when present.
 3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives remain ordinary proving work while the formal target stays fixed. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
-5. Verify the changed target and affected dependency boundary with the lightest sufficient gate; use [verification gates](../references/verification.md) whenever file, dependency, or integration scope matters.
+5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. Follow the repository's verification guidance when present and state what actually ran.
 
-Load [`simp` guidance](../references/simp-reference.md) or [performance guidance](../references/performance-optimization.md) only when that mechanism is material to the proof.
+When simplification policy or performance is material, follow the repository's corresponding Lean guidance when present. Its absence is not a reason to invoke `lean4-install` implicitly; continue under this Skill's core contract and the actual project conventions.
 
 ## Boundaries
 

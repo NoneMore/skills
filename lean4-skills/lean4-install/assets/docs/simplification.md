@@ -1,4 +1,7 @@
+<!-- lean4-install: managed-guidance -->
 # `simp` and Simp-Lemma Design
+
+Repository-specific simplification policy takes precedence over this generic guidance.
 
 Use when debugging simplification, deciding whether a theorem belongs in the global simp set, or authoring a simproc.
 
@@ -18,7 +21,7 @@ Do not promote a local convenience into global simp policy without a canonical d
 
 Before adding `@[simp]`:
 
-1. simplify the proposed left-hand side with the intended context **excluding the candidate lemma**;
+1. simplify the proposed left-hand side with the intended context excluding the candidate lemma;
 2. if it already rewrites, the candidate LHS is usually not the right global form;
 3. check that the RHS moves toward the intended stable representation;
 4. check for cycles or competing rewrites;
@@ -38,4 +41,4 @@ Use a simproc when rewriting genuinely depends on deterministic computation or s
 
 A simproc should decline inputs outside its intended domain rather than launching hidden unbounded proof search. Prefer ordinary simp lemmas when they express the same behavior clearly.
 
-For performance-motivated simp changes, compare against a verified baseline and load [performance guidance](performance-optimization.md) when measurement matters.
+For performance-motivated simplification changes, compare against a verified baseline and follow [performance guidance](performance.md) when measurement matters.

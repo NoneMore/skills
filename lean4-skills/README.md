@@ -1,12 +1,12 @@
 # Lean 4 Skills
 
-A jointly installed family of outcome-oriented capabilities for formal mathematics in Lean 4 and mathlib. These are not stages in a required workflow, and the collection root is not itself a Skill.
+A Lean 4 capability family for formal mathematics in Lean 4 and mathlib. Eight outcome-oriented Skills are model-routable; `lean4-install` is a separate user-invoked installer for durable repository documentation.
 
-Install all eight `lean4-*` Skills together. They are independently discoverable so the runtime can activate the narrow capability whose behavioral contract and references match the requested outcome; they are not intended to be deployed as unrelated standalone products.
+Install the eight routable `lean4-*` capabilities together. They are not stages in a required workflow and are not intended to be unrelated standalone products. The installer is optional at runtime and must never be selected implicitly.
 
 Before materially changing this collection, follow the repository-level [Skill Design Principles](../SKILL-DESIGN-PRINCIPLES.md).
 
-## Capabilities
+## Routable capabilities
 
 - `lean4-explore` — choose among multiple materially different Lean/mathlib formal directions when that choice is itself the requested outcome.
 - `lean4-formalize` — translate mathematical intent into an appropriate Lean declaration when statement design is the requested outcome.
@@ -17,39 +17,39 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-review` — independently review Lean proof code and report evidence-backed findings.
 - `lean4-optimize` — improve an already-correct proof for clarity, robustness, maintainability, or measured performance.
 
+## Explicit installer
+
+`lean4-install` is user-invoked only. Its outcome is to materialize reusable Lean/mathlib guidance as ordinary documentation inside the target repository, following that repository's documentation conventions. It is not a router, support capability, runtime dependency, or prerequisite that other Skills call.
+
+The installer carries a documentation bundle for:
+
+- mathlib search and integration;
+- verification gates and claim strength;
+- simplification and simp-lemma design;
+- measured Lean performance work;
+- additional guidance for upstream mathlib contributions.
+
+It prefers an existing repository documentation location. If the repository has no applicable convention, it defaults to `docs/lean/`. Once installed, these files are project knowledge: the routable Skills may follow them when present, just as they follow any other applicable repository documentation.
+
+A repository does not need the installer to invoke the eight behavioral Skills. If the shared documentation is absent, each Skill still owns its core behavioral contract and must not pretend that project guidance exists.
+
 ## Routing and composition
 
-Choose the primary capability by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, and explanatory substeps normally remain inside the capability that already owns the task.
+Choose the primary routable capability by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, and explanatory substeps normally remain inside the capability that already owns the task.
 
-`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Compose it only when multiple materially different formal directions remain plausible and choosing among them becomes a distinct requested outcome. Different proof strategies for a fixed concrete goal do not by themselves create an exploration outcome. A standalone explanation of existing code with no evaluation request and no open formal-design decision does not require a specialized Lean 4 Skill.
+`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Different proof strategies for a fixed concrete goal remain `lean4-prove` work. An ordinary proof hole remains `lean4-prove` work even when the source contains `sorry` or `admit`; use `lean4-trust` when the trust basis itself is the requested outcome.
 
-Use the requested deliverable as the commitment test at the `lean4-explore` / `lean4-formalize` boundary. If the task is complete once an evidence-backed formal direction has been chosen, exploration may own that outcome. If the requested deliverable is a Lean declaration, the ordinary choices needed to produce that declaration remain inside `lean4-formalize` unless direction selection is explicitly separated into its own outcome.
+When capabilities compose, the primary outcome owner keeps the governing mutation, trust, scope, and verification contract. A supporting capability cannot broaden it.
 
-An ordinary proof hole remains `lean4-prove` work even when the source currently contains `sorry` or `admit`. Route to `lean4-trust` when inspecting, explaining, or reducing the accepted trust basis is itself the requested outcome.
+`lean4-install` does not participate in this composition model. Installing or updating repository documentation is a separate explicit user outcome.
 
-When capabilities compose, the primary outcome owner also owns the governing invariants. A supporting capability may gather evidence or resolve a bounded subproblem, but it must not broaden the primary owner's mutation permissions, trust basis, scope, or verification claims. In particular, exploratory scratch work does not override a read-only review contract or become a durable edit merely because it informed another capability.
+## Knowledge placement
 
-When a real outcome boundary is crossed, hand off explicitly: exploration may settle an encoding for formalization, diagnosis may reduce to ordinary proof search, review may identify a change owned by proof/trust/optimization, and exploration may support an optimization decision without owning the durable edit.
+Generic reusable Lean knowledge is not committed as shared runtime references beside the routable Skills and is not vendored into them. The source templates live under `lean4-install/assets/docs/` because their purpose is to become durable project documentation when the user asks for installation.
 
-Each capability is directly discoverable from its own metadata. There is no family router or compatibility Skill. Cross-skill composition happens only when the requested outcome genuinely crosses a boundary.
-
-## Family layout and shared references
-
-The eight `lean4-*` directories are routing boundaries inside one jointly installed family, not independent source packages. Keep shared knowledge shared in the authoring tree rather than mirroring it into every Skill directory.
-
-Reusable family-level material has one canonical home under `references/`. Each `SKILL.md` links directly to the shared references it needs through the collection layout. Skill-specific material stays local to its owner, such as `lean4-explore/references/exploration-playbook.md` and `lean4-optimize/references/proof-simplification.md`.
-
-This keeps routing locality without turning activation boundaries into duplicated source ownership. Installations of this family should preserve the collection layout so those relative references remain available. If a target runtime requires physically self-contained Skill packages, materialize those copies as generated distribution artifacts rather than committing mirrors back into the source tree.
+Only genuinely Skill-specific reference material stays with a routable Skill, such as `lean4-explore/references/exploration-playbook.md` and `lean4-optimize/references/proof-simplification.md`.
 
 Collection-level upstream provenance and licensing live once in [UPSTREAM.md](UPSTREAM.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-## Shared source material
-
-- `references/mathlib-guide.md` — search and integration with local declarations and mathlib;
-- `references/verification.md` — live, file-local, dependency-aware, and project-level verification gates;
-- `references/performance-optimization.md` — measured Lean elaboration/build performance work;
-- `references/simp-reference.md` — `simp`, simp-lemma, and simproc design;
-- `references/branches/mathlib-upstream.md` — additional policy and review bar for work intended for upstream mathlib.
 
 ## Scope
 

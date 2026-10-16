@@ -1,6 +1,9 @@
+<!-- lean4-install: managed-guidance -->
 # Mathlib Search and Integration
 
-Use when an existing declaration may avoid re-proving, re-defining, or over-specializing something.
+Repository-specific conventions take precedence over this generic guidance.
+
+Use this guidance when an existing declaration may avoid re-proving, re-defining, or over-specializing something.
 
 ## Search from meaning and type
 
@@ -29,14 +32,12 @@ If the exact lemma is absent, look for:
 - a theorem in the namespace of the main structure or property;
 - an equivalent formulation using canonical library types.
 
-This often produces a better proof than searching only by surface words from the goal.
-
 ## Imports
 
 Add the narrowest import consistent with local project style. Do not copy an import from a search result without checking that it is appropriate for the target project.
 
-For upstream mathlib work, load [upstream mathlib guidance](branches/mathlib-upstream.md) for the current contribution policy and review bar.
+For upstream mathlib work, also follow [upstream mathlib guidance](upstream-mathlib.md).
 
 ## Stop condition
 
-Search is complete when a candidate has been validated or additional search is no longer likely to change the strategy. "Search before prove" does not mean exhaustive unbounded searching.
+Search is complete when a candidate has been validated or additional search is no longer likely to change the strategy. Search before proving does not mean exhaustive unbounded searching.

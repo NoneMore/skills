@@ -10,6 +10,8 @@ license: MIT
 
 Inspect and, when requested, reduce a declaration's trust dependencies against an explicit project/task policy.
 
+Follow applicable repository Lean guidance when present; project trust and verification policy takes precedence over generic defaults.
+
 ## Inspect first
 
 For a named declaration, use Lean's own environment to inspect dependencies and, when relevant, `#print axioms <declaration>` in the project context. Successful elaboration alone does not establish the trust basis the user expects.
@@ -26,10 +28,10 @@ Do not label a dependency unacceptable merely because it appears in `#print axio
 ## Cleanup
 
 1. Trace each unwanted assumption through the target and dependent declarations.
-2. Search local code and mathlib for an accepted replacement; use [mathlib search guidance](../references/mathlib-guide.md) when useful.
+2. Search local code and mathlib for an accepted replacement; follow applicable repository mathlib-search guidance when present.
 3. If necessary, prove the smallest missing lemma from accepted hypotheses.
 4. Replace the dependency without strengthening the theorem statement or silently introducing another unacceptable assumption.
-5. Re-run the relevant semantic/integration gate using [verification guidance](../references/verification.md), then re-check the target's trust basis.
+5. Re-run the relevant semantic/integration gate under repository verification guidance when present, then re-check the target's trust basis.
 
 Work bottom-up when unwanted assumptions depend on one another.
 
