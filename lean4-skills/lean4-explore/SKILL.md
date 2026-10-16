@@ -13,7 +13,6 @@ Reduce uncertainty when multiple materially different formal-design directions r
 ## Invariants
 
 - Production source is observational by default. Disposable scratch declarations, `example`s, `#check`, `#synth`, minimal test files, or temporary local edits are allowed when they materially test a branch, but do not silently turn exploratory candidates into durable project changes.
-- When exploration supports another capability that owns the requested outcome, preserve that owner's stricter mutation, trust, scope, and verification invariants. Exploratory permission never broadens the primary owner's contract.
 - Distinguish verified facts, working hypotheses, and material rejected or deferred branches. Do not preserve branch history that does not affect the decision.
 - Search by mathematical meaning, type shape, structure, and neighborhood before guessing declaration names. Inspect local declarations and active imports before widening outward, and validate candidate declarations in the actual project context.
 - Prefer Lean/project evidence over verbal plausibility when an inexpensive experiment can discriminate between branches.
@@ -45,9 +44,9 @@ Load [the exploration playbook](references/exploration-playbook.md) when the tas
 
 For claims that depend on actual elaboration, changed imports, or project integration, load [verification guidance](../references/verification.md) and use the lightest gate that establishes the claim. Exploration does not upgrade a scratch success into a project-level verification claim.
 
-## Handoff
+## Stop boundary
 
-Stop exploring when choosing among formal directions is no longer the primary uncertainty. Carry the selected direction and material evidence into the capability that owns the next requested outcome. Common handoffs are `lean4-formalize` for a durable declaration, `lean4-prove` for a settled target that needs a proof, and `lean4-refute` for requested certified falsity.
+Stop when choosing among formal directions is no longer the primary uncertainty. Return the selected direction and material evidence without silently turning exploration into a different durable outcome.
 
 ## Completion
 
@@ -57,6 +56,6 @@ Return, in proportion to the task:
 - the evidence that materially discriminates between them;
 - rejected alternatives only when their rejection explains the choice, prevents repeated work, or preserves a material tradeoff;
 - unresolved uncertainty only when it could still change the decision;
-- the next concrete outcome or action once the investigation has converged enough to hand off.
+- the next concrete outcome or action once the investigation has converged enough to proceed.
 
 Stop when further branching is unlikely to change the decision, or when the user-requested uncertainty has been reduced enough for the next bounded outcome.

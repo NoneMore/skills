@@ -24,13 +24,11 @@ Produce a checked proof for an existing concrete formal target without silently 
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
 5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. After changing an imported source file, do not treat a passing `lake env lean` check as dependency-aware. Load [verification guidance](../references/verification.md) when the distinction between live, file-local, dependency-aware, or project-level verification matters, and state what actually ran.
 
-If a performance or simplification concern becomes a separate post-correctness improvement outcome, use `lean4-optimize` rather than widening proof completion into optimization.
-
 ## Boundaries
 
-- If the statement itself needs design or revision, use `lean4-formalize` rather than silently changing it.
-- Use `lean4-explore` only for a distinct formal-design decision that could change the chosen object, abstraction, API family, hypothesis boundary, generality, symmetry, or dependency strategy. Multiple proof strategies for the same fixed target remain proving work.
-- If the requested outcome ceases to be proof completion for the fixed target, hand off to the capability that owns the new outcome rather than widening this contract.
+- If the statement itself needs design or revision, proof completion for the fixed target is no longer the governing outcome; do not silently change it.
+- Search, theorem lookup, API comparison, and materially different proof strategies remain part of proving while the formal target stays fixed. A separate formal-design decision that could change the object, abstraction, API family, hypotheses, or generality is not ordinary proof search.
+- Do not widen a proof-completion task into certified refutation, review, trust audit, or post-correctness optimization unless the requested outcome itself changes.
 
 ## Stop and completion
 
