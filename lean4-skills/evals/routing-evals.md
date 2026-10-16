@@ -1,8 +1,8 @@
 # Lean 4 collection routing evals
 
-Run each prompt independently with none of the Lean 4 skills pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
+Run each prompt independently with all eight Lean 4 Skills installed and none pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
-Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, proof-strategy comparison, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal-design directions remain plausible and choosing among them is a distinct requested outcome. Supporting capabilities must not broaden the primary owner's mutation, trust, scope, or verification contract. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
+Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, proof-strategy comparison, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal-design directions remain plausible and choosing among them is a distinct requested outcome. Select `lean4-trust` when the trust basis itself is being inspected or changed, not merely because an ordinary proof hole is represented by `sorry`/`admit`. Supporting capabilities must not broaden the primary owner's mutation, trust, scope, or verification contract. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
 
 ## Positive routing
 
@@ -81,9 +81,19 @@ Prompt: Keep the existing Lean theorem statement fixed and repair the proof.
 - `lean4_prove_selected = PASS`
 - `lean4_formalize_not_selected = PASS`
 
+Prompt: Fill the `sorry` in this existing fixed theorem and check the resulting proof.
+- `lean4_prove_selected = PASS`
+- `lean4_trust_not_selected_merely_because_source_contains_sorry = PASS`
+
+Prompt: Audit this theorem's trust basis. Tell me whether its remaining `sorry` or any custom axiom contaminates the result, and remove only dependencies forbidden by our policy.
+- `lean4_trust_selected = PASS`
+- `trust_basis_is_the_requested_outcome = PASS`
+- `lean4_prove_may_compose_for_bounded_missing_proofs_without_owning_the_audit = PASS`
+
 Prompt: This existing theorem no longer elaborates: application type mismatch at line 43. Fix it.
 - `lean4_diagnose_primary_for_current_diagnostic = PASS`
 - `lean4_prove_may_compose_only_after_diagnosis_reduces_to_an_ordinary_proof_obligation = PASS`
+- `diagnosis_does_not_silently_change_statement_or_trust_basis = PASS`
 
 Prompt: A proof search failed; therefore the theorem must be false. Check it.
 - `did_not_equate_failed_proof_search_with_falsity = PASS`
