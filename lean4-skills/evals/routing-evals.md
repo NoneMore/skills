@@ -2,7 +2,7 @@
 
 Run each prompt independently with none of the Lean 4 skills pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
-Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when choosing among plausible formal directions is a distinct requested outcome. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
+Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal directions remain plausible and choosing among them is a distinct requested outcome. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
 
 ## Positive routing
 
@@ -34,6 +34,10 @@ Prompt: Before formalizing this construction, investigate whether it is really a
 Prompt: Find the exact mathlib declaration for this fact, compare the nearby alternatives, and explain which abstraction is canonical in this project. Do not change code.
 - `lean4_explore_selected = PASS`
 - `answer_grounded_in_actual_project_or_mathlib_evidence = PASS`
+
+Prompt: Find the exact mathlib declaration for this fact. I only need its name and signature, not a design recommendation.
+- `lean4_explore_not_selected_for_lookup_alone = PASS`
+- `no_specialized_lean4_skill_required_without_an_owned_outcome = PASS`
 
 Prompt: Find a suitable existing lemma and use it to finish this existing proof goal.
 - `lean4_prove_primary = PASS`

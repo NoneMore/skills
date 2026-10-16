@@ -6,7 +6,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 
 ## Capabilities
 
-- `lean4-explore` — investigate an open Lean/mathlib design or research question when choosing among plausible abstractions, APIs, mathematical hypotheses, generalizations, or approaches is itself the requested outcome.
+- `lean4-explore` — choose among multiple materially different Lean/mathlib formal directions when that choice is itself the requested outcome.
 - `lean4-formalize` — translate mathematical intent into an appropriate Lean declaration when statement design is the requested outcome.
 - `lean4-prove` — complete or repair a proof for an existing concrete Lean declaration or goal.
 - `lean4-refute` — search for and Lean-certify a counterexample or negation.
@@ -19,7 +19,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 
 Choose the primary capability by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, and explanatory substeps normally remain inside the capability that already owns the task.
 
-`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Compose it only when choosing among multiple plausible formal directions becomes a distinct requested outcome. A standalone explanation of existing code with no evaluation request and no open formal-design decision does not require a specialized Lean 4 Skill.
+`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Compose it only when multiple materially different formal directions remain plausible and choosing among them becomes a distinct requested outcome. A standalone explanation of existing code with no evaluation request and no open formal-design decision does not require a specialized Lean 4 Skill.
 
 When a real outcome boundary is crossed, hand off explicitly: exploration may settle an encoding for formalization, diagnosis may reduce to ordinary proof search, review may identify a change owned by proof/trust/optimization, and exploration may support an optimization decision without owning the durable edit.
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Lean 4 Explore"
   short_description: "Choose among Lean/mathlib formal directions with evidence"
-  default_prompt: "Use $lean4-explore when choosing among multiple plausible Lean/mathlib formal directions is itself the task; investigate abstractions, APIs, mathematical hypotheses, generalizations, or approaches before committing to a durable outcome."
+  default_prompt: "Use $lean4-explore when multiple materially different Lean/mathlib formal directions remain plausible and choosing among them is itself the task; compare them with project/library evidence and disposable Lean experiments before committing to a durable outcome."

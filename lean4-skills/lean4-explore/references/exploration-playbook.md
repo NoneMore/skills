@@ -1,17 +1,12 @@
 # Exploration playbook
 
-Use this reference when a Lean/mathlib task is genuinely open-ended: the hard part is deciding which object, abstraction, API, hypothesis boundary, generalization, or implementation path deserves commitment.
+Use this reference when a Lean/mathlib task is genuinely open-ended: multiple materially different formal directions remain plausible, and choosing among them is itself the requested outcome.
 
-## Maintain a branch ledger
+## Keep discrimination cheap
 
-Keep the active search tree small and explicit. For each branch, record:
+Maintain only as much branch state as needed to compare live alternatives. For each live branch, know what evidence would distinguish it and the cheapest useful Lean/project experiment. A formal branch ledger is useful only when the alternatives or their history are complex enough to justify it.
 
-- the hypothesis or design idea;
-- what evidence would distinguish it from alternatives;
-- the cheapest useful experiment;
-- current status: viable, rejected, deferred, or selected.
-
-Do not preserve branches merely because they were mentioned. Preserve them when the reason for rejection may later become invalid or when they expose a meaningful tradeoff.
+Do not preserve rejected branches merely because they were mentioned. Keep their rationale only when it may prevent repeated work, become invalid under changed constraints, or expose a meaningful tradeoff.
 
 ## Re-identify the local concept
 
@@ -59,8 +54,8 @@ Useful discriminators include `#check`, `#synth`, `#print`, `example`, a minimal
 
 Report the verification strength honestly. A scratch elaboration answers a local question; it does not by itself prove project integration.
 
-## Converge deliberately
+## Converge on the formal decision
 
-Prefer a branch when the evidence is stronger on the dimensions that matter for the task: canonicality, faithfulness, generality, reuse, proof simplicity, import cost, trust, performance, and project conventions.
+Prefer a direction when the evidence is stronger on the dimensions that matter for the task: canonicality, faithfulness, generality, reuse, proof simplicity, import cost, trust, performance, and project conventions.
 
-Stop exploring when one branch dominates, when a small set of options remains with a real user-facing tradeoff, or when the next uncertainty is no longer exploratory. Carry forward rejected branches only when their rejection rationale is useful context.
+Stop exploring when one direction dominates, when a small set of options remains with a real user-facing tradeoff, or when the next uncertainty is no longer about choosing among formal directions.

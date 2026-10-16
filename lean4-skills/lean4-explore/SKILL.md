@@ -1,6 +1,6 @@
 ---
 name: lean4-explore
-description: "Use for formal mathematics in Lean 4/mathlib when choosing among multiple plausible formal directions is itself the requested outcome: the right formal object, abstraction, existing API or theorem family, mathematical hypothesis boundary, generalization, dual formulation, or implementation approach is not yet settled. Explore the local project and mathlib, run disposable Lean experiments, compare plausible branches, and return evidence-backed directions. Do not use for plain explanation, ordinary theorem lookup inside an already-owned task, or when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
+description: "Use for formal mathematics in Lean 4/mathlib when multiple materially different formal directions remain plausible and choosing among them is itself the requested outcome. The uncertainty may concern the formal object, abstraction, API family, mathematical hypothesis boundary, generalization, or dual formulation. Explore local project and mathlib evidence and use disposable Lean experiments when they discriminate between directions. Do not use for plain explanation, ordinary theorem lookup inside an already-owned task, or when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
 license: MIT
 ---
 
@@ -8,14 +8,14 @@ license: MIT
 
 ## Purpose
 
-Reduce uncertainty about the right formal direction before committing to a durable Lean change. Build and prune a small evidence-backed search tree rather than stopping at the first plausible theorem name or implementation.
+Reduce uncertainty when multiple materially different formal directions remain plausible before committing to a durable Lean outcome. Compare only branches whose differences could change the chosen formal object, abstraction, API, assumptions, generality, symmetry, or dependency strategy.
 
 Use this skill when the question is primarily **which formal direction should we pursue?**, not merely **how does existing code work?** or **how do we execute an already-known Lean task?**
 
 ## Invariants
 
 - Production source is observational by default. Disposable scratch declarations, `example`s, `#check`, `#synth`, minimal test files, or temporary local edits are allowed when they materially test a branch, but do not silently turn exploratory candidates into durable project changes.
-- Distinguish verified facts, working hypotheses, rejected branches, and deferred follow-ups.
+- Distinguish verified facts, working hypotheses, and material rejected or deferred branches. Do not preserve branch history that does not affect the decision.
 - Search by mathematical meaning, type shape, structure, and neighborhood before guessing declaration names. Use [mathlib search and integration](references/mathlib-guide.md) when useful.
 - Prefer Lean/project evidence over verbal plausibility when an inexpensive experiment can discriminate between branches.
 - Diverge only while a branch is likely to reveal materially new information; prune branches once evidence makes them dominated, irrelevant, or outside scope.
@@ -37,33 +37,37 @@ Load [the exploration playbook](references/exploration-playbook.md) when the tas
 
 ## Workflow
 
-1. State the exploration question, current constraints, and what decision or uncertainty the investigation should resolve.
+1. State the exploration question, current constraints, and the decision or uncertainty the investigation should resolve.
 2. Inspect the local declaration neighborhood and active imports before widening outward.
 3. Generate a small number of materially different branches across the relevant directions above.
 4. Test cheap discriminators first. Use disposable Lean experiments rather than argument-by-guess when possible.
 5. Compare surviving branches by evidence, canonicality, generality, downstream leverage, implementation cost, and risk.
-6. Converge when one direction is sufficiently supported, when several genuinely viable options remain with an explicit tradeoff, or when the next uncertainty belongs to a more outcome-specific skill.
+6. Converge when one direction is sufficiently supported, when several genuinely viable options remain with an explicit tradeoff, or when choosing among formal directions is no longer the primary uncertainty.
 
 Use [verification guidance](references/verification.md) for claims that depend on actual elaboration, imports, or project integration. Exploration does not upgrade a scratch success into a project-level verification claim.
 
-## Handoffs
+## Handoff
 
-- Use `lean4-formalize` when the exploration has selected the mathematical encoding and the requested next outcome is a durable Lean declaration.
-- Use `lean4-prove` when a concrete declaration/goal and proof obligation are settled.
-- Use `lean4-refute` when the requested outcome becomes a Lean-certified counterexample or negation; exploratory counterexample probing alone does not require that skill.
-- Use `lean4-diagnose` when a concrete Lean/Lake diagnostic becomes the primary blocker.
-- Use `lean4-trust`, `lean4-review`, or `lean4-optimize` when the requested outcome becomes respectively a trust audit, independent evaluation, or durable improvement of already-correct code.
+Stop exploring when choosing among formal directions is no longer the primary uncertainty. Carry the selected direction and material evidence into the capability that owns the next requested outcome.
+
+Common boundaries are:
+
+- a settled encoding that now needs a durable Lean declaration → `lean4-formalize`;
+- a settled concrete declaration or goal that now needs a checked proof → `lean4-prove`;
+- a request for Lean-certified falsity or a certified counterexample → `lean4-refute`.
+
+Other outcome transitions follow collection routing. Exploration itself does not own durable edits merely because reconnaissance was needed first.
 
 Plain explanation of existing Lean code with no evaluation request and no open design decision does not need a specialized Lean 4 Skill. Ordinary theorem lookup needed to finish a known proof remains part of `lean4-prove`; do not invoke exploration merely because search is useful.
 
 ## Completion
 
-Return:
+Return, in proportion to the task:
 
 - the best-supported direction or the small set of remaining viable directions;
-- the evidence that discriminates between them;
-- important branches rejected and why;
-- unresolved uncertainties and non-blocking follow-ups;
-- the next skill or concrete action if the investigation has converged enough to hand off.
+- the evidence that materially discriminates between them;
+- rejected alternatives only when their rejection explains the choice, prevents repeated work, or preserves a material tradeoff;
+- unresolved uncertainty only when it could still change the decision;
+- the next concrete outcome or action once the investigation has converged enough to hand off.
 
 Stop when further branching is unlikely to change the decision, or when the user-requested uncertainty has been reduced enough for the next bounded outcome.
