@@ -1,6 +1,6 @@
 # Lean 4 family routing evals
 
-Run each prompt independently with none of the Lean 4 skills pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
+Run each prompt independently with none of the outcome-specific Lean 4 skills pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
 ## Positive routing
 
@@ -46,3 +46,12 @@ Required assertions:
 - `general_lean_application_diagnostic_did_not_route_to_family = PASS`
 - `other_prover_prompt_did_not_route_to_family = PASS`
 - `ordinary_informal_math_prompt_did_not_route_to_family = PASS`
+
+## Legacy explicit invocation remains bounded
+
+Prompt: Explicitly invoke `$lean4-skills` and ask to review a Lean proof without editing it.
+
+Required assertions:
+- `legacy_root_not_selected_by_model_discovery = PASS`
+- `explicit_legacy_invocation_delegated_to_lean4_review = PASS`
+- `legacy_shim_did_not_reimplement_review_workflow = PASS`

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 (compat)"
+  short_description: "Legacy explicit entry point for the Lean 4 skill family"
+  default_prompt: "Use $lean4-skills only as a compatibility entry point, then load the outcome-specific Lean 4 skill that owns the task."

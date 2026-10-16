@@ -14,7 +14,11 @@ Before materially changing this family, follow the repository-level [Skill Desig
 - `lean4-review` — independently review Lean proof code and report evidence-backed findings.
 - `lean4-optimize` — improve an already-correct proof for clarity, robustness, maintainability, or measured performance.
 
-Each capability is directly discoverable from its own metadata. There is intentionally no family router skill: selection belongs to discovery, and cross-skill handoffs are explicit where one outcome turns into another.
+Each capability is directly discoverable from its own metadata. There is intentionally no model-invoked family router: selection belongs to discovery, and cross-skill handoffs are explicit where one outcome turns into another.
+
+## Compatibility
+
+The root `SKILL.md` is a temporary **user-invoked compatibility shim** for explicit `$lean4-skills` callers. It sets `disable-model-invocation: true`, contains no independent Lean workflow, and delegates to exactly the child capability that owns the requested outcome. New metadata and documentation must not depend on the legacy entry point. Remove the shim once known callers using the old name have migrated.
 
 ## Shared references
 
