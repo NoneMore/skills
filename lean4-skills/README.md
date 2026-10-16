@@ -35,16 +35,16 @@ Each capability is directly discoverable from its own metadata. There is no fami
 
 ## Family installation and reference locality
 
-The eight `lean4-*` directories form one installation unit and are expected to be installed together. Package-local reference copies exist to make reference traversal reliable after a narrow Skill is activated, not to define eight independent deployment units.
+The eight `lean4-*` directories form one installation unit and are expected to be installed together. Package-local reference copies exist to make reference loading reliable after a narrow Skill is activated, not to define eight independent deployment units.
 
 For every Skill:
 
 - the directory name matches the `name` in `SKILL.md`;
-- runtime reference traversal stays inside the activated Skill package;
+- only references that the Skill explicitly routes to are carried as shared package-local guidance;
 - required provenance and third-party notices stay available locally;
 - supporting capabilities do not rely on the collection root being loaded into model context.
 
-The root `references/` directory is the canonical source for reusable material shared by multiple Skills. `scripts/sync-packages.py` starts from each Skill's required reference seeds, follows package-local Markdown dependencies transitively, and vendors the resulting closure into that Skill. Run `scripts/sync-packages.py --check` to detect drift, validate package names, and reject broken or escaping local Markdown links. Skill-specific references remain owned by that Skill.
+The root `references/` directory is the canonical source for reusable material shared by multiple Skills. `scripts/sync-packages.py` vendors the explicit per-Skill reference set and checks it for drift. `SKILL.md` is the authoritative reference-loading map: mentioning another mechanism inside a reference does not implicitly add that mechanism's reference to the Skill. Run `scripts/sync-packages.py --check` to validate package names, vendored-copy drift, and broken or escaping local Markdown links. Skill-specific references remain owned by that Skill.
 
 ## Shared source material
 

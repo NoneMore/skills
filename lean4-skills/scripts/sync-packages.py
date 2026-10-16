@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Vendor shared Lean 4 reference material into the jointly installed Skill family."""
+"""Vendor explicitly selected shared Lean 4 references into the Skill family."""
 
 from __future__ import annotations
 
@@ -12,11 +12,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SHARED = ROOT / "references"
 
-# These are behavioral entry points, not complete dependency lists. Shared
-# Markdown references may link to other shared references; package_references()
-# follows those links transitively so an activated Skill can traverse its local
-# reference graph without falling back to the collection root.
-PACKAGE_REFERENCE_SEEDS = {
+# This map is authoritative. A reference mentioning or linking another mechanism
+# does not implicitly widen a Skill's reference set; SKILL.md owns load decisions.
+PACKAGE_REFERENCES = {
     "lean4-explore": ["mathlib-guide.md", "verification.md", "branches/mathlib-upstream.md"],
     "lean4-formalize": ["mathlib-guide.md", "verification.md", "branches/mathlib-upstream.md"],
     "lean4-prove": [
@@ -63,11 +61,10 @@ def local_link_target(raw_target: str) -> str | None:
         if closing != -1:
             target = target[1:closing]
     else:
-        # Markdown permits an optional title after the destination.
         target = target.split(maxsplit=1)[0]
 
     target = target.split("#", 1)[0]
-    if not target or target.startswith("#") or URI_RE.match(target):
+    if not target or URI_RE.match(target):
         return None
     return target
 
@@ -79,40 +76,8 @@ def markdown_local_links(path: Path):
             yield target
 
 
-def package_references(package: str) -> list[Path]:
-    """Return the transitive shared-reference closure for one Skill."""
-    pending = [Path(rel) for rel in PACKAGE_REFERENCE_SEEDS[package]]
-    seen: set[Path] = set()
-    shared_root = SHARED.resolve()
-
-    while pending:
-        rel = pending.pop()
-        if rel in seen:
-            continue
-        seen.add(rel)
-
-        src = SHARED / rel
-        if not src.exists():
-            # main() reports the missing canonical source with the package name.
-            continue
-
-        for target in markdown_local_links(src):
-            resolved = (src.parent / target).resolve()
-            try:
-                dependency = resolved.relative_to(shared_root)
-            except ValueError:
-                # Links outside the canonical shared-reference tree are not
-                # vendored dependencies. validate_local_links() will still
-                # reject them if they become runtime-local package links.
-                continue
-            if dependency.suffix == ".md" and dependency not in seen:
-                pending.append(dependency)
-
-    return sorted(seen, key=lambda path: path.as_posix())
-
-
 def expected_files(package: str):
-    for rel in package_references(package):
+    for rel in PACKAGE_REFERENCES[package]:
         yield SHARED / rel, ROOT / package / "references" / rel
     for rel in PROVENANCE:
         yield ROOT / rel, ROOT / package / rel
@@ -131,7 +96,7 @@ def validate_name(package: str) -> list[str]:
 
 
 def validate_local_links(package: str) -> list[str]:
-    """Reject broken runtime-local Markdown links in a Skill package."""
+    """Reject broken or escaping local Markdown links in a Skill package."""
     errors: list[str] = []
     package_root = (ROOT / package).resolve()
 
@@ -160,7 +125,7 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
-    for package in PACKAGE_REFERENCE_SEEDS:
+    for package in PACKAGE_REFERENCES:
         errors.extend(validate_name(package))
         for src, dst in expected_files(package):
             if not src.exists():
@@ -173,8 +138,6 @@ def main() -> int:
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(src, dst)
 
-        # Validate after writing in sync mode so newly discovered transitive
-        # dependencies are present before their links are checked.
         errors.extend(validate_local_links(package))
 
     if errors:

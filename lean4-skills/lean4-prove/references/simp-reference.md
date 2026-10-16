@@ -38,4 +38,4 @@ Use a simproc when rewriting genuinely depends on deterministic computation or s
 
 A simproc should decline inputs outside its intended domain rather than launching hidden unbounded proof search. Prefer ordinary simp lemmas when they express the same behavior clearly.
 
-For performance-motivated simp changes, compare against a verified baseline and load [performance guidance](performance-optimization.md) when measurement matters.
+For performance-motivated simp changes, follow performance guidance only when the active Skill explicitly routes to it; this reference does not by itself add a performance dependency.
