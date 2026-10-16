@@ -23,4 +23,4 @@ A helper is not valuable just because a block is long. Keep arguments inline whe
 
 Before manual pointwise or case reasoning, search for `congr`, `EqOn`, `EventuallyEq`, or `ext`-style theorems appropriate to the structure. They often preserve the intended abstraction and reduce definitional bookkeeping.
 
-Use the parent `lean4-optimize` skill for baseline, verification, and stopping behavior. For measured elaboration/build cost, use the family [performance guidance](../../references/performance-optimization.md).
+Use the parent `lean4-optimize` skill for baseline, verification, and stopping behavior. For measured elaboration/build cost, use [performance guidance](performance-optimization.md).
