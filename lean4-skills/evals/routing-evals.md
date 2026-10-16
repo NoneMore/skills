@@ -2,6 +2,8 @@
 
 Run each prompt independently with none of the Lean 4 skills pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
+Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when choosing among plausible formal directions is a distinct requested outcome. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
+
 ## Positive routing
 
 | Prompt | Expected skill |
@@ -39,7 +41,8 @@ Prompt: Find a suitable existing lemma and use it to finish this existing proof 
 - `lean4_explore_may_compose_only_if_reconnaissance_becomes_a_distinct_subproblem = PASS`
 
 Prompt: Why does this existing `simpa [foo]` proof work?
-- `lean4_explore_selected = PASS`
+- `no_specialized_lean4_skill_required = PASS`
+- `lean4_explore_not_selected_without_open_design_decision = PASS`
 - `lean4_review_not_selected_without_evaluation_request = PASS`
 - `lean4_optimize_not_selected_without_change_request = PASS`
 

@@ -1,6 +1,6 @@
 ---
 name: lean4-explore
-description: "Use for formal mathematics in Lean 4/mathlib when the main uncertainty is what formal object, abstraction, existing API, theorem, assumption boundary, generalization, dual formulation, or implementation approach should be pursued. Explore the local project and mathlib, run disposable Lean experiments, compare plausible branches, and return evidence-backed directions. Do not use when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
+description: "Use for formal mathematics in Lean 4/mathlib when choosing among multiple plausible formal directions is itself the requested outcome: the right formal object, abstraction, existing API or theorem family, mathematical hypothesis boundary, generalization, dual formulation, or implementation approach is not yet settled. Explore the local project and mathlib, run disposable Lean experiments, compare plausible branches, and return evidence-backed directions. Do not use for plain explanation, ordinary theorem lookup inside an already-owned task, or when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
 license: MIT
 ---
 
@@ -10,7 +10,7 @@ license: MIT
 
 Reduce uncertainty about the right formal direction before committing to a durable Lean change. Build and prune a small evidence-backed search tree rather than stopping at the first plausible theorem name or implementation.
 
-Use this skill when the question is primarily **what should we pursue?**, not merely **how do we execute an already-known Lean task?**
+Use this skill when the question is primarily **which formal direction should we pursue?**, not merely **how does existing code work?** or **how do we execute an already-known Lean task?**
 
 ## Invariants
 
@@ -54,7 +54,7 @@ Use [verification guidance](references/verification.md) for claims that depend o
 - Use `lean4-diagnose` when a concrete Lean/Lake diagnostic becomes the primary blocker.
 - Use `lean4-trust`, `lean4-review`, or `lean4-optimize` when the requested outcome becomes respectively a trust audit, independent evaluation, or durable improvement of already-correct code.
 
-Ordinary theorem lookup needed to finish a known proof remains part of `lean4-prove`; do not invoke exploration merely because search is useful.
+Plain explanation of existing Lean code with no evaluation request and no open design decision does not need a specialized Lean 4 Skill. Ordinary theorem lookup needed to finish a known proof remains part of `lean4-prove`; do not invoke exploration merely because search is useful.
 
 ## Completion
 

@@ -1,6 +1,6 @@
 ---
 name: lean4-review
-description: "Use for independent review of Lean 4/mathlib proof code when the requested outcome is evidence-backed findings about correctness, trust, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only; explanation or reconnaissance without an evaluation request belongs to lean4-explore."
+description: "Use for independent review of Lean 4/mathlib proof code when the requested outcome is evidence-backed findings about correctness, trust, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only. Plain explanation without an evaluation request does not need this skill; use lean4-explore only when choosing among formal directions is itself the open task."
 license: MIT
 ---
 
@@ -26,7 +26,7 @@ Review-only requests are read-only. If fixes are also requested, substantiate th
 
 For upstream mathlib work, load [upstream guidance](references/branches/mathlib-upstream.md) as an additional review bar. Use [`simp` guidance](references/simp-reference.md) when global simplification policy is material.
 
-If the user is asking why existing code works, what abstraction it represents, or which nearby API is canonical without asking for an evaluation, use `lean4-explore` instead.
+A standalone request to explain how existing code works, with no evaluation request and no open design decision, does not require a specialized Lean 4 Skill. If the question instead asks which abstraction, API, or formal direction should be pursued, use `lean4-explore` for that decision.
 
 ## Output and completion
 

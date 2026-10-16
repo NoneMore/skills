@@ -6,7 +6,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 
 ## Capabilities
 
-- `lean4-explore` — investigate an open Lean/mathlib design or research question when the right abstraction, API, assumptions, generalization, or approach is not yet known.
+- `lean4-explore` — investigate an open Lean/mathlib design or research question when choosing among plausible abstractions, APIs, mathematical hypotheses, generalizations, or approaches is itself the requested outcome.
 - `lean4-formalize` — translate mathematical intent into an appropriate Lean declaration when statement design is the requested outcome.
 - `lean4-prove` — complete or repair a proof for an existing concrete Lean declaration or goal.
 - `lean4-refute` — search for and Lean-certify a counterexample or negation.
@@ -14,6 +14,14 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-trust` — inspect and clean up axioms, `sorry`/`admit`, and declaration trust dependencies.
 - `lean4-review` — independently review Lean proof code and report evidence-backed findings.
 - `lean4-optimize` — improve an already-correct proof for clarity, robustness, maintainability, or measured performance.
+
+## Routing and composition
+
+Choose the primary capability by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, and explanatory substeps normally remain inside the capability that already owns the task.
+
+`lean4-explore` is not a generic preflight or fallback for every non-editing Lean question. Compose it only when choosing among multiple plausible formal directions becomes a distinct requested outcome. A standalone explanation of existing code with no evaluation request and no open formal-design decision does not require a specialized Lean 4 Skill.
+
+When a real outcome boundary is crossed, hand off explicitly: exploration may settle an encoding for formalization, diagnosis may reduce to ordinary proof search, review may identify a change owned by proof/trust/optimization, and exploration may support an optimization decision without owning the durable edit.
 
 Each capability is directly discoverable from its own metadata. There is no family router or compatibility Skill. Cross-skill composition happens only when the requested outcome genuinely crosses a boundary.
 
