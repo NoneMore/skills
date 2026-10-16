@@ -33,8 +33,6 @@ Keep knowledge at the lowest level where it materially improves execution or ver
 
 The family has one shared runtime reference: [verification guidance](references/verification.md). It captures Lean/Lake verification semantics that are easy to get materially wrong, including the difference between file-local and dependency-aware checks after changed imports.
 
-Load shared references on demand rather than preloading them for every Skill. In a composed task, the primary outcome owner owns shared-reference loading; supporting capabilities reuse guidance already established for the active task instead of reloading duplicate copies.
-
 Specialized optimization knowledge stays with `lean4-optimize`:
 
 - `lean4-optimize/references/proof-simplification.md` — simplify an already-correct proof strategy;
@@ -44,8 +42,6 @@ Specialized optimization knowledge stays with `lean4-optimize`:
 There is no standalone shared mathlib-search document. Search behavior is small enough to keep local to the owning Skill: inspect local declarations and active imports, search by meaning/type rather than guessed names, and validate candidates in the actual project context.
 
 Current upstream mathlib policy is live external state. For upstream-targeted work, consult the current authoritative contribution guidance and nearby current mathlib code instead of relying on a cached family document.
-
-Installations of this family should preserve the collection layout so relative references remain available. If a target runtime requires physically self-contained Skill packages, materialize reference copies as generated distribution artifacts rather than committing mirrors back into the authoring tree.
 
 Collection-level upstream provenance and licensing live once in [UPSTREAM.md](UPSTREAM.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

@@ -16,8 +16,6 @@ Establish a clean verified baseline for the target first. If correctness is not 
 
 Do not introduce new axioms, `sorry`, or `admit`, and do not change the public theorem statement merely to make optimization easier.
 
-Follow applicable repository Lean guidance when present; stronger project policy takes precedence.
-
 ## Choose one optimization surface
 
 - **Strategy simplification:** replace an indirect proof with a more direct mathematical/library argument or extract a genuinely useful helper. Load [proof strategy simplification](references/proof-simplification.md).

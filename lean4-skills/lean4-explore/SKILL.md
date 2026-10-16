@@ -10,8 +10,6 @@ license: MIT
 
 Reduce uncertainty when multiple materially different formal-design directions remain plausible before committing to a durable Lean outcome. Compare only branches whose differences could change the chosen formal object, abstraction, API, assumptions, generality, symmetry, or dependency strategy.
 
-Use this skill when the question is primarily **which formal direction should we pursue?**, not merely **how does existing code work?** or **which proof strategy should solve this already-fixed goal?** Different induction schemes, rewrite plans, automation choices, or other proof strategies for the same fixed statement remain part of `lean4-prove` unless the investigation exposes a separate formal-design decision.
-
 ## Invariants
 
 - Production source is observational by default. Disposable scratch declarations, `example`s, `#check`, `#synth`, minimal test files, or temporary local edits are allowed when they materially test a branch, but do not silently turn exploratory candidates into durable project changes.
@@ -49,19 +47,7 @@ For claims that depend on actual elaboration, changed imports, or project integr
 
 ## Handoff
 
-Stop exploring when choosing among formal directions is no longer the primary uncertainty. Carry the selected direction and material evidence into the capability that owns the next requested outcome.
-
-Common boundaries are:
-
-- a settled encoding that now needs a durable Lean declaration → `lean4-formalize`;
-- a settled concrete declaration or goal that now needs a checked proof → `lean4-prove`;
-- a request for Lean-certified falsity or a certified counterexample → `lean4-refute`.
-
-At the formalization boundary, use the requested deliverable as a commitment test: if an evidence-backed direction is itself a sufficient result, exploration may own it; if the task requires a Lean declaration, ordinary choices of types, hypotheses, generality, and available API remain part of `lean4-formalize` unless the direction decision is explicitly separated into its own outcome.
-
-Other outcome transitions follow collection routing. Exploration itself does not own durable edits merely because reconnaissance was needed first.
-
-Plain explanation of existing Lean code with no evaluation request and no open design decision does not need a specialized Lean 4 Skill. Ordinary theorem lookup and proof-strategy comparison needed to finish a known proof remain part of `lean4-prove`; do not invoke exploration merely because search or branching is useful.
+Stop exploring when choosing among formal directions is no longer the primary uncertainty. Carry the selected direction and material evidence into the capability that owns the next requested outcome. Common handoffs are `lean4-formalize` for a durable declaration, `lean4-prove` for a settled target that needs a proof, and `lean4-refute` for requested certified falsity.
 
 ## Completion
 

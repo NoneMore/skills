@@ -14,7 +14,7 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 
 - Preserve existing declarations unless statement revision is explicitly authorized.
 - Prefer the weakest faithful statement: make hypotheses explicit and do not hide assumptions behind new axioms.
-- Follow local project conventions and applicable repository Lean guidance. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
+- Follow local project conventions. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
 
 ## Workflow
 

@@ -15,7 +15,6 @@ Produce a Lean-certified logical refutation of a target proposition while preser
 - Preserve the original declaration; encode witnesses or negations as separate checked results.
 - Failure to prove a proposition is not evidence that it is false.
 - Do not weaken the trust basis with new axioms, `sorry`, or `admit` to manufacture a refutation.
-- Follow applicable repository Lean guidance when present; stronger project policy takes precedence over generic defaults.
 
 ## Workflow
 

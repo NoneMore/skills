@@ -10,8 +10,6 @@ license: MIT
 
 Inspect and, when requested, reduce a declaration's trust dependencies against an explicit project/task policy.
 
-Follow applicable repository Lean guidance when present; project trust and verification policy takes precedence over generic defaults.
-
 ## Inspect first
 
 For a named declaration, use Lean's own environment to inspect dependencies and, when relevant, `#print axioms <declaration>` in the project context. Successful elaboration alone does not establish the trust basis the user expects.

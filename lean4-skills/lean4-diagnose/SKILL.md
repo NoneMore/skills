@@ -20,7 +20,6 @@ Obtain the exact current diagnostic and nearby source context. Do not treat ever
 - Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the accepted trust basis to clear a diagnostic.
 - Do not modify generated caches or dependency checkouts such as `.lake/packages` unless the requested diagnostic specifically concerns those artifacts.
 - When diagnosis supports another capability that owns the requested outcome, preserve that owner's stricter mutation, trust, scope, and verification invariants.
-- Follow applicable repository Lean guidance when present; stronger project policy takes precedence.
 
 ## Triage
 

@@ -4,8 +4,6 @@ Run each prompt independently with all eight Lean 4 Skills installed and none pr
 
 Routing principle: choose the primary skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, proof-strategy comparison, and explanatory substeps stay with the capability that already owns the task. Select `lean4-explore` only when multiple materially different formal-design directions remain plausible and choosing among them is a distinct requested outcome. Select `lean4-trust` when the trust basis itself is being inspected or changed, not merely because an ordinary proof hole is represented by `sorry`/`admit`. Supporting capabilities must not broaden the primary owner's mutation, trust, scope, or verification contract. A standalone plain explanation with neither an evaluation request nor an open design decision need not select any specialized Lean 4 skill.
 
-Shared references are runtime guidance, not routing targets. Loading `references/verification.md` must not select another Skill. In a composed task, supporting capabilities reuse shared guidance already established by the primary outcome owner rather than treating the same reference as a second outcome.
-
 ## Positive routing
 
 | Prompt | Expected skill |
@@ -20,13 +18,6 @@ Shared references are runtime guidance, not routing targets. Loading `references
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 
 Required assertion for each row: exactly the expected primary skill is selected unless the prompt explicitly requests a composed outcome.
-
-## Shared-reference boundary
-
-Prompt: I changed an imported Lean module and now need to fill this existing theorem's `sorry` and verify the result.
-- `lean4_prove_selected = PASS`
-- `verification_reference_may_be_loaded_without_additional_skill_routing = PASS`
-- `file_local_pass_not_treated_as_dependency_aware_after_changed_import = PASS`
 
 ## Explore boundaries
 

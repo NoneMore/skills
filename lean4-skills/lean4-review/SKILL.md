@@ -16,8 +16,6 @@ Prefer the smallest scope that answers the request: one declaration, one file, c
 
 Review-only requests are read-only with respect to project source. Verification may use the project's normal Lean/Lake gates and their generated build artifacts when needed to establish a material claim. If fixes are also requested, substantiate the finding first, then compose with the capability that owns the change (`lean4-prove`, `lean4-diagnose`, `lean4-trust`, or `lean4-optimize`) rather than turning review into an unbounded implementation workflow.
 
-Follow applicable repository Lean guidance when present; project policy and established documentation take precedence over generic review defaults.
-
 ## Review order
 
 1. **Correctness signals:** diagnostics, unresolved `sorry`/`admit`, and material trust/axiom concerns. When a correctness finding depends on actual elaboration, changed imports, or project integration, load [verification guidance](../references/verification.md) and report what actually ran; a file-local pass is not dependency-aware when changed imported artifacts may be stale.

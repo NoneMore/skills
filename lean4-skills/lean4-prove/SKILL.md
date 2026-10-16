@@ -14,7 +14,7 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 - Preserve existing theorem statements, declaration signatures, and public API unless the user explicitly expands the task to statement design.
 - Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the accepted trust basis to claim proof completion.
-- Follow local project conventions and applicable repository Lean guidance. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
+- Follow local project conventions. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
 
 ## Workflow
 
@@ -28,12 +28,9 @@ If a performance or simplification concern becomes a separate post-correctness i
 
 ## Boundaries
 
-- If an informal mathematical claim still needs a Lean declaration or the statement itself must be designed or revised, use `lean4-formalize`.
-- Use `lean4-explore` only when the blocker is a distinct formal-design decision whose resolution could change the chosen formal object, abstraction, API family, hypothesis boundary, generality, symmetry, or dependency strategy. Multiple proof strategies for the same fixed target do not by themselves cross this boundary. Ordinary theorem lookup and candidate comparison needed to finish the known goal remain part of this skill.
-- If there is credible evidence that the proposition is false and the requested outcome is a certified counterexample or negation, use `lean4-refute`.
-- If the target is already correct and the requested outcome is simplification or speed, use `lean4-optimize`.
-- If the blocker is a concrete non-proof Lean/Lake diagnostic whose class is not yet understood, use `lean4-diagnose`.
-- If the task is specifically about unacceptable assumptions or trust dependencies, use `lean4-trust`.
+- If the statement itself needs design or revision, use `lean4-formalize` rather than silently changing it.
+- Use `lean4-explore` only for a distinct formal-design decision that could change the chosen object, abstraction, API family, hypothesis boundary, generality, symmetry, or dependency strategy. Multiple proof strategies for the same fixed target remain proving work.
+- If the requested outcome ceases to be proof completion for the fixed target, hand off to the capability that owns the new outcome rather than widening this contract.
 
 ## Stop and completion
 
