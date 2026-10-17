@@ -31,7 +31,7 @@ Required assertions:
 
 ## Repeated same-strategy failures trigger reframing
 
-Fixture: Use a pinned proof target with two viable proof formulations. The first formulation leads to a helper chain whose next 2–3 attempts fail with the same blocker class while producing superficially different local obligations. Those failures expose a more useful formulation of the target; a refreshed local/imported API search for that formulation finds a direct applicable result. Keep the statement, available APIs, and recorded diagnostics fixed across runs.
+Fixture: Use a pinned proof target where one formulation leads to a helper chain whose next 2–3 attempts fail with the same blocker class while producing superficially different local obligations. Those failures expose another, more useful formulation; a refreshed local/imported API search finds a direct applicable result for it. Keep the statement, available APIs, and recorded diagnostics fixed across runs.
 
 Prompt: Complete the existing theorem without changing its statement.
 
