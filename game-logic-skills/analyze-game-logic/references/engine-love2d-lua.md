@@ -6,9 +6,12 @@ in `SKILL.md`; this reference contains only LÖVE-specific tracing deltas.
 
 ## 1. Applicability and detection
 
-Strong indicators are a source directory with root `main.lua`, a `.love` ZIP with
-root `main.lua`, or a valid Windows PE that is also a ZIP with root `main.lua`.
-`conf.lua`, LÖVE strings/DLLs, and API use are supporting signals only.
+Strong packaging evidence is a `.love` ZIP with root `main.lua`, or a structurally
+valid Windows PE that is also a ZIP with root `main.lua`. A source directory or
+generic ZIP with root `main.lua` is only a candidate; corroborate it with material
+LÖVE-specific evidence such as `conf.lua`, LÖVE API use, or runtime strings/DLLs
+before classifying the boundary as LÖVE-hosted Lua. None of these container signals
+prove gameplay ownership.
 
 Stop this adapter when the unresolved mechanic crosses a material C module, FFI
 call, or other opaque native boundary.
@@ -60,10 +63,11 @@ userdata edges when they are material.
 
 ## 5. Recommended tracing workflow
 
-Classify the container, expose only the needed readable Lua, start from the
-strongest mechanic anchor, resolve module origin/scheduler/thread only when it can
-change the claim, then follow the path to the authoritative transition. For fused
-PEs, rely on valid PE + ZIP structure rather than a `PK` string or runtime name.
+Classify the container, corroborate the LÖVE boundary when packaging is ambiguous,
+expose only the needed readable Lua, start from the strongest mechanic anchor,
+resolve module origin/scheduler/thread only when it can change the claim, then
+follow the path to the authoritative transition. For fused PEs, rely on valid PE +
+ZIP structure rather than a `PK` string or runtime name.
 
 ## 6. Static-analysis guidance
 
@@ -85,6 +89,7 @@ native boundaries matter.
 
 ## 10. Common failure modes
 
+- Classifying a generic `main.lua` source tree or ZIP as LÖVE without corroboration.
 - Escalating a fused PE to native analysis before checking its appended Lua.
 - Treating an archive member or lexical require as the effective module.
 - Treating `love.update` or a Channel consumer as the scheduler/computation owner.
@@ -98,7 +103,9 @@ transition.
 
 ## 12. Bundled tool
 
-`scripts/love2d_triage.py` mechanically classifies source directories, `.love`
-archives, and fused Windows executables; hashes file targets; inventories
-Lua/native inputs; and reports lexical resolution/scheduler/thread/native hints.
-Its output narrows search rather than proving runtime ownership or resolution.
+`scripts/love2d_triage.py` mechanically inventories source directories, `.love`
+archives, generic ZIP candidates, and fused Windows executables; hashes file
+targets; and reports lexical resolution/scheduler/thread/native hints. Container
+classification narrows search and does not by itself prove LÖVE identity, runtime
+ownership, or effective resolution. Use `--self-test` for deterministic classifier
+regressions.
