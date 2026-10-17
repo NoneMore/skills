@@ -1,6 +1,6 @@
 # Lean 4 collection discovery evals
 
-Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked and are not scored by model discovery.
+Run each prompt independently with all eight Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked and are not scored by model discovery.
 
 Discovery is recall-oriented but has a context budget: load materially useful guidance without requiring unique ownership or blanket activation.
 
@@ -12,7 +12,8 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
 | I think this Lean proposition is false; find and certify a counterexample. | `lean4-refute` |
 | After updating mathlib, several theorem files fail around the same imports with changed identifiers and signatures. Determine the common cause and migration path. | `lean4-diagnose` |
-| Which axioms does this theorem depend on, and can we remove our custom one? | `lean4-trust` |
+| Which axioms does this theorem depend on? Audit its trust basis against our accepted policy. | `lean4-review` |
+| Remove our custom axiom from this existing theorem if possible without changing its statement. | `lean4-prove` |
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 
@@ -27,9 +28,10 @@ Prompt: This existing theorem no longer elaborates with an application type mism
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: Audit this theorem's trust basis and remove our custom axiom if possible without changing the theorem statement.
-- `lean4_trust_selected = PASS`
+- `lean4_review_selected = PASS`
+- `lean4_prove_selected = PASS`
 - `trust_basis_checked_against_requested_policy = PASS`
-- `auxiliary_proof_work_preserved_trust_cleanup_outcome = PASS`
+- `trust_cleanup_did_not_require_a_dedicated_trust_skill = PASS`
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 ## Adjacent intents stay out

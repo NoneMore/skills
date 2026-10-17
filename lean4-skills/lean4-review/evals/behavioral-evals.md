@@ -11,6 +11,15 @@ Required assertions:
 - `prioritized_material_findings_with_evidence = PASS`
 - `did_not_invent_nits_without_material_findings = PASS`
 
+## Trust audit inspects dependencies rather than inferring from elaboration
+
+Prompt: This theorem compiles. Confirm whether it depends on any axioms I did not define locally.
+
+Required assertions:
+- `did_not_infer_trust_basis_from_elaboration = PASS`
+- `inspected_axiom_dependencies_in_project_context = PASS`
+- `interpreted_dependencies_against_requested_policy = PASS`
+
 ## Fix requests preserve review independence
 
 Prompt: Review this proof and fix any blocker you find.
