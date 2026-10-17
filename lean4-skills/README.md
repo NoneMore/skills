@@ -11,7 +11,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 ## Model-discoverable capabilities
 
 - `lean4-formalize` — design or explicitly revise a Lean declaration.
-- `lean4-prove` — complete or repair a proof for an existing target, including trust-preserving cleanup when an unacceptable dependency must be removed.
+- `lean4-prove` — complete or repair a proof for an existing target.
 - `lean4-refute` — find and independently Lean-certify a counterexample or negation.
 - `lean4-diagnose` — identify a root cause and migration path for Lean/Lake/build/integration failures.
 - `lean4-review` — independently review Lean proof code or audit a declaration's trust dependencies; review-only requests are read-only.
