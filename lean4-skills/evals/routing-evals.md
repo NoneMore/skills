@@ -28,6 +28,7 @@ Prompt: This existing theorem no longer elaborates with an application type mism
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: Audit this theorem's trust basis and remove our custom axiom if possible without changing the theorem statement.
+- `lean4_review_selected = PASS`
 - `lean4_prove_selected = PASS`
 - `trust_basis_checked_against_requested_policy = PASS`
 - `trust_cleanup_did_not_require_a_dedicated_trust_skill = PASS`
