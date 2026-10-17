@@ -9,10 +9,11 @@ license: MIT
 ## Workflow
 
 1. Inspect the exact goal, nearby source, and current diagnostics.
-2. Search local and imported APIs before broader mathlib; validate candidates in the project context.
-3. Try a bounded set of materially different proof strategies, using live feedback when available or compiling candidates one at a time.
-4. Apply the smallest coherent passing change. Keep the statement and public API fixed unless revision is explicitly authorized.
-5. Verify the affected scope and report what ran. If an imported source changed, a file-local check against possibly stale artifacts is not dependency-aware verification.
+2. Search local and imported APIs before broader mathlib; validate candidates in the project context. Search again when failed attempts expose a materially different formulation or abstraction.
+3. Try a bounded set of materially different proof strategies. When cheap live feedback is available, discriminate 2–3 materially different candidates before building substantial helper machinery.
+4. Treat repeated attempts that preserve the same blocker or continue the same helper/abstraction chain as one strategy, not new strategies. After 2–3 such failures, or when a new helper starts spawning its own unresolved helper chain, stop deepening that route: refresh the goal, search again, and reframe before adding more structure.
+5. Apply the smallest coherent passing change. Keep the statement and public API fixed unless revision is explicitly authorized.
+6. Verify the affected scope and report what ran. If an imported source changed, a file-local check against possibly stale artifacts is not dependency-aware verification.
 
 Do not add axioms, `sorry`, or `admit` to manufacture completion. Stop when no materially new bounded avenue remains; report the blocker, useful evidence, and smallest next action.
 
