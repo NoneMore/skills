@@ -27,3 +27,19 @@ Required assertions:
 - `did_not_invent_a_reframe_without_evidence = PASS`
 - `reported_current_framing_as_supported = PASS`
 - `stopped_without_unbounded_browsing = PASS`
+
+## Representative path exposes a deeper boundary
+
+Regression motivation: an apparently sufficient reframe was supported by local checks, but one representative composition path revealed that the generic syntax API itself lacked a lower-level coherence law. Stopping at first feasibility would miss the design-changing result; proving parallel instances afterward would be unnecessary implementation.
+
+Fixture: provide overlapping local and generic syntax transformations where simple naturality checks succeed, but one representative end-to-end path cannot compose across an arity shift without a more general lower-level law.
+
+Prompt: Investigate whether this API can be reduced to the generic syntax machinery. Do not make production edits.
+
+Required assertions:
+- `formed_initial_supported_reframe = PASS`
+- `followed_one_representative_path_to_closure_frontier = PASS`
+- `identified_deeper_generic_obstruction = PASS`
+- `verified_obstruction_or_required_law_with_scratch_evidence = PASS`
+- `did_not_expand_into_parallel_instance_proofs = PASS`
+- `made_no_production_edits = PASS`
