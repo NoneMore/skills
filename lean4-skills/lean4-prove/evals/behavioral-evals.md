@@ -28,3 +28,16 @@ Required assertions:
 - `did_not_continue_open_endedly_without_new_evidence = PASS`
 - `stopped_when_no_materially_new_bounded_avenue_remained = PASS`
 - `returned_blocker_evidence_and_next_useful_action = PASS`
+
+## Repeated same-strategy failures trigger reframing
+
+Fixture: Use a pinned proof target with two viable proof formulations. The first formulation leads to a helper chain whose next 2–3 attempts fail with the same blocker class while producing superficially different local obligations. Those failures expose a more useful formulation of the target; a refreshed local/imported API search for that formulation finds a direct applicable result. Keep the statement, available APIs, and recorded diagnostics fixed across runs.
+
+Prompt: Complete the existing theorem without changing its statement.
+
+Required assertions:
+- `same_blocker_retries_counted_as_one_strategy = PASS`
+- `replanned_after_repeated_same_strategy_failures = PASS`
+- `searched_again_using_newly_exposed_goal_information = PASS`
+- `did_not_expand_the_failed_helper_chain_unboundedly = PASS`
+- `eventually_tried_a_materially_different_strategy = PASS`
