@@ -26,7 +26,7 @@ Review-only requests are read-only with respect to project source. Verification 
 
 Treat project-specific simplification policy as authoritative when global simp behavior is material.
 
-Search, abstraction comparison, local diagnostic checks, and other reconnaissance needed to substantiate a review finding remain part of review; they do not create separate routing outcomes. Trust concerns may be reported as correctness findings, but a requested trust-basis audit belongs to `lean4-trust`, and explicit upstream contribution readiness belongs to `lean4-mathlib-contribute`.
+Search, abstraction comparison, local diagnostic checks, and other bounded investigation needed to substantiate a review finding remain part of review; they do not create a separate Recon outcome. Use `lean4-recon` only when the requested work is instead to deliberately widen semantic context and challenge the problem framing before committing to or evaluating a concrete design. Trust concerns may be reported as correctness findings, but a requested trust-basis audit belongs to `lean4-trust`, and explicit upstream contribution readiness belongs to `lean4-mathlib-contribute`.
 
 ## Output and completion
 
