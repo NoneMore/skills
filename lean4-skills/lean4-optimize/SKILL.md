@@ -33,6 +33,6 @@ Do not combine all three by default.
 5. Reject changes that regress correctness, diagnostics, trust, or maintainability without a compensating requested benefit.
 6. Stop when remaining opportunities are marginal, speculative, or outside the requested surface.
 
-Library search, abstraction comparison, local diagnostics, and small experiments needed to choose and verify an improvement remain part of optimization. If the requested improvement is instead to make an existing artifact acceptable for upstream mathlib contribution under current upstream expectations, use `lean4-mathlib-contribute`.
+Library search, abstraction comparison, local diagnostics, and small experiments needed to choose and verify an improvement remain part of optimization. They do not by themselves select `lean4-recon`; use Recon only when deliberate context expansion to challenge the surrounding problem framing is itself requested before committing to a design. If the requested improvement is instead to make an existing artifact acceptable for upstream mathlib contribution under current upstream expectations, use `lean4-mathlib-contribute`.
 
 Correctness and maintainability outrank token or line count.
