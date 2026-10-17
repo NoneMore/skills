@@ -157,86 +157,24 @@ Required assertions:
 - checked for material `duplicate()`/`duplicate_deep()` or runtime reassignment before concluding the resource remained shared
 - reported that mutating `stats.speed` can broaden to every evidenced consumer of that shared resource
 
-## 15. LÖVE fused Windows executable recovers Lua before native escalation
+## 15. LÖVE fused Windows executable exposes Lua before native escalation
 
-An authorized offline Windows `game.exe` is a standard fused LÖVE executable with
-a structurally valid appended `.love` archive containing root `main.lua` and the
-material mechanic in readable Lua.
-
-Required assertions:
-- classified the PE plus appended `.love` structurally rather than from a `PK`
-  string or runtime DLL name alone
-- recovered only the readable payload/source needed for the mechanic and retained
-  target/payload provenance
-- loaded the LÖVE adapter after the Lua boundary became material
-- stayed at Lua/source level while it closed the mechanic
-- did not begin PE/native reverse engineering merely because the shipped artifact
-  was an executable
-
-## 16. LÖVE custom love.run controls scheduling claims
-
-Recovered Lua defines `love.update(dt)` but also overrides `love.run` with a
-fixed-step accumulator that can call the gameplay update zero, one, or multiple
-times per rendered frame.
+An authorized offline Windows `game.exe` is a valid PE followed by a valid ZIP
+whose root contains `main.lua`, and the material mechanic is readable in that
+payload.
 
 Required assertions:
-- detected and followed the custom `love.run` before making timing claims
-- did not equate rendered frames with simulation steps
-- preserved the actual accumulator/update ordering material to the mechanic
-- kept unresolved target-version/runtime timing detail explicit rather than
-  substituting a frozen default main loop
+- identified the fused LÖVE container from structural PE + ZIP evidence rather than a `PK` string or DLL name
+- stayed at readable Lua while it closed the mechanic
+- did not introduce native reverse engineering merely because the shipped artifact was an executable
 
-## 17. LÖVE effective module resolution beats archive presence
+## 16. LÖVE effective implementation beats the obvious source surface
 
-The shipped `.love` contains `rules.lua`, while material filesystem/require
-configuration causes `require("rules")` to resolve to a different effective copy
-from a mounted or save-backed path.
+The shipped archive contains `rules.lua`, but material filesystem/require
+configuration resolves `require("rules")` elsewhere. The game also overrides
+`love.run`, changing the cadence at which the material update runs.
 
 Required assertions:
-- did not call the archive copy authoritative solely because it existed
-- recovered only the path/search/identity relation needed to determine the
-  effective module origin
-- preserved the distinction between code/data shadowing and gameplay save
-  persistence
-- traced the mechanic from the effective module actually consumed by the target
-
-## 18. LÖVE worker thread owns the material computation
-
-`love.update` only receives a value from a Channel. The formula and material
-computation run in Lua supplied to `love.thread.newThread` and the result is sent
-back to the main thread.
-
-Required assertions:
-- traced the worker source and Channel edge rather than stopping at the consumer
-- distinguished computation ownership from main-thread consumption
-- did not assume ordinary Lua variables/functions were shared across thread
-  environments
-- resolved shared LÖVE userdata only when it was material to ownership or scope
-
-## 19. LÖVE Lua-to-native transition stops Lua assumptions
-
-A recovered Lua callback calls a C module or FFI/native function and the
-unresolved authoritative mutation lies beyond that call.
-
-Required assertions:
-- preserved the effective Lua caller, arguments/state relation, and transition
-  evidence
-- identified the native implementation as the unresolved material boundary
-- did not invent LuaJIT/private VM layouts, native calling conventions, or C-side
-  gameplay semantics
-- continued with the shared core/native workflow only because the decisive
-  relation lay beyond the Lua boundary
-
-## 20. LÖVE mechanical triage hints are not semantic proof
-
-`love2d_triage.py` reports a custom `love.run`, several lexical `require` edges,
-thread creation, RNG use, and adjacent DLL candidates.
-
-Required assertions:
-- treated the helper output as inventory/search hints and provenance rather than
-  gameplay ownership evidence
-- resolved only the indicators material to the requested mechanic
-- did not infer effective module origin from a lexical `require` edge when path
-  customization could change resolution
-- did not classify a DLL candidate as the mechanic owner without transition/data
-  flow evidence
+- resolved the material module origin instead of treating archive presence or a lexical require edge as authoritative
+- followed the effective scheduler rather than equating render frames or callback presence with simulation cadence
+- resolved only the path/scheduler facts capable of changing the mechanic claim
