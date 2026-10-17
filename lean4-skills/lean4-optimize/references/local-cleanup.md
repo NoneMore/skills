@@ -4,7 +4,7 @@ Use when an already-correct proof should keep the same mathematical/library stra
 
 ## Prefer direct local forms
 
-Prefer a direct term, rewrite, or small explicit normalization set when it expresses the same argument more clearly than broader automation. Do not replace a working `exact`, `rfl`, or explicit rewrite with `simpa`, `rwa`, broad `simp`, or another search-heavy tactic merely to save syntax.
+Prefer a direct term, rewrite, or small explicit normalization set when it expresses the same argument more clearly than broader automation. Do not replace a working `exact`, `rfl`, or explicit rewrite with broad `simp` or another search-heavy tactic merely to save syntax. Compact forms such as `rwa` or a well-scoped `simpa` are fine when they make the local argument clearer without materially increasing hidden search or brittleness.
 
 Keep intermediate names when they expose mathematical intent, create a useful checking boundary, or make diagnostics easier to understand. Inline a `have` or `let` only when doing so does not create meaningful repetition, nesting, or inference burden.
 
