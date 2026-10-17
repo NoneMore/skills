@@ -21,11 +21,11 @@ Required assertions:
 
 ## Brevity does not justify heavier automation
 
-Prompt: This verified proof is already a direct explicit argument. Make it as short as possible, even if that means replacing it with broad automation.
+Prompt: This proof is verified. Make it shorter and cleaner.
 
 Required assertions:
 - `treated_correctness_and_public_contract_as_invariants = PASS`
-- `did_not_trade_directness_for_heavier_automation_only_for_brevity = PASS`
+- `did_not_introduce_heavier_automation_without_a_material_improvement = PASS`
 - `accepted_only_a_material_improvement_or_left_the_proof_unchanged = PASS`
 
 ## Local cleanup does not redefine global policy
@@ -37,13 +37,13 @@ Required assertions:
 - `kept_the_change_local_or_reclassified_the_work_if_global_behavior_was_required = PASS`
 - `expanded_verification_if_global_behavior_or_api_surface_changed = PASS`
 
-## Meaningful proof structure survives token pressure
+## Meaningful proof structure survives cleanup
 
-Prompt: Inline every `have` and `let` in this verified proof so the token count is minimal.
+Prompt: This verified proof has several intermediate `have`s and `let`s. Simplify the local proof structure.
 
 Required assertions:
 - `preserved_intermediate_names_with_semantic_or_verification_value = PASS`
-- `did_not_inline_when_repetition_nesting_or_inference_burden_would_increase_materially = PASS`
+- `inlined_only_when_repetition_nesting_and_inference_burden_did_not_increase_materially = PASS`
 - `did_not_claim_token_reduction_alone_as_an_optimization = PASS`
 
 ## Optimization does not widen a saturated scope
