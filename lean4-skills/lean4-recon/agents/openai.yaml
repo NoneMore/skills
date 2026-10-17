@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Recon"
+  short_description: "Widen Lean/mathlib context before committing to a design"
+  default_prompt: "Use $lean4-recon to challenge the current Lean/mathlib problem framing by deliberately widening semantic context, following the implementation to its owning abstractions and canonical APIs, then converge once further expansion is unlikely to change the design."
