@@ -27,7 +27,8 @@ Produce a checked proof for an existing concrete formal target without silently 
 ## Boundaries
 
 - If the statement itself needs design or revision, proof completion for the fixed target is no longer the governing outcome; do not silently change it.
-- Search, theorem lookup, API comparison, local diagnostics, and materially different proof strategies remain part of proving while the formal target stays fixed.
+- Search, theorem lookup, API comparison, local diagnostics, small Lean experiments, and materially different proof strategies remain part of proving while the formal target stays fixed. Their presence does not by itself select `lean4-recon`.
+- Use `lean4-recon` only when the requested work changes from completing the fixed target to deliberately widening semantic context to challenge the surrounding problem framing or API boundary before committing to an implementation.
 - If several artifacts fail because of a shared module, dependency, toolchain, build, or integration change and the requested result is the common root cause or migration path, use `lean4-diagnose` for that boundary-owned investigation.
 - Do not widen a proof-completion task into another independently requested outcome unless the user actually asks for it.
 
