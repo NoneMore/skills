@@ -40,4 +40,4 @@ Required assertions:
 - `replanned_after_repeated_same_strategy_failures = PASS`
 - `searched_again_using_newly_exposed_goal_information = PASS`
 - `did_not_expand_the_failed_helper_chain_unboundedly = PASS`
-- `eventually_tried_a_materially_different_strategy = PASS`
+- `completed_target_using_reframed_direct_result = PASS`
