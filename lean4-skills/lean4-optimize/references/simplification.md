@@ -32,7 +32,7 @@ Global simp lemmas should encode a stable canonical orientation, not merely an e
 
 Start with `simp?` or a tiny `simp only [...]` set. If that clarifies the issue, keep the proof explicit. Use simp tracing only after narrowing the problem; raw traces are noisy.
 
-If simplification finishes but the goal remains open, the remaining work is proof/solver reasoning rather than another rewrite rule.
+If the current simplifier reaches a fixed point and the goal remains open, inspect the residual goal instead of reflexively adding another global simp lemma. Use an explicit local rewrite, proof step, or solver as appropriate.
 
 ## Simprocs
 
