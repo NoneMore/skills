@@ -2,7 +2,7 @@
 
 Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
-Routing principle: choose the Skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, helper proofs, and local diagnostic work stay inside the selected Skill when they are merely means to that outcome. Do not select another Skill just because the task uses behavior associated with it. Use multiple Skills only when the prompt itself requests multiple independently meaningful outcomes that no single Skill owns.
+Routing principle: choose the Skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, helper proofs, and local diagnostics stay inside the selected Skill when they are merely means to that outcome. Artifact-owned failures stay with the artifact owner; use `lean4-diagnose` for explicit diagnosis or root-cause work across module, dependency, toolchain, build, or integration boundaries.
 
 ## Positive routing
 
@@ -12,79 +12,70 @@ Routing principle: choose the Skill by the requested outcome, not by incidental 
 | Formalize this textbook theorem in Lean; choose the right hypotheses and generality. | `lean4-formalize` |
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
 | I think this Lean proposition is false; find and certify a counterexample. | `lean4-refute` |
-| In this mathlib theorem file, why is instance synthesis failing after my refactor? | `lean4-diagnose` |
+| After updating mathlib, several theorem files fail around the same imports with changed identifiers and signatures. Determine the common cause and migration path. | `lean4-diagnose` |
 | Which axioms does this theorem depend on, and can we remove our custom one? | `lean4-trust` |
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 | This existing theorem is intended for upstream mathlib; assess and adapt it to current contribution expectations. | `lean4-mathlib-contribute` |
 
-Required assertion for each row: exactly the expected skill is selected unless the prompt explicitly requests multiple independently meaningful outcomes.
+Required assertion for each row: the expected outcome owner is selected unless the prompt explicitly requests multiple independently meaningful outcomes.
 
-## Formalize and explore boundaries
+## Explore versus owned work
 
 Prompt: Formalize this theorem in Lean using the canonical encoding; choose the best types, hypotheses, and available mathlib API as needed.
 - `lean4_formalize_selected = PASS`
-- `ordinary_encoding_api_and_generality_choices_stay_inside_formalize = PASS`
-- `lean4_explore_not_selected_merely_because_statement_design_requires_comparison = PASS`
+- `ordinary_statement_design_comparison_stays_inside_formalize = PASS`
 
 Prompt: Before formalizing this construction, investigate whether it is really an instance of a generic fixed-point API, whether a dual theorem should exist, and whether any hypotheses can be dropped. I want a direction recommendation before any declaration is committed.
 - `lean4_explore_selected = PASS`
 - `direction_recommendation_is_the_requested_outcome = PASS`
-- `no_durable_statement_or_proof_change_required = PASS`
+
+Prompt: This theorem statement is fixed. Compare induction, rewriting, a direct order-theoretic argument, and automation if useful, then finish the proof.
+- `lean4_prove_selected = PASS`
+- `proof_strategy_comparison_stays_inside_prove = PASS`
 
 Prompt: Find the exact mathlib declaration for this fact. I only need its name and signature, not a design recommendation.
 - `lean4_explore_not_selected_for_lookup_alone = PASS`
 - `no_specialized_lean4_skill_required_without_an_owned_outcome = PASS`
 
-## Prove, diagnose, and explore boundaries
+## Artifact-owned diagnostics versus root-cause diagnosis
 
-Prompt: This theorem statement is fixed. Compare induction, rewriting, a direct order-theoretic argument, and automation if useful, then finish the proof without changing the statement.
+Prompt: This existing theorem no longer elaborates: application type mismatch at line 43. Fix it without changing the theorem statement.
 - `lean4_prove_selected = PASS`
-- `materially_different_proof_strategies_remain_proving_work = PASS`
-- `lean4_explore_not_selected_for_strategy_diversity_alone = PASS`
+- `local_diagnostic_stays_inside_proof_repair = PASS`
 
-Prompt: Find a suitable existing lemma and use it to finish this existing proof goal.
-- `lean4_prove_selected = PASS`
-- `ordinary_goal_directed_search_stays_inside_prove = PASS`
-- `lean4_explore_not_selected_for_internal_reconnaissance = PASS`
+Prompt: Formalize this theorem with the canonical mathlib encoding. My first declaration draft has an instance-synthesis error; adjust the statement design and finish the declaration.
+- `lean4_formalize_selected = PASS`
+- `local_elaboration_diagnostic_stays_inside_formalize = PASS`
 
-Prompt: This existing theorem no longer elaborates: application type mismatch at line 43. Fix it.
+Prompt: After a mathlib update, several unrelated theorem files now fail with unknown identifiers, changed signatures, and instance-synthesis errors around the same imported area. Find the common cause before we patch individual files.
 - `lean4_diagnose_selected = PASS`
-- `lean4_prove_not_selected_when_concrete_diagnostic_is_the_primary_problem = PASS`
-- `proof_or_search_substeps_needed_for_the_repair_stay_inside_diagnose = PASS`
-- `diagnosis_does_not_silently_change_statement_or_trust_basis = PASS`
+- `cross_artifact_dependency_boundary_is_the_requested_outcome = PASS`
+- `diagnosis_clusters_shared_failures_before_local_repairs = PASS`
 
-## Review, trust, and optimize boundaries
+Prompt: Do not fix this theorem yet. Explain why this application has a type mismatch after the dependency update and identify which API boundary changed.
+- `lean4_diagnose_selected = PASS`
+- `diagnosis_itself_is_the_requested_outcome = PASS`
+
+## Review, trust, and optimize
 
 Prompt: Why does this existing `simpa [foo]` proof work?
 - `no_specialized_lean4_skill_required = PASS`
-- `lean4_review_not_selected_without_evaluation_request = PASS`
-- `lean4_optimize_not_selected_without_change_request = PASS`
 
 Prompt: Is this working `simpa [foo]` proof brittle or inappropriate for this project?
 - `lean4_review_selected = PASS`
-- `lean4_optimize_not_selected_without_change_request = PASS`
 
-Prompt: Review this Lean file read-only and tell me whether its local stabilization predicate should instead use the generic fixed-point API.
-- `lean4_review_selected = PASS`
-- `abstraction_reconnaissance_stays_inside_review = PASS`
-- `lean4_explore_not_selected_for_internal_reconnaissance = PASS`
-- `review_read_only_constraint_preserved = PASS`
+Prompt: Audit this theorem's trust basis. Tell me whether its remaining `sorry` or any custom axiom contaminates the result, and remove only dependencies forbidden by our policy.
+- `lean4_trust_selected = PASS`
+- `trust_basis_is_the_requested_outcome = PASS`
 
 Prompt: This proof works; replace it with the canonical library theorem if that is better.
 - `lean4_optimize_selected = PASS`
 - `library_reconnaissance_stays_inside_optimize = PASS`
-- `lean4_explore_not_selected_for_internal_reconnaissance = PASS`
 
 Prompt: Fill the `sorry` in this existing fixed theorem and check the resulting proof.
 - `lean4_prove_selected = PASS`
-- `lean4_trust_not_selected_merely_because_source_contains_sorry = PASS`
-
-Prompt: Audit this theorem's trust basis. Tell me whether its remaining `sorry` or any custom axiom contaminates the result, and remove only dependencies forbidden by our policy.
-- `lean4_trust_selected = PASS`
-- `lean4_review_not_selected_when_trust_basis_is_the_requested_outcome = PASS`
-- `trust_basis_is_the_requested_outcome = PASS`
-- `bounded_replacement_proofs_stay_inside_trust_cleanup = PASS`
+- `source_sorry_does_not_turn_ordinary_completion_into_a_trust_audit = PASS`
 
 ## Refutation boundaries
 
@@ -104,24 +95,18 @@ Prompt: Prove in Lean that the closedness hypothesis is necessary by certifying 
 Prompt: Prepare this existing verified theorem for upstream mathlib submission. Make any justified changes to API shape, generality, naming, imports, documentation, or proof structure required by current upstream expectations.
 - `lean4_mathlib_contribute_selected = PASS`
 - `upstream_readiness_is_the_requested_outcome = PASS`
-- `generic_review_or_optimize_not_selected_as_primary = PASS`
 
 Prompt: Review this existing Lean change only for upstream mathlib acceptance. Do not edit it.
 - `lean4_mathlib_contribute_selected = PASS`
-- `lean4_review_not_selected_for_upstream_readiness_review = PASS`
 - `read_only_constraint_preserved = PASS`
-
-Prompt: Formalize this textbook theorem in Lean using the canonical mathlib API and choose appropriate hypotheses.
-- `lean4_formalize_selected = PASS`
-- `lean4_mathlib_contribute_not_selected_merely_because_mathlib_api_is_used = PASS`
 
 Prompt: Use mathlib to finish this fixed Lean theorem without changing its statement.
 - `lean4_prove_selected = PASS`
-- `lean4_mathlib_contribute_not_selected_merely_because_mathlib_is_used = PASS`
+- `ordinary_mathlib_use_stays_with_direct_outcome_owner = PASS`
 
-Prompt: This file may be submitted to mathlib later, but right now fix the application type mismatch at line 43 and nothing else.
-- `lean4_diagnose_selected = PASS`
-- `lean4_mathlib_contribute_not_selected_when_upstream_readiness_is_not_the_current_outcome = PASS`
+Prompt: This file may be submitted to mathlib later, but right now fix the application type mismatch in this theorem and nothing else.
+- `lean4_prove_selected = PASS`
+- `future_upstream_intent_does_not_override_current_artifact_outcome = PASS`
 
 ## Adjacent intents stay out
 

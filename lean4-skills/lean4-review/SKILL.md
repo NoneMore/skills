@@ -1,6 +1,6 @@
 ---
 name: lean4-review
-description: "Use for independent review of Lean 4/mathlib proof code when the requested outcome is evidence-backed findings about correctness, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only. Do not use when the trust basis itself is the requested outcome; use lean4-trust for a trust audit or cleanup. Do not use when upstream mathlib contribution readiness is the requested outcome; use lean4-mathlib-contribute. Plain explanation without an evaluation request does not need this skill; use lean4-explore only when choosing among formal directions is itself the open task."
+description: "Use for independent review of Lean 4/mathlib proof code when the requested outcome is evidence-backed findings about correctness, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only. Trust-basis audits and upstream mathlib readiness have their own outcome-specific Skills; ordinary explanation without an evaluation request does not require review."
 license: MIT
 ---
 
@@ -26,7 +26,7 @@ Review-only requests are read-only with respect to project source. Verification 
 
 Treat project-specific simplification policy as authoritative when global simp behavior is material.
 
-Search, abstraction comparison, diagnostic checks, and other reconnaissance needed to substantiate a review finding remain part of review; they do not create separate routing outcomes. Trust concerns may be reported as ordinary correctness findings, but if inspecting or changing the declaration's trust basis is itself the requested outcome, use `lean4-trust`. Likewise, an explicit upstream mathlib acceptance/readiness review belongs to `lean4-mathlib-contribute` rather than generic review.
+Search, abstraction comparison, local diagnostic checks, and other reconnaissance needed to substantiate a review finding remain part of review; they do not create separate routing outcomes. Trust concerns may be reported as correctness findings, but a requested trust-basis audit belongs to `lean4-trust`, and explicit upstream contribution readiness belongs to `lean4-mathlib-contribute`.
 
 ## Output and completion
 

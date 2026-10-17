@@ -1,6 +1,6 @@
 ---
 name: lean4-formalize
-description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate an informal mathematical claim into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, and generality choices needed to deliver that declaration remain part of this skill. Do not use when a concrete Lean declaration is already fixed and only its proof needs completion, when choosing among formal directions has been explicitly separated into its own requested outcome, or when a concrete existing artifact is being assessed or adapted specifically for upstream mathlib contribution readiness."
+description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate mathematical intent into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, generality, and local elaboration decisions needed to deliver that declaration remain part of this skill. Use `lean4-explore` only when choosing among materially different formal directions has itself been separated into the requested outcome."
 license: MIT
 ---
 
@@ -21,14 +21,14 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 1. Resolve the mathematical claim and intended level of generality. If a source contains several claims, make the selected claim or selection rule explicit.
 2. Search local code and active imports before widening to mathlib for canonical types, definitions, theorem shapes, and existing results. Search by meaning/type rather than guessed names and validate candidates in the actual project context.
 3. Draft the weakest faithful declaration with explicit hypotheses and no hidden trust-basis changes.
-4. Check that the declaration itself elaborates. A draft may contain an explicitly reported proof hole when the requested outcome is only statement design.
+4. Check that the declaration itself elaborates. Diagnose local type, instance, namespace, import, or API errors as part of making this declaration valid. A draft may contain an explicitly reported proof hole when the requested outcome is only statement design.
 5. If proving exposes a statement mismatch, revise only declarations created for the task or existing declarations the user explicitly authorized for statement work.
 
 ## Boundaries
 
-Statement-design decisions required to produce the requested declaration stay here, including ordinary choices of canonical types, hypotheses, generality, and API. Search or comparison needed for those choices does not by itself make exploration a separate outcome.
+Statement-design decisions required to produce the requested declaration stay here, including ordinary choices of canonical types, hypotheses, generality, API, and local elaboration repair. Search or comparison needed for those choices does not by itself make exploration a separate outcome.
 
-If the request is only for a direction recommendation before committing to a declaration, this is not a formalization outcome. If a concrete declaration is already fixed and only its proof remains, this is not a statement-design outcome. If a concrete artifact already exists and the requested outcome is specifically upstream mathlib contribution readiness, use `lean4-mathlib-contribute`; merely choosing mathlib APIs while creating a declaration remains ordinary formalization.
+If the request is only for a direction recommendation before committing to a declaration, use `lean4-explore`. If a concrete declaration is already fixed and only its proof remains, use `lean4-prove`. If the work reveals a shared module, dependency, toolchain, build, or integration failure whose root cause is now the requested result, use `lean4-diagnose`. Merely choosing mathlib APIs while creating a declaration remains ordinary formalization.
 
 If the same request also requires a checked proof, settle the declaration first, then complete and verify that proof without silently changing the statement. If evidence instead shows the requested claim may be false, report that rather than weakening the statement to make it provable.
 

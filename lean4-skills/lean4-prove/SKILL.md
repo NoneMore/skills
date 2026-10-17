@@ -1,6 +1,6 @@
 ---
 name: lean4-prove
-description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or current proof goal already exists and the requested outcome is to complete or repair its proof with the statement held fixed unless explicitly authorized otherwise. Comparing materially different proof strategies for that fixed target remains part of this skill. Do not use when a concrete Lean/Lake diagnostic is itself the primary problem, when the main uncertainty is statement design or a separate formal-design decision about the object/API/hypotheses, or when the requested outcome is certified refutation, trust audit, review-only work, post-correctness optimization, or upstream mathlib contribution readiness."
+description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or proof goal already exists and the requested outcome is to complete or repair its proof with the target held fixed unless explicitly authorized otherwise. Local elaboration, typeclass, API, and tactic diagnostics encountered while repairing that target remain part of proving, as do comparisons among proof strategies. Use `lean4-diagnose` when root-cause investigation across module, dependency, toolchain, build, or integration boundaries is itself the requested outcome."
 license: MIT
 ---
 
@@ -18,7 +18,7 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 ## Workflow
 
-1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing.
+1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing. Treat local type mismatches, instance failures, unknown identifiers, and tactic errors as part of repairing this proof unless evidence shows a broader boundary failure.
 2. Search local declarations and active imports before widening to mathlib. Search by mathematical meaning and type shape rather than guessed declaration names, and validate candidates in the actual project context.
 3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives remain ordinary proving work while the formal target stays fixed. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
@@ -27,9 +27,9 @@ Produce a checked proof for an existing concrete formal target without silently 
 ## Boundaries
 
 - If the statement itself needs design or revision, proof completion for the fixed target is no longer the governing outcome; do not silently change it.
-- If a concrete Lean/Lake diagnostic is the primary problem rather than ordinary proof search, use `lean4-diagnose` until that diagnostic boundary is resolved.
-- Search, theorem lookup, API comparison, and materially different proof strategies remain part of proving while the formal target stays fixed. A separate formal-design decision that could change the object, abstraction, API family, hypotheses, or generality is not ordinary proof search.
-- Do not widen a proof-completion task into certified refutation, review, trust audit, post-correctness optimization, or upstream contribution-readiness work unless the requested outcome itself changes.
+- Search, theorem lookup, API comparison, local diagnostics, and materially different proof strategies remain part of proving while the formal target stays fixed.
+- If several artifacts fail because of a shared module, dependency, toolchain, build, or integration change and the requested result is the common root cause or migration path, use `lean4-diagnose` for that boundary-owned investigation.
+- Do not widen a proof-completion task into another independently requested outcome unless the user actually asks for it.
 
 ## Stop and completion
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Lean 4 Diagnose"
-  short_description: "Diagnose Lean/Lake failures in formal-math work"
-  default_prompt: "Use $lean4-diagnose to classify this Lean/Lake failure in its formal-mathematics context and verify the smallest justified fix."
+  short_description: "Find Lean/Lake boundary failures and migration causes"
+  default_prompt: "Use $lean4-diagnose when diagnosis itself is the requested outcome or a Lean/Lake/module/dependency failure spans artifact boundaries; identify the common root cause and verify the smallest justified migration or repair."

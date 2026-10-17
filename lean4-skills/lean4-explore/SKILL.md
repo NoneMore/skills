@@ -1,6 +1,6 @@
 ---
 name: lean4-explore
-description: "Use for formal mathematics in Lean 4/mathlib when multiple materially different formal-design directions remain plausible and choosing among them is itself the requested outcome. The uncertainty may concern the formal object, abstraction, API family, mathematical hypothesis boundary, generalization, dual formulation, or dependency strategy. Explore local project and mathlib evidence and use disposable Lean experiments when they discriminate between directions. Do not use for plain explanation, ordinary theorem lookup, multiple proof strategies for a fixed concrete goal inside an already-owned task, upstream mathlib contribution readiness for an existing artifact, or when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
+description: "Use for formal mathematics in Lean 4/mathlib when multiple materially different formal-design directions remain plausible and choosing among them is itself the requested outcome. The uncertainty may concern the formal object, abstraction, API family, hypothesis boundary, generalization, dual formulation, or dependency strategy. Explore project and mathlib evidence and use disposable Lean experiments when they discriminate between directions. Reconnaissance that is only a means to another already-requested outcome stays with that owning Skill."
 license: MIT
 ---
 
@@ -44,7 +44,7 @@ For claims based on actual elaboration, report the check that ran and the scope 
 
 ## Stop boundary
 
-Stop when choosing among formal directions is no longer the primary uncertainty. Return the selected direction and material evidence without silently turning exploration into a different durable outcome. If a concrete artifact already exists and the requested decision is specifically whether or how it should meet upstream mathlib contribution expectations, use `lean4-mathlib-contribute` instead.
+Stop when choosing among formal directions is no longer the requested uncertainty. Return the selected direction and material evidence without silently turning exploration into a different durable outcome. Reconnaissance needed only to complete an already-owned formalization, proof, review, optimization, or upstream-readiness task remains internal to that owner.
 
 ## Completion
 
