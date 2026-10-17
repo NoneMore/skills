@@ -13,7 +13,6 @@ import argparse
 import hashlib
 import io
 import json
-import os
 import re
 import struct
 import sys
@@ -78,15 +77,22 @@ def zip_root_has_main(names: Iterable[str]) -> bool:
     return "main.lua" in normalized
 
 
+def is_windows_pe(data: bytes) -> bool:
+    if len(data) < 0x40 or not data.startswith(b"MZ"):
+        return False
+    pe_offset = int.from_bytes(data[0x3C:0x40], "little")
+    return 0 <= pe_offset <= len(data) - 4 and data[pe_offset : pe_offset + 4] == b"PE\x00\x00"
+
+
 def locate_fused_zip(path: Path) -> tuple[int, bytes] | None:
     """Locate a valid appended ZIP by walking EOCD candidates from the end.
 
-    A standard fused LÖVE executable is a PE followed by a .love ZIP. We avoid
-    accepting the first local-file signature and instead require a parseable ZIP
-    whose recovered root contains main.lua.
+    A standard fused LÖVE executable is a Windows PE followed by a .love ZIP. We
+    avoid accepting the first local-file signature and instead require a parseable
+    ZIP whose recovered root contains main.lua.
     """
     data = path.read_bytes()
-    if not data.startswith(b"MZ"):
+    if not is_windows_pe(data):
         return None
 
     eocd_sig = b"PK\x05\x06"
@@ -99,7 +105,6 @@ def locate_fused_zip(path: Path) -> tuple[int, bytes] | None:
             comment_len = int.from_bytes(data[eocd + 20 : eocd + 22], "little")
             zip_end = eocd + 22 + comment_len
             if zip_end <= len(data):
-                # The ZIP start can be recovered from the central-directory offset.
                 cd_size = int.from_bytes(data[eocd + 12 : eocd + 16], "little")
                 cd_offset = int.from_bytes(data[eocd + 16 : eocd + 20], "little")
                 zip_start = eocd - cd_size - cd_offset
@@ -235,6 +240,34 @@ def analyze_target(path: Path) -> dict[str, object]:
         "sha256": sha256_file(path),
     }
 
+    if is_windows_pe(raw):
+        fused = locate_fused_zip(path)
+        if fused is not None:
+            offset, payload = fused
+            entries = entries_from_zip_bytes(payload)
+            result = {
+                "target": target,
+                "container": {
+                    "classification": "windows-fused-executable",
+                    "appended_love_offset": offset,
+                    "appended_love_size": len(payload),
+                    "appended_love_sha256": hashlib.sha256(payload).hexdigest(),
+                },
+                "love_evidence": {"root_main_lua": "main.lua" in entries},
+            }
+            result.update(inventory_entries(entries))
+            return result
+        return {
+            "target": target,
+            "container": {"classification": "unsupported-or-unknown-windows-executable"},
+            "love_evidence": {"root_main_lua": False},
+            "lua_files": [],
+            "config_files": [],
+            "require_hints": [],
+            "indicators": {},
+            "native_candidates": [],
+        }
+
     if zipfile.is_zipfile(path):
         with zipfile.ZipFile(path) as archive:
             root_main = zip_root_has_main(archive.namelist())
@@ -248,27 +281,9 @@ def analyze_target(path: Path) -> dict[str, object]:
         result.update(inventory_entries(entries))
         return result
 
-    fused = locate_fused_zip(path)
-    if fused is not None:
-        offset, payload = fused
-        entries = entries_from_zip_bytes(payload)
-        result = {
-            "target": target,
-            "container": {
-                "classification": "windows-fused-executable",
-                "appended_love_offset": offset,
-                "appended_love_size": len(payload),
-                "appended_love_sha256": hashlib.sha256(payload).hexdigest(),
-            },
-            "love_evidence": {"root_main_lua": "main.lua" in entries},
-        }
-        result.update(inventory_entries(entries))
-        return result
-
-    classification = "unsupported-or-unknown-windows-executable" if raw.startswith(b"MZ") else "unsupported-or-unknown-file"
     return {
         "target": target,
-        "container": {"classification": classification},
+        "container": {"classification": "unsupported-or-unknown-file"},
         "love_evidence": {"root_main_lua": False},
         "lua_files": [],
         "config_files": [],
