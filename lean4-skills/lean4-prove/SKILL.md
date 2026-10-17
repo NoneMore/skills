@@ -1,6 +1,6 @@
 ---
 name: lean4-prove
-description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or current proof goal already exists and the requested outcome is to complete or repair its proof with the statement held fixed unless explicitly authorized otherwise. Comparing materially different proof strategies for that fixed target remains part of this skill. Do not use when the main uncertainty is statement design, a separate formal-design decision about the object/API/hypotheses, certified refutation, review-only work, or post-correctness optimization."
+description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or current proof goal already exists and the requested outcome is to complete or repair its proof with the statement held fixed unless explicitly authorized otherwise. Comparing materially different proof strategies for that fixed target remains part of this skill. Do not use when a concrete Lean/Lake diagnostic is itself the primary problem, when the main uncertainty is statement design or a separate formal-design decision about the object/API/hypotheses, or when the requested outcome is certified refutation, trust audit, review-only work, post-correctness optimization, or upstream mathlib contribution readiness."
 license: MIT
 ---
 
@@ -14,7 +14,7 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 - Preserve existing theorem statements, declaration signatures, and public API unless the user explicitly expands the task to statement design.
 - Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the accepted trust basis to claim proof completion.
-- Follow local project conventions. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
+- Follow local project conventions.
 
 ## Workflow
 
@@ -27,8 +27,9 @@ Produce a checked proof for an existing concrete formal target without silently 
 ## Boundaries
 
 - If the statement itself needs design or revision, proof completion for the fixed target is no longer the governing outcome; do not silently change it.
+- If a concrete Lean/Lake diagnostic is the primary problem rather than ordinary proof search, use `lean4-diagnose` until that diagnostic boundary is resolved.
 - Search, theorem lookup, API comparison, and materially different proof strategies remain part of proving while the formal target stays fixed. A separate formal-design decision that could change the object, abstraction, API family, hypotheses, or generality is not ordinary proof search.
-- Do not widen a proof-completion task into certified refutation, review, trust audit, or post-correctness optimization unless the requested outcome itself changes.
+- Do not widen a proof-completion task into certified refutation, review, trust audit, post-correctness optimization, or upstream contribution-readiness work unless the requested outcome itself changes.
 
 ## Stop and completion
 

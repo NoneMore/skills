@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Mathlib Contribute"
+  short_description: "Prepare existing Lean code for upstream mathlib contribution"
+  default_prompt: "Use $lean4-mathlib-contribute to assess or adapt this existing Lean artifact for upstream mathlib contribution readiness using current upstream policy and nearby current mathlib code."

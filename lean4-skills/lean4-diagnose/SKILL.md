@@ -1,6 +1,6 @@
 ---
 name: lean4-diagnose
-description: "Use for Lean 4/Lake diagnostics arising in formal-mathematics or mathlib work when a concrete failure is the primary problem: type mismatches, instance synthesis, imports/namespaces, elaboration depth, heartbeat/timeouts, visibility, or build/integration failures. Diagnose before changing source and preserve the governing statement and trust contract. Do not use when the primary problem is ordinary proof search, open-ended abstraction exploration, or general Lean application/CLI/FFI development."
+description: "Use for Lean 4/Lake diagnostics arising in formal-mathematics or mathlib work when a concrete failure is the primary problem: type mismatches, instance synthesis, imports/namespaces, elaboration depth, heartbeat/timeouts, visibility, or build/integration failures. Diagnose before changing source and preserve the governing statement and trust contract. Do not use when the primary problem is ordinary proof search, open-ended abstraction exploration, upstream mathlib contribution readiness, or general Lean application/CLI/FFI development."
 license: MIT
 ---
 
@@ -29,13 +29,11 @@ Obtain the exact current diagnostic and nearby source context. Do not treat ever
 - **Unsolved goals / tactic failed:** inspect the remaining goal. If the current problem is only ordinary proof search rather than a concrete diagnostic, this skill is not the right owner.
 - **No goals to be solved:** remove the redundant later tactic; an earlier tactic already closed the goal.
 
-For upstream mathlib work, consult current authoritative contribution policy and nearby current mathlib code.
-
 ## Boundaries
 
 Use this skill while a concrete Lean/Lake diagnostic is the primary problem. Proof search, API lookup, and small supporting experiments needed to resolve that diagnostic remain internal substeps rather than separate routing outcomes.
 
-If the only viable repair would revise a fixed statement or trust basis, report that blocker rather than broadening the task implicitly.
+If the only viable repair would revise a fixed statement or trust basis, report that blocker rather than broadening the task implicitly. An eventual upstream mathlib target does not select this skill unless resolving the concrete diagnostic is the requested outcome now; use `lean4-mathlib-contribute` when contribution readiness itself becomes the requested outcome.
 
 ## Verification and stop behavior
 

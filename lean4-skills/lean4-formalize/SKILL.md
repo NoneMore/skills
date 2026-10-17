@@ -1,6 +1,6 @@
 ---
 name: lean4-formalize
-description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate an informal mathematical claim into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, and generality choices needed to deliver that declaration remain part of this skill. Do not use when a concrete Lean declaration is already fixed and only its proof needs completion, or when choosing among formal directions has been explicitly separated into its own requested outcome."
+description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate an informal mathematical claim into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, and generality choices needed to deliver that declaration remain part of this skill. Do not use when a concrete Lean declaration is already fixed and only its proof needs completion, when choosing among formal directions has been explicitly separated into its own requested outcome, or when a concrete existing artifact is being assessed or adapted specifically for upstream mathlib contribution readiness."
 license: MIT
 ---
 
@@ -14,7 +14,7 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 
 - Preserve existing declarations unless statement revision is explicitly authorized.
 - Prefer the weakest faithful statement: make hypotheses explicit and do not hide assumptions behind new axioms.
-- Follow local project conventions. For upstream mathlib work, consult current authoritative upstream policy and nearby current mathlib code.
+- Follow local project conventions.
 
 ## Workflow
 
@@ -28,7 +28,7 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 
 Statement-design decisions required to produce the requested declaration stay here, including ordinary choices of canonical types, hypotheses, generality, and API. Search or comparison needed for those choices does not by itself make exploration a separate outcome.
 
-If the request is only for a direction recommendation before committing to a declaration, this is not a formalization outcome. If a concrete declaration is already fixed and only its proof remains, this is not a statement-design outcome.
+If the request is only for a direction recommendation before committing to a declaration, this is not a formalization outcome. If a concrete declaration is already fixed and only its proof remains, this is not a statement-design outcome. If a concrete artifact already exists and the requested outcome is specifically upstream mathlib contribution readiness, use `lean4-mathlib-contribute`; merely choosing mathlib APIs while creating a declaration remains ordinary formalization.
 
 If the same request also requires a checked proof, settle the declaration first, then complete and verify that proof without silently changing the statement. If evidence instead shows the requested claim may be false, report that rather than weakening the statement to make it provable.
 

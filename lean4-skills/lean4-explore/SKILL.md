@@ -1,6 +1,6 @@
 ---
 name: lean4-explore
-description: "Use for formal mathematics in Lean 4/mathlib when multiple materially different formal-design directions remain plausible and choosing among them is itself the requested outcome. The uncertainty may concern the formal object, abstraction, API family, mathematical hypothesis boundary, generalization, dual formulation, or dependency strategy. Explore local project and mathlib evidence and use disposable Lean experiments when they discriminate between directions. Do not use for plain explanation, ordinary theorem lookup, or multiple proof strategies for a fixed concrete goal inside an already-owned task, or when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
+description: "Use for formal mathematics in Lean 4/mathlib when multiple materially different formal-design directions remain plausible and choosing among them is itself the requested outcome. The uncertainty may concern the formal object, abstraction, API family, mathematical hypothesis boundary, generalization, dual formulation, or dependency strategy. Explore local project and mathlib evidence and use disposable Lean experiments when they discriminate between directions. Do not use for plain explanation, ordinary theorem lookup, multiple proof strategies for a fixed concrete goal inside an already-owned task, upstream mathlib contribution readiness for an existing artifact, or when the requested outcome is already a concrete proof completion, statement formalization, certified refutation, diagnostic repair, trust audit, code review, or optimization."
 license: MIT
 ---
 
@@ -17,8 +17,6 @@ Reduce uncertainty when multiple materially different formal-design directions r
 - Search by mathematical meaning, type shape, structure, and neighborhood before guessing declaration names. Inspect local declarations and active imports before widening outward, and validate candidate declarations in the actual project context.
 - Prefer Lean/project evidence over verbal plausibility when an inexpensive experiment can discriminate between branches.
 - Diverge only while a branch is likely to reveal materially new information; prune branches once evidence makes them dominated, irrelevant, or outside scope.
-
-For work aimed at upstream mathlib, consult current authoritative contribution policy and nearby current mathlib code in addition to this Skill.
 
 ## Exploration directions
 
@@ -46,7 +44,7 @@ For claims based on actual elaboration, report the check that ran and the scope 
 
 ## Stop boundary
 
-Stop when choosing among formal directions is no longer the primary uncertainty. Return the selected direction and material evidence without silently turning exploration into a different durable outcome.
+Stop when choosing among formal directions is no longer the primary uncertainty. Return the selected direction and material evidence without silently turning exploration into a different durable outcome. If a concrete artifact already exists and the requested decision is specifically whether or how it should meet upstream mathlib contribution expectations, use `lean4-mathlib-contribute` instead.
 
 ## Completion
 
