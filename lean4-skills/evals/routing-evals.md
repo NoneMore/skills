@@ -1,12 +1,14 @@
 # Lean 4 collection discovery evals
 
-Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked (`disable-model-invocation: true`) and are therefore not scored by model-discovery evals.
+Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked (`disable-model-invocation: true`) and are not scored by model discovery.
 
-Discovery principle: optimize for reliable loading of materially useful guidance, not mutually exclusive classification. For each positive case, the expected Skill must be selected. Selecting an additional compatible model-discoverable Skill is not a failure unless the extra activation changes behavior in a way that conflicts with the request or its completion contract.
+Discovery is recall-oriented but not free: load materially useful guidance without requiring unique ownership, while avoiding blanket activation that defeats the context benefit of the split.
 
-## Positive discovery
+## Positive discovery and activation cost
 
-| Prompt | Required discovered skill |
+These are intentionally single-intent prompts.
+
+| Prompt | Required discovered Skill |
 |---|---|
 | Formalize this textbook theorem in Lean; choose the right hypotheses and generality. | `lean4-formalize` |
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
@@ -16,28 +18,36 @@ Discovery principle: optimize for reliable loading of materially useful guidance
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 
-Required assertion for each row: the named Skill is discovered and its materially relevant contract is followed. Do not require other compatible Skills to remain unselected.
+For every row:
+- the required Skill is discovered;
+- its materially relevant contract is followed;
+- at most two model-discoverable Lean Skills are activated.
 
-## Compatible overlap must not derail the request
+Do not require a particular neighboring Skill to remain unselected. The activation bound exists only to reject degenerate routing such as loading most or all seven Skills for every Lean request.
+
+## Compatible overlap
 
 Prompt: This existing theorem no longer elaborates with an application type mismatch. Find the cause and fix the proof without changing its statement.
 - `lean4_prove_selected = PASS`
 - `fixed_statement_preserved = PASS`
 - `diagnostic_work_did_not_prevent_proof_repair = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: Audit this theorem's trust basis and remove our custom axiom if possible without changing the theorem statement.
 - `lean4_trust_selected = PASS`
-- `trust_basis_was_checked_against_the_requested_policy = PASS`
-- `any_auxiliary_proof_work_preserved_the_trust_cleanup_outcome = PASS`
+- `trust_basis_checked_against_requested_policy = PASS`
+- `auxiliary_proof_work_preserved_trust_cleanup_outcome = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: Review this working proof for brittleness and maintainability. Do not edit it.
 - `lean4_review_selected = PASS`
 - `review_only_constraint_preserved = PASS`
 - `additional_compatible_guidance_did_not_trigger_source_mutation = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
-## User-invoked modes are not model-discovery requirements
+## User-invoked modes
 
-Do not require model discovery to select `lean4-recon` or `lean4-mathlib-contribute`. Their behavioral evals run after explicit activation and test the broader context-loading or upstream-readiness contract directly.
+Do not require model discovery to select `lean4-recon` or `lean4-mathlib-contribute`. Their behavioral evals run after explicit activation.
 
 ## Adjacent intents stay out
 
