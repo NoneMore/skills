@@ -34,4 +34,4 @@ Stop when remaining opportunities are marginal, speculative, or out of scope. Co
 
 ## Completion
 
-Report the baseline, the property improved, and the verification gate that passed. For performance work, report comparable before/after measurements. Mention material tradeoffs or promising candidates that were rejected rather than presenting them as wins.
+Report the baseline, the property improved, and the verification gate that passed. For non-performance work, name the concrete cost reduced, such as repetition, nesting, search or inference burden, brittle elaboration dependence, or an unnecessary abstraction boundary. For performance work, report comparable before/after measurements. Mention material tradeoffs or promising candidates that were rejected rather than presenting them as wins.
