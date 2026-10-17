@@ -1,6 +1,6 @@
 ---
 name: lean4-formalize
-description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate mathematical intent into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, generality, and local elaboration decisions needed to deliver that declaration remain part of this skill. Use `lean4-explore` only when choosing among materially different formal directions has itself been separated into the requested outcome."
+description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to translate mathematical intent into a Lean declaration, choose its canonical types or hypotheses, decide its intended generality, or explicitly revise an existing statement. Ordinary API, encoding, hypothesis, generality, and local elaboration decisions needed to deliver that declaration remain part of this skill. Use `lean4-recon` only when deliberate context expansion to challenge the current framing is itself the requested outcome before committing to a declaration."
 license: MIT
 ---
 
@@ -26,9 +26,9 @@ Turn mathematical intent into a faithful Lean declaration whose statement design
 
 ## Boundaries
 
-Statement-design decisions required to produce the requested declaration stay here, including ordinary choices of canonical types, hypotheses, generality, API, and local elaboration repair. Search or comparison needed for those choices does not by itself make exploration a separate outcome.
+Statement-design decisions required to produce the requested declaration stay here, including ordinary choices of canonical types, hypotheses, generality, API, and local elaboration repair. Search or comparison needed for those choices does not by itself make Recon a separate outcome.
 
-If the request is only for a direction recommendation before committing to a declaration, use `lean4-explore`. If a concrete declaration is already fixed and only its proof remains, use `lean4-prove`. If the work reveals a shared module, dependency, toolchain, build, or integration failure whose root cause is now the requested result, use `lean4-diagnose`. Merely choosing mathlib APIs while creating a declaration remains ordinary formalization.
+Use `lean4-recon` when the request is instead to challenge the current problem framing before committing to a declaration by deliberately widening semantic context beyond what statement completion requires. If a concrete declaration is already fixed and only its proof remains, use `lean4-prove`. If the work reveals a shared module, dependency, toolchain, build, or integration failure whose root cause is now the requested result, use `lean4-diagnose`. Merely choosing mathlib APIs while creating a declaration remains ordinary formalization.
 
 If the same request also requires a checked proof, settle the declaration first, then complete and verify that proof without silently changing the statement. If evidence instead shows the requested claim may be false, report that rather than weakening the statement to make it provable.
 
