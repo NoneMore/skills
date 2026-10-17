@@ -1,6 +1,6 @@
 ---
 name: lean4-prove
-description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or proof goal already exists and the requested outcome is to complete or repair its proof with the target held fixed unless explicitly authorized otherwise. Local elaboration, typeclass, API, and tactic diagnostics encountered while repairing that target remain part of proving, as do comparisons among proof strategies. Use `lean4-diagnose` when root-cause investigation across module, dependency, toolchain, build, or integration boundaries is itself the requested outcome."
+description: "Use for formal mathematics in Lean 4/mathlib when a concrete Lean declaration, theorem statement, or proof goal already exists and the task is to complete or repair its proof with the target held fixed unless explicitly authorized otherwise."
 license: MIT
 ---
 
@@ -18,19 +18,15 @@ Produce a checked proof for an existing concrete formal target without silently 
 
 ## Workflow
 
-1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing. Treat local type mismatches, instance failures, unknown identifiers, and tactic errors as part of repairing this proof unless evidence shows a broader boundary failure.
+1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing.
 2. Search local declarations and active imports before widening to mathlib. Search by mathematical meaning and type shape rather than guessed declaration names, and validate candidates in the actual project context.
-3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives remain ordinary proving work while the formal target stays fixed. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
+3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives are all ordinary proving techniques. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
 4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
 5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. `lake env lean path/to/File.lean` is a fast file-local check and does not rebuild changed imports. After changing an imported source, use a dependency-aware check such as `lake lean path/to/File.lean`, or the repository's configured build/test gate when integration scope matters. Repository-configured gates take precedence, and state what actually ran.
 
-## Boundaries
+## Scope discipline
 
-- If the statement itself needs design or revision, proof completion for the fixed target is no longer the governing outcome; do not silently change it.
-- Search, theorem lookup, API comparison, local diagnostics, small Lean experiments, and materially different proof strategies remain part of proving while the formal target stays fixed. Their presence does not by itself select `lean4-recon`.
-- Use `lean4-recon` only when the requested work changes from completing the fixed target to deliberately widening semantic context to challenge the surrounding problem framing or API boundary before committing to an implementation.
-- If several artifacts fail because of a shared module, dependency, toolchain, build, or integration change and the requested result is the common root cause or migration path, use `lean4-diagnose` for that boundary-owned investigation.
-- Do not widen a proof-completion task into another independently requested outcome unless the user actually asks for it.
+Keep the agreed target fixed unless statement revision is explicitly authorized. Search, theorem lookup, API comparison, local diagnostics, small Lean experiments, and proof-strategy comparison may all be used when they help establish the proof. Do not turn a proof-completion request into unrelated repository cleanup or silently broaden its public API.
 
 ## Stop and completion
 

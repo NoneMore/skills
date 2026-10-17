@@ -1,6 +1,6 @@
 ---
 name: lean4-refute
-description: "Use for formal mathematics in Lean 4/mathlib when the requested outcome is to show a proposition is false or to find and Lean-certify a counterexample or proof of its negation. Do not treat failed proof search or exploratory counterexample probing alone as certified falsity."
+description: "Use for formal mathematics in Lean 4/mathlib when the task is to show a proposition is false or to find and Lean-certify a counterexample or proof of its negation. Do not treat failed proof search or exploratory counterexample probing alone as certified falsity."
 license: MIT
 ---
 
@@ -25,7 +25,7 @@ Produce a Lean-certified logical refutation of a target proposition while preser
 4. Encode the candidate witness or negation as a separate result without invoking the target declaration itself as evidence, then ask Lean to certify it.
 5. Verify that result in the actual project context. When the target or surrounding environment contains `sorry`/`admit`, custom axioms, or otherwise uncertain trust dependencies, inspect the refutation's trust basis with `#print axioms` or an equivalent environment check and reject certification if it depends on `sorryAx`, the target as an assumption, or another dependency forbidden by the agreed policy. If changed imports or project integration matter, use a gate that rebuilds or exercises that boundary rather than relying on possibly stale file-local artifacts, and report the gate that actually ran.
 
-Keep search bounded. If the proposition instead needs redesign, use `lean4-formalize`; if the user wants to keep proving the fixed target, use `lean4-prove`. If the requested work is to investigate whether an assumption is genuinely necessary, probe examples and counterexamples, or challenge the surrounding framing without yet requiring certified falsity, use `lean4-recon`. Once a Lean-certified disproof itself becomes the requested outcome, use this Skill.
+Keep search bounded. A plausible witness, failed proof search, or exploratory hypothesis probe remains uncertified evidence until Lean checks an independent refutation under the accepted trust basis.
 
 ## Outcomes
 

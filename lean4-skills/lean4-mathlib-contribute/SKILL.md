@@ -1,6 +1,7 @@
 ---
 name: lean4-mathlib-contribute
-description: "Use when a concrete Lean 4 artifact already exists and the requested outcome is to assess or adapt it specifically for upstream mathlib contribution readiness. Own current contribution policy, nearby mathlib conventions, API and generality fit, naming/docs/import discipline, proof robustness, attributes, and integration evidence needed for that readiness decision. Ordinary use of mathlib stays with the direct artifact owner."
+description: "User-invoked mode for assessing or adapting an existing Lean 4 artifact specifically for upstream mathlib contribution readiness using current contribution policy, nearby mathlib conventions, API and generality fit, naming/docs/import discipline, proof robustness, attributes, and integration evidence."
+disable-model-invocation: true
 license: MIT
 ---
 
@@ -13,7 +14,6 @@ Assess or adapt an existing Lean artifact so its suitability for upstream mathli
 ## Preconditions and invariants
 
 - A concrete Lean artifact already exists: a declaration, proof, file, diff, or PR-sized change that can be inspected against upstream expectations.
-- The requested outcome is explicitly upstream mathlib contribution readiness, not merely using mathlib as a dependency or theorem library.
 - Treat mathlib contribution policy as live external state. Consult current authoritative upstream guidance at execution time rather than relying on cached policy text in this Skill.
 - Inspect nearby current mathlib code when local conventions, API shape, placement, naming, imports, attributes, or proof style materially affect the readiness decision.
 - Review-only requests are read-only. When adaptation is requested, make bounded changes justified by an upstream-readiness finding.
@@ -24,18 +24,10 @@ Assess or adapt an existing Lean artifact so its suitability for upstream mathli
 1. Establish the concrete artifact, intended upstream destination or neighborhood when known, and whether the user wants readiness findings only or actual adaptation.
 2. Retrieve the current authoritative mathlib contribution guidance relevant to the artifact. If live policy cannot be consulted, continue only with independently verifiable code evidence and state that policy compliance remains unverified.
 3. Inspect the nearest relevant current mathlib declarations/files and evaluate the artifact against material upstream concerns: canonical abstractions and APIs, theorem generality and hypothesis boundary, namespace and naming, declaration placement, docstrings, imports, attributes and simp behavior, proof robustness, duplication, and maintenance cost.
-4. If adaptation is requested, apply the smallest coherent changes that address substantiated readiness gaps. Search, small experiments, proof repairs, and local diagnostics remain internal substeps when they are bounded means to the upstream-readiness outcome.
+4. If adaptation is requested, apply the smallest coherent changes that address substantiated readiness gaps. Search, small experiments, proof repairs, and local diagnostics may be used as bounded supporting work.
 5. Run the repository-configured Lean/mathlib gates that establish the affected correctness and integration scope, and report exactly what ran. Re-check any policy or nearby-code criterion materially affected by the edits.
 
-## Boundaries
-
-Ordinary Lean work that happens to use mathlib stays with its direct outcome owner. Select this Skill when upstream suitability or adaptation is itself the requested result for an existing artifact; an eventual plan to submit upstream is not enough.
-
-Local proof, elaboration, API search, nearby-code inspection, or abstraction comparison encountered while assessing or adapting that concrete artifact remain part of the contribution-readiness task. They do not by themselves select `lean4-recon`. Use Recon when the requested work is instead an open-ended investigation that deliberately widens semantic context to challenge the problem framing before a concrete upstream artifact or readiness decision governs the task.
-
-Use `lean4-diagnose` only when the requested problem becomes a shared root-cause investigation across module, dependency, toolchain, build, or integration boundaries rather than readiness of this artifact.
-
-Upstream readiness may justify changes to API shape, generality, naming, imports, documentation, or proof structure that a narrower Skill would normally preserve. Make those changes only when the upstream-readiness request authorizes them, and surface any material semantic or public-API change explicitly rather than treating it as style cleanup.
+Upstream readiness may justify changes to API shape, generality, naming, imports, documentation, or proof structure that ordinary artifact work would preserve. Make those changes only when the user's explicit invocation and requested adaptation authorize them, and surface any material semantic or public-API change rather than treating it as style cleanup.
 
 ## Completion
 

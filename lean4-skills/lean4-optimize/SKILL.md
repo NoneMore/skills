@@ -1,6 +1,6 @@
 ---
 name: lean4-optimize
-description: "Use only after a Lean 4/mathlib proof is already correct and the requested outcome is a durable local improvement in clarity, maintainability, robustness, brevity where that helps clarity, or measured performance. Local diagnostics encountered while making and verifying that improvement remain part of optimization. Upstream mathlib contribution readiness is a different outcome."
+description: "Use after a Lean 4/mathlib proof is already correct when the task is a durable local improvement in clarity, maintainability, robustness, brevity where that helps clarity, or measured performance."
 license: MIT
 ---
 
@@ -12,7 +12,7 @@ Improve an already-correct Lean proof without trading away correctness, trust, o
 
 ## Preconditions
 
-Establish a clean verified baseline for the target first. If the proof is not correct yet, repair it with `lean4-prove`; use `lean4-diagnose` when the requested problem is instead a root-cause investigation across module, dependency, toolchain, build, or integration boundaries.
+Establish a clean verified baseline for the target first. If the proof is not correct yet, do not optimize an unverified baseline. If the request also includes repair, establish correctness before measuring or claiming an optimization; otherwise report the missing baseline as the blocker.
 
 Do not introduce new axioms, `sorry`, or `admit`, and do not change the public theorem statement merely to make optimization easier.
 
@@ -33,6 +33,4 @@ Do not combine all three by default.
 5. Reject changes that regress correctness, diagnostics, trust, or maintainability without a compensating requested benefit.
 6. Stop when remaining opportunities are marginal, speculative, or outside the requested surface.
 
-Library search, abstraction comparison, local diagnostics, and small experiments needed to choose and verify an improvement remain part of optimization. They do not by themselves select `lean4-recon`; use Recon only when deliberate context expansion to challenge the surrounding problem framing is itself requested before committing to a design. If the requested improvement is instead to make an existing artifact acceptable for upstream mathlib contribution under current upstream expectations, use `lean4-mathlib-contribute`.
-
-Correctness and maintainability outrank token or line count.
+Library search, abstraction comparison, local diagnostics, and small experiments may all be used to choose and verify an improvement. Correctness and maintainability outrank token or line count.

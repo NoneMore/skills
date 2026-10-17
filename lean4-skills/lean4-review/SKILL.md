@@ -1,6 +1,6 @@
 ---
 name: lean4-review
-description: "Use for independent review of Lean 4/mathlib proof code when the requested outcome is evidence-backed findings about correctness, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only. Trust-basis audits and upstream mathlib readiness have their own outcome-specific Skills; ordinary explanation without an evaluation request does not require review."
+description: "Use for independent review of Lean 4/mathlib proof code when the task needs evidence-backed findings about correctness, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only."
 license: MIT
 ---
 
@@ -24,9 +24,7 @@ Review-only requests are read-only with respect to project source. Verification 
 4. **Maintainability:** proof structure, naming, comments/docstrings, and local style.
 5. **Optimization opportunities:** only when they materially improve directness, determinism, performance, or clarity.
 
-Treat project-specific simplification policy as authoritative when global simp behavior is material.
-
-Search, abstraction comparison, local diagnostic checks, and other bounded investigation needed to substantiate a review finding remain part of review; they do not create a separate Recon outcome. Use `lean4-recon` only when the requested work is instead to deliberately widen semantic context and challenge the problem framing before committing to a concrete design, rather than evaluating an existing artifact under review. Trust concerns may be reported as correctness findings, but a requested trust-basis audit belongs to `lean4-trust`, and explicit upstream contribution readiness belongs to `lean4-mathlib-contribute`.
+Treat project-specific simplification policy as authoritative when global simp behavior is material. Bounded search, abstraction comparison, local diagnostic checks, and small experiments may all be used to substantiate findings; review-only work remains read-only regardless of what supporting guidance was also loaded.
 
 ## Output and completion
 

@@ -1,6 +1,7 @@
 ---
 name: lean4-recon
-description: "Use for open-ended formal-mathematics investigation in Lean 4/mathlib when the requested outcome is to challenge or improve the current problem framing before committing to a durable implementation. Deliberately widen semantic and repository context to discover whether a local definition, theorem, hypothesis set, or API is better understood through an existing generic abstraction, canonical construction, broader theorem, dual formulation, historical design, or dependency strategy. No alternative direction needs to be known in advance. Search needed only to finish an already-settled declaration, proof, review, optimization, or upstream-readiness task stays with that owning Skill."
+description: "User-invoked mode for open-ended formal-mathematics investigation in Lean 4/mathlib when the user wants to challenge or improve the current problem framing before committing to a durable implementation. Deliberately widen semantic and repository context to look for canonical abstractions, broader theorems, dual formulations, assumption boundaries, historical constraints, or lower-level design leverage."
+disable-model-invocation: true
 license: MIT
 ---
 
@@ -14,9 +15,7 @@ Recon may begin with no known alternative. Discovering whether a materially bett
 
 ## Context-loading mode
 
-This Skill uses a deliberately divergent context policy. Outcome-completion Skills should normally read and search only as far as needed to deliver their already-owned artifact. Recon instead tests whether that local framing is itself the wrong boundary.
-
-Do not stop expanding context merely because the local theorem, definition, or implementation could already be completed. Expand across a semantic boundary only while the next boundary has a credible chance of changing the abstraction, statement, assumptions, API placement, dependency strategy, or downstream design.
+Explicit invocation authorizes a deliberately divergent context policy. Do not stop expanding context merely because the local theorem, definition, or implementation could already be completed. Cross a semantic boundary only while the next boundary has a credible chance of changing the abstraction, statement, assumptions, API placement, dependency strategy, or downstream design.
 
 Useful expansion directions include:
 
@@ -57,15 +56,11 @@ Use these as prompts for judgment, not an exhaustive checklist:
 3. Cross the smallest promising semantic boundary: owning generic namespace, canonical characterization, dual API, assumption boundary, relevant history, or downstream reuse.
 4. Use cheap discriminators first: `#check`, `#synth`, `#print`, scratch `example`s, minimal imports, concrete instances, or focused repository search.
 5. If a materially better framing appears, test enough of it to establish that the difference is real rather than merely aesthetically plausible.
-6. Converge when further expansion is unlikely to change the design decision, when a better framing is supported well enough to hand off, or when the bounded investigation supports retaining the current framing.
+6. Converge when further expansion is unlikely to change the design decision, when a better framing is supported well enough to proceed, or when the bounded investigation supports retaining the current framing.
 
 For claims based on actual elaboration, report the check that ran and the scope it establishes. Scratch or file-local success answers only the local question it exercised; if the design comparison materially depends on changed imports or project integration, use a gate that exercises that boundary.
 
-## Boundaries
-
-Recon owns deliberate context expansion whose requested purpose is to test or improve the current framing. It does not own ordinary theorem lookup, API search, proof-strategy comparison, local diagnostics, or small experiments when those are merely bounded means to an already-settled formalization, proof, refutation, review, optimization, or upstream-readiness outcome.
-
-When Recon converges on a concrete declaration, proof, refutation, repair, optimization, trust cleanup, review, or upstream contribution task, stop expanding context and let that outcome's contract govern durable work unless the user explicitly asked to carry both outcomes through.
+Recon is observational by default. Do not silently turn a framing investigation into durable production edits; if implementation is also requested, make only the changes the user authorized after the investigation has converged enough to support them.
 
 ## Completion
 
@@ -75,6 +70,6 @@ Return, in proportion to the task:
 - the best-supported direction when the evidence favors one, or the small set of remaining options when a real tradeoff remains;
 - the evidence that materially supports the reframe or supports keeping the current framing;
 - unresolved uncertainty only when it could still change the design decision;
-- the next concrete outcome once reconnaissance has converged enough to proceed.
+- the next concrete action once reconnaissance has converged enough to proceed.
 
 A result that finds no material reframe is complete when the most plausible semantic expansion paths were checked proportionately and further widening is unlikely to change the decision.
