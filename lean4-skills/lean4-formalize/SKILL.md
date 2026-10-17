@@ -6,31 +6,21 @@ license: MIT
 
 # Lean 4 Formalize
 
-## Purpose
-
 Turn mathematical intent into a faithful Lean declaration whose statement design is explicit rather than accidental.
-
-## Invariants
-
-- Preserve existing declarations unless statement revision is explicitly authorized.
-- Prefer the weakest faithful statement: make hypotheses explicit and do not hide assumptions behind new axioms.
-- Follow local project conventions.
 
 ## Workflow
 
-1. Resolve the mathematical claim and intended level of generality. If a source contains several claims, make the selected claim or selection rule explicit.
-2. Search local code and active imports before widening to mathlib for canonical types, definitions, theorem shapes, and existing results. Search by meaning/type rather than guessed names and validate candidates in the actual project context.
-3. Draft the weakest faithful declaration with explicit hypotheses and no hidden trust-basis changes.
-4. Check that the declaration itself elaborates. Diagnose local type, instance, namespace, import, or API errors as part of making this declaration valid. A draft may contain an explicitly reported proof hole when the requested outcome is only statement design.
-5. If proving exposes a statement mismatch, revise only declarations created for the task or existing declarations the user explicitly authorized for statement work.
+1. Resolve the claim and intended level of generality.
+2. Search local code and active imports before widening to mathlib for canonical types, definitions, and theorem shapes; validate candidates in the project context.
+3. Draft the weakest faithful declaration with explicit hypotheses and no hidden trust-basis change.
+4. Check that the declaration skeleton elaborates. A statement-design-only result may retain an explicitly reported proof hole.
+5. Revise existing declarations only when the user explicitly authorized statement work on them.
 
-Statement-design work may include ordinary API search, encoding comparison, hypothesis testing, generality decisions, and local elaboration repair. If the same request also requires a checked proof, settle the declaration first, then complete and verify that proof without silently changing the statement. If evidence shows the requested claim may be false, report that rather than weakening the statement to make it provable.
-
-A statement-design-only result needs the declaration skeleton to elaborate in its intended context. When the requested deliverable also includes a checked proof across changed files or project boundaries, run the repository-configured gate appropriate to that affected scope and report what ran; do not label a file-local elaboration check as project verification.
+If proving exposes a statement mismatch or evidence that the claim is false, report it rather than silently weakening the statement. If a checked proof is also requested, settle the declaration first and then verify the proof at the affected scope.
 
 ## Completion
 
-- **Draft:** the intended claim is represented faithfully in Lean and the declaration skeleton elaborates apart from explicitly reported proof holes.
-- **Checked:** the declaration and requested proof elaborate under the required verification gate.
+- **Draft:** the intended claim is represented faithfully and the declaration skeleton elaborates apart from reported proof holes.
+- **Checked:** the declaration and requested proof elaborate under the verification gate actually claimed.
 
-Any unresolved statement ambiguity or proof hole makes the result partial; report it explicitly.
+Unresolved statement ambiguity or proof holes make the result partial and must be reported.
