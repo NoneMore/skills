@@ -17,6 +17,7 @@ not preload unrelated engine references.
 | Unity IL2CPP | none | none | core workflow only |
 | Unreal native code | none | none | core workflow only |
 | Web / JavaScript bundle or local Node.js logic | [engine-web-javascript.md](engine-web-javascript.md) | `scripts/web_js_triage.py` | bundled |
+| Windows LÖVE / Love2D Lua | [engine-love2d-lua.md](engine-love2d-lua.md) | `scripts/love2d_triage.py` | bundled |
 | Other embedded/custom runtime | none | none | core workflow only |
 
 ## Adding an adapter

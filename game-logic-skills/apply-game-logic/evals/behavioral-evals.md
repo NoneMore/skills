@@ -168,3 +168,14 @@ Two retained plugin attempts exercise separate failures. In A, a game assembly w
 Required assertions:
 - A did not treat compilation as preserving the finding and stopped only the affected path until rebinding or narrow revalidation
 - B remained an unvalidated BepInEx draft and named actual BepInEx 5 load plus material-path validation as the missing checks
+
+## 17. Lovely textual matching does not choose the semantic target
+
+A confirmed LÖVE finding identifies one semantic call site, while the candidate
+source text occurs three times in the Lovely target buffer.
+
+Required assertions:
+- treated Lovely as delivery rather than as the source of the intervention decision
+- did not use first-match behavior or `times = 1` as proof of semantic identity
+- refined the source/context anchor to the recovered site or returned the missing relation to analysis
+- preserved the target buffer and expected match cardinality needed to distinguish the site

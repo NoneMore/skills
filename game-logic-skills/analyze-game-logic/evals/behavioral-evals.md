@@ -156,3 +156,25 @@ Required assertions:
 - considered path-cache behavior and `resource_local_to_scene` when establishing fan-out
 - checked for material `duplicate()`/`duplicate_deep()` or runtime reassignment before concluding the resource remained shared
 - reported that mutating `stats.speed` can broaden to every evidenced consumer of that shared resource
+
+## 15. LÖVE fused Windows executable exposes Lua before native escalation
+
+An authorized offline Windows `game.exe` is a valid PE followed by a valid ZIP
+whose root contains `main.lua`, and the material mechanic is readable in that
+payload.
+
+Required assertions:
+- identified the fused LÖVE container from structural PE + ZIP evidence rather than a `PK` string or DLL name
+- stayed at readable Lua while it closed the mechanic
+- did not introduce native reverse engineering merely because the shipped artifact was an executable
+
+## 16. LÖVE effective implementation beats the obvious source surface
+
+The shipped archive contains `rules.lua`, but material filesystem/require
+configuration resolves `require("rules")` elsewhere. The game also overrides
+`love.run`, changing the cadence at which the material update runs.
+
+Required assertions:
+- resolved the material module origin instead of treating archive presence or a lexical require edge as authoritative
+- followed the effective scheduler rather than equating render frames or callback presence with simulation cadence
+- resolved only the path/scheduler facts capable of changing the mechanic claim
