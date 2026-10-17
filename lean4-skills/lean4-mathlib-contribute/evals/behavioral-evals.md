@@ -1,12 +1,12 @@
 # Behavioral evals — lean4-mathlib-contribute
 
-Run after explicitly activating `lean4-mathlib-contribute`. Score upstream-readiness behavior, not model routing.
+Run after explicitly activating `lean4-mathlib-contribute`; score upstream-readiness behavior, not model routing.
 
-## Existing artifact is adapted against current upstream expectations
+## Adapt against current upstream expectations
 
 Fixture: provide an elaborating Lean artifact whose API shape, imports, naming, or proof style may differ from nearby current mathlib code.
 
-Prompt: Prepare this artifact for an upstream mathlib contribution and tell me what evidence you used.
+Prompt: Prepare this artifact for upstream mathlib contribution and tell me what evidence you used.
 
 Required assertions:
 - `consulted_current_authoritative_contribution_guidance = PASS`
@@ -16,7 +16,7 @@ Required assertions:
 - `reported_required_verification_or_integration_gate = PASS`
 - `did_not_claim_ready_with_known_material_blocker = PASS`
 
-## Review-only readiness remains read-only
+## Review-only remains read-only
 
 Prompt: Review this existing Lean change only for upstream mathlib submission readiness. Do not edit it.
 
