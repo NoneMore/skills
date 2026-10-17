@@ -6,8 +6,8 @@ Prompt: This proof currently fails to elaborate, but please optimize it for brev
 
 Required assertions:
 - `did_not_optimize_unverified_failing_baseline = PASS`
-- `reported_or_established_the_required_correctness_baseline_before_optimization = PASS`
-- `did_not_claim_an_optimization_without_a_verified_before_and_after = PASS`
+- `established_or_reported_missing_correctness_baseline = PASS`
+- `did_not_claim_optimization_without_verified_before_and_after = PASS`
 
 ## Performance changes are measured
 
