@@ -11,18 +11,21 @@ import re
 import sys
 import zipfile
 from pathlib import Path, PurePosixPath
+from typing import Iterable
 
 RE_REQUIRE = re.compile(r"\brequire\s*(?:\(\s*)?['\"]([^'\"]+)['\"]")
-RE_CUSTOM_RUN = re.compile(r"\b(?:function\s+love\.run\b|love\.run\s*=)")
-RE_RESOLUTION = re.compile(
-    r"\blove\.filesystem\.(?:setRequirePath|setCRequirePath|mount|setIdentity)\s*\(|\bappendidentity\b"
-)
-RE_THREAD = re.compile(r"\blove\.thread\.(?:newThread|getChannel|newChannel)\s*\(")
-RE_FFI = re.compile(r"\b(?:require\s*(?:\(\s*)?['\"]ffi['\"]|ffi\.(?:load|cdef)\b)")
+INDICATORS = {
+    "custom_love_run": re.compile(r"\b(?:function\s+love\.run\b|love\.run\s*=)"),
+    "resolution_override": re.compile(
+        r"\blove\.filesystem\.(?:setRequirePath|setCRequirePath|mount|setIdentity)\s*\(|\bappendidentity\b"
+    ),
+    "thread_use": re.compile(r"\blove\.thread\.(?:newThread|getChannel|newChannel)\s*\("),
+    "ffi_native": re.compile(r"\b(?:require\s*(?:\(\s*)?['\"]ffi['\"]|ffi\.(?:load|cdef)\b)"),
+}
 
 
-def sha256(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
+def normalize(name: str) -> str:
+    return str(PurePosixPath(name.replace("\\", "/")))
 
 
 def is_windows_pe(data: bytes) -> bool:
@@ -32,121 +35,98 @@ def is_windows_pe(data: bytes) -> bool:
     return 0 <= offset <= len(data) - 4 and data[offset : offset + 4] == b"PE\0\0"
 
 
-def text(data: bytes) -> str | None:
+def decode_lua(data: bytes) -> str | None:
     if b"\0" in data[:4096]:
         return None
     for encoding in ("utf-8-sig", "utf-8", "cp1252"):
         try:
             return data.decode(encoding)
         except UnicodeDecodeError:
-            pass
+            continue
     return None
 
 
-def normalize(name: str) -> str:
-    return str(PurePosixPath(name.replace("\\", "/")))
-
-
-def inventory(lua_entries: dict[str, bytes], native_candidates: list[str]) -> dict[str, object]:
+def scan(entries: Iterable[tuple[str, bytes | None]]) -> dict[str, object]:
+    lua_files: list[str] = []
+    natives: list[str] = []
     require_hints: list[dict[str, str]] = []
-    indicators = {
-        "custom_love_run": [],
-        "resolution_override": [],
-        "thread_use": [],
-        "ffi_native": [],
-    }
-    checks = {
-        "custom_love_run": RE_CUSTOM_RUN,
-        "resolution_override": RE_RESOLUTION,
-        "thread_use": RE_THREAD,
-        "ffi_native": RE_FFI,
-    }
+    indicators: dict[str, list[str]] = {key: [] for key in INDICATORS}
 
-    for name, data in sorted(lua_entries.items()):
-        source = text(data)
+    for raw_name, data in entries:
+        name = normalize(raw_name)
+        suffix = PurePosixPath(name).suffix.lower()
+        if suffix == ".dll":
+            natives.append(name)
+            continue
+        if suffix != ".lua" or data is None:
+            continue
+
+        lua_files.append(name)
+        source = decode_lua(data)
         if source is None:
             continue
-        for module in RE_REQUIRE.findall(source):
-            require_hints.append({"source": name, "module": module})
-        for key, pattern in checks.items():
+        require_hints.extend({"source": name, "module": module} for module in RE_REQUIRE.findall(source))
+        for key, pattern in INDICATORS.items():
             if pattern.search(source):
                 indicators[key].append(name)
 
-    lua_files = sorted(lua_entries)
+    lua_files.sort()
     return {
         "lua_files": lua_files,
-        "config_files": [name for name in ("main.lua", "conf.lua") if name in lua_entries],
+        "config_files": [name for name in ("main.lua", "conf.lua") if name in lua_files],
         "require_hints": require_hints,
         "indicators": indicators,
-        "native_candidates": sorted(native_candidates),
+        "native_candidates": sorted(natives),
     }
 
 
-def directory_inputs(root: Path) -> tuple[dict[str, bytes], list[str]]:
-    lua_entries: dict[str, bytes] = {}
-    natives: list[str] = []
-    for child in root.rglob("*"):
-        if not child.is_file():
+def directory_entries(root: Path) -> Iterable[tuple[str, bytes | None]]:
+    for path in root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in {".lua", ".dll"}:
             continue
-        rel = child.relative_to(root).as_posix()
-        suffix = child.suffix.lower()
-        if suffix == ".dll":
-            natives.append(rel)
-        elif suffix == ".lua":
-            try:
-                lua_entries[rel] = child.read_bytes()
-            except OSError:
-                pass
-    return lua_entries, natives
+        name = path.relative_to(root).as_posix()
+        if path.suffix.lower() == ".dll":
+            yield name, None
+            continue
+        try:
+            yield name, path.read_bytes()
+        except OSError:
+            continue
 
 
-def zip_inputs(raw: bytes) -> tuple[dict[str, bytes], list[str], bool]:
-    lua_entries: dict[str, bytes] = {}
-    natives: list[str] = []
+def zip_entries(raw: bytes) -> Iterable[tuple[str, bytes | None]]:
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
-        names = [normalize(name) for name in archive.namelist() if not name.endswith("/")]
         for info in archive.infolist():
             if info.is_dir():
                 continue
             name = normalize(info.filename)
             suffix = PurePosixPath(name).suffix.lower()
             if suffix == ".dll":
-                natives.append(name)
+                yield name, None
             elif suffix == ".lua":
                 try:
-                    lua_entries[name] = archive.read(info)
+                    yield name, archive.read(info)
                 except (OSError, RuntimeError, zipfile.BadZipFile):
-                    pass
-    return lua_entries, natives, "main.lua" in names
+                    continue
 
 
-def result(
-    target: dict[str, object],
-    classification: str,
-    lua_entries: dict[str, bytes],
-    natives: list[str],
-    root_main: bool,
+def build_result(
+    target: dict[str, object], classification: str, inventory: dict[str, object]
 ) -> dict[str, object]:
-    output = {
+    root_main = "main.lua" in inventory["lua_files"]
+    return {
         "target": target,
         "container": {"classification": classification},
         "love_evidence": {"root_main_lua": root_main},
+        **inventory,
     }
-    output.update(inventory(lua_entries, natives))
-    return output
 
 
 def analyze_target(path: Path) -> dict[str, object]:
     if path.is_dir():
-        lua_entries, natives = directory_inputs(path)
-        root_main = "main.lua" in lua_entries
-        return result(
-            {"path": str(path.resolve()), "kind": "directory"},
-            "source-directory" if root_main else "unknown-directory",
-            lua_entries,
-            natives,
-            root_main,
-        )
+        inventory = scan(directory_entries(path))
+        classification = "source-directory" if "main.lua" in inventory["lua_files"] else "unknown-directory"
+        return build_result({"path": str(path.resolve()), "kind": "directory"}, classification, inventory)
 
     if not path.is_file():
         raise FileNotFoundError(path)
@@ -156,23 +136,24 @@ def analyze_target(path: Path) -> dict[str, object]:
         "path": str(path.resolve()),
         "kind": "file",
         "size": len(raw),
-        "sha256": sha256(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
     }
 
     if zipfile.is_zipfile(io.BytesIO(raw)):
-        lua_entries, natives, root_main = zip_inputs(raw)
-        if is_windows_pe(raw):
-            classification = "windows-fused-executable" if root_main else "windows-pe-with-zip"
-        else:
-            classification = "love-archive" if root_main else "zip-non-love"
-        return result(target, classification, lua_entries, natives, root_main)
+        inventory = scan(zip_entries(raw))
+        has_main = "main.lua" in inventory["lua_files"]
+        classification = (
+            "windows-fused-executable" if is_windows_pe(raw) and has_main
+            else "windows-pe-with-zip" if is_windows_pe(raw)
+            else "love-archive" if has_main
+            else "zip-non-love"
+        )
+        return build_result(target, classification, inventory)
 
-    return result(
+    return build_result(
         target,
         "unsupported-or-unknown-windows-executable" if is_windows_pe(raw) else "unsupported-or-unknown-file",
-        {},
-        [],
-        False,
+        scan(()),
     )
 
 
