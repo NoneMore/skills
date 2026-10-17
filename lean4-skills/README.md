@@ -10,7 +10,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 
 ## Capabilities
 
-- `lean4-explore` — choose among multiple materially different Lean/mathlib formal directions when that choice is itself the requested outcome.
+- `lean4-recon` — deliberately widen Lean/mathlib semantic and repository context to test whether the current local framing misses a more canonical abstraction, construction, general theorem, duality, assumption boundary, or design direction before committing to implementation.
 - `lean4-formalize` — translate mathematical intent into an appropriate Lean declaration when statement design is the requested outcome.
 - `lean4-prove` — complete or repair a proof for an existing concrete Lean declaration or goal, including local elaboration diagnostics encountered while repairing it.
 - `lean4-refute` — search for and Lean-certify a counterexample or negation.
@@ -22,13 +22,15 @@ Before materially changing this collection, follow the repository-level [Skill D
 
 ## Routing
 
-Choose a Skill by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, helper proofs, and local diagnostic work stay inside the selected Skill when they are merely means to that outcome.
+Choose a Skill by the requested outcome, not by incidental mechanisms used along the way. Search, theorem lookup, API inspection, small Lean experiments, helper proofs, and local diagnostic work stay inside the selected Skill when they are merely bounded means to that outcome.
+
+`lean4-recon` is different because deliberate context expansion is itself the requested work. Use it when the task asks whether the current framing should be challenged before implementation: follow local definitions into their owning abstractions, inspect canonical characterizations and nearby generic APIs, pressure-test hypotheses, or reopen a design boundary that ordinary task-completion search would have no reason to cross. No alternative direction needs to be known in advance. Do not select Recon merely because an already-owned formalization, proof, review, optimization, refutation, or upstream-readiness task needs ordinary search or proof-strategy comparison.
 
 Artifact-owned failures stay with the artifact owner: diagnostics encountered while formalizing a declaration, repairing a fixed proof, certifying a refutation, reviewing code, optimizing a proof, or adapting an upstream contribution remain internal to that Skill. Use `lean4-diagnose` when root-cause investigation is itself requested or when the failure spans a module, dependency, toolchain, build, or integration boundary rather than one owned artifact.
 
 Use more than one Skill only when the request itself contains multiple independently meaningful outcomes that no single Skill owns.
 
-`lean4-explore` is selected when choosing among materially different formal directions is itself the requested deliverable. Reconnaissance needed to complete an already-owned outcome remains internal to that owner. An ordinary proof hole remains `lean4-prove` work even when the source contains `sorry` or `admit`; use `lean4-trust` when the trust basis itself is the requested outcome.
+An ordinary proof hole remains `lean4-prove` work even when the source contains `sorry` or `admit`; use `lean4-trust` when the trust basis itself is the requested outcome.
 
 Using mathlib as a library does not by itself select `lean4-mathlib-contribute`. That Skill is for an explicit upstream-contribution outcome on an existing artifact: determining or improving whether the artifact is suitable for submission to mathlib under current upstream expectations.
 
@@ -48,7 +50,7 @@ Specialized optimization knowledge stays with `lean4-optimize`:
 - `lean4-optimize/references/simplification.md` — `simp`, simp-lemma, and simproc design;
 - `lean4-optimize/references/performance.md` — measured elaboration/build performance work.
 
-There is no standalone shared mathlib-search document. Search behavior is small enough to keep local to the owning Skill: inspect local declarations and active imports, search by meaning/type rather than guessed names, and validate candidates in the actual project context.
+There is no standalone shared mathlib-search document. Search behavior is small enough to keep local to Skills that use it: inspect local declarations and active imports, search by meaning/type rather than guessed names, and validate candidates in the actual project context. Recon adds a different policy only when the requested outcome is to widen context beyond what completion of a settled artifact would require.
 
 Current upstream mathlib contribution policy is live external state owned by `lean4-mathlib-contribute`. That Skill should consult current authoritative contribution guidance and nearby current mathlib code at execution time instead of relying on a cached family document. The general Lean Skills should not independently acquire an upstream-contribution review bar merely because they use mathlib APIs.
 
