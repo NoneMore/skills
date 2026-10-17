@@ -1,68 +1,107 @@
 # Workflows
 
+## Shared Project Preflight
+
+For work on a real project:
+
+1. Locate the Lean project root and the project's actual blueprint entry/build conventions. The stock layout usually uses `blueprint/src/web.tex`, `blueprint/src/print.tex`, and `blueprint/src/content.tex`, but custom layouts are valid.
+2. Prefer a project-native read-only blueprint status/graph tool when it clearly provides the needed factual view. Otherwise use the bundled `scripts/blueprint.py` mechanical tool when supported.
+3. Run the mechanical check before relying on a normalized graph view:
+
+   ```sh
+   python3 <skill-path>/scripts/blueprint.py check --project-root <project-root>
+   ```
+
+   - exit `0`: projection is mechanically coherent;
+   - exit `1`: fix/report the structural projection violations before treating the normalized graph as authoritative;
+   - exit `2`: the bundled projection is unsupported/unavailable; do not emulate it with a regex parser.
+4. For Modify/Update tasks where graph or metadata effects matter, save a pre-edit state when useful:
+
+   ```sh
+   python3 <skill-path>/scripts/blueprint.py inspect --project-root <project-root> > /tmp/blueprint-before.json
+   ```
+
+The mechanical tool reports project facts; it does not decide mathematical dependency quality, node granularity, or Lean/blueprint semantic equivalence.
+
+For standalone snippets or pasted fragments, work directly from the supplied material and do not claim project-level validation.
+
 ## Create
 
-Use Create when the user wants a new blueprint route for a target theorem, definition, construction, or other tracked node.
+Use Create when the user wants a new route or tracked nodes for a theorem, definition, construction, or other mathematical target.
 
-1. **Identify the target.** State exactly what the final node should express.
-2. **Gather authoritative material.** Use the supplied references, existing blueprint, local Lean code, and reliable library facts that are relevant to the target.
-3. **Build the dependency route backward.** Separate prerequisites needed for the statement from lemmas used only in proofs.
-4. **Minimize the graph.** Merge routine steps into prose; keep separate nodes for reusable results, substantial bottlenecks, and independent formalization obligations.
-5. **Write the LaTeX in project style.** Add `\lean`/status metadata only when the corresponding declarations are actually known in the project.
-6. **Validate if working in a project.** Run the web build. If Lean metadata was added or changed, build Lean as needed, rebuild the web blueprint so its declaration list is current, then run the declaration check.
+1. **Identify the target exactly.** State what the final node should express.
+2. **Gather authoritative material.** Use the supplied references, nearby blueprint, local Lean declarations/types, and reliable library facts relevant to the target.
+3. **Build the route backward.** Separate prerequisites needed to state the target from results used only in its proof.
+4. **Minimize the graph.** Keep separate nodes for reusable results, substantial bottlenecks, and independent formalization obligations; keep routine transformations in prose.
+5. **Write in project style.** Reuse existing theorem environments, labels, macros, citations, and proof layout. Add Lean metadata only when supported by the project.
+6. **Re-run the mechanical check/inspect when project structure changed**, then perform the relevant upstream/project validation described below.
 
-If a necessary bridge is not present in the sources or code, introduce it as a clearly identified proposed local lemma rather than pretending it is an existing theorem.
+If a necessary bridge is absent from the sources/code, introduce it as a clearly proposed local lemma rather than pretending an existing theorem supplies it.
 
 ### Create output
 
-Return insertion-ready LaTeX plus a short summary of the route and any proposed/unresolved nodes.
+Return/apply insertion-ready LaTeX, summarize the mathematical route, and identify proposed or unresolved nodes.
 
 ## Modify
 
-Use Modify for an existing blueprint when the user wants a mathematical or structural change.
+Use Modify when an existing blueprint needs a mathematical or structural change.
 
-1. **Read the affected region and nearby conventions.** Identify the statement/proof/dependencies being changed.
-2. **Make the requested change directly.** Preserve unrelated text, labels, citations, custom macros, discussion links, and status markers.
-3. **Repair local references.** If labels, node boundaries, or proof placement changed, update affected `\uses`, `\proves`, and ordinary LaTeX references.
-4. **Revisit downstream dependencies only where the change matters.** A statement change may affect both statement and proof dependencies; a proof-only change normally affects proof routes, not downstream statements.
-5. **Validate the edited surface.** Build the web blueprint. When Lean metadata changed, build Lean as needed, rebuild the web blueprint, then run the declaration check.
+1. **Use the mechanical view to localize the edit when available.** Read the affected source region and nearby conventions rather than reconstructing the whole graph manually.
+2. **Make the requested change directly.** Preserve unrelated prose, labels, citations, discussion links, custom macros, and status markers.
+3. **Repair directly affected references/associations.** Update `\uses`, `\proves`, and ordinary LaTeX references only where the edit requires it.
+4. **Use graph impact mechanically; judge consequences mathematically.** Reverse dependencies can identify potentially affected nodes, but whether they require edits is a mathematical decision. A proof-only change normally does not alter downstream statement dependencies.
+5. **Re-run `check` and `inspect`.** If a pre-edit state was saved, compare normalized effects:
 
-Prefer a small patch over reconstructing a whole file. Reordering alone is not a reason to rewrite mathematical dependencies.
+   ```sh
+   python3 <skill-path>/scripts/blueprint.py inspect --project-root <project-root> > /tmp/blueprint-after.json
+   python3 <skill-path>/scripts/blueprint.py diff /tmp/blueprint-before.json /tmp/blueprint-after.json
+   ```
+6. **Validate the edited project surface** with the real project commands below.
+
+Prefer a small patch over reconstructing whole files. Reordering alone is not a reason to rewrite mathematical dependencies.
 
 ### Modify output
 
-Show/apply the changed region and summarize added/removed nodes, changed dependencies, and any mathematical follow-up that remains.
+Summarize the changed region, material node/dependency/mapping effects, and unresolved mathematical follow-up. Prefer mechanically generated structural diff facts over manually counting graph changes.
 
 ## Update
 
 Use Update to synchronize an existing blueprint with the current Lean project while keeping the mathematical route intact.
 
-1. **Read blueprint mappings.** Collect relevant nodes, their `\lean` declarations, and status markers.
-2. **Inspect the Lean project.** Find the corresponding declarations and inspect their types/definitions/proofs when status is being changed.
-3. **Synchronize names.** Fix clearly stale declaration names and add obvious missing mappings. Leave ambiguous mappings unresolved rather than guessing.
+1. **Start from the mechanical mapping/status view when available.** Use `inspect` or a project-native equivalent to collect the relevant nodes and existing metadata.
+2. **Inspect authoritative Lean declarations.** Read declaration types/definitions/proofs when changing semantic status; declaration existence alone is insufficient.
+3. **Synchronize names.** Fix clearly stale names and add obvious missing mappings. Leave ambiguous candidates unresolved.
 4. **Synchronize status.**
-   - use statement `\leanok` when the mapped Lean declaration matches the blueprint statement;
-   - use proof `\leanok` when the corresponding proof/implementation is complete;
-   - use `\mathlibok` when the node itself is supplied by Mathlib;
-   - keep `\notready` as a mathematical-readiness marker unless the requested update includes changing readiness.
-5. **Keep dependencies mathematical.** Do not rewrite `\uses` merely because Lean's implementation imports or calls extra helper declarations. Change blueprint dependencies when the mathematical route changed or the existing graph is wrong.
-6. **Validate.** For changed mappings/status, build Lean as needed, rebuild the web blueprint so the generated declaration list is current, then run the project's declaration check.
-
-When an Update reveals that the blueprint statement itself no longer matches the intended theorem, switch to a small Modify operation rather than hiding the mismatch with metadata edits.
+   - statement `\leanok`: only when the mapped Lean declaration corresponds to the blueprint statement;
+   - proof `\leanok`: only when the corresponding proof/implementation is complete enough to justify the claim;
+   - `\mathlibok`: only when the node itself is supplied by Mathlib;
+   - `\notready`: keep as a mathematical-readiness marker unless the requested work includes changing readiness.
+5. **Keep dependencies mathematical.** Do not rewrite `\uses` merely to mirror Lean imports, helper calls, or implementation details.
+6. **Do not repair mathematics just to make synchronization succeed.** If the blueprint statement and intended Lean theorem no longer match, leave disputed metadata unchanged and report the mismatch unless the user's requested outcome includes a Modify operation.
+7. **Re-run mechanical check/inspect/diff**, then perform the real Lean/blueprint validation below.
 
 ### Update output
 
-Summarize:
+Summarize Lean-name/status changes, unresolved or mismatched cases, mechanically observed structural effects, and relevant validation results.
 
-- Lean names added, removed, or corrected;
-- `\leanok` / `\mathlibok` changes;
-- unresolved or ambiguous mappings;
-- validation results relevant to those changes.
+## Real Project Validation
+
+The bundled mechanical tool complements rather than replaces upstream/project validation.
+Use the narrowest checks appropriate to what changed:
+
+- After structural/dependency/`\lean{...}` edits, run the project's web build, normally `leanblueprint web`. In the stock workflow this regenerates `blueprint/lean_decls`.
+- If Lean mappings/status changed, ensure the Lean project is built as needed, rebuild the web blueprint so declaration data is current, then run `leanblueprint checkdecls` or the project's equivalent.
+- Use `leanblueprint all` only when a broad final build is warranted.
+- Run `leanblueprint pdf` when PDF/print-specific content changed, the user requests PDF validation, or the project's bibliography workflow requires PDF/BibTeX work before the web build.
+- Inspect the repository diff and fix failures introduced by the edit.
+
+A successful web build or declaration check confirms syntax/generation/name availability only. It does not establish mathematical equivalence between blueprint prose and Lean types, proof completeness, or absence of placeholders such as `sorry`.
 
 ## Shared Editing Notes
 
-- Preserve custom theorem environments and labels.
-- Prefer one `\lean{...}` and one `\uses{...}` per environment unless project style says otherwise.
-- Keep statement dependencies and proof-only dependencies separate in source, even though the rendered graph may combine information for readiness/display.
-- Use `\proves{...}` when a non-adjacent proof needs an explicit target.
-- Do not add a new node just to mirror every Lean helper declaration; the blueprint tracks the mathematical plan, not the implementation call graph.
+- Preserve custom theorem environments and project label conventions.
+- Use one complete `\lean{...}` and one complete `\uses{...}` per owner; current upstream stores these as single values rather than merging repeated occurrences.
+- Keep statement and proof dependencies separate in source.
+- Use `\proves{...}` for a non-adjacent proof target.
+- Do not create blueprint nodes merely to mirror Lean helper declarations.
+- Do not treat frontier/priority heuristics as authoring semantics; planning/ranking is outside this Skill's mechanical contract.
