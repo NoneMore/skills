@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Prove"
+  short_description: "Complete or repair an already-specified Lean proof"
+  default_prompt: "Use $lean4-prove to complete or repair this settled Lean theorem, including local elaboration or API diagnostics encountered while fixing it, and verify the result."

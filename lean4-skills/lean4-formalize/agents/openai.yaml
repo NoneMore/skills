@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Formalize"
+  short_description: "Design faithful Lean statements for mathematical claims"
+  default_prompt: "Use $lean4-formalize to translate this mathematical intent into an appropriate Lean 4/mathlib declaration, including local elaboration repairs needed to make the statement valid."

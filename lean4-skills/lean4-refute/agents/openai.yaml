@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Refute"
+  short_description: "Lean-certify a counterexample or negation"
+  default_prompt: "Use $lean4-refute to search for and certify a Lean counterexample or negation for this proposition."

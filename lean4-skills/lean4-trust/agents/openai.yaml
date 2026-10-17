@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Trust"
+  short_description: "Inspect and clean up Lean theorem trust dependencies"
+  default_prompt: "Use $lean4-trust to inspect this declaration's trust basis and remove only assumptions that are unacceptable under the requested policy."

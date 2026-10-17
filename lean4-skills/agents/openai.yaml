@@ -1,4 +1,0 @@
-interface:
-  display_name: "Lean 4"
-  short_description: "Formalize mathematics reliably in Lean 4 and mathlib"
-  default_prompt: "Use $lean4-skills for this formal mathematics task and load only the relevant guidance."

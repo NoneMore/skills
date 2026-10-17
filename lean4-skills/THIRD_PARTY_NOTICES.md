@@ -1,6 +1,6 @@
 # Third-party notices
 
-This package is derived from `cameronfreer/lean4-skills` at commit `b6243b85b9b0a0ddff5bb6773889044daf687f8e` as recorded in `UPSTREAM.md`.
+This Lean 4 skill family is derived from `cameronfreer/lean4-skills` at commit `b6243b85b9b0a0ddff5bb6773889044daf687f8e` as recorded in `UPSTREAM.md`.
 
 The upstream material is distributed under the following MIT License:
 

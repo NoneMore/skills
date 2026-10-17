@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Diagnose"
+  short_description: "Find Lean/Lake boundary failures and migration causes"
+  default_prompt: "Use $lean4-diagnose when diagnosis itself is the requested outcome or a Lean/Lake/module/dependency failure spans artifact boundaries; identify the common root cause and verify the smallest justified migration or repair."
