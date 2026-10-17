@@ -4,7 +4,9 @@ A jointly installed family of nine outcome-oriented capabilities for formal math
 
 Install all nine `lean4-*` Skills together. They are independently discoverable so the runtime can activate the narrow capability whose behavioral contract and references match the requested outcome; they are not intended to be deployed as unrelated standalone products.
 
-The split is motivated by observed agent behavior: task-specific branch references were not loaded reliably enough in practice, and routing distinctions encoded only after activating a broad Lean Skill did not consistently affect discovery. Independent Skills move the outcome boundary into discovery metadata while keeping specialized context out of unrelated tasks.
+The split is motivated by observed agent behavior: task-specific branch references under a broad Skill were not loaded reliably enough in practice, and routing distinctions encoded only after activation did not consistently affect discovery. Independent Skills move behaviorally distinct context-loading policies into discovery metadata while keeping specialized context out of unrelated tasks.
+
+`lean4-recon` also addresses a separate observed failure mode: a convergent task-completion strategy can successfully finish a local Lean artifact while never crossing the semantic boundary needed to discover a more canonical mathlib abstraction. Recon therefore deliberately spends context differently from artifact-completion Skills: it widens the semantic neighborhood to test the framing before committing to implementation.
 
 Before materially changing this collection, follow the repository-level [Skill Design Principles](../SKILL-DESIGN-PRINCIPLES.md).
 
