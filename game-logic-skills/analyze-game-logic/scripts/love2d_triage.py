@@ -9,6 +9,7 @@ import io
 import json
 import re
 import sys
+import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Iterable
@@ -32,7 +33,19 @@ def is_windows_pe(data: bytes) -> bool:
     if len(data) < 0x40 or not data.startswith(b"MZ"):
         return False
     offset = int.from_bytes(data[0x3C:0x40], "little")
-    return 0 <= offset <= len(data) - 4 and data[offset : offset + 4] == b"PE\0\0"
+    if offset > len(data) - 24 or data[offset : offset + 4] != b"PE\0\0":
+        return False
+
+    coff = offset + 4
+    machine = int.from_bytes(data[coff : coff + 2], "little")
+    section_count = int.from_bytes(data[coff + 2 : coff + 4], "little")
+    optional_size = int.from_bytes(data[coff + 16 : coff + 18], "little")
+    optional = coff + 20
+    if machine == 0 or section_count == 0 or optional_size < 2:
+        return False
+    if optional + optional_size + section_count * 40 > len(data):
+        return False
+    return int.from_bytes(data[optional : optional + 2], "little") in {0x10B, 0x20B}
 
 
 def decode_lua(data: bytes) -> str | None:
@@ -142,10 +155,12 @@ def analyze_target(path: Path) -> dict[str, object]:
     if zipfile.is_zipfile(io.BytesIO(raw)):
         inventory = scan(zip_entries(raw))
         has_main = "main.lua" in inventory["lua_files"]
+        is_pe = is_windows_pe(raw)
         classification = (
-            "windows-fused-executable" if is_windows_pe(raw) and has_main
-            else "windows-pe-with-zip" if is_windows_pe(raw)
-            else "love-archive" if has_main
+            "windows-fused-executable" if is_pe and has_main
+            else "windows-pe-with-zip" if is_pe
+            else "love-archive" if has_main and path.suffix.lower() == ".love"
+            else "zip-with-root-main-lua" if has_main
             else "zip-non-love"
         )
         return build_result(target, classification, inventory)
@@ -157,17 +172,79 @@ def analyze_target(path: Path) -> dict[str, object]:
     )
 
 
+def _self_test_zip() -> bytes:
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("main.lua", "function love.update(dt) require('rules') end\n")
+        archive.writestr("rules.lua", "return {}\n")
+    return buffer.getvalue()
+
+
+def _self_test_pe() -> bytes:
+    data = bytearray(0x200)
+    data[:2] = b"MZ"
+    data[0x3C:0x40] = (0x80).to_bytes(4, "little")
+    data[0x80:0x84] = b"PE\0\0"
+    coff = 0x84
+    data[coff : coff + 2] = (0x14C).to_bytes(2, "little")
+    data[coff + 2 : coff + 4] = (1).to_bytes(2, "little")
+    data[coff + 16 : coff + 18] = (0xE0).to_bytes(2, "little")
+    data[coff + 20 : coff + 22] = (0x10B).to_bytes(2, "little")
+    return bytes(data)
+
+
+def run_self_test() -> int:
+    payload = _self_test_zip()
+    valid_pe = _self_test_pe()
+    fake_pe = bytearray(0x100)
+    fake_pe[:2] = b"MZ"
+    fake_pe[0x3C:0x40] = (0x80).to_bytes(4, "little")
+    fake_pe[0x80:0x84] = b"PE\0\0"
+
+    assert is_windows_pe(valid_pe)
+    assert not is_windows_pe(bytes(fake_pe))
+
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        love = root / "game.love"
+        generic = root / "game.zip"
+        fused = root / "game.exe"
+        fake_fused = root / "fake.exe"
+        love.write_bytes(payload)
+        generic.write_bytes(payload)
+        fused.write_bytes(valid_pe + payload)
+        fake_fused.write_bytes(bytes(fake_pe) + payload)
+
+        assert analyze_target(love)["container"]["classification"] == "love-archive"
+        assert analyze_target(generic)["container"]["classification"] == "zip-with-root-main-lua"
+        assert analyze_target(fused)["container"]["classification"] == "windows-fused-executable"
+        assert analyze_target(fake_fused)["container"]["classification"] != "windows-fused-executable"
+
+    print("love2d_triage self-test: OK")
+    return 0
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Read-only triage for Windows LÖVE source, .love, and fused PE artifacts."
     )
-    parser.add_argument("target", type=Path)
+    parser.add_argument("target", type=Path, nargs="?")
     parser.add_argument("--pretty", action="store_true")
-    return parser.parse_args(argv)
+    parser.add_argument("--self-test", action="store_true")
+    args = parser.parse_args(argv)
+    if args.self_test:
+        if args.target is not None:
+            parser.error("--self-test does not accept a target")
+    elif args.target is None:
+        parser.error("target is required unless --self-test is used")
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
+    if args.self_test:
+        return run_self_test()
+    assert args.target is not None
     try:
         output = analyze_target(args.target)
     except (OSError, zipfile.BadZipFile) as exc:
