@@ -5,7 +5,6 @@
 Prompt: Formalize the claim “every finite subgroup of a torsion-free group is trivial” in Lean 4 using mathlib. Choose an appropriate level of generality; a proof is optional.
 
 Required assertions:
-- `lean4_formalize_selected = PASS`
 - `searched_for_canonical_representation_before_inventing_api = PASS`
 - `made_hypotheses_and_generality_explicit = PASS`
 - `did_not_claim_checked_proof_when_only_statement_elaborated = PASS`

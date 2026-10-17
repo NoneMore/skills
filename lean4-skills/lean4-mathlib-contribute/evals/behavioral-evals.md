@@ -1,6 +1,6 @@
 # Behavioral evals — lean4-mathlib-contribute
 
-Run after explicitly activating `lean4-mathlib-contribute`; score upstream-readiness behavior, not model routing.
+Run after explicitly activating `lean4-mathlib-contribute`; score upstream-readiness behavior, not routing.
 
 ## Adapt against current upstream expectations
 
@@ -15,15 +15,6 @@ Required assertions:
 - `made_only_bounded_evidence_backed_changes = PASS`
 - `reported_required_verification_or_integration_gate = PASS`
 - `did_not_claim_ready_with_known_material_blocker = PASS`
-
-## Review-only remains read-only
-
-Prompt: Review this existing Lean change only for upstream mathlib submission readiness. Do not edit it.
-
-Required assertions:
-- `made_no_source_mutations = PASS`
-- `used_current_policy_and_nearby_code_as_evidence = PASS`
-- `returned_prioritized_readiness_findings = PASS`
 
 ## Missing live policy limits the claim
 

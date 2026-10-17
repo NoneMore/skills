@@ -6,27 +6,22 @@ license: MIT
 
 # Lean 4 Optimize
 
-Improve an already-correct Lean proof without trading away correctness, trust, or maintainability.
+Establish a verified baseline before claiming an optimization. Keep the public theorem statement and accepted trust basis unchanged.
 
-## Preconditions
+## Choose one surface
 
-Establish a verified baseline first. If correctness is not established, repair or report that blocker before claiming an optimization. Keep the public theorem statement and accepted trust basis unchanged.
-
-## Choose the requested surface
-
-- **Strategy simplification:** prefer a more direct mathematical/library argument or a genuinely useful helper. Load [proof strategy simplification](references/proof-simplification.md).
+- **Strategy simplification:** prefer a more direct mathematical/library argument or useful helper. Load [proof strategy simplification](references/proof-simplification.md).
 - **Local simplification:** remove ceremony when the result becomes clearer and at least as stable. Load [simp and simp-lemma design](references/simplification.md) when global simp behavior is material.
 - **Performance:** localize and measure cost before changing code. Load [performance guidance](references/performance.md).
 
 Do not combine all three by default.
 
-## Contract
+## Workflow
 
-1. Record the verified baseline and concrete property to improve.
-2. Search local code and active imports before widening to mathlib when an existing result may remove complexity.
+1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first.
+2. Search local and imported APIs when an existing result may remove complexity.
 3. Apply one coherent change at a time.
-4. Re-run the baseline's verification scope; for performance work, rerun the same measurement.
-5. Reject changes that regress correctness, trust, diagnostics, or maintainability without a requested compensating benefit.
-6. Stop when remaining opportunities are marginal, speculative, or out of scope.
+4. Re-run the baseline verification scope; for performance work, rerun the same measurement.
+5. Reject regressions in correctness, trust, diagnostics, or maintainability unless the user requested the tradeoff.
 
-Correctness and maintainability outrank token or line count.
+Stop when remaining opportunities are marginal, speculative, or out of scope. Correctness and maintainability outrank token or line count.

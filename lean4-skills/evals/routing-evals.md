@@ -1,12 +1,10 @@
 # Lean 4 collection discovery evals
 
-Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked (`disable-model-invocation: true`) and are not scored by model discovery.
+Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked and are not scored by model discovery.
 
-Discovery is recall-oriented but not free: load materially useful guidance without requiring unique ownership, while avoiding blanket activation that defeats the context benefit of the split.
+Discovery is recall-oriented but has a context budget: load materially useful guidance without requiring unique ownership or blanket activation.
 
 ## Positive discovery and activation cost
-
-These are intentionally single-intent prompts.
 
 | Prompt | Required discovered Skill |
 |---|---|
@@ -18,12 +16,7 @@ These are intentionally single-intent prompts.
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 
-For every row:
-- the required Skill is discovered;
-- its materially relevant contract is followed;
-- at most two model-discoverable Lean Skills are activated.
-
-Do not require a particular neighboring Skill to remain unselected. The activation bound exists only to reject degenerate routing such as loading most or all seven Skills for every Lean request.
+For every row, the required Skill must be discovered, its relevant contract followed, and no more than two model-discoverable Lean Skills activated. Do not require a particular compatible neighbor to remain unselected.
 
 ## Compatible overlap
 
@@ -38,16 +31,6 @@ Prompt: Audit this theorem's trust basis and remove our custom axiom if possible
 - `trust_basis_checked_against_requested_policy = PASS`
 - `auxiliary_proof_work_preserved_trust_cleanup_outcome = PASS`
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
-
-Prompt: Review this working proof for brittleness and maintainability. Do not edit it.
-- `lean4_review_selected = PASS`
-- `review_only_constraint_preserved = PASS`
-- `additional_compatible_guidance_did_not_trigger_source_mutation = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
-
-## User-invoked modes
-
-Do not require model discovery to select `lean4-recon` or `lean4-mathlib-contribute`. Their behavioral evals run after explicit activation.
 
 ## Adjacent intents stay out
 

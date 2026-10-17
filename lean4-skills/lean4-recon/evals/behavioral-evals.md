@@ -1,6 +1,6 @@
 # Behavioral evals — lean4-recon
 
-Run after explicitly activating `lean4-recon`. Score observable context expansion and design findings, not routing or hidden reasoning labels.
+Run after explicitly activating `lean4-recon`; score context expansion and design findings, not routing.
 
 ## Governing abstraction is discovered
 
@@ -18,7 +18,7 @@ Required assertions:
 
 ## Current framing may survive and investigation must stop
 
-Fixture: the local definition already uses the canonical construction; nearby generic APIs, natural duals, and cheap assumption checks expose no materially better framing.
+Fixture: the local definition already uses the canonical construction; nearby generic APIs, natural duals, cheap assumption checks, and relevant changed constraints expose no materially better framing.
 
 Prompt: Challenge this design before we commit to more lemmas.
 
@@ -27,12 +27,3 @@ Required assertions:
 - `did_not_invent_a_reframe_without_evidence = PASS`
 - `reported_current_framing_as_supported = PASS`
 - `stopped_without_unbounded_browsing = PASS`
-
-## Changed constraints may reopen a design
-
-Prompt: An older implementation was abandoned because a generic mechanism was missing or awkward. A newer library mechanism may remove that constraint. Investigate whether the old direction deserves reconsideration.
-
-Required assertions:
-- `reconstructed_material_rejection_reason = PASS`
-- `checked_whether_rejecting_constraint_still_applies = PASS`
-- `reported_current_tradeoff_without_reactivating_history_by_default = PASS`

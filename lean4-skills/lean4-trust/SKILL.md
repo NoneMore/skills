@@ -6,21 +6,15 @@ license: MIT
 
 # Lean 4 Trust
 
-Inspect and, when requested, reduce a declaration's trust dependencies against an explicit task or project policy.
+## Workflow
 
-## Inspect
+1. Inspect the environment and, when relevant, `#print axioms <declaration>`. Distinguish project axioms, unresolved placeholders, transitive assumptions, and ordinary Lean/kernel principles; interpret them against the requested policy.
+2. Trace each unwanted assumption through the target and its dependencies.
+3. Search local and imported APIs for an accepted replacement; prove the smallest missing lemma when necessary.
+4. Replace the dependency without strengthening the theorem statement or substituting another forbidden assumption.
+5. Verify the edited scope and re-check the target's trust basis.
 
-Use Lean's environment and, when relevant, `#print axioms <declaration>`. Distinguish project axioms, unresolved placeholders, transitive assumptions, and ordinary Lean/kernel principles; acceptability is determined by the requested policy, not by appearance in `#print axioms` alone.
-
-## Cleanup
-
-1. Trace each unwanted assumption through the target and its dependencies.
-2. Search local code and active imports before widening to mathlib for an accepted replacement.
-3. Prove the smallest missing lemma when necessary.
-4. Replace the dependency without silently strengthening the theorem statement or substituting another forbidden assumption.
-5. Re-run the semantic/integration gate required by the edited scope, then re-check the target's trust basis.
-
-If the theorem is not derivable under the accepted policy, report the blocker instead of changing the statement or trust policy implicitly.
+If the theorem is not derivable under the accepted policy, report the blocker instead of changing the statement or policy implicitly.
 
 ## Completion
 

@@ -6,23 +6,16 @@ license: MIT
 
 # Lean 4 Diagnose
 
-Identify the root cause of a Lean/Lake/module/dependency/integration failure and the smallest justified migration or repair path.
-
 Start from the exact diagnostic, reproduction boundary, and nearby source. Prefer one cause that explains clustered symptoms over independent symptom patching.
 
 ## Triage
 
-- **Clustered failures:** inspect shared imports, APIs, instances, toolchain changes, and build boundaries before patching files independently.
-- **Type mismatch:** compare expected and actual types, including implicit arguments, universes, equality direction, changed signatures, and local instances.
-- **Instance failure:** determine whether the instance is absent, moved, or blocked by unresolved metavariables before manufacturing local evidence.
-- **Unknown identifier / field / import:** inspect spelling, namespace, visibility, active imports, and the current declaration signature.
-- **Depth / heartbeat / timeout:** localize whether the cost is elaboration, reduction, tactic work, or typeclass search before raising limits.
-- **Build mismatch:** distinguish source state from built artifacts and reproduce at the smallest boundary that exercises the suspected dependency path.
+- **Shared boundary:** for clustered failures or build mismatches, inspect common imports, APIs, toolchain changes, and source-versus-artifact state before patching files independently.
+- **Elaboration:** for type, instance, identifier, field, or import failures, compare expected and actual types/signatures, implicits, universes, namespaces, active imports, and instance availability.
+- **Resource limits:** localize elaboration, reduction, tactic, or typeclass-search cost before raising limits.
 
-Prefer the smallest change that tests the root-cause hypothesis. Do not turn diagnosis into unrelated refactoring, silent API revision, or trust weakening.
+Test the root-cause hypothesis with the smallest justified change. Do not turn diagnosis into unrelated refactoring, silent API revision, or trust weakening.
 
 ## Completion
 
-Re-run the command or repository gate that exercises the failing boundary and report what it establishes. A file-local pass is not enough when the suspected failure is in a changed dependency or integration boundary.
-
-Done means the root cause is supported by reproducible evidence and either the requested failure is repaired at the relevant boundary or the smallest remaining migration/diagnostic action is explicit.
+Re-run the command or repository gate that exercises the failing boundary; a file-local pass is insufficient when the suspected cause crosses a changed dependency or integration boundary. Done means the root cause has reproducible support and either the requested failure is repaired or the smallest remaining migration/diagnostic action is explicit.

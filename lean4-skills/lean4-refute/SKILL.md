@@ -6,23 +6,13 @@ license: MIT
 
 # Lean 4 Refute
 
-Produce a Lean-certified logical refutation while preserving the original target.
-
-## Contract
-
-- Failed proof search is not evidence of falsity.
-- Encode a witness or negation as a separate checked result; do not use the target declaration itself as evidence for its refutation.
-- Do not introduce new axioms, `sorry`, or `admit` to manufacture a result.
-
 ## Workflow
 
 1. Resolve the exact proposition and choose the cheapest bounded route: concrete witness, small decidable search, contradiction from accepted facts, or direct negation.
-2. Search local declarations and active imports before widening to mathlib; validate candidates in the project context.
-3. Encode the candidate as an independent result and ask Lean to certify it.
-4. When the target or environment contains `sorry`/`admit`, custom axioms, or uncertain trust dependencies, inspect the refutation's trust basis (for example with `#print axioms`) and reject certification if it depends on the target, `sorryAx`, or another forbidden assumption.
-5. Run the verification gate needed by the affected scope and report what ran.
-
-A plausible witness remains uncertified evidence until Lean checks an independent refutation under the accepted trust policy.
+2. Search local and imported APIs before broader mathlib; validate candidates in context.
+3. Encode the witness or negation as a separate result and ask Lean to certify it. Failed proof search is not evidence of falsity, and the target declaration itself must not serve as evidence for its refutation.
+4. If the target or environment contains `sorry`/`admit`, custom axioms, or uncertain trust dependencies, inspect the refutation's trust basis and reject certification if it depends on the target, `sorryAx`, or another forbidden assumption.
+5. Verify the affected scope and report what ran. Do not introduce new axioms, `sorry`, or `admit` to manufacture a result.
 
 ## Outcomes
 
