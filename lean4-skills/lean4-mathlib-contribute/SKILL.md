@@ -31,7 +31,9 @@ Assess or adapt an existing Lean artifact so its suitability for upstream mathli
 
 Ordinary Lean work that happens to use mathlib stays with its direct outcome owner. Select this Skill when upstream suitability or adaptation is itself the requested result for an existing artifact; an eventual plan to submit upstream is not enough.
 
-Local proof, elaboration, or API diagnostics encountered while adapting that artifact remain part of the contribution-readiness task. Use `lean4-diagnose` only when the requested problem becomes a shared root-cause investigation across module, dependency, toolchain, build, or integration boundaries rather than readiness of this artifact.
+Local proof, elaboration, API search, nearby-code inspection, or abstraction comparison encountered while assessing or adapting that concrete artifact remain part of the contribution-readiness task. They do not by themselves select `lean4-recon`. Use Recon when the requested work is instead an open-ended investigation that deliberately widens semantic context to challenge the problem framing before a concrete upstream artifact or readiness decision governs the task.
+
+Use `lean4-diagnose` only when the requested problem becomes a shared root-cause investigation across module, dependency, toolchain, build, or integration boundaries rather than readiness of this artifact.
 
 Upstream readiness may justify changes to API shape, generality, naming, imports, documentation, or proof structure that a narrower Skill would normally preserve. Make those changes only when the upstream-readiness request authorizes them, and surface any material semantic or public-API change explicitly rather than treating it as style cleanup.
 
