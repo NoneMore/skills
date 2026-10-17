@@ -6,30 +6,20 @@ license: MIT
 
 # Lean 4 Prove
 
-## Purpose
-
-Produce a checked proof for an existing concrete formal target without silently changing what is being proved.
-
-## Invariants
-
-- Preserve existing theorem statements, declaration signatures, and public API unless the user explicitly expands the task to statement design.
-- Do not introduce new axioms, `sorry`, `admit`, or otherwise weaken the accepted trust basis to claim proof completion.
-- Follow local project conventions.
+Produce a checked proof for an existing target without silently changing what is being proved or weakening the accepted trust basis.
 
 ## Workflow
 
-1. Inspect the exact goal, declaration, nearby source, and current diagnostics before editing.
-2. Search local declarations and active imports before widening to mathlib. Search by mathematical meaning and type shape rather than guessed declaration names, and validate candidates in the actual project context.
-3. Try a small set of materially different proof candidates. Induction schemes, rewrite plans, direct structural arguments, automation choices, and theorem-selection alternatives are all ordinary proving techniques. Prefer live goal/candidate feedback when available; otherwise apply and compile one candidate at a time.
-4. Apply the smallest coherent passing change. Cross-file support edits are allowed when genuinely required, but do not widen the task into unrelated cleanup.
-5. Verify the changed target and affected dependency boundary with the lightest sufficient gate. `lake env lean path/to/File.lean` is a fast file-local check and does not rebuild changed imports. After changing an imported source, use a dependency-aware check such as `lake lean path/to/File.lean`, or the repository's configured build/test gate when integration scope matters. Repository-configured gates take precedence, and state what actually ran.
+1. Inspect the exact goal, nearby source, and current diagnostics.
+2. Search local declarations and active imports before widening to mathlib; search by meaning and type shape, then validate candidates in the project context.
+3. Try a small set of materially different proof strategies, using live feedback when available or compiling candidates one at a time.
+4. Apply the smallest coherent passing change. Keep the statement and public API fixed unless revision is explicitly authorized.
+5. Run the lightest verification gate that exercises the affected scope and report what ran. If an imported source changed, do not treat a file-local check against possibly stale artifacts as dependency-aware verification.
 
-## Scope discipline
-
-Keep the agreed target fixed unless statement revision is explicitly authorized. Search, theorem lookup, API comparison, local diagnostics, small Lean experiments, and proof-strategy comparison may all be used when they help establish the proof. Do not turn a proof-completion request into unrelated repository cleanup or silently broaden its public API.
+Do not add axioms, `sorry`, or `admit` to manufacture completion. Do not widen proof repair into unrelated cleanup.
 
 ## Stop and completion
 
-Do not repeat the same failed avenue without new evidence. When no materially new bounded avenue remains, stop with the blocker, evidence already gathered, and the smallest useful next action.
+Stop when no materially new bounded avenue remains; return the blocker, useful evidence, and smallest next action.
 
-A proof is complete when the agreed target elaborates, the agreed proof scope has no unresolved `sorry`/`admit`, and the affected scope satisfies the chosen verification gate. State what actually ran; do not collapse weaker local checks into stronger integration claims.
+Complete means the agreed target elaborates, the requested proof scope has no unresolved `sorry`/`admit`, and the affected scope passed the verification gate actually claimed.
