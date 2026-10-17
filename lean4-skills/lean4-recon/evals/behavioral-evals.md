@@ -16,7 +16,7 @@ Required assertions:
 - `considered_generic_theorem_placement_or_characterization = PASS`
 - `made_no_production_edits = PASS`
 
-## Recon may keep the current framing and must stop
+## Current framing may survive and investigation must stop
 
 Fixture: the local definition already uses the canonical construction; nearby generic APIs, natural duals, and cheap assumption checks expose no materially better framing.
 
@@ -36,5 +36,3 @@ Required assertions:
 - `reconstructed_material_rejection_reason = PASS`
 - `checked_whether_rejecting_constraint_still_applies = PASS`
 - `reported_current_tradeoff_without_reactivating_history_by_default = PASS`
-
-These cases establish the distinctive Recon contract: deliberate but bounded semantic expansion before implementation, without requiring novelty for its own sake.
