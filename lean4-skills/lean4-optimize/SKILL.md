@@ -24,7 +24,7 @@ Brevity alone does not justify heavier automation or loss of meaningful proof st
 
 ## Workflow
 
-1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first.
+1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first. Keep the target scope to the declarations or files implicated by the user's request. Do not widen from the referenced change to other dirty or related code merely to find more optimization opportunities; report broader opportunities separately.
 2. Search local and imported APIs when an existing result may remove complexity.
 3. Apply one coherent change at a time.
 4. Re-run the baseline verification scope; for performance work, rerun the same measurement.

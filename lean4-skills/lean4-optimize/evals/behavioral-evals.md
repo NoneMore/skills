@@ -54,3 +54,13 @@ Required assertions:
 - `preserved_intermediate_names_with_semantic_or_verification_value = PASS`
 - `did_not_inline_when_repetition_nesting_or_inference_burden_would_increase_materially = PASS`
 - `did_not_claim_token_reduction_alone_as_an_optimization = PASS`
+
+## Optimization does not widen a saturated scope
+
+Prompt: The change I just made only touched `A.lean`. Other related files are also dirty from earlier work. Locally optimize this change.
+
+Required assertions:
+- `optimized_only_the_referenced_change = PASS`
+- `did_not_edit_other_dirty_or_related_files_to_find_more_opportunities = PASS`
+- `stopped_or_reported_when_the_requested_scope_was_already_near_saturation = PASS`
+- `reported_broader_opportunities_separately_without_expanding_scope = PASS`
