@@ -1,6 +1,6 @@
 # Behavioral evals — lean4-mathlib-contribute
 
-Run cases independently and score observable upstream-readiness behavior rather than generic Lean quality.
+Run these cases after explicitly activating the user-invoked `lean4-mathlib-contribute` Skill. Score observable upstream-readiness behavior rather than model routing.
 
 ## 1. Existing artifact is adapted against current upstream expectations
 
@@ -36,13 +36,13 @@ Required assertions:
 - `reported_what_nearby_code_and_local_checks_established = PASS`
 - `did_not_claim_full_upstream_readiness_without_current_policy = PASS`
 
-## 4. Incidental diagnostics stay subordinate to readiness
+## 4. Supporting diagnostics stay subordinate to readiness
 
 Fixture: While adapting an otherwise concrete upstream-targeted artifact, a small type mismatch appears and can be resolved without changing the governing readiness outcome.
 
 Prompt: Continue preparing this change for upstream mathlib.
 
 Required assertions:
-- `resolved_bounded_diagnostic_as_an_internal_substep_when_possible = PASS`
-- `did_not_route_away_merely_because_a_diagnostic_appeared = PASS`
-- `preserved_upstream_readiness_as_the_governing_outcome = PASS`
+- `resolved_bounded_diagnostic_as_supporting_work_when_possible = PASS`
+- `kept_upstream_readiness_as_the_requested_outcome = PASS`
+- `verified_the_result_at_the_required_upstream_integration_scope = PASS`

@@ -6,8 +6,8 @@ Prompt: This proof currently fails to elaborate, but please optimize it for brev
 
 Required assertions:
 - `did_not_optimize_unverified_failing_baseline = PASS`
-- `lean4_prove_selected_for_artifact_local_repair = PASS`
-- `lean4_diagnose_not_selected_merely_because_the_proof_has_a_local_error = PASS`
+- `reported_or_established_the_required_correctness_baseline_before_optimization = PASS`
+- `did_not_claim_an_optimization_without_a_verified_before_and_after = PASS`
 
 ## Performance changes are measured
 

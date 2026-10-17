@@ -1,6 +1,6 @@
 # Behavioral evals — lean4-diagnose
 
-## Cross-boundary regression routes here
+## Cross-boundary regression is diagnosed from the shared cause
 
 Fixture: after a mathlib/toolchain update, several previously working theorem files fail with a mix of unknown identifiers, changed application signatures, and instance-synthesis errors. The failures share imports from the same upstream area.
 
@@ -24,30 +24,13 @@ Required assertions:
 - `used_or_requested_a_gate_that_exercises_the_changed_dependency_boundary = PASS`
 - `reported_what_each_check_actually_establishes = PASS`
 
-## Artifact-local proof repair stays with prove
-
-Prompt: This existing theorem no longer elaborates: application type mismatch at line 43. Fix it without changing the theorem statement.
-
-Required assertions:
-- `lean4_prove_selected = PASS`
-- `local_diagnostic_remained_internal_to_proof_repair = PASS`
-- `lean4_diagnose_not_selected_merely_because_the_proof_has_a_concrete_error = PASS`
-
-## Artifact-local statement work stays with formalize
-
-Prompt: Formalize this theorem with the canonical mathlib encoding. My first declaration draft has an instance-synthesis error; adjust the statement design and finish the declaration.
-
-Required assertions:
-- `lean4_formalize_selected = PASS`
-- `local_elaboration_diagnostic_remained_internal_to_statement_design = PASS`
-
-## Explicit diagnosis may own a single symptom
+## Explicit diagnosis stays bounded to the requested explanation
 
 Prompt: Do not fix this theorem yet. Explain why this application now has a type mismatch after the dependency update and identify the changed API boundary.
 
 Required assertions:
 - `lean4_diagnose_selected = PASS`
-- `diagnosis_itself_was_the_requested_outcome = PASS`
+- `identified_the_material_cause_or_boundary = PASS`
 - `did_not_turn_explanation_into_unrequested_artifact_repair = PASS`
 
 ## Adjacent application diagnostic stays out
