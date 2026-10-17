@@ -2,13 +2,13 @@
 
 Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. Score discovery decisions from metadata, not hidden workflow labels.
 
-Routing principle: choose the Skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, helper proofs, and local diagnostics stay inside the selected Skill when they are merely means to that outcome. Artifact-owned failures stay with the artifact owner; use `lean4-diagnose` for explicit diagnosis or root-cause work across module, dependency, toolchain, build, or integration boundaries.
+Routing principle: choose the Skill by the requested outcome, not by incidental mechanisms. Search, theorem lookup, API inspection, small experiments, helper proofs, and local diagnostics stay inside the selected Skill when they are merely bounded means to that outcome. `lean4-recon` owns deliberate context expansion requested to challenge the current framing before implementation; it does not require an alternative direction to be known in advance. Artifact-owned failures stay with the artifact owner; use `lean4-diagnose` for explicit diagnosis or root-cause work across module, dependency, toolchain, build, or integration boundaries.
 
 ## Positive routing
 
 | Prompt | Expected skill |
 |---|---|
-| I am not sure what the right mathlib abstraction is for this construction. Explore existing APIs, possible generalizations, and assumption boundaries before we commit to an implementation. | `lean4-explore` |
+| Before we extend this Lean/mathlib API further, investigate whether the current local definitions and helper concepts are using the right abstractions or missing a more canonical framing. Do not implement changes yet. | `lean4-recon` |
 | Formalize this textbook theorem in Lean; choose the right hypotheses and generality. | `lean4-formalize` |
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
 | I think this Lean proposition is false; find and certify a counterexample. | `lean4-refute` |
@@ -20,22 +20,25 @@ Routing principle: choose the Skill by the requested outcome, not by incidental 
 
 Required assertion for each row: the expected outcome owner is selected unless the prompt explicitly requests multiple independently meaningful outcomes.
 
-## Explore versus owned work
+## Recon versus owned work
 
 Prompt: Formalize this theorem in Lean using the canonical encoding; choose the best types, hypotheses, and available mathlib API as needed.
 - `lean4_formalize_selected = PASS`
-- `ordinary_statement_design_comparison_stays_inside_formalize = PASS`
+- `ordinary_statement_design_search_stays_inside_formalize = PASS`
+- `lean4_recon_not_selected_for_bounded_search_inside_a_settled_outcome = PASS`
 
-Prompt: Before formalizing this construction, investigate whether it is really an instance of a generic fixed-point API, whether a dual theorem should exist, and whether any hypotheses can be dropped. I want a direction recommendation before any declaration is committed.
-- `lean4_explore_selected = PASS`
-- `direction_recommendation_is_the_requested_outcome = PASS`
+Prompt: Before we commit to this construction, challenge the current framing. Follow the definitions far enough to determine whether the local concept is actually an instance of a more canonical mathlib abstraction, whether a generic characterization is missing, or whether a material hypothesis or duality changes the right API. No alternative direction is known yet and I do not want implementation changes yet.
+- `lean4_recon_selected = PASS`
+- `recon_can_start_without_a_known_alternative = PASS`
+- `requested_context_expansion_is_the_outcome = PASS`
 
 Prompt: This theorem statement is fixed. Compare induction, rewriting, a direct order-theoretic argument, and automation if useful, then finish the proof.
 - `lean4_prove_selected = PASS`
 - `proof_strategy_comparison_stays_inside_prove = PASS`
+- `lean4_recon_not_selected_for_bounded_proof_search = PASS`
 
-Prompt: Find the exact mathlib declaration for this fact. I only need its name and signature, not a design recommendation.
-- `lean4_explore_not_selected_for_lookup_alone = PASS`
+Prompt: Find the exact mathlib declaration for this fact. I only need its name and signature, not a design investigation.
+- `lean4_recon_not_selected_for_lookup_alone = PASS`
 - `no_specialized_lean4_skill_required_without_an_owned_outcome = PASS`
 
 ## Artifact-owned diagnostics versus root-cause diagnosis
@@ -71,7 +74,8 @@ Prompt: Audit this theorem's trust basis. Tell me whether its remaining `sorry` 
 
 Prompt: This proof works; replace it with the canonical library theorem if that is better.
 - `lean4_optimize_selected = PASS`
-- `library_reconnaissance_stays_inside_optimize = PASS`
+- `bounded_library_search_stays_inside_optimize = PASS`
+- `lean4_recon_not_selected_when_the_improvement_outcome_is_already_settled = PASS`
 
 Prompt: Fill the `sorry` in this existing fixed theorem and check the resulting proof.
 - `lean4_prove_selected = PASS`
@@ -83,8 +87,9 @@ Prompt: A proof search failed; therefore the theorem must be false. Check it.
 - `did_not_equate_failed_proof_search_with_falsity = PASS`
 - `lean4_refute_requires_certification = PASS`
 
-Prompt: I am unsure whether the closedness hypothesis is necessary. Explore examples and counterexamples, but I am not asking for a certified disproof yet.
-- `lean4_explore_selected = PASS`
+Prompt: Before we build more API around this theorem, investigate whether the closedness hypothesis is genuinely structural or just an artifact of the current proof. Examples and counterexamples are useful, but I am not asking for a certified disproof yet.
+- `lean4_recon_selected = PASS`
+- `assumption_boundary_investigation_is_recon = PASS`
 - `counterexample_probing_did_not_force_lean4_refute = PASS`
 
 Prompt: Prove in Lean that the closedness hypothesis is necessary by certifying a counterexample to the version without it.
