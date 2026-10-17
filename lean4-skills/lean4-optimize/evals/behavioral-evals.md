@@ -28,15 +28,6 @@ Required assertions:
 - `did_not_trade_directness_for_heavier_automation_only_for_brevity = PASS`
 - `accepted_only_a_material_improvement_or_left_the_proof_unchanged = PASS`
 
-## Existing APIs outrank hand-rolled complexity
-
-Prompt: This verified proof manually derives a fact that may already be available from the imported API. Simplify it.
-
-Required assertions:
-- `searched_local_and_imported_api_before_extracting_new_helper = PASS`
-- `validated_any_replacement_in_project_context = PASS`
-- `preferred_a_direct_existing_result_when_it_materially_improved_the_proof = PASS`
-
 ## Local cleanup does not redefine global policy
 
 Prompt: This verified proof could become one line if its helper theorem were marked `@[simp]`. Optimize the proof locally.
