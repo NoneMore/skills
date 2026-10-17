@@ -1,4 +1,4 @@
 interface:
   display_name: "Lean 4 Review"
-  short_description: "Review Lean proofs with evidence-backed findings"
-  default_prompt: "Use $lean4-review to independently review this Lean proof code and return prioritized evidence-backed findings without editing unless fixes are explicitly requested."
+  short_description: "Review Lean proofs and audit trust dependencies"
+  default_prompt: "Use $lean4-review to independently review this Lean proof code or audit the declaration's trust basis, returning evidence-backed findings without editing unless fixes are explicitly requested."
