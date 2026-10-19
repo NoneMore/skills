@@ -14,13 +14,13 @@ Establish a verified baseline before claiming an optimization. Keep the public t
 - **Local simplification:** preserve the proof strategy while removing ceremony when the result becomes clearer and at least as stable. Load [local proof cleanup](references/local-cleanup.md). Load [simp and simp-lemma design](references/simplification.md) when simplifier policy or global simp behavior is material.
 - **Performance:** localize and measure cost before changing code. Load [performance guidance](references/performance.md).
 
-Choose one primary surface. Record secondary benefits, but do not widen into other optimization surfaces by default.
+Choose one primary surface per pass. If the user explicitly requests successive passes (for example, local cleanup followed by strategy simplification), verify each pass and use its accepted result as the next baseline. Otherwise, record secondary benefits without widening scope.
 
 ## Candidate acceptance
 
 Correctness, the accepted trust basis, and the public theorem contract are hard invariants. Accept a candidate only when it materially improves the selected property without an unacceptable regression in directness, clarity, maintainability, inference/search burden, determinism, or verification cost.
 
-Brevity alone does not justify heavier automation or loss of meaningful proof structure. Prefer the narrowest change that achieves the improvement.
+Brevity alone does not justify heavier automation or loss of meaningful proof structure. Prefer the narrowest change that achieves the improvement. When probing several alternatives together, assess each result separately and retest a promising candidate alone at its actual source location before accepting it.
 
 ## Workflow
 

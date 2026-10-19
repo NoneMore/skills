@@ -55,3 +55,38 @@ Required assertions:
 - `did_not_edit_other_dirty_or_related_files_to_find_more_opportunities = PASS`
 - `stopped_or_reported_when_the_requested_scope_was_already_near_saturation = PASS`
 - `reported_broader_opportunities_separately_without_expanding_scope = PASS`
+
+## Explicit sequential passes each have their own baseline
+
+Fixture: A pinned, fully verified Lean theorem has some local ceremony and a hand-built argument that may be replaceable by an imported library result. The user explicitly requests a local-cleanup pass followed by a strategy-simplification pass.
+
+Prompt: First do local cleanup, verify it, then try a strategy-level simplification. Keep only improvements that earn their cost.
+
+Required assertions:
+- `respected_requested_order_without_treating_one_surface_as_global_limit = PASS`
+- `verified_each_accepted_pass_before_using_it_as_the_next_baseline = PASS`
+- `allowed_a_no_op_pass_when_improvement_was_marginal = PASS`
+- `preserved_public_contract_and_trust_basis_across_passes = PASS`
+
+## Mixed-result candidate batches need candidate-level verification
+
+Fixture: In a pinned theorem whose target depends on an indexed type, a batch probe returns two labeled candidate results: `simpa` has a type mismatch, while a direct `exact` closes its own goals without diagnostics. The batch itself does not modify the source file.
+
+Prompt: Choose the clearer correct local simplification, if any, and verify it.
+
+Required assertions:
+- `attributed_diagnostics_and_success_to_individual_candidates = PASS`
+- `did_not_reject_a_successful_candidate_because_its_neighbor_failed = PASS`
+- `retested_the_selected_candidate_alone_in_real_source_context = PASS`
+- `did_not_claim_optimization_from_batch_probe_alone = PASS`
+
+## Prefer direct image-cardinality API over a custom equivalence
+
+Fixture: A fully verified proof explicitly constructs subtype equivalences and universe casts only to establish cardinality equality for the image of an injective function. The pinned imported mathlib version already has a theorem expressing image-cardinality preservation with lifts.
+
+Prompt: Simplify the proof strategy while preserving the theorem statement and trust basis.
+
+Required assertions:
+- `searched_existing_image_cardinality_api_by_mathematical_shape = PASS`
+- `validated_a_direct_library_result_before_extracting_more_helpers = PASS`
+- `accepted_only_a_checked_material_strategy_improvement = PASS`

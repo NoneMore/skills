@@ -11,13 +11,11 @@ Use when an already-correct proof is structurally more complicated than the math
 5. Is a manual equality of morphisms/functions better expressed by an extensionality theorem?
 6. Is the chosen representation fighting the library's canonical abstraction?
 
-Search before extracting helpers: replacing a long local argument with an existing theorem is usually better than formalizing the long argument into another local API.
+Search existing APIs by the goal's mathematical shape before constructing local helpers or representation conversions. Prefer a direct library result when it removes substantial proof machinery.
 
 ## Helper extraction
 
-Extract a helper when it creates a meaningful reusable or verification boundary. Prefer the weakest assumptions justified by actual use, keep proof-specific helpers private, and avoid generalizing solely for abstraction's sake.
-
-A helper is not valuable just because a block is long. Keep arguments inline when the block is a one-off expression of the core mathematical reasoning and extraction would merely add parameters and navigation.
+Extract a helper for meaningful reuse or a verification boundary, not merely because a block is long. Recurring representation mismatches may justify a small bridge lemma when it removes repeated conversion work; keep one-off core reasoning inline when extraction only adds parameters and navigation. Prefer the weakest assumptions justified by actual use, keep proof-specific helpers private, and expose public helpers only for stable caller-facing contracts.
 
 ## Congruence and extensionality
 
