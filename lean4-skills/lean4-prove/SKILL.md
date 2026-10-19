@@ -11,7 +11,7 @@ license: MIT
 1. Inspect the exact goal, nearby source, and current diagnostics.
 2. Identify the goal's mathematical shape; search local and imported APIs before broader mathlib for a direct result, validating candidates in context before constructing custom helpers.
 3. Try a bounded set of materially different proof strategies, using cheap live feedback to discriminate a small number of plausible candidates before substantial helper construction, or otherwise compiling candidates one at a time.
-4. Count attempts with the same structural blocker or growing helper chain as one strategy. When that pattern repeats, stop deepening it, reframe the goal, and re-search as needed. For dependent-type failures, compare expected and actual indexed types to distinguish definitional equality, transport, and statement mismatch; test a minimal conversion or bridge in context before further tactic retries.
+4. Count attempts with the same structural blocker or growing helper chain as one strategy. When the blocker repeats or a helper starts spawning its own unresolved helper chain, stop deepening the route, reframe the goal, and re-search as needed. For dependent-type failures, compare expected and actual indexed types to distinguish definitional equality, transport, and statement mismatch; test a minimal conversion or bridge in context before further tactic retries.
 5. Apply the smallest coherent passing change. Keep the statement and public API fixed unless revision is explicitly authorized.
 6. Verify the affected scope and report what ran. If an imported source changed, a file-local check against possibly stale artifacts is not dependency-aware verification.
 
