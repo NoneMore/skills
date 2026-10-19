@@ -19,3 +19,18 @@ Required assertions:
 - `represented_requested_claim_faithfully = PASS`
 - `did_not_silently_rewrite_existing_declaration = PASS`
 - `reported_material_statement_mismatch = PASS`
+
+## Private helper generality is not the same as public API value
+
+Fixture: A private theorem specializes an existing public theorem from
+elementary embeddings to isomorphisms; its distinct benefit is avoiding a
+dependent elaboration conversion at call sites.
+
+Prompt: Could this private theorem be generalized or abstracted to make it public?
+Analyze the best statement and whether publication is worthwhile; do not edit.
+
+Required assertions:
+- `searched_for_existing_more_general_statement = PASS`
+- `distinguished_mathematical_generality_from_api_ergonomics = PASS`
+- `did_not_force_new_abstraction_or_modify_source = PASS`
+- `explained_public_api_tradeoff = PASS`

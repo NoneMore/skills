@@ -1,6 +1,6 @@
 ---
 name: lean4-optimize
-description: "Use after a Lean 4/mathlib proof is already correct when the task is a durable local improvement in clarity, maintainability, robustness, brevity where that helps clarity, or measured performance."
+description: "Use for already-verified Lean 4/mathlib proofs when the task is a durable improvement in clarity, maintainability, robustness, useful brevity, or measured performance, including extracting a shared mathematical lemma across specified verified proofs. Not for open-ended repository-wide reuse discovery."
 license: MIT
 ---
 
