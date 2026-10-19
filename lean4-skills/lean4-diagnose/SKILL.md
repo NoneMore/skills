@@ -1,6 +1,6 @@
 ---
 name: lean4-diagnose
-description: "Use when root-cause diagnosis or a migration plan is the requested Lean 4/mathlib/Lake outcome, especially for shared elaboration, module, import, dependency, toolchain, build, or integration failures. Routine local proof repair belongs to the proving task, not a required diagnostic handoff. Not for general Lean application/FFI work."
+description: "Use for formal-mathematics Lean 4/mathlib/Lake work when root-cause diagnosis or a migration plan is requested, or when repairing shared or cross-boundary elaboration, module, import, dependency, toolchain, build, or integration failures. Routine local proof repair stays in lean4-prove; no mandatory diagnostic handoff. Not for general Lean application/CLI/FFI work."
 license: MIT
 ---
 
@@ -11,7 +11,7 @@ Start from the exact diagnostic, reproduction boundary, and nearby source. Prefe
 ## Triage
 
 - **Shared boundary:** for clustered failures or build mismatches, inspect common imports, APIs, toolchain changes, and source-versus-artifact state before patching files independently.
-- **Elaboration:** for type, instance, identifier, field, or import failures, compare expected and actual types/signatures, implicits, universes, namespaces, active imports, and instance availability.
+- **Elaboration:** for type, instance, identifier, field, or import failures, compare expected and actual types/signatures, implicits, universes, namespaces, active imports, and instance availability. For dependent-index mismatches, distinguish definitional equality, required transport, and genuine statement mismatch using a minimal diagnostic experiment.
 - **Resource limits:** localize elaboration, reduction, tactic, or typeclass-search cost before raising limits.
 
 Test the root-cause hypothesis with the smallest justified change. Do not turn diagnosis into unrelated refactoring, silent API revision, or trust weakening.

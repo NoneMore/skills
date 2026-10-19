@@ -12,6 +12,8 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
 | I think this Lean proposition is false; find and certify a counterexample. | `lean4-refute` |
 | After updating mathlib, several theorem files fail around the same imports with changed identifiers and signatures. Determine the common cause and migration path. | `lean4-diagnose` |
+| Explain why a dependent-index `rw` fails with `motive is not type correct`; do not edit the theorem. | `lean4-diagnose` |
+| After upgrading mathlib, several imported modules fail with type and identifier errors. Fix the project and verify the affected dependencies. | `lean4-diagnose` |
 | Which axioms does this theorem depend on? Audit its trust basis against our accepted policy. | `lean4-review` |
 | Remove our custom axiom from this existing theorem if possible without changing its statement. | `lean4-prove` |
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
