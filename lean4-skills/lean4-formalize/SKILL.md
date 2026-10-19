@@ -1,6 +1,6 @@
 ---
 name: lean4-formalize
-description: "Use for formal mathematics in Lean 4/mathlib when translating mathematical intent into a Lean declaration, choosing canonical types or hypotheses, deciding intended generality, or explicitly revising a statement."
+description: "Use for formal mathematics in Lean 4/mathlib when designing or revising an individual declaration, choosing canonical types or hypotheses, deciding intended generality, or evaluating whether an existing helper should become a reusable public statement."
 license: MIT
 ---
 
@@ -15,6 +15,15 @@ license: MIT
 5. Revise an existing declaration only when statement revision is explicitly authorized.
 
 If proving exposes a statement mismatch or evidence that the claim is false, report it rather than silently weakening the statement. If a checked proof is requested, settle the declaration first and then verify the affected scope.
+
+## Existing declarations
+
+When assessing a private helper or existing theorem, search for a more general
+declaration and distinguish mathematical generality from a useful specialized
+wrapper or elaboration boundary. Recommend public exposure only for a real API
+benefit; do not force generalization or edit an existing declaration without
+authorization. Use `lean4-abstract` when the goal is shared structure and
+migration across multiple proofs.
 
 ## Completion
 

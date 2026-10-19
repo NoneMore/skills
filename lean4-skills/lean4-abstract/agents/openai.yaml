@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lean 4 Abstract"
+  short_description: "Extract shared mathematics across Lean proofs"
+  default_prompt: "Use $lean4-abstract to find common mathematical structure across these Lean proofs, compare existing APIs and candidate abstractions, and integrate only verified improvements within the requested scope."

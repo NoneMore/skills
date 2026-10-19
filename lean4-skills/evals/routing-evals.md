@@ -1,6 +1,6 @@
 # Lean 4 collection discovery evals
 
-Run each prompt independently with all eight Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked and are not scored by model discovery.
+Run each prompt independently with all nine Lean 4 Skills installed and none pre-activated. `lean4-recon` and `lean4-mathlib-contribute` are user-invoked and are not scored by model discovery.
 
 Discovery is recall-oriented but has a context budget: load materially useful guidance without requiring unique ownership or blanket activation.
 
@@ -9,6 +9,8 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Prompt | Required discovered Skill |
 |---|---|
 | Formalize this textbook theorem in Lean; choose the right hypotheses and generality. | `lean4-formalize` |
+| Could this private Lean theorem be generalized or exposed as a useful public declaration? Assess its statement, without editing. | `lean4-formalize` |
+| These distinct Lean proofs seem to share a mathematical transport argument; extract a common abstraction and refactor the consumers. | `lean4-abstract` |
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
 | I think this Lean proposition is false; find and certify a counterexample. | `lean4-refute` |
 | After updating mathlib, several theorem files fail around the same imports with changed identifiers and signatures. Determine the common cause and migration path. | `lean4-diagnose` |
@@ -38,6 +40,22 @@ Prompt: Complete this fixed Lean theorem; an attempted `rw` inside its proof fai
 - `lean4_prove_selected = PASS`
 - `ordinary_elaboration_repair_did_not_require_a_diagnose_handoff = PASS`
 - `kept_the_statement_fixed_and_verified_the_proof = PASS`
+
+## Single-declaration versus cross-proof boundary
+
+Prompt: This verified Lean proof is too verbose; simplify the local tactic argument.
+- `lean4_optimize_selected = PASS`
+- `did_not_route_local_cleanup_to_cross_proof_abstraction = PASS`
+
+Prompt: The private isomorphism helper appears to wrap an existing more general elementary-embedding result. Is it worth publishing? Do not edit code.
+- `lean4_formalize_selected = PASS`
+- `assessed_statement_generality_and_public_api_value = PASS`
+- `analysis_only_remained_read_only = PASS`
+
+Prompt: Several verified theorems use different tactics but encode a shared invariant. Find a useful common lemma and migrate the proofs.
+- `lean4_abstract_selected = PASS`
+- `did_not_replace_semantic_extraction_with_only_local_cleanup = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 ## Adjacent intents stay out
 
