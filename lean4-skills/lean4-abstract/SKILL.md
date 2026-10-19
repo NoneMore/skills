@@ -1,77 +1,68 @@
 ---
 name: lean4-abstract
 description: >-
-  User-invoked Lean 4/mathlib mode for investigating and optionally extracting
-  concrete suspected mathematical reuse within one proof or across declarations.
-  Starts from a specific repeated argument, plausible historical match, or
-  requested reuse assessment; not routine proving, cleanup, or open-ended reframing.
+  User-invoked Lean 4/mathlib mode for assessing and optionally extracting
+  concrete suspected mathematical reuse within one proof or across declarations;
+  not routine proving, cleanup, or open-ended reframing.
 disable-model-invocation: true
 license: MIT
 ---
 
 # Lean 4 Abstract
 
-Use this mode only when explicitly selected by the user. Recognize and evaluate
-reusable *mathematical* structure: repeated subarguments inside a large proof,
-similarities to earlier declarations, or a known library construction. Multiple
-top-level theorems are not required. Shared tactic syntax alone is not evidence
-of a shared mathematical argument.
+Use only when explicitly selected by the user. Investigate a *specific* suspected
+mathematical reuse: repeated arguments within one proof, a plausible earlier
+declaration, or a library construction. One theorem can suffice; shared tactic
+syntax alone cannot.
 
 ## Workflow
 
-1. Identify the explicitly selected reuse question, concrete signal and
-   representative sites, whether the request is assessment-only or authorizes
-   implementation, and the verification gate. A signal may be repeated invariants
-   within one proof or a plausible match to earlier work; if none is locatable,
-   report uncertainty rather than starting speculative repository-wide search.
-2. Compare the smallest relevant sites and their constructions, hypotheses,
-   invariants, and conclusions. Search within the active proof and nearby code,
-   then local and imported APIs; widen to targeted repository/mathlib search only
-   when a specific construction, theorem family, or plausible owner motivates it.
-3. Compare the smallest useful outcomes: apply an existing result, factor a local
-   or private helper, introduce a reusable declaration, or make no change.
-   Distinguish mathematical generality from elaboration convenience; do not
-   create public API just because a helper is long or private.
-4. Validate candidate statements and representative applications in the actual
-   Lean context (including repeated local uses in a single proof). Check
-   hypotheses, universes, coercions, and typeclass inference. Place any new
-   declaration at an appropriate mathematical layer without introducing
-   unnecessary imports or reversing dependency direction.
-5. Separate investigation from modification authority. Reading earlier consumers
-   to assess reuse does not authorize editing or migrating them. If implementation
-   was requested, change only authorized sites, verify the affected integration
-   scope, and preserve public statements, accepted trust, and unrelated work.
-   Before refactoring already-verified code, record a reproducible verification
-   baseline; if unavailable, distinguish pre-existing failures from introduced
-   ones and limit completion claims accordingly.
+1. **Bound the question.** Identify the concrete signal, representative sites,
+   assessment-only versus implementation authority, and verification gate. If
+   no signal can be located, report uncertainty instead of starting speculative
+   repository-wide search.
+2. **Compare and search.** Check constructions, hypotheses, invariants, and
+   conclusions at the smallest relevant sites. Search the active proof and
+   nearby code, then local/imported APIs; widen only toward a specific
+   construction, theorem family, or plausible owner.
+3. **Choose the least costly result.** Apply an existing theorem, factor a
+   local/private helper, introduce a justified public declaration, or make no
+   change. Distinguish mathematical generality from elaboration convenience;
+   length or privacy alone does not justify a new public API.
+4. **Validate in Lean.** Check candidate statements and representative uses
+   (including repeated uses within one proof) in the actual context: hypotheses,
+   universes, coercions, and typeclass inference. Place declarations at the
+   appropriate mathematical layer without unnecessary imports or reversing
+   dependency direction.
+5. **Respect edit and verification scope.** Reading historical consumers does
+   not authorize their migration. For authorized edits to already-verified code,
+   record a reproducible baseline or report its absence; change only authorized
+   sites, preserve public statements, accepted trust and unrelated work, and
+   verify affected integration scope. File-local checks against stale imported
+   artifacts are not dependency-aware verification.
 
 ## Acceptance and stopping
 
-Accept extraction only when checked reuse, clarity, or a stable mathematical
-boundary outweighs indirection, parameters, inference/search burden, and
-maintenance cost. Prefer existing APIs to parallel implementations. A local
-helper can be the correct endpoint; publication and migration are optional.
+Extract only when checked reuse, clarity, or a stable mathematical boundary
+outweighs indirection, parameters, inference/search burden, and maintenance.
+A local helper or no change is valid. Reject tactic-only resemblance and
+incompatible cases; stop after repeated structural blockers, unproductive
+helper chains, or speculative broader search.
 
-Reject superficial similarity and incompatible special cases. Stop when the
-same structural blocker repeats, a helper chain stops making progress, or
-broader search becomes speculative. This mode tests a *specific reuse hypothesis*;
-user-invoked `lean4-recon` instead challenges the *problem framing or governing
-mathematical abstraction*, with deliberately wider exploration. If a deeper
-reframe is indicated, report it as a separate option rather than silently
-switching modes or expanding into open-ended reconnaissance.
+This mode tests a bounded reuse hypothesis. User-invoked `lean4-recon` instead
+challenges the governing mathematical framing and may explore more broadly.
+Report a deeper reframe as a separate option; do not silently switch modes.
 
-Do not add axioms, `sorry`, or `admit` to manufacture success. Do not claim
-dependency-aware verification from file-local checks against stale imports.
+Do not add axioms, `sorry`, or `admit` to manufacture success. Behavioral
+instructions do not replace runtime/tool authorization controls.
 
 ## Completion
 
-- **Assessment:** identify candidate reuse or explain why not to extract it;
-  give representative sites, evidence, tradeoffs, and next action. Do not edit
-  production sources on an assessment-only request.
-- **Implementation:** identify the reused or extracted abstraction, authorized
-  consumers changed, concrete benefit, verification actually performed, and
-  limitations. If candidate uses or the required gate cannot be checked,
-  report the result as partial.
+- **Assessment:** identify the candidate or reason not to extract, representative
+  sites, evidence, tradeoffs, and next action. No production edits on
+  assessment-only requests.
+- **Implementation:** report the reused/extracted result, authorized consumers
+  changed, concrete benefit, verification performed, and limitations. Treat
+  unchecked candidate uses or required gates as partial.
 
-Do not commit or push unless authorized by the current task. Prompt guidance
-does not replace runtime/tool authorization enforcement.
+Do not commit or push without current-task authorization.

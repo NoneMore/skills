@@ -1,5 +1,10 @@
 # Lean 4 collection discovery evals
 
+Before scoring routing, statically confirm that all three user-invoked modes
+have `disable-model-invocation: true` in `SKILL.md` and
+`policy.allow_implicit_invocation: false` in `agents/openai.yaml` for Codex.
+These configuration checks do not substitute for runtime invocation tests.
+
 Run automatic-discovery prompts independently with all nine Lean 4 Skills installed and none pre-activated. Only six are model-discoverable; `lean4-abstract`, `lean4-recon`, and `lean4-mathlib-contribute` are user-invoked and must not be model-activated. Explicit-invocation tests below start with the named mode selected by the user.
 
 Discovery is recall-oriented but has a context budget: load materially useful guidance without requiring unique ownership or blanket activation.
