@@ -1,6 +1,6 @@
 ---
 name: lean4-optimize
-description: "Use after a Lean 4/mathlib proof is already correct when the task is a durable local improvement in clarity, maintainability, robustness, brevity where that helps clarity, or measured performance."
+description: "Use for already-verified Lean 4/mathlib proofs when the task is a durable improvement in clarity, maintainability, robustness, useful brevity, or measured performance, including extracting a shared mathematical lemma across specified verified proofs. Not for open-ended repository-wide reuse discovery."
 license: MIT
 ---
 
@@ -24,7 +24,7 @@ Brevity alone does not justify heavier automation or loss of meaningful proof st
 
 ## Workflow
 
-1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first. Keep the target scope to proofs implicated by the current task or session. Do not widen from the referenced change to other dirty or related code merely to find more optimization opportunities; report broader opportunities separately.
+1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first. Relevant prior-session proofs may inform the investigation or be inspected read-only, but derive source-edit and consumer-migration scope from the current request, not past work. Do not search unrelated dirty or nearby code merely to find more optimization opportunities; report broader opportunities separately. Verification may cover dependencies or consumers beyond the edited sites when needed to check the affected integration boundary.
 2. Search local and imported APIs when an existing result may remove complexity.
 3. Apply one coherent change at a time.
 4. Re-run the baseline verification scope; for performance work, rerun the same measurement.
