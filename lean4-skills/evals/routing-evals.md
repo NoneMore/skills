@@ -11,6 +11,8 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Formalize this textbook theorem in Lean; choose the right hypotheses and generality. | `lean4-formalize` |
 | Could this private Lean theorem be generalized or exposed as a useful public declaration? Assess its statement, without editing. | `lean4-formalize` |
 | These distinct Lean proofs seem to share a mathematical transport argument; extract a common abstraction and refactor the consumers. | `lean4-abstract` |
+| Inside this one long Lean theorem, several local branches establish the same invariant. Extract a reusable helper for them. | `lean4-abstract` |
+| This Lean argument feels familiar from an earlier module. Investigate whether the old mathematical result can be reused here; don't edit yet. | `lean4-abstract` |
 | Fill the `sorry` in this existing Lean theorem without changing its statement. | `lean4-prove` |
 | I think this Lean proposition is false; find and certify a counterexample. | `lean4-refute` |
 | After updating mathlib, several theorem files fail around the same imports with changed identifiers and signatures. Determine the common cause and migration path. | `lean4-diagnose` |
@@ -41,11 +43,11 @@ Prompt: Complete this fixed Lean theorem; an attempted `rw` inside its proof fai
 - `ordinary_elaboration_repair_did_not_require_a_diagnose_handoff = PASS`
 - `kept_the_statement_fixed_and_verified_the_proof = PASS`
 
-## Single-declaration versus cross-proof boundary
+## Statement design, local cleanup, and evidence-triggered reuse
 
 Prompt: This verified Lean proof is too verbose; simplify the local tactic argument.
 - `lean4_optimize_selected = PASS`
-- `did_not_route_local_cleanup_to_cross_proof_abstraction = PASS`
+- `did_not_route_local_cleanup_to_reuse_discovery = PASS`
 
 Prompt: The private isomorphism helper appears to wrap an existing more general elementary-embedding result. Is it worth publishing? Do not edit code.
 - `lean4_formalize_selected = PASS`
@@ -55,6 +57,16 @@ Prompt: The private isomorphism helper appears to wrap an existing more general 
 Prompt: Several verified theorems use different tactics but encode a shared invariant. Find a useful common lemma and migrate the proofs.
 - `lean4_abstract_selected = PASS`
 - `did_not_replace_semantic_extraction_with_only_local_cleanup = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
+
+Prompt: These three unrelated verified proofs just need shorter local tactic scripts; no shared mathematical argument is suspected.
+- `lean4_optimize_selected = PASS`
+- `did_not_activate_abstract_just_for_multiple_proofs = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
+
+Prompt: Fill the hole in this single theorem. No repeated construction or reuse clue is present.
+- `lean4_prove_selected = PASS`
+- `did_not_activate_abstract_without_reuse_evidence = PASS`
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 ## Adjacent intents stay out

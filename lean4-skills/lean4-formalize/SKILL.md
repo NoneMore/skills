@@ -14,7 +14,7 @@ license: MIT
 4. Check that the declaration skeleton elaborates. Statement-design-only work may retain an explicitly reported proof hole.
 5. Revise an existing declaration only when statement revision is explicitly authorized.
 
-If proving exposes a statement mismatch or evidence that the claim is false, report it rather than silently weakening the statement. If a checked proof is requested, settle the declaration first and then verify the affected scope.
+If proving exposes a statement mismatch or evidence that the claim is false, report it rather than silently weakening the statement. This Skill owns statement design and elaboration, not extended proof search: substantive proof construction or repair belongs to `lean4-prove`. If a checked proof is requested, settle the declaration first and claim only verification actually performed.
 
 ## Existing declarations
 
@@ -22,8 +22,8 @@ When assessing a private helper or existing theorem, search for a more general
 declaration and distinguish mathematical generality from a useful specialized
 wrapper or elaboration boundary. Recommend public exposure only for a real API
 benefit; do not force generalization or edit an existing declaration without
-authorization. Use `lean4-abstract` when the goal is shared structure and
-migration across multiple proofs.
+authorization. Use `lean4-abstract` when the task investigates concrete mathematical
+reuse, including repeated arguments inside one large proof or a match to earlier work.
 
 ## Completion
 

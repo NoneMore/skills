@@ -16,9 +16,9 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-diagnose` — identify a root cause and migration path for Lean/Lake/build/integration failures.
 - `lean4-review` — independently review Lean proof code or audit a declaration's trust dependencies; review-only requests are read-only.
 - `lean4-optimize` — improve an already-correct proof from a verified baseline.
-- `lean4-abstract` — discover, validate, and integrate reusable mathematics across multiple proofs or declarations.
+- `lean4-abstract` — recognize, validate, and extract mathematical reuse within one proof or across earlier declarations.
 
-Discovery is recall-oriented but still has a context budget. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Collection discovery evals therefore test both required recall and bounded activation.
+Discovery is recall-oriented but still has a context budget. An explicit reuse question or concrete repeated mathematical structure can justify `lean4-abstract`; multiple theorems are not required. Routine proving and cleanup do not trigger repository-wide reuse investigation. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Collection discovery evals therefore test both required recall and bounded activation.
 
 ## User-invoked capabilities
 
