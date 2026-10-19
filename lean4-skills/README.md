@@ -17,7 +17,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-review` — independently review Lean proof code or audit a declaration's trust dependencies; review-only requests are read-only.
 - `lean4-optimize` — improve an already-correct proof from a verified baseline.
 
-Discovery is recall-oriented but still has a context budget. Ordinary proving, statement design, and optimization may search existing APIs or factor local helpers without switching modes or triggering repository-wide exploration. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. User-invoked modes are not activated by model discovery.
+Discovery is recall-oriented but still has a context budget. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split.
 
 ## User-invoked capabilities
 
@@ -25,15 +25,13 @@ Discovery is recall-oriented but still has a context budget. Ordinary proving, s
 - `lean4-recon` — deliberately widen semantic/repository context to challenge the current framing before committing to implementation.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
-All three set `disable-model-invocation: true`. `lean4-abstract` asks whether a *particular suspected argument or invariant* can be reused, including by choosing no extraction. `lean4-recon` asks whether the *surrounding mathematical framing or abstraction layer* is right; it can explore broadly without a preidentified reuse candidate. Neither silently activates the other. Explicit user selection starts a dedicated reuse study.
-
 ## Defensive structure
 
 Keep defenses only where they change behavior or completion claims.
 
 Collection-level integrity regressions cover cross-cutting failures such as stale imported artifacts, manufactured success through trust weakening, and verification claims made without the required tooling or gate. Individual Skills state these common constraints tersely and keep detailed doctrine only for Skill-specific risks.
 
-Examples of justified local defenses include independent refutation when the target itself may contain `sorry`, read-only review, optimization from a verified baseline, distinguishing mathematical commonality from tactic repetition, and live upstream policy for contribution work.
+Examples of justified local defenses include independent refutation when the target itself may contain `sorry`, read-only review, optimization from a verified baseline, and live upstream policy for contribution work.
 
 ## Knowledge placement
 

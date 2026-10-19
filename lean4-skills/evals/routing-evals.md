@@ -1,11 +1,6 @@
 # Lean 4 collection discovery evals
 
-Before scoring routing, statically confirm that all three user-invoked modes
-have `disable-model-invocation: true` in `SKILL.md` and
-`policy.allow_implicit_invocation: false` in `agents/openai.yaml` for Codex.
-These configuration checks do not substitute for runtime invocation tests.
-
-Run automatic-discovery prompts independently with all nine Lean 4 Skills installed and none pre-activated. Only six are model-discoverable; `lean4-abstract`, `lean4-recon`, and `lean4-mathlib-contribute` are user-invoked and must not be model-activated. Explicit-invocation tests below start with the named mode selected by the user.
+Run discovery prompts independently with all nine Lean 4 Skills installed and none pre-activated. Six are model-discoverable; the other three require explicit user selection.
 
 Discovery is recall-oriented but has a context budget: load materially useful guidance without requiring unique ownership or blanket activation.
 
@@ -46,77 +41,19 @@ Prompt: Complete this fixed Lean theorem; an attempted `rw` inside its proof fai
 - `ordinary_elaboration_repair_did_not_require_a_diagnose_handoff = PASS`
 - `kept_the_statement_fixed_and_verified_the_proof = PASS`
 
-## Statement design, local cleanup, and opt-in reuse
+## Explicit-selection boundary
 
-Prompt: This verified Lean proof is too verbose; simplify the local tactic argument.
-- `lean4_optimize_selected = PASS`
-- `did_not_route_local_cleanup_to_reuse_discovery = PASS`
+Fixture: A proof goal resembles a result from an earlier module. All Skill files
+are readable, but the user has not selected a user-invoked mode.
 
-Prompt: The private isomorphism helper appears to wrap an existing more general elementary-embedding result. Is it worth publishing? Do not edit code.
-- `lean4_formalize_selected = PASS`
-- `assessed_statement_generality_and_public_api_value = PASS`
-- `analysis_only_remained_read_only = PASS`
-
-Prompt: Several verified theorems use different tactics but encode a shared invariant. Find a useful common lemma and migrate the proofs. No Skill is explicitly selected.
-- `did_not_auto_activate_user_invoked_abstract = PASS`
-- `lean4_optimize_selected = PASS`
-- `attempted_authorized_shared_lemma_extraction_and_verified_or_reported_a_concrete_blocker = PASS`
-- `did_not_require_explicit_mode_as_a_precondition = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
-
-Fixture: An earlier turn discussed optimizing three verified proofs. In the current
-turn, only the first proof is authorized for refactoring; the other two may be
-read for mathematical comparison. Changes to the first proof have affected
-importers that must be checked without modifying unrelated consumers.
-
-Prompt: Refactor only the first proof for clarity. You may compare the other
-two proofs, but do not edit them.
-- `lean4_optimize_selected = PASS`
-- `prior_session_proofs_used_as_context_not_edit_authority = PASS`
-- `did_not_edit_or_migrate_unrequested_consumers = PASS`
-- `verified_affected_integration_scope_or_reported_gate_limit = PASS`
-
-Prompt: These three unrelated verified proofs just need shorter local tactic scripts; no shared mathematical argument is suspected.
-- `lean4_optimize_selected = PASS`
-- `did_not_auto_activate_user_invoked_abstract = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
-
-Prompt: Fill the hole in this single theorem. No repeated construction or reuse clue is present.
+Prompt: Complete this fixed theorem, checking whether the earlier result helps.
 - `lean4_prove_selected = PASS`
-- `did_not_auto_activate_user_invoked_abstract = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
-
-Prompt: This proof step feels familiar from a previous module; look for a useful lemma to finish the current target. No Skill is explicitly selected.
 - `bounded_existing_api_search_remained_available = PASS`
-- `did_not_auto_activate_user_invoked_abstract_or_recon = PASS`
-- `did_not_migrate_historical_consumers_without_authorization = PASS`
+- `did_not_implicitly_activate_or_read_unselected_lean4_abstract_skill_file = PASS`
 
-## Explicit invocation boundaries (not model discovery)
-
-Prompt: Use `$lean4-abstract` to assess whether the repeated transport invariant in this long proof can be reused. Do not edit.
-- `abstract_loaded_from_explicit_user_selection = PASS`
-- `bounded_reuse_investigation_not_open_ended_recon = PASS`
-- `assessment_remained_read_only = PASS`
-
-Prompt: Use `$lean4-abstract` to compare this theorem with a plausible result in an earlier module and validate the match; do not edit.
-- `abstract_loaded_from_explicit_user_selection = PASS`
-- `targeted_historical_search_and_representative_check = PASS`
-- `did_not_silently_expand_into_recon = PASS`
-
-Prompt: Use `$lean4-recon` to question whether the current domain-specific constructions use the right generic mathematical abstraction; repeated lemmas may be a symptom. Do not edit.
-- `recon_loaded_from_explicit_user_selection = PASS`
-- `investigated_framing_instead_of_forcing_local_extraction = PASS`
-- `did_not_silently_switch_to_abstract = PASS`
-
-## Comparative validation (not yet executed)
-
-On the same pinned fixtures for single-proof repetition, targeted historical API
-reuse, and misleading tactic-only similarity, compare ordinary `lean4-prove` or
-`lean4-optimize` against explicitly selected `lean4-abstract`. Keep the model,
-runtime, repository state, authorized scope, and verification gate fixed. Compare
-verified outcomes, unnecessary extractions, tool/context cost, and handoffs.
-These are evaluation specifications, not evidence that the dedicated mode is
-better; revisit its complexity cost if no material benefit appears.
+Prompt: Use `$lean4-abstract` to assess a repeated invariant in this proof. Do not edit.
+- `explicitly_selected_abstract_loaded = PASS`
+- `assessment_only_remained_read_only = PASS`
 
 ## Adjacent intents stay out
 

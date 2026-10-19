@@ -15,8 +15,6 @@ Investigate only semantic boundaries that could change the design decision:
 - revisit history only when a previously rejecting constraint may have changed;
 - look for a lower-level theorem or API change that would remove repeated local machinery.
 
-This user-invoked mode challenges the governing mathematical framing even without a concrete reuse hypothesis. For a bounded study of a specified repeated argument or historical match, `lean4-abstract` is a *separate user-invoked mode*. Do not silently switch modes or interpret a possible refactor as authority to extract it.
-
 Use `#check`, `#synth`, `#print`, scratch `example`s, minimal imports, concrete instances, and focused repository search as discriminators. Prefer the smallest experiment that distinguishes live design alternatives and project evidence over verbal plausibility.
 
 When composition across an abstraction boundary is uncertain, follow one representative path until it closes or exposes the lowest-level obstruction. Continue local proof iteration only while it can change that diagnosis; do not broaden into parallel cases or production implementation afterward.

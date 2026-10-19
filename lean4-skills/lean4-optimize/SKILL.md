@@ -14,7 +14,7 @@ Establish a verified baseline before claiming an optimization. Keep the public t
 - **Local simplification:** preserve the proof strategy while removing ceremony when the result becomes clearer and at least as stable. Load [local proof cleanup](references/local-cleanup.md). Load [simp and simp-lemma design](references/simplification.md) when simplifier policy or global simp behavior is material.
 - **Performance:** localize and measure cost before changing code. Load [performance guidance](references/performance.md).
 
-Choose one primary surface per pass. If the user explicitly requests successive passes (for example, local cleanup followed by strategy simplification), verify each pass and use its accepted result as the next baseline. Otherwise, record secondary benefits without widening scope. A helper used to improve an authorized proof remains optimization, even when it factors repeated local mathematics. Search relevant existing APIs when useful, but do not turn routine cleanup into repository-wide similarity search or auto-activate user-invoked `lean4-abstract`. An explicit request to extract a shared lemma across specified verified proofs remains in scope for `lean4-optimize`, even without selecting `lean4-abstract`. Users may explicitly select that mode for a dedicated, bounded reuse study.
+Choose one primary surface per pass. If the user explicitly requests successive passes (for example, local cleanup followed by strategy simplification), verify each pass and use its accepted result as the next baseline. Otherwise, record secondary benefits without widening scope. Local helpers or shared lemmas across specified verified proofs are optimization when they materially improve the authorized work; prefer existing APIs and avoid speculative repository-wide searches.
 
 ## Candidate acceptance
 
@@ -24,7 +24,7 @@ Brevity alone does not justify heavier automation or loss of meaningful proof st
 
 ## Workflow
 
-1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first. Relevant prior-session proofs may inform the investigation or be inspected read-only, but derive source-edit and consumer-migration scope from the current request, not past work. Do not search unrelated dirty or nearby code merely to find more optimization opportunities; report broader opportunities separately. Verification may cover dependencies or consumers beyond the edited sites when needed to check the affected integration boundary.
+1. Record the baseline and concrete property to improve; if correctness is not established, repair or report that blocker first. Keep the target scope to the declarations or files implicated by the user's request. Do not widen from the referenced change to other dirty or related code merely to find more optimization opportunities; report broader opportunities separately.
 2. Search local and imported APIs when an existing result may remove complexity.
 3. Apply one coherent change at a time.
 4. Re-run the baseline verification scope; for performance work, rerun the same measurement.
