@@ -19,6 +19,7 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Remove our custom axiom from this existing theorem if possible without changing its statement. | `lean4-prove` |
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
+| These two verified Lean proofs share an invariant; extract a shared mathematical lemma and refactor both. No Skill is selected. | `lean4-optimize` |
 
 For every discovery row and compatible-overlap case, require the specified Skill(s), relevant contract, and `model_discoverable_lean_skill_count_lte_2 = PASS`. Do not require any compatible neighbor to remain unselected. No user-invoked Skill may be activated by model discovery.
 
@@ -57,6 +58,18 @@ Prompt: Several verified theorems use different tactics but encode a shared inva
 - `attempted_authorized_shared_lemma_extraction_and_verified_or_reported_a_concrete_blocker = PASS`
 - `did_not_require_explicit_mode_as_a_precondition = PASS`
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
+
+Fixture: An earlier turn discussed optimizing three verified proofs. In the current
+turn, only the first proof is authorized for refactoring; the other two may be
+read for mathematical comparison. Changes to the first proof have affected
+importers that must be checked without modifying unrelated consumers.
+
+Prompt: Refactor only the first proof for clarity. You may compare the other
+two proofs, but do not edit them.
+- `lean4_optimize_selected = PASS`
+- `prior_session_proofs_used_as_context_not_edit_authority = PASS`
+- `did_not_edit_or_migrate_unrequested_consumers = PASS`
+- `verified_affected_integration_scope_or_reported_gate_limit = PASS`
 
 Prompt: These three unrelated verified proofs just need shorter local tactic scripts; no shared mathematical argument is suspected.
 - `lean4_optimize_selected = PASS`
