@@ -1,6 +1,6 @@
 ---
 name: lean4-diagnose
-description: "Use for formal-mathematics Lean 4/Lake work when the task needs root-cause diagnosis of elaboration, module, import, dependency, toolchain, build, or integration failures, especially when several symptoms may share one cause or a migration path is needed. Do not use for general Lean application/CLI/FFI development."
+description: "Use when root-cause diagnosis or a migration plan is the requested Lean 4/mathlib/Lake outcome, especially for shared elaboration, module, import, dependency, toolchain, build, or integration failures. Routine local proof repair belongs to the proving task, not a required diagnostic handoff. Not for general Lean application/FFI work."
 license: MIT
 ---
 

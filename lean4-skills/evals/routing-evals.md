@@ -34,6 +34,12 @@ Prompt: Audit this theorem's trust basis and remove our custom axiom if possible
 - `trust_cleanup_did_not_require_a_dedicated_trust_skill = PASS`
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
 
+Prompt: Complete this fixed Lean theorem; an attempted `rw` inside its proof fails with `motive is not type correct`. Diagnose that local mismatch as needed and finish the proof.
+- `lean4_prove_selected = PASS`
+- `ordinary_elaboration_repair_did_not_require_a_diagnose_handoff = PASS`
+- `kept_the_statement_fixed_and_verified_the_proof = PASS`
+- `model_discoverable_lean_skill_count_lte_2 = PASS`
+
 ## Adjacent intents stay out
 
 Prompt A: Add a Lean-to-C FFI binding for this C function.
