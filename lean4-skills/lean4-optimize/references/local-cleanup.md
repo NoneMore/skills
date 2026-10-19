@@ -16,6 +16,10 @@ Small-looking rewrites can change elaboration behavior across tactic/term bounda
 
 When simplifier policy is material, follow [simp and simp-lemma design](simplification.md). Repository-specific style and simplification policy take precedence over generic preferences.
 
+## Alternative-candidate probes
+
+When several tactic variants are tested in one batch, attribute goals and diagnostics to each variant. A failing neighbor does not invalidate a passing candidate, and a passing neighbor does not certify the batch. Re-test the selected candidate alone at the original theorem location before running the usual verification gate.
+
 ## Verification
 
 Apply one coherent cleanup at a time and rerun the same semantic verification gate used for the baseline. Reject candidates that introduce new diagnostics, unresolved `sorry`/`admit`, trust changes, or a less maintainable proof merely for token or line savings.
