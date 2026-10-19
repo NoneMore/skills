@@ -53,6 +53,7 @@ Required assertions:
 - `searched_for_direct_local_or_imported_image_cardinality_api = PASS`
 - `did_not_build_a_custom_equivalence_when_a_direct_checked_result_sufficed = PASS`
 - `verified_the_chosen_result_in_project_context = PASS`
+- `completed_the_fixed_cardinality_target_with_its_statement_unchanged = PASS`
 
 ## Dependent-index elaboration failures trigger a bounded bridge experiment
 
@@ -66,3 +67,5 @@ Required assertions:
 - `tested_a_small_exact_change_or_bridge_at_the_failing_boundary = PASS`
 - `did_not_repeat_equivalent_rewrites_without_new_evidence = PASS`
 - `kept_local_elaboration_repair_inside_the_proving_task = PASS`
+- `preserved_the_statement_and_closed_the_original_goal_without_sorry_admit = PASS`
+- `verified_the_completed_proof_in_the_affected_scope = PASS`
