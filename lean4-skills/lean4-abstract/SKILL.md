@@ -1,27 +1,29 @@
 ---
 name: lean4-abstract
 description: >-
-  Use for Lean 4/mathlib when the task is to investigate, validate, or extract
-  suspected reusable mathematical structure: repeated reasoning within one proof,
-  a plausible resemblance to earlier work, or an existing library pattern.
-  Not for routine proof completion, local cleanup, or isolated statement design.
+  User-invoked Lean 4/mathlib mode for investigating and optionally extracting
+  concrete suspected mathematical reuse within one proof or across declarations.
+  Starts from a specific repeated argument, plausible historical match, or
+  requested reuse assessment; not routine proving, cleanup, or open-ended reframing.
+disable-model-invocation: true
 license: MIT
 ---
 
 # Lean 4 Abstract
 
-Recognize and evaluate reusable *mathematical* structure: repeated subarguments
-inside a large proof, similarities to earlier declarations, or a known library
-construction. Multiple top-level theorems are not required. Shared tactic syntax
-alone is not evidence of a shared mathematical argument.
+Use this mode only when explicitly selected by the user. Recognize and evaluate
+reusable *mathematical* structure: repeated subarguments inside a large proof,
+similarities to earlier declarations, or a known library construction. Multiple
+top-level theorems are not required. Shared tactic syntax alone is not evidence
+of a shared mathematical argument.
 
 ## Workflow
 
-1. Identify the concrete reuse signal and representative sites, whether the task
-   requests assessment or implementation, and the applicable verification gate.
-   A signal may be repeated invariants within one proof or a plausible match to
-   earlier work. Ordinary proof work does not justify speculative repository-wide
-   similarity searches.
+1. Identify the explicitly selected reuse question, concrete signal and
+   representative sites, whether the request is assessment-only or authorizes
+   implementation, and the verification gate. A signal may be repeated invariants
+   within one proof or a plausible match to earlier work; if none is locatable,
+   report uncertainty rather than starting speculative repository-wide search.
 2. Compare the smallest relevant sites and their constructions, hypotheses,
    invariants, and conclusions. Search within the active proof and nearby code,
    then local and imported APIs; widen to targeted repository/mathlib search only
@@ -49,8 +51,11 @@ helper can be the correct endpoint; publication and migration are optional.
 
 Reject superficial similarity and incompatible special cases. Stop when the
 same structural blocker repeats, a helper chain stops making progress, or
-broader search becomes speculative. Report possible wider redesign separately;
-open-ended semantic reconnaissance belongs to user-invoked `lean4-recon`.
+broader search becomes speculative. This mode tests a *specific reuse hypothesis*;
+user-invoked `lean4-recon` instead challenges the *problem framing or governing
+mathematical abstraction*, with deliberately wider exploration. If a deeper
+reframe is indicated, report it as a separate option rather than silently
+switching modes or expanding into open-ended reconnaissance.
 
 Do not add axioms, `sorry`, or `admit` to manufacture success. Do not claim
 dependency-aware verification from file-local checks against stale imports.

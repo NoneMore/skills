@@ -1,4 +1,4 @@
 interface:
   display_name: "Lean 4 Abstract"
-  short_description: "Recognize and extract reusable Lean mathematics"
-  default_prompt: "Use $lean4-abstract to investigate concrete mathematical reuse within a proof or across existing declarations, prefer existing APIs, and extract or integrate only validated improvements within the authorized scope."
+  short_description: "Assess targeted mathematical reuse in Lean 4"
+  default_prompt: "Use $lean4-abstract for a user-selected, bounded investigation of concrete mathematical reuse within a proof or across declarations. Prefer existing APIs, verify representative uses, and change only authorized sites; report broader reframing separately rather than silently entering recon."

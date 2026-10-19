@@ -15,7 +15,7 @@ license: MIT
 5. Apply the smallest coherent passing change. Keep the statement and public API fixed unless revision is explicitly authorized.
 6. Verify the affected scope and report what ran. If an imported source changed, a file-local check against possibly stale artifacts is not dependency-aware verification.
 
-If a concrete mathematical resemblance to prior work or repeated local arguments emerges, a bounded search for an existing lemma may help the current target; a separate reuse assessment belongs to `lean4-abstract`. Do not scan for hypothetical reuse by default or refactor other consumers without authorization.
+If a concrete mathematical resemblance to prior work or repeated local arguments emerges, a bounded search for an existing lemma may help the current target. Do not scan for hypothetical reuse, refactor other consumers without authorization, or auto-activate user-invoked `lean4-abstract`; a systematic reuse assessment can be offered as a separate, explicitly selected task.
 
 Do not add axioms, `sorry`, or `admit` to manufacture completion. Stop when no materially new bounded avenue remains; report the blocker, useful evidence, and smallest next action.
 

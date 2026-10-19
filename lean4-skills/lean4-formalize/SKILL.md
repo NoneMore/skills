@@ -22,8 +22,10 @@ When assessing a private helper or existing theorem, search for a more general
 declaration and distinguish mathematical generality from a useful specialized
 wrapper or elaboration boundary. Recommend public exposure only for a real API
 benefit; do not force generalization or edit an existing declaration without
-authorization. Use `lean4-abstract` when the task investigates concrete mathematical
-reuse, including repeated arguments inside one large proof or a match to earlier work.
+authorization. Checking an existing result or a local helper remains part of
+statement/API design when that is the user's task. `lean4-abstract` is an
+optional, explicitly user-invoked mode for a dedicated mathematical reuse
+study, not an automatic handoff from `lean4-formalize`.
 
 ## Completion
 

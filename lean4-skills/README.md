@@ -2,7 +2,7 @@
 
 A jointly installed family of nine capabilities for formal mathematics in Lean 4 and mathlib. The collection root is not itself a Skill.
 
-Seven Skills are model-discoverable; two broader modes are explicitly user-invoked. There is no family router and no requirement that exactly one Skill own a request.
+Six Skills are model-discoverable; three focused or broader modes are explicitly user-invoked. There is no family router and no requirement that exactly one Skill own a request.
 
 The split addresses an observed discovery failure: task-specific guidance hidden behind a broad Skill was not loaded reliably enough, and distinctions available only after activation could not help pre-activation discovery. The family therefore exposes outcome-specific contracts directly while keeping overlap bounded.
 
@@ -16,16 +16,16 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-diagnose` — identify a root cause and migration path for Lean/Lake/build/integration failures.
 - `lean4-review` — independently review Lean proof code or audit a declaration's trust dependencies; review-only requests are read-only.
 - `lean4-optimize` — improve an already-correct proof from a verified baseline.
-- `lean4-abstract` — recognize, validate, and extract mathematical reuse within one proof or across earlier declarations.
 
-Discovery is recall-oriented but still has a context budget. An explicit reuse question, a specific suspicion of earlier similar work, or repeated mathematical reasoning can justify `lean4-abstract`; multiple theorems are not required. Routine proving and cleanup do not trigger repository-wide reuse investigation. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Collection discovery evals therefore test both required recall and bounded activation.
+Discovery is recall-oriented but still has a context budget. Ordinary proving, statement design, and optimization may search existing APIs or factor local helpers without switching modes or triggering repository-wide exploration. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. User-invoked modes are not activated by model discovery.
 
 ## User-invoked capabilities
 
+- `lean4-abstract` — investigate a concrete mathematical reuse hypothesis within one proof or across declarations; validate candidates and extract only within requested scope.
 - `lean4-recon` — deliberately widen semantic/repository context to challenge the current framing before committing to implementation.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
-These set `disable-model-invocation: true`: the user explicitly chooses the larger context spend or upstream-readiness bar.
+All three set `disable-model-invocation: true`. `lean4-abstract` asks whether a *particular suspected argument or invariant* can be reused, including by choosing no extraction. `lean4-recon` asks whether the *surrounding mathematical framing or abstraction layer* is right; it can explore broadly without a preidentified reuse candidate. Neither silently activates the other. Explicit user selection starts a dedicated reuse study.
 
 ## Defensive structure
 
@@ -43,7 +43,7 @@ Collection-level provenance and licensing live once in [UPSTREAM.md](UPSTREAM.md
 
 ## Evals
 
-- `evals/routing-evals.md` tests required discovery, bounded compatible overlap, and adjacent-intent exclusion.
+- `evals/routing-evals.md` tests model discovery, user-invoked exclusion, explicit-selection boundaries, and bounded compatible overlap.
 - `evals/integrity-evals.md` owns cross-cutting verification/trust regressions.
 - Per-Skill behavioral evals test only behavior that materially distinguishes that Skill.
 
