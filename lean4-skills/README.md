@@ -18,7 +18,7 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-optimize` — improve an already-correct proof from a verified baseline.
 - `lean4-abstract` — recognize, validate, and extract mathematical reuse within one proof or across earlier declarations.
 
-Discovery is recall-oriented but still has a context budget. An explicit reuse question or concrete repeated mathematical structure can justify `lean4-abstract`; multiple theorems are not required. Routine proving and cleanup do not trigger repository-wide reuse investigation. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Collection discovery evals therefore test both required recall and bounded activation.
+Discovery is recall-oriented but still has a context budget. An explicit reuse question, a specific suspicion of earlier similar work, or repeated mathematical reasoning can justify `lean4-abstract`; multiple theorems are not required. Routine proving and cleanup do not trigger repository-wide reuse investigation. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Collection discovery evals therefore test both required recall and bounded activation.
 
 ## User-invoked capabilities
 

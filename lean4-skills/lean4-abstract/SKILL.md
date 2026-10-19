@@ -1,9 +1,9 @@
 ---
 name: lean4-abstract
 description: >-
-  Use for Lean 4/mathlib when concrete evidence suggests reusable mathematical
-  structure within one proof, across declarations, or in existing library code,
-  and the task is to investigate, validate, or extract that reuse.
+  Use for Lean 4/mathlib when the task is to investigate, validate, or extract
+  suspected reusable mathematical structure: repeated reasoning within one proof,
+  a plausible resemblance to earlier work, or an existing library pattern.
   Not for routine proof completion, local cleanup, or isolated statement design.
 license: MIT
 ---
