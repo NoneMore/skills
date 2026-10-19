@@ -24,9 +24,9 @@ open-ended repository survey. Shared tactic syntax alone is not evidence.
    direction, elaboration cost, and maintenance.
 4. Test the candidate and representative uses in the actual Lean context.
    Reject incompatible cases rather than weakening statements or trust.
-5. For authorized changes, establish the verified baseline, edit only requested
-   sites, and verify affected consumers and imports. Reading other consumers
-   does not authorize migrating them.
+5. Record the current verification state before authorized edits. Change
+   only requested sites, then verify affected consumers and imports. Reading
+   other consumers does not authorize migrating them.
 
 ## Completion
 
