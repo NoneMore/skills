@@ -18,4 +18,4 @@ Test the root-cause hypothesis with the smallest justified change. Do not turn d
 
 ## Completion
 
-Re-run the command or repository gate that exercises the failing boundary; a file-local pass is insufficient when the suspected cause crosses a changed dependency or integration boundary. Done means the root cause has reproducible support and either the requested failure is repaired or the smallest remaining migration/diagnostic action is explicit.
+Re-run the command or repository gate that exercises the failing boundary; a file-local pass is insufficient when the suspected cause crosses a changed dependency or integration boundary. Done means the root cause has reproducible support and the requested outcome is met: diagnosis-only tasks identify the cause and smallest useful next action; repair tasks fix the failure and pass the affected verification gate. If repair is blocked, report the blocker and next action without claiming completion.
