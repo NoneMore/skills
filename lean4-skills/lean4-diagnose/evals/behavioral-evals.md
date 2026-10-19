@@ -18,3 +18,17 @@ Prompt: Do not fix this theorem yet. Explain why this application now has a type
 Required assertions:
 - `identified_material_cause_or_boundary = PASS`
 - `did_not_turn_explanation_into_unrequested_repair = PASS`
+
+## Dependent-type mismatch is diagnosed without repairing an unrequested proof
+
+Fixture: A Lean theorem fails with `rewrite failed: motive is not type correct` while rewriting between two expressions used as indices of parameterized types. The user requests a cause, not a completed proof.
+
+Prompt: Explain the failing rewrite, distinguish definitional equality from a genuine transport obligation, and run the smallest discriminating diagnostic experiment when tooling permits. Report the observed evidence or verification blocker; do not edit source.
+
+Required assertions:
+- `compared_expected_actual_indexed_types = PASS`
+- `distinguished_defeq_transport_and_statement_mismatch = PASS`
+- `ran_a_small_discriminating_experiment_when_tooling_permitted = PASS`
+- `reported_reproducible_evidence_or_an_explicit_verification_blocker_without_claiming_confirmation = PASS`
+- `did_not_turn_diagnostic_request_into_proof_repair = PASS`
+- `did_not_edit_source = PASS`

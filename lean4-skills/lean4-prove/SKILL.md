@@ -9,9 +9,9 @@ license: MIT
 ## Workflow
 
 1. Inspect the exact goal, nearby source, and current diagnostics.
-2. Search local and imported APIs before broader mathlib; validate candidates in the project context. Search again when failed attempts expose a materially different formulation or abstraction.
-3. Try a bounded set of materially different proof strategies, using cheap live feedback to discriminate a small number of plausible candidates before substantial helper construction, or otherwise compiling candidates one at a time.
-4. Treat attempts that preserve the same structural blocker or continue the same helper/abstraction chain as one strategy. Once failures repeat that pattern, or a new helper starts spawning its own unresolved helper chain, stop deepening the route: refresh the goal and reframe before adding more structure.
+2. Identify the goal's mathematical shape; search local and imported APIs before broader mathlib for direct results. Validate candidates in context before building helpers; re-search when failures reveal a materially different formulation or abstraction.
+3. Try a bounded set of materially different proof strategies; use cheap live feedback to discriminate a few plausible candidates, or compile them one at a time.
+4. Treat attempts with the same structural blocker or growing helper chain as one strategy; if that pattern repeats or a helper spawns unresolved helpers, stop extending it and reframe. For dependent-type failures, compare expected and actual indexed types; distinguish definitional equality, transport, and statement mismatch; test a minimal conversion or bridge in context before retrying tactics.
 5. Apply the smallest coherent passing change. Keep the statement and public API fixed unless revision is explicitly authorized.
 6. Verify the affected scope and report what ran. If an imported source changed, a file-local check against possibly stale artifacts is not dependency-aware verification.
 
