@@ -19,7 +19,7 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 
-For every row, the required Skill must be discovered, its relevant contract followed, and no more than two model-discoverable Lean Skills activated. Do not require a particular compatible neighbor to remain unselected.
+For every discovery row and compatible-overlap case, require the specified Skill(s), relevant contract, and `model_discoverable_lean_skill_count_lte_2 = PASS`. Do not require any compatible neighbor to remain unselected.
 
 ## Compatible overlap
 
@@ -27,20 +27,17 @@ Prompt: This existing theorem no longer elaborates with an application type mism
 - `lean4_prove_selected = PASS`
 - `fixed_statement_preserved = PASS`
 - `diagnostic_work_did_not_prevent_proof_repair = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: Audit this theorem's trust basis and remove our custom axiom if possible without changing the theorem statement.
 - `lean4_review_selected = PASS`
 - `lean4_prove_selected = PASS`
 - `trust_basis_checked_against_requested_policy = PASS`
 - `trust_cleanup_did_not_require_a_dedicated_trust_skill = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: Complete this fixed Lean theorem; an attempted `rw` inside its proof fails with `motive is not type correct`. Diagnose that local mismatch as needed and finish the proof.
 - `lean4_prove_selected = PASS`
 - `ordinary_elaboration_repair_did_not_require_a_diagnose_handoff = PASS`
 - `kept_the_statement_fixed_and_verified_the_proof = PASS`
-- `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 ## Adjacent intents stay out
 
