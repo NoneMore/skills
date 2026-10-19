@@ -53,7 +53,9 @@ Prompt: The private isomorphism helper appears to wrap an existing more general 
 
 Prompt: Several verified theorems use different tactics but encode a shared invariant. Find a useful common lemma and migrate the proofs. No Skill is explicitly selected.
 - `did_not_auto_activate_user_invoked_abstract = PASS`
-- `handled_request_with_available_capabilities_or_offered_explicit_mode = PASS`
+- `lean4_optimize_selected = PASS`
+- `attempted_authorized_shared_lemma_extraction_and_verified_or_reported_a_concrete_blocker = PASS`
+- `did_not_require_explicit_mode_as_a_precondition = PASS`
 - `model_discoverable_lean_skill_count_lte_2 = PASS`
 
 Prompt: These three unrelated verified proofs just need shorter local tactic scripts; no shared mathematical argument is suspected.
@@ -87,6 +89,16 @@ Prompt: Use `$lean4-recon` to question whether the current domain-specific const
 - `recon_loaded_from_explicit_user_selection = PASS`
 - `investigated_framing_instead_of_forcing_local_extraction = PASS`
 - `did_not_silently_switch_to_abstract = PASS`
+
+## Comparative validation (not yet executed)
+
+On the same pinned fixtures for single-proof repetition, targeted historical API
+reuse, and misleading tactic-only similarity, compare ordinary `lean4-prove` or
+`lean4-optimize` against explicitly selected `lean4-abstract`. Keep the model,
+runtime, repository state, authorized scope, and verification gate fixed. Compare
+verified outcomes, unnecessary extractions, tool/context cost, and handoffs.
+These are evaluation specifications, not evidence that the dedicated mode is
+better; revisit its complexity cost if no material benefit appears.
 
 ## Adjacent intents stay out
 

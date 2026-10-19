@@ -20,6 +20,7 @@ mathematical arguments in this one proof. Keep the theorem statement fixed.
 Required assertions:
 - `recognized_reuse_within_one_proof = PASS`
 - `did_not_require_multiple_top_level_declarations = PASS`
+- `recorded_original_proof_verification_baseline_or_reported_its_limit = PASS`
 - `verified_helper_and_representative_local_uses = PASS`
 - `did_not_publish_or_migrate_unrelated_consumers = PASS`
 
@@ -66,6 +67,7 @@ these proofs; refactor both while keeping their public statements unchanged.
 
 Required assertions:
 - `identified_shared_mathematical_structure_not_just_tactics = PASS`
+- `recorded_original_consumer_verification_baseline_or_reported_its_limit = PASS`
 - `candidate_and_representative_consumers_verified = PASS`
 - `existing_public_statements_and_trust_preserved = PASS`
 - `reported_concrete_reuse_benefit_and_affected_gate = PASS`

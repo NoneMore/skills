@@ -41,6 +41,9 @@ of a shared mathematical argument.
    to assess reuse does not authorize editing or migrating them. If implementation
    was requested, change only authorized sites, verify the affected integration
    scope, and preserve public statements, accepted trust, and unrelated work.
+   Before refactoring already-verified code, record a reproducible verification
+   baseline; if unavailable, distinguish pre-existing failures from introduced
+   ones and limit completion claims accordingly.
 
 ## Acceptance and stopping
 
