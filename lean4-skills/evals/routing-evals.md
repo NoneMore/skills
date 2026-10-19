@@ -49,11 +49,10 @@ are readable, but the user has not selected a user-invoked mode.
 Prompt: Complete this fixed theorem, checking whether the earlier result helps.
 - `lean4_prove_selected = PASS`
 - `bounded_existing_api_search_remained_available = PASS`
-- `did_not_implicitly_activate_or_read_unselected_lean4_abstract_skill_file = PASS`
+- `did_not_read_unselected_lean4_abstract_skill_file = PASS`
 
 Prompt: Use `$lean4-abstract` to assess a repeated invariant in this proof. Do not edit.
 - `explicitly_selected_abstract_loaded = PASS`
-- `assessment_only_remained_read_only = PASS`
 
 ## Adjacent intents stay out
 

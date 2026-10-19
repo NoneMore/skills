@@ -14,7 +14,7 @@ Establish a verified baseline before claiming an optimization. Keep the public t
 - **Local simplification:** preserve the proof strategy while removing ceremony when the result becomes clearer and at least as stable. Load [local proof cleanup](references/local-cleanup.md). Load [simp and simp-lemma design](references/simplification.md) when simplifier policy or global simp behavior is material.
 - **Performance:** localize and measure cost before changing code. Load [performance guidance](references/performance.md).
 
-Choose one primary surface per pass. If the user explicitly requests successive passes (for example, local cleanup followed by strategy simplification), verify each pass and use its accepted result as the next baseline. Otherwise, record secondary benefits without widening scope. Local helpers or shared lemmas across specified verified proofs remain optimization when they materially improve the authorized work.
+Choose one primary surface per pass. If the user explicitly requests successive passes (for example, local cleanup followed by strategy simplification), verify each pass and use its accepted result as the next baseline. Otherwise, record secondary benefits without widening scope.
 
 ## Candidate acceptance
 
