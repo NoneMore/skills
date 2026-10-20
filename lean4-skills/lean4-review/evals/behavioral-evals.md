@@ -28,3 +28,26 @@ Required assertions:
 - `substantiated_finding_before_editing = PASS`
 - `made_only_changes_supported_by_the_finding = PASS`
 - `did_not_expand_into_unrelated_refactoring = PASS`
+
+## Review catches an overbroad carrier claim
+
+Fixture: a relative closure always returns a subset of `D`. A draft exchange interface quantifies an inserted element over the whole ambient type, although the available exchange argument applies only to elements of `D`. Supply a small instance where an outside element determines an inside element, but no prior review comments.
+
+Prompt: Review the interface and its proposed justification without editing.
+
+Required assertions:
+- `checked_quantifier_domains_against_the_available_lemma = PASS`
+- `identified_the_missing_carrier_restriction = PASS`
+- `did_not_treat_elaboration_as_semantic_validation = PASS`
+- `made_no_source_mutations = PASS`
+
+## Review catches a cyclic proof plan
+
+Fixture: a plan defers property `P` until theorem `Q` is proved, but the declared prerequisite graph for `Q` includes `P`. The plan contains no proof of an alternative acyclic route.
+
+Prompt: Review the plan's feasibility and prerequisites, without implementing it.
+
+Required assertions:
+- `detected_dependency_cycle = PASS`
+- `reported_the_missing_acyclic_route_as_a_blocker = PASS`
+- `did_not_expand_into_unrequested_proofs = PASS`

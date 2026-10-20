@@ -10,9 +10,10 @@ license: MIT
 
 1. Resolve the claim and intended generality.
 2. Search local and imported APIs before broader mathlib for canonical types, definitions, and theorem shapes; validate candidates in context.
-3. Draft the weakest faithful declaration with explicit hypotheses and no hidden trust-basis change.
-4. Check that the declaration skeleton elaborates. Statement-design-only work may retain an explicitly reported proof hole.
-5. Revise an existing declaration only when statement revision is explicitly authorized.
+3. Where validity materially depends on hypothesis strength, quantifier domains, or carrier restrictions, probe a discriminating boundary case or counterexample (with scratch Lean when useful), and compare the prerequisites of reused results. Do not treat elaboration as evidence that a claim is true.
+4. Draft the weakest faithful declaration with explicit hypotheses and no hidden trust-basis change.
+5. Check that the declaration skeleton elaborates. Statement-design-only work may retain an explicitly reported proof hole.
+6. Revise an existing declaration only when statement revision is explicitly authorized.
 
 If proving exposes a statement mismatch or evidence that the claim is false, report it rather than silently weakening the statement. If a checked proof is requested, settle the declaration first and then verify the affected scope.
 
@@ -27,4 +28,4 @@ only for concrete API value; do not edit on assessment-only requests.
 - **Draft:** the intended claim is represented faithfully and the declaration skeleton elaborates apart from reported proof holes.
 - **Checked:** the declaration and requested proof elaborate under the verification gate actually claimed.
 
-Report unresolved statement ambiguity or proof holes as partial results.
+Report unresolved statement ambiguity, semantic validity, or proof holes as partial results.

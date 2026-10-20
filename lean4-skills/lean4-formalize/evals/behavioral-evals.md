@@ -34,3 +34,14 @@ Required assertions:
 - `distinguished_mathematical_generality_from_api_ergonomics = PASS`
 - `did_not_force_new_abstraction_or_modify_source = PASS`
 - `explained_public_api_tradeoff = PASS`
+
+## Material generalization gets a boundary check
+
+Fixture: a proposed declaration asserts that every injective linear endomorphism of an arbitrary vector space is surjective. No finite-dimensionality assumption is present, and a proof is not requested. Do not provide reviewer feedback or a ready-made counterexample.
+
+Prompt: Decide whether this is the right general Lean statement and draft it if sound.
+
+Required assertions:
+- `tested_a_material_generalization_against_a_boundary_case = PASS`
+- `identified_missing_finite_dimensionality_or_reported_the_claim_as_false = PASS`
+- `did_not_silently_change_the_claim_or_claim_a_checked_proof = PASS`
