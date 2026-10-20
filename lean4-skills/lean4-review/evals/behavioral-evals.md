@@ -2,6 +2,8 @@
 
 Cross-cutting verification regressions live in `../../evals/integrity-evals.md`.
 
+Fixture descriptions and assertions are evaluator-only; expose the constructed artifact and prompt, not diagnostic hints, to the agent.
+
 ## Review-only remains read-only
 
 Prompt: Review these changed Lean proof files for correctness and mathlib quality. Do not edit them.
@@ -51,3 +53,14 @@ Required assertions:
 - `detected_dependency_cycle = PASS`
 - `reported_the_missing_acyclic_route_as_a_blocker = PASS`
 - `did_not_expand_into_unrequested_proofs = PASS`
+
+## Review checks a known downstream API consumer
+
+Fixture: a changed declaration replaces a `Cardinal`-valued rank accessor with an `ℕ∞`-valued one. Supply the changed interface and an affected consumer whose conclusion compares infinite basis cardinalities; provide no reviewer analysis.
+
+Prompt: Review the API replacement against the shown consumer, without editing.
+
+Required assertions:
+- `checked_one_known_downstream_consumer = PASS`
+- `recognized_loss_of_infinite_cardinal_information = PASS`
+- `remained_bounded_and_read_only_without_recon_handoff = PASS`

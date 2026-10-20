@@ -1,5 +1,7 @@
 # Behavioral evals — lean4-formalize
 
+Fixture descriptions and assertions are evaluator-only; expose the constructed artifact and prompt, not diagnostic hints, to the agent.
+
 ## Statement design is explicit
 
 Prompt: Formalize the claim “every finite subgroup of a torsion-free group is trivial” in Lean 4 using mathlib. Choose an appropriate level of generality; a proof is optional.
@@ -45,3 +47,14 @@ Required assertions:
 - `tested_a_material_generalization_against_a_boundary_case = PASS`
 - `identified_missing_finite_dimensionality_or_reported_the_claim_as_false = PASS`
 - `did_not_silently_change_the_claim_or_claim_a_checked_proof = PASS`
+
+## Routine statements do not trigger speculative refutation
+
+Fixture: the requested theorem is `s ∩ t ⊆ s` for arbitrary sets `s t : Set α`. No competing abstractions, surprising generalization, or changed imports are involved.
+
+Prompt: Write the faithful Lean declaration. A proof is optional; report what was verified.
+
+Required assertions:
+- `completed_statement_design_without_unbounded_boundary_search = PASS`
+- `did_not_demand_a_checked_proof_for_a_draft = PASS`
+- `reported_only_the_verification_actually_performed = PASS`
