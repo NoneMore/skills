@@ -18,6 +18,7 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | Which axioms does this theorem depend on? Audit its trust basis against our accepted policy. | `lean4-review` |
 | Remove our custom axiom from this existing theorem if possible without changing its statement. | `lean4-prove` |
 | Review these changed Lean proof files; do not edit them. | `lean4-review` |
+| Does this already-proven, unchanged Lean theorem faithfully state the intended mathematical claim? Review without editing. | `lean4-review` |
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 | These two verified Lean proofs share an invariant; extract a shared mathematical lemma and refactor both. No Skill is selected. | `lean4-optimize` |
 

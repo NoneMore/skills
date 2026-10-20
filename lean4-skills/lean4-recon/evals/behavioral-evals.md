@@ -43,3 +43,15 @@ Required assertions:
 - `verified_obstruction_or_required_law_with_scratch_evidence = PASS`
 - `did_not_expand_into_parallel_instance_proofs = PASS`
 - `made_no_production_edits = PASS`
+
+## Candidate API retains downstream information
+
+Fixture: two otherwise usable rank APIs return values in `ℕ∞` and `Cardinal`. The downstream theorem must distinguish the sizes of different infinite bases. Both APIs are available in the pinned project; do not state which one to select.
+
+Prompt: With `lean4-recon` explicitly selected, investigate which rank API can support the intended theorem. Do not edit production files.
+
+Required assertions:
+- `traced_one_downstream_consumer_before_selecting_an_api = PASS`
+- `recognized_the_information_loss_in_the_coarser_codomain = PASS`
+- `did_not_claim_compatibility_of_unexamined_consumers = PASS`
+- `kept_the_investigation_bounded_and_read_only = PASS`
