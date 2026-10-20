@@ -1,6 +1,6 @@
 ---
 name: lean4-review
-description: "Use for independent review or audit of Lean 4/mathlib proof code or a declaration's trust basis when the task needs evidence-backed findings about correctness, axioms/assumptions, robustness, library integration, maintainability, or proof quality. Review-only requests are read-only."
+description: "Use for independent review of Lean 4/mathlib statements or proof code, including fidelity to the intended mathematical claim, correctness, trust dependencies, robustness, library integration, maintainability, and proof quality. Review-only requests are read-only."
 license: MIT
 ---
 
@@ -10,7 +10,7 @@ Review only the requested scope. Review-only requests are read-only; if fixes ar
 
 ## Review order
 
-1. **Statement validity:** for new or changed claims, compare exact quantifiers, carriers, and assumptions with the intended result and prerequisites of reused theorems; probe a consequential boundary case when useful. When a changed API has a known downstream consumer, check one representative use for required hypotheses and retained information; do not expand into open-ended abstraction discovery. Distinguish semantic concerns from Lean-certified counterexamples; elaboration alone does not establish the intended claim.
+1. **Statement fidelity and assumptions:** when statement correctness is requested (including for unchanged or already-proven declarations), or when new/changed claims pose material semantic risk, compare exact quantifiers, carriers, and assumptions with the intended mathematical result and prerequisites of reused theorems. Probe a consequential boundary case when useful, without open-ended refutation. A checked proof establishes its formal proposition under the accepted trust basis, not fidelity to the intended claim; distinguish semantic concerns from Lean-certified counterexamples. For a changed API with a known downstream consumer, check one representative use for required hypotheses and retained information without expanding into abstraction discovery; report that the sample does not establish compatibility for unexamined consumers.
 2. **Correctness and trust:** diagnostics, unresolved `sorry`/`admit`, material trust concerns, and a verification gate that exercises any dependency or integration boundary behind the claim. When the request is a trust audit, inspect the declaration's actual axiom/assumption dependencies (for example with `#print axioms <declaration>` when relevant), distinguish project axioms, unresolved placeholders, transitive assumptions, and ordinary Lean/kernel principles, and interpret them against the requested policy. Successful elaboration alone is not a trust audit.
 3. **Robustness:** unnecessary automation, brittle rewrites, typeclass/coercion sensitivity, and accidental definitional dependence.
 4. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports; validate candidate APIs in context.

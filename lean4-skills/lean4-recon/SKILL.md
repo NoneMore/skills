@@ -11,7 +11,7 @@ Investigate only semantic boundaries that could change the design decision:
 
 - follow the local construction to the generic structure or theorem family that owns it;
 - test local wrappers or predicates against canonical notions, broader theorem placement, and natural duals;
-- trace one representative downstream consumer when candidate APIs differ in required hypotheses or information retained;
+- trace one representative downstream consumer when candidate APIs differ in required hypotheses or information retained; treat this as a design discriminator, not proof of compatibility for unexamined consumers;
 - pressure-test material hypotheses with examples or scratch Lean checks;
 - revisit history only when a previously rejecting constraint may have changed;
 - look for a lower-level theorem or API change that would remove repeated local machinery.

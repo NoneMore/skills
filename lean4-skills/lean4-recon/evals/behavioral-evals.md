@@ -53,4 +53,5 @@ Prompt: With `lean4-recon` explicitly selected, investigate which rank API can s
 Required assertions:
 - `traced_one_downstream_consumer_before_selecting_an_api = PASS`
 - `recognized_the_information_loss_in_the_coarser_codomain = PASS`
+- `did_not_claim_compatibility_of_unexamined_consumers = PASS`
 - `kept_the_investigation_bounded_and_read_only = PASS`

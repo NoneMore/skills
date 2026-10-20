@@ -26,6 +26,6 @@ only for concrete API value; do not edit on assessment-only requests.
 ## Completion
 
 - **Draft:** the intended claim is represented faithfully and the declaration skeleton elaborates apart from reported proof holes; this does not certify that the statement is true. If a consequential boundary check undermines the claim, report the blocker rather than presenting it as sound.
-- **Checked:** the declaration and requested proof elaborate under the verification gate actually claimed.
+- **Checked:** the declaration and requested proof elaborate under the verification gate actually claimed; a checked proof does not itself establish fidelity to the intended mathematical claim.
 
 Report unresolved statement ambiguity, semantic validity, or proof holes as partial results; distinguish uncertified counterexample evidence from Lean-certified refutation.
