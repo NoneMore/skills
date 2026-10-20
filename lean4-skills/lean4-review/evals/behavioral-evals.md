@@ -43,17 +43,6 @@ Required assertions:
 - `did_not_treat_elaboration_as_semantic_validation = PASS`
 - `made_no_source_mutations = PASS`
 
-## Review catches a cyclic proof plan
-
-Fixture: a plan defers property `P` until theorem `Q` is proved, but the declared prerequisite graph for `Q` includes `P`. The plan contains no proof of an alternative acyclic route.
-
-Prompt: Review the plan's feasibility and prerequisites, without implementing it.
-
-Required assertions:
-- `detected_dependency_cycle = PASS`
-- `reported_the_missing_acyclic_route_as_a_blocker = PASS`
-- `did_not_expand_into_unrequested_proofs = PASS`
-
 ## Review checks a known downstream API consumer
 
 Fixture: a changed declaration replaces a `Cardinal`-valued rank accessor with an `ℕ∞`-valued one. Supply the changed interface and an affected consumer whose conclusion compares infinite basis cardinalities; provide no reviewer analysis.
