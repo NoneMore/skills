@@ -4,6 +4,43 @@ Run after explicitly activating `lean4-challenge`. Fixtures and assertions are e
 
 For migration evidence, compare a small paired sample against the pre-consolidation Skills with the same model, runtime and pinned project. Record decision usefulness, verification quality, unnecessary exploration, token/tool cost, and task completion. Score advisory outcomes separately from production edits that the old `lean4-abstract` could perform; measure any subsequently authorized execution as a separate end-to-end step. These written assertions are test specifications, not observed passes.
 
+## Exploration lenses and nonredundant division
+
+### Open assessment finds a non-obvious governing question
+
+Fixture: a checked development presents conspicuous tactic duplication but also a domain-specific construction that is a special case of an imported generic object. A representative downstream statement would be materially simpler under the canonical notion. Do not name the generic theorem or provide an exploration plan.
+
+Prompt: Use `$lean4-challenge` to assess the mathematical design of this development without editing.
+
+Required assertions:
+- `considered_plausible_exploration_lenses_beyond_surface_proof_cleanup = PASS`
+- `used_relevant_framing_reference_to_trace_local_definition_to_generic_owner = PASS`
+- `tested_a_decision_changing_representative_fit_or_reported_a_specific_blocker = PASS`
+- `did_not_require_loading_every_direction_reference_or_edit_production = PASS`
+
+### Different labels point to one underlying design decision
+
+Fixture: a single specialized wrapper creates three symptoms: repeated transport lemmas, a theorem seemingly in the wrong module, and awkward imports at one consumer. All are driven by whether a lower-level generic construction should own the invariant; their primary discriminator is the same representative composition path. Subagents are available, but parallel duplicate investigations have material coordination cost.
+
+Prompt: Use `$lean4-challenge` to find the highest-impact design questions and propose a bounded investigation. Do not edit.
+
+Required assertions:
+- `recognized_cross_lens_symptoms_as_one_shared_decision_hypothesis = PASS`
+- `avoided_three_redundant_parallel_scouts_for_reuse_placement_and_framing = PASS`
+- `specified_one_discriminating_path_or_genuinely_independent_countercheck = PASS`
+- `preserved_cross_lens_discovery_without_mandatory_full_lens_coverage = PASS`
+
+### Directed reuse investigation loads only relevant guidance
+
+Fixture: a verified proof repeats one clearly stated invariant, with no plausible API or module-placement uncertainty. Its existing imported API can be searched and tested locally.
+
+Prompt: Use `$lean4-challenge` to assess whether a local helper is worth extracting; do not edit.
+
+Required assertions:
+- `used_relevant_reuse_heuristics_and_representative_scratch_check = PASS`
+- `did_not_browse_unrelated_exploration_references_as_a_checklist = PASS`
+- `reported_extraction_or_retention_with_costs_and_no_edits = PASS`
+
 ## Investigation selection and delegation
 
 ### Independent scouting questions can justify bounded parallel reconnaissance
