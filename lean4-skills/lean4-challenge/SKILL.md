@@ -14,11 +14,11 @@ Question whether consequential mathematical design choices should be retained or
 
 ## Choose investigation depth
 
-- **No direction specified:** use a small, bounded set of parallel subagent scouts, when available, to identify distinct, plausible high-impact design questions. Synthesize and rank directions by supporting evidence, potential impact, uncertainty, and cost of the next discriminating test. Return the shortlist and recommended first direction; do not silently turn reconnaissance into deep investigation.
+- **No direction specified:** scout a small, bounded set of distinct, plausible high-impact design questions. Parallelize independent scouting questions only when the expected benefit justifies coordination cost. Synthesize and rank directions by supporting evidence, potential impact, uncertainty, and cost of the next discriminating test. Return the shortlist and recommended first direction; do not silently turn reconnaissance into deep investigation.
 - **Direction specified:** investigate that decision directly; skip broad scouting. Delegate independent checks or counterarguments only when useful.
-- **Comprehensive depth explicitly requested:** investigate multiple consequential directions in parallel with subagents when available, giving each a bounded question and experimental remit; synthesize overlapping and conflicting evidence. Comprehensive does not mean exhaustive repository-wide exploration.
+- **Comprehensive depth explicitly requested:** investigate multiple consequential directions with bounded questions and experiments; parallelize independent deep investigations when beneficial, and synthesize overlapping and conflicting evidence. Comprehensive does not mean exhaustive repository-wide exploration.
 
-When subagents are unavailable, use bounded sequential investigation and report the limitation. Do not claim parallel work that did not occur.
+Investigation scope and depth follow the user's intent; parallelism is an execution choice based on independent work, runtime support, and expected value versus cost. Use bounded sequential work when delegation is unavailable or not worthwhile; report material limits and do not claim parallel work that did not occur.
 
 ## Deep investigation
 
@@ -32,4 +32,4 @@ When subagents are unavailable, use bounded sequential investigation and report 
 
 Production sources and other durable repository artifacts remain unchanged under this Skill, even if implementation is requested. Scratch experiments may test hypotheses but are not production changes. Recommend concrete follow-up work for the appropriate execution Skill without automatically invoking it. Distinguish checked Lean facts, mathematical reasoning, qualitative judgments, and unresolved hypotheses; report missing tools or specification instead of claiming verification.
 
-For reconnaissance, return a prioritized set of consequential questions, the evidence and uncertainty behind each, and the smallest next experiment. For deep investigation, return the principal design judgment, alternatives and actual experiment outcomes, comparative costs, unresolved tradeoffs, and the smallest justified next action (including retaining the current design). A successful Challenge requires neither novelty nor an edit.
+For reconnaissance, return a prioritized set of consequential questions, the evidence and uncertainty behind each, and the smallest next experiment. For deep investigation, return the principal design judgment, alternatives and actual experiment outcomes, comparative costs, unresolved tradeoffs, and the smallest justified next action (including retaining the current design). If implementation is recommended, hand off the chosen option, checked evidence and limits, statement/trust invariants, affected declarations or consumers, smallest proposed edit, and verification gate. Name an execution Skill only when its scope fits (e.g. `lean4-optimize` for verified-proof refactoring, `lean4-formalize` for declaration design); otherwise identify the ownership gap. Never delegate or authorize edits automatically. A successful Challenge requires neither novelty nor an edit.
