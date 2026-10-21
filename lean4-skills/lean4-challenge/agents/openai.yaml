@@ -1,7 +1,7 @@
 interface:
   display_name: "Lean 4 Challenge"
   short_description: "Advisory Lean mathematical design investigation"
-  default_prompt: "Use $lean4-challenge to assess consequential mathematical design decisions without editing production files. Find and rank directions for a scouting request; for an open design assessment, briefly scout then test the leading question enough to judge; investigate a specified direction directly, or multiple directions only for an explicitly comprehensive request. Use subagents only when independent work justifies their cost."
+  default_prompt: "Use $lean4-challenge to question consequential mathematical design choices with bounded Lean/mathlib experiments. Match depth to the requested deliverable, compare against retaining the current design, and report evidence and limits without production edits."
 
 policy:
   allow_implicit_invocation: false

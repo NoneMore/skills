@@ -8,7 +8,7 @@ Use when definitions, theorems, or module boundaries may contradict the mathemat
 2. Inspect relevant import directions and representative consumers. Look for generic results trapped in specialized modules, repeated wrappers, awkward imports, missing lower-level laws, and potential cycles.
 3. Compare retaining the placement, moving a result, introducing a generic lower-level theorem, or exposing a local facade.
 4. Follow **one representative dependency or composition path** across the proposed boundary; a standalone compiling theorem does not establish integration fitness.
-5. Bound the likely migration: affected declarations, consumers, import boundaries, elaboration changes, and the necessary verification gate.
+5. Identify material affected declarations, consumer and import boundaries, and unverified risks; do not design or promise a migration workflow.
 
 ## Discriminating evidence
 

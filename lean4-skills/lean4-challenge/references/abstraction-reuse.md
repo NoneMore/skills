@@ -18,6 +18,6 @@ Use when mathematical content within or across declarations might be shared. Sim
 
 ## Judgment and stop
 
-Recommend the smallest justified option, including **no extraction**. Record what elaborated versus which consumers remain unexamined. Preserve public statements and trust assumptions in the handoff. Scratch experiments do not authorize production edits. Stop once representative uses and costs distinguish the viable choices.
+Recommend the smallest justified option, including **no extraction**. Record what elaborated versus which consumers remain unexamined. State relevant public-statement and trust invariants in the recommendation. Scratch experiments do not authorize production edits. Stop once representative uses and costs distinguish the viable choices.
 
 If reuse exposes a different generic mathematical owner or placement question, use [framing](mathematical-framing.md) or [theory organization](theory-organization.md) as needed, without duplicating the same underlying investigation.

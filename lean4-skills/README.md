@@ -21,9 +21,7 @@ Discovery is recall-oriented but still has a context budget. Compatible overlap 
 
 ## User-invoked capabilities
 
-- `lean4-challenge` — user-invoked, advisory comparison of consequential mathematical design choices. Direction-finding requests receive a bounded, ranked shortlist; open-ended design assessments scout briefly and test the leading question enough to form a bounded judgment. Specified or expressly comprehensive requests use targeted experiments. Independent work may use subagents when worthwhile. Replaces `lean4-recon` and `lean4-abstract`; never edits production artifacts.
-
-Challenge hands off the supported option, evidence, affected scope, invariants, and verification requirements. Implementation remains a separately authorized execution task: use an existing execution Skill when its scope fits, or an ordinary bounded multi-step workflow for cross-module changes without a single owning Skill. Challenge does not initiate execution or invent a new owner.
+- `lean4-challenge` — explicitly invoked, advisory comparison of consequential mathematical design choices. Matches investigation depth to the requested outcome, uses bounded experiments, and can recommend retaining the current design. Replaces `lean4-recon` and `lean4-abstract`; never edits production artifacts or promises an implementation workflow.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
 ## Defensive structure

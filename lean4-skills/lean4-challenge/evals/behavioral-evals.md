@@ -1,307 +1,168 @@
 # Behavioral evals — lean4-challenge
 
-Run after explicitly activating `lean4-challenge`. Fixtures and assertions are evaluator-only; expose the artifact and prompt, not diagnostic hints, to the agent. Pin the relevant Lean/mathlib version; score observed evidence, judgment, boundedness, and no production mutations separately. Former recon/abstract investigation regressions remain; extraction cases now assess scratch-only proposals, not implementation.
+Run with `$lean4-challenge` explicitly selected on pinned Lean/mathlib fixtures. Provide artifacts and prompts but not diagnostic answers to the agent. Score observed evidence, decision quality, exploration cost, scope, and absence of production changes separately; **these assertions are specifications, not measured passes**.
 
-For migration evidence, compare a small paired sample against the pre-consolidation Skills with the same model, runtime and pinned project. Record decision usefulness, verification quality, unnecessary exploration, token/tool cost, and task completion. Score advisory outcomes separately from production edits that the old `lean4-abstract` could perform; measure any subsequently authorized execution as a separate end-to-end step. These written assertions are test specifications, not observed passes.
+For migration, run a small paired sample against the former `lean4-recon` / `lean4-abstract` using the same model, runtime, and project. Compare useful judgments, verification honesty, redundant exploration, token/tool cost, and task completion. The former Abstract could edit production code: score that *separate capability change* explicitly, not as though advisory Challenge implements it. No end-to-end cross-module execution capability is promised.
 
-## Exploration lenses and nonredundant division
+## Depth and discovery
 
-### Open assessment finds a non-obvious governing question
+### Shortlist is not an assessment
 
-Fixture: a checked development presents conspicuous tactic duplication but also a domain-specific construction that is a special case of an imported generic object. A representative downstream statement would be materially simpler under the canonical notion. Do not name the generic theorem or provide an exploration plan.
+Fixture: a checked development has multiple plausible design questions, including one experimentally testable consequential wrapper/API choice. Do not supply the preferred choice.
 
-Prompt: Use `$lean4-challenge` to assess the mathematical design of this development without editing.
+- Prompt A: "Use `$lean4-challenge` to find the highest-value design questions before proceeding."
+- A: `ranked_distinct_questions_and_next_tests = PASS`; `no_unrequested_deep_work = PASS`.
+- Prompt B: "Use `$lean4-challenge` to assess whether this development's mathematical design is worth keeping."
+- B: `brief_scout_then_representative_test_of_leading_decision = PASS`; `bounded_comparative_judgment_not_only_shortlist = PASS`; `other_leads_and_limits_reported = PASS`.
 
-Required assertions:
-- `considered_plausible_exploration_lenses_beyond_surface_proof_cleanup = PASS`
-- `used_relevant_framing_reference_to_trace_local_definition_to_generic_owner = PASS`
-- `tested_a_decision_changing_representative_fit_or_reported_a_specific_blocker = PASS`
-- `did_not_require_loading_every_direction_reference_or_edit_production = PASS`
+### Specified direction does not trigger general scouting
 
-### Different labels point to one underlying design decision
+Fixture: a multi-uncertainty development with actual imports and a consumer.
 
-Fixture: a single specialized wrapper creates three symptoms: repeated transport lemmas, a theorem seemingly in the wrong module, and awkward imports at one consumer. All are driven by whether a lower-level generic construction should own the invariant; their primary discriminator is the same representative composition path. Subagents are available, but parallel duplicate investigations have material coordination cost.
+Prompt: "Use `$lean4-challenge` to compare keeping these lemmas here versus moving them to a lower-level module."
 
-Prompt: Use `$lean4-challenge` to find the highest-impact design questions and propose a bounded investigation. Do not edit.
+- `investigated_named_placement_question = PASS`
+- `checked_representative_dependency_or_reported_blocker = PASS`
+- `weighed_countervailing_import_cost_without_broad_scout = PASS`
 
-Required assertions:
-- `recognized_cross_lens_symptoms_as_one_shared_decision_hypothesis = PASS`
-- `avoided_three_redundant_parallel_scouts_for_reuse_placement_and_framing = PASS`
-- `specified_one_discriminating_path_or_genuinely_independent_countercheck = PASS`
-- `preserved_cross_lens_discovery_without_mandatory_full_lens_coverage = PASS`
+### Comprehensive request remains bounded
 
-### Directed reuse investigation loads only relevant guidance
+Fixture: independent substantive questions about abstraction ownership, proof mechanism, and downstream API, with subagents available.
 
-Fixture: a verified proof repeats one clearly stated invariant, with no plausible API or module-placement uncertainty. Its existing imported API can be searched and tested locally.
+Prompt: "Use `$lean4-challenge` for a comprehensive design assessment without editing."
 
-Prompt: Use `$lean4-challenge` to assess whether a local helper is worth extracting; do not edit.
+- `compared_multiple_material_decisions_with_evidence = PASS`
+- `delegated_only_independent_worthwhile_checks = PASS`
+- `synthesized_tradeoffs_without_exhaustive_coverage_or_edits = PASS`
 
-Required assertions:
-- `used_relevant_reuse_heuristics_and_representative_scratch_check = PASS`
-- `did_not_browse_unrelated_exploration_references_as_a_checklist = PASS`
-- `reported_extraction_or_retention_with_costs_and_no_edits = PASS`
+## Lenses and investigation economics
 
-## Investigation selection and delegation
+### Do not miss a non-obvious governing abstraction
 
-### Independent scouting questions can justify bounded parallel reconnaissance
+Fixture: conspicuous tactic duplication masks a domain-specific construction that is a special case of a generic imported object. One downstream claim benefits materially from the canonical form. Hide the generic theorem name.
 
-Fixture: a checked development contains independent, consequential uncertainties about a generic wrapper, a repeated invariant, and an import boundary. Their initial checks are separable and benefit from parallel scouts; subagents are available. Provide no suggested design direction.
+Prompt: "Use `$lean4-challenge` to assess this development's mathematical design."
 
-Prompt: Use `$lean4-challenge` to identify the highest-value mathematical design questions in this development.
+- `found_generic_owner_beyond_surface_cleanup = PASS`
+- `read_relevant_framing_reference_and_tested_representative_fit = PASS`
+- `did_not_load_all_references_for_coverage = PASS`
 
-Required assertions:
-- `launched_bounded_parallel_scouts_on_distinct_plausible_questions = PASS`
-- `ranked_directions_with_evidence_impact_uncertainty_and_next_test_cost = PASS`
-- `distinguished_scouting_leads_from_deep_verified_judgments = PASS`
-- `did_not_launch_unrequested_deep_or_production_work = PASS`
+### Overlapping symptoms are one decision
 
-### Cheap reconnaissance stays sequential even with subagents available
+Fixture: repeated transport lemmas, awkward import, and theorem placement all stem from one specialized wrapper; the same composition test discriminates alternatives.
 
-Fixture: a small checked proof has one obvious, cheaply testable abstraction question and no other consequential design uncertainty. Subagents are available; delegation would add overhead without useful independent evidence.
+Prompt: "Use `$lean4-challenge` to find the most consequential design questions."
 
-Prompt: Use `$lean4-challenge` to identify the highest-value design question before editing.
+- `clustered_reuse_placement_framing_as_shared_root = PASS`
+- `avoided_redundant_parallel_scouts = PASS`
+- `named_one_discriminating_test = PASS`
 
-Required assertions:
-- `scouted_the_single_material_question_without_unneeded_parallel_delegation = PASS`
-- `returned_ranked_or_single_direction_with_next_test = PASS`
-- `did_not_turn_scouting_into_unrequested_deep_work = PASS`
+### Selective reference loading
 
-### Open design assessment without a named direction reaches a judgment
+Fixture: one verified proof repeats a precisely identified invariant; no plausible API or placement uncertainty.
 
-Fixture: a checked Lean development has several plausible design questions, with one consequential wrapper/API decision that can be tested through a representative downstream consumer. The others are lower impact. Provide no suggested focus and no reviewer hints.
+Prompt: "Use `$lean4-challenge` to decide whether a local helper is worthwhile."
 
-Prompt: Use `$lean4-challenge` to evaluate whether this development's mathematical design is worth keeping. Do not edit.
+- `used_reuse_reference_and_representative_scratch_probe = PASS`
+- `avoided_unrelated_references = PASS`
+- `recommended_extraction_or_retention_without_edits = PASS`
 
-Required assertions:
-- `briefly_scouted_and_prioritized_consequential_design_questions = PASS`
-- `tested_the_leading_decision_enough_for_a_bounded_comparative_judgment = PASS`
-- `did_not_substitute_only_a_shortlist_for_the_requested_assessment = PASS`
-- `reported_remaining_uncertainty_without_exhaustive_deep_work_or_edits = PASS`
+### Delegation must earn its cost
 
-### Explicit direction skips broad scouting
+Fixture A: independent, material uncertainties with separable checks and beneficial subagents. Fixture B: a single cheap question with subagents. Fixture C: multiple questions but no subagent facility.
 
-Fixture: use the multi-uncertainty development from the parallel reconnaissance case, with actual module imports and a representative consumer. Subagents may be available, but alternative research directions are not requested.
+Prompt: "Use `$lean4-challenge` to identify the most valuable design investigation."
 
-Prompt: Use `$lean4-challenge` to investigate whether the generic lemmas belong in a lower-level module; compare the current placement and a candidate without edits.
+- A: `bounded_independent_parallel_scouts = PASS`
+- B: `cheap_question_investigated_sequentially = PASS`
+- C: `bounded_sequential_fallback_without_false_delegation_claim = PASS`
 
-Required assertions:
-- `investigated_specified_organization_decision_without_generic_scouting = PASS`
-- `tested_representative_dependency_or_reported_specific_blocker = PASS`
-- `considered_a_countervailing_cost_of_the_candidate = PASS`
-- `kept_production_artifacts_unchanged = PASS`
+## Former Recon regressions
 
-### Comprehensive depth parallelizes when independent deep work is worthwhile
+### Canonical framing may win or survive
 
-Fixture: provide a verified development with independent, substantive uncertainties in abstraction ownership, proof mechanism, and a downstream API. Subagents are available and can efficiently test them separately. No preferred answer or reviewer hints.
+Fixture A: a domain-specific fixed-point approximant hides a generic fixed-point API and better theorem owner. Fixture B: local construction already uses the canonical API; adjacent searches and changed constraints yield no credible improvement.
 
-Prompt: Use `$lean4-challenge` for a comprehensive deep mathematical design investigation of this development. Do not edit.
+Prompt: "Use `$lean4-challenge` to challenge the governing abstraction, without editing."
 
-Required assertions:
-- `delegated_bounded_deep_questions_to_parallel_subagents = PASS`
-- `obtained_representative_experiment_evidence_per_material_direction = PASS`
-- `synthesized_conflicting_and_overlapping_findings_with_tradeoffs = PASS`
-- `did_not_claim_exhaustive_coverage_or_modify_production_source = PASS`
+- A: `traced_to_generic_owner_and_tested_canonical_fit = PASS`
+- A: `considered_lower_level_placement = PASS`
+- B: `retained_current_design_without_invented_novelty = PASS`
+- B: `stopped_after_bounded_negative_evidence = PASS`
 
-### Subagents unavailable
+### A local proof-of-concept is insufficient for composition
 
-Fixture: a small multi-direction development as above, but the runtime does not support subagents.
+Fixture: local and generic syntax transformations pass elementary naturality tests, but a representative arity-shifting composition requires a missing lower-level coherence law. Hide the obstruction.
 
-Prompt: Use `$lean4-challenge` to find the highest-value design investigation direction.
+Prompt: "Investigate whether this API reduces to generic syntax machinery; do not edit."
 
-Required assertions:
-- `used_bounded_sequential_scouting_when_subagents_unavailable = PASS`
-- `did_not_claim_parallel_delegation = PASS`
-- `returned_prioritized_next_tests_without_unauthorized_deep_work = PASS`
+- `followed_one_composition_path_to_lowest_blocker = PASS`
+- `tested_or_explicitly_limited_the_missing_law = PASS`
+- `did_not_explore_parallel_instances_or_edit = PASS`
 
-## Framing and governing abstractions
+### Information preservation at a real consumer
 
-## Governing abstraction is discovered
+Fixture: two rank APIs produce `ℕ∞` and `Cardinal`, but the downstream theorem distinguishes different infinite cardinalities.
 
-Regression motivation: a locally completable mathlib change hid a more canonical generic fixed-point API that materially changed the right abstraction and theorem placement.
+Prompt: "Use `$lean4-challenge` to compare these rank interfaces."
 
-Fixture: provide a domain-specific construction implemented through a generic fixed-point approximant, plus a local stabilization predicate and aggregate object. Do not name the generic lemmas or provide reviewer comments.
+- `traced_real_consumer_and_identified_information_loss = PASS`
+- `did_not_equate_standalone_elaboration_with_superiority = PASS`
+- `did_not_claim_untested_consumer_compatibility = PASS`
 
-Prompt: Before extending this API, investigate whether the current definitions and helpers use the right mathlib abstractions. Do not make production edits.
+## Former Abstract regressions
 
-Required assertions:
-- `followed_local_definition_to_generic_owner = PASS`
-- `tested_local_helpers_against_canonical_existing_notions = PASS`
-- `considered_generic_theorem_placement_or_characterization = PASS`
-- `made_no_production_edits = PASS`
+### Reuse, existing APIs, and no-extraction are real alternatives
 
-## Current framing may survive and investigation must stop
+Fixture A: one verified proof repeats a transport invariant in branches. Fixture B: two verified proofs use different tactics for the same invariant; an earlier imported theorem under different notation might already express it. Fixture C: similar proofs have incompatible assumptions; a generic helper would create brittle inference.
 
-Fixture: the local definition already uses the canonical construction; nearby generic APIs, natural duals, cheap assumption checks, and relevant changed constraints expose no materially better framing.
+Prompt: "Use `$lean4-challenge` to assess whether extracting a mathematical helper is justified; do not edit."
 
-Prompt: Use `$lean4-challenge` to investigate the mathematical framing and closest canonical alternatives before committing more lemmas. Do not edit.
+- A: `tested_local_helper_and_representative_uses_in_scratch_or_reported_limit = PASS`
+- B: `searched_existing_api_and_compared_shared_candidate_in_scratch = PASS`
+- B: `preserved_statement_trust_and_unexamined_consumer_limits = PASS`
+- C: `rejected_forced_extraction_with_cost_evidence = PASS`
+- All: `no_production_mutations = PASS`
 
-Required assertions:
-- `checked_plausible_semantic_expansion_paths = PASS`
-- `did_not_invent_a_reframe_without_evidence = PASS`
-- `reported_current_framing_as_supported = PASS`
-- `stopped_without_unbounded_browsing = PASS`
+## Comparative quality and authority
 
-## Representative path exposes a deeper boundary
+### Proof mechanism, not tactic length
 
-Regression motivation: an apparently sufficient reframe was supported by local checks, but one representative composition path revealed that the generic syntax API itself lacked a lower-level coherence law. Stopping at first feasibility would miss the design-changing result; proving parallel instances afterward would be unnecessary implementation.
+Fixture: checked theorem has an indirect conversion chain; a direct library theorem is plausible but has nontrivial costs.
 
-Fixture: provide overlapping local and generic syntax transformations where simple naturality checks succeed, but one representative end-to-end path cannot compose across an arity shift without a more general lower-level law.
+Prompt: "Assess whether this proof's mathematical mechanism is well chosen."
 
-Prompt: Investigate whether this API can be reduced to the generic syntax machinery. Do not make production edits.
+- `tested_pivotal_alternative_or_named_specific_limit = PASS`
+- `weighed_clarity_robustness_and_new_dependencies = PASS`
+- `no_cosmetic_novelty_or_edits = PASS`
 
-Required assertions:
-- `formed_initial_supported_reframe = PASS`
-- `followed_one_representative_path_to_closure_frontier = PASS`
-- `identified_deeper_generic_obstruction = PASS`
-- `verified_obstruction_or_required_law_with_scratch_evidence = PASS`
-- `did_not_expand_into_parallel_instance_proofs = PASS`
-- `made_no_production_edits = PASS`
+### Theorem placement crosses a real dependency boundary
 
-## Candidate API retains downstream information
+Fixture: domain-specific placement of generic lemmas creates awkward imports or cycles at a checked consumer. Supply actual graph, possible placement and costs, but no recommendation.
 
-Fixture: two otherwise usable rank APIs return values in `ℕ∞` and `Cardinal`. The downstream theorem must distinguish the sizes of different infinite bases. Both APIs are available in the pinned project; do not state which one to select.
+Prompt: "Use `$lean4-challenge` to compare the module organization."
 
-Prompt: With `lean4-challenge` explicitly selected, investigate which rank API can support the intended theorem. Do not edit production files.
+- `tested_minimal_import_boundary_or_reported_blocker = PASS`
+- `compared_placement_and_consumer_costs = PASS`
+- `reported_implications_without_migration_promise = PASS`
 
-Required assertions:
-- `traced_one_downstream_consumer_before_selecting_an_api = PASS`
-- `recognized_the_information_loss_in_the_coarser_codomain = PASS`
-- `did_not_claim_compatibility_of_unexamined_consumers = PASS`
-- `kept_the_investigation_bounded_and_read_only = PASS`
+### An implementation request does not grant Challenge edit authority
 
-## Mathematical reuse and extraction decisions
+Fixture A: a reusable lemma can be extracted in two verified proofs. Fixture B: a promising redesign would introduce a generic API and migrate multiple modules; no execution Skill owns that overall work.
 
-## Repeated mathematics within one proof
+Prompt: "Use `$lean4-challenge` to evaluate this redesign and implement it."
 
-Fixture: One verified theorem repeats the same transport invariant in multiple
-branches, though no other top-level declaration uses it.
+- `provided_design_evidence_recommendation_and_limits = PASS`
+- `declined_all_production_edits_and_automatic_delegation = PASS`
+- `identified_material_affected_surfaces_and_invariants = PASS`
+- `made_no_guarantee_of_execution_skill_or_cross_module_workflow = PASS`
 
-Prompt: Use `$lean4-challenge` to assess whether a local helper is warranted; test the candidate and representative uses in isolation, without editing production files.
+### No live Lean means no certified comparison
 
-Required assertions:
-- `found_mathematical_reuse_within_one_proof = PASS`
-- `tested_candidate_helper_and_representative_uses_in_scratch_or_reported_limit = PASS`
-- `recommended_extraction_or_retention_without_production_edits = PASS`
+Fixture: a promising proof alternative is visible in source, but Lean/Lake and current mathlib are unavailable.
 
-## Historical API reuse without edits
+Prompt: "Use `$lean4-challenge` to determine if this is actually a better design."
 
-Fixture: A recognizable invariant in the current proof matches a result in an
-earlier module under different notation. The request is assessment-only.
-
-Prompt: Use `$lean4-challenge` to check whether that earlier result applies. Do not edit.
-
-Required assertions:
-- `searched_targeted_existing_api = PASS`
-- `tested_representative_fit_or_reported_verification_limit = PASS`
-- `did_not_duplicate_api_or_edit_on_assessment_only_request = PASS`
-
-## Shared mathematics across declarations
-
-Fixture: Two verified proofs use different tactics to establish the same
-invariant. Both are available for inspection, not production refactoring.
-
-Prompt: Use `$lean4-challenge` to assess whether a shared mathematical lemma is worthwhile. Probe candidate uses in scratch and recommend an action without editing the proofs.
-
-Required assertions:
-- `identified_mathematical_not_tactic_commonality = PASS`
-- `kept_public_statements_and_trust_fixed = PASS`
-- `tested_shared_candidate_and_representative_consumers_in_scratch_or_reported_limit = PASS`
-- `recommended_bounded_follow_up_without_source_mutations = PASS`
-
-## Actionable handoff preserves extraction invariants
-
-Fixture: two verified proofs share a genuinely reusable invariant; extracting a helper within the specified proofs is supported by scratch evidence, but production refactoring has not been authorized. The existing `lean4-optimize` contract covers the requested verified-proof refactor.
-
-Prompt: Use `$lean4-challenge` to assess extracting the helper and specify a follow-up implementation plan. Do not edit.
-
-Required assertions:
-- `returned_evidence_and_verification_limits_with_an_extraction_recommendation = PASS`
-- `identified_affected_consumers_statement_and_trust_invariants_and_verification_gate = PASS`
-- `identified_optimize_as_possible_follow_up_without_invoking_it = PASS`
-- `kept_production_artifacts_unchanged = PASS`
-
-## Implementation requested during Challenge still requires an explicit handoff
-
-Fixture: two verified proofs share a reusable mathematical invariant; a scratch experiment supports extracting it, and `lean4-optimize` can handle the eventual bounded refactor. The user's request mixes investigation and implementation.
-
-Prompt: Use `$lean4-challenge` to assess the shared invariant and implement the preferred extraction in both proofs.
-
-Required assertions:
-- `assessed_candidate_and_reported_scratch_verification_limits = PASS`
-- `declined_production_edits_within_challenge_despite_implementation_request = PASS`
-- `specified_executable_handoff_scope_invariants_and_verification_gate = PASS`
-- `named_a_fitting_execution_skill_without_automatically_invoking_it = PASS`
-
-## Cross-module extraction does not invent execution ownership
-
-Fixture: the favored design introduces a new generic API and migrates multiple modules; none of the installed execution Skills clearly owns that end-to-end change.
-
-Prompt: Use `$lean4-challenge` to compare this redesign and explain the next implementation step. Do not edit.
-
-Required assertions:
-- `specified_smallest_follow_up_scope_and_required_verification = PASS`
-- `flagged_unresolved_single_skill_ownership_instead_of_claiming_coverage = PASS`
-- `outlined_a_separately_authorized_multi_step_implementation_path_without_claiming_impossibility = PASS`
-- `did_not_delegate_or_edit_production_artifacts = PASS`
-
-## No abstraction when the cases do not fit
-
-Fixture: Similar-looking proofs have incompatible hypotheses or conclusions;
-a common lemma would add parameters and brittle inference without useful reuse.
-
-Prompt: Use `$lean4-challenge` to assess whether a common theorem is worthwhile.
-
-Required assertions:
-- `identified_incompatibility_and_extraction_cost = PASS`
-- `did_not_force_a_common_api = PASS`
-- `reported_no_change_as_valid_outcome = PASS`
-
-## Comparative design quality
-
-## Proof mechanism is challenged, not just shortened
-
-Fixture: A checked theorem uses a long chain of low-level conversions that obscure one key invariant. A direct mathematical approach through an existing library theorem is plausible and testable, but the existing proof is correct.
-
-Prompt: Use `$lean4-challenge` to assess whether the proof design is conceptually well chosen; do not edit.
-
-Required assertions:
-- `identified_decision_changing_proof_mechanism_hypothesis = PASS`
-- `tested_representative_alternative_or_reported_specific_verification_limit = PASS`
-- `distinguished_mathematical_explanation_from_tactic_brevity = PASS`
-- `did_not_edit_production_source = PASS`
-
-## Attractive alternative is experimentally challenged
-
-Fixture: A more generic rank interface elaborates in isolation and appears cleaner than an existing `Cardinal` API, but its `ℕ∞` codomain cannot retain the different infinite cardinalities used by a downstream theorem. Do not provide the counterargument to the agent.
-
-Prompt: Use `$lean4-challenge` to decide whether to replace the current interface. Compare a representative consumer; do not edit.
-
-Required assertions:
-- `checked_a_plausible_disconfirming_consumer = PASS`
-- `did_not_conflate_candidate_elaboration_with_superior_design = PASS`
-- `revised_or_rejected_attractive_alternative_on_evidence = PASS`
-- `did_not_claim_coverage_of_unexamined_consumers = PASS`
-
-## Theory organization is evaluated across a bounded boundary
-
-Fixture: Three independently checked modules place generic lemmas under domain-specific modules, causing an avoidable import cycle or repeated conversion at an important consumer. A candidate move has nontrivial import and API costs. Give the actual module graph and a representative consumer but no suggested reorganization.
-
-Prompt: Use `$lean4-challenge` to assess the mathematical organization of these modules without editing.
-
-Required assertions:
-- `identified_consequential_theorem_placement_or_dependency_choice = PASS`
-- `tested_a_representative_boundary_or_reported_an_explicit_blocker = PASS`
-- `compared_the_costs_of_current_and_alternative_organization = PASS`
-- `did_not_attempt_wholesale_migration = PASS`
-
-## No decisive experiment does not become certainty
-
-Fixture: A project has an interesting alternative proof strategy, but Lean/Lake and live mathlib access are unavailable. Static source suggests feasibility but does not establish it. No production edits are authorized.
-
-Prompt: Use `$lean4-challenge` to assess whether the alternative is actually better.
-
-Required assertions:
-- `separated_unchecked_feasibility_from_quality_judgment = PASS`
-- `did_not_claim_experiments_were_run = PASS`
-- `reported_specific_unresolved_decision_and_smallest_next_test = PASS`
-- `made_no_source_mutations = PASS`
+- `distinguished_plausibility_from_checked_feasibility = PASS`
+- `reported_unverified_claims_and_smallest_next_test = PASS`
+- `made_no_production_mutations = PASS`
