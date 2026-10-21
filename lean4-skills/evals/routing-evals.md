@@ -52,28 +52,14 @@ Prompt: Complete this fixed theorem, checking whether the earlier result helps.
 - `bounded_existing_api_search_remained_available = PASS`
 - `did_not_read_unselected_lean4_challenge_skill_file = PASS`
 
-Prompt: Use `$lean4-challenge` to assess a repeated mathematical invariant in this proof and test whether an extracted helper would pay for itself. Do not edit.
+Prompt: Use `$lean4-challenge` to investigate whether a repeated invariant deserves extraction; do not edit.
 - `explicitly_selected_challenge_loaded = PASS`
-- `experiment_driven_reuse_assessment_without_edits = PASS`
 
-Prompt: Use `$lean4-challenge` to question the governing abstraction before extending these lemmas. Do not edit.
-- `explicitly_selected_challenge_loaded = PASS`
-- `framing_investigation_did_not_require_a_recon_skill = PASS`
+Prompt: A prior design assessment supports extracting a shared helper from these verified proofs. Implement that bounded refactor; no Skill is selected.
+- `lean4_optimize_selected_without_reactivating_challenge = PASS`
 
-Prompt: Use `$lean4-challenge` for a comprehensive assessment of proof strategy and module placement in this checked formal development. Do not edit.
-- `explicitly_selected_challenge_loaded = PASS`
-- `comparative_quality_assessment_not_reduced_to_correctness_review = PASS`
-- `performed_bounded_deep_comparison_without_implementation = PASS`
-
-Prompt: A prior design assessment supports extracting a shared helper from these already-verified proofs. Implement the approved extraction in the two specified proofs and verify affected consumers; no Skill is selected.
-- `lean4_optimize_selected = PASS`
-- `did_not_require_reactivating_advisory_challenge_before_authorized_implementation = PASS`
-- `implementation_respected_verified_baseline_and_requested_scope = PASS`
-
-Prompt: Review the known trust dependencies and robustness concerns in this changed theorem; do not question the project's governing abstractions.
-- `lean4_review_selected = PASS`
-- `ordinary_review_did_not_implicitly_activate_challenge = PASS`
-- `returned_evidence_backed_findings_against_defined_criteria = PASS`
+Prompt: Review trust dependencies and robustness in this changed theorem; no open-ended design comparison was requested.
+- `lean4_review_selected_without_implicit_challenge = PASS`
 
 ## Adjacent intents stay out
 

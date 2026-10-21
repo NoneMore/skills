@@ -10,41 +10,36 @@ license: MIT
 
 # Lean 4 Challenge
 
-Question consequential mathematical design choices and return evidence-backed comparisons, including reasons to retain the current design. Unlike `lean4-review` (findings against relatively settled criteria for a specified artifact), Challenge investigates whether the design itself should differ. Proof, formalization, and optimization methods are experiments, not production deliverables.
+Question consequential mathematical design choices and return evidence-backed comparisons, including reasons to retain the current design. Unlike `lean4-review` (findings against criteria for a specified artifact), Challenge asks whether the design itself should differ. Proof, formalization, and optimization are investigative techniques, not production deliverables.
 
-## Select depth by requested outcome
+## Match the requested depth
 
-Direction and deliverable are independent; an unspecified direction does not mean a scout-only answer.
+- **Find directions:** scout plausible consequential decisions and return a ranked shortlist with next tests; do not silently investigate them in depth.
+- **Assess a design without a named direction:** scout briefly, then test the leading decision enough for a bounded judgment.
+- **Investigate a named decision:** compare it directly without broad scouting.
+- **Explicitly comprehensive assessment:** compare several material decisions, not the whole repository exhaustively.
 
-- **Find directions:** scout a bounded set of plausible high-impact decisions, rank by evidence, impact, uncertainty, and next-test cost, then stop with a shortlist.
-- **Assess a design without a named direction:** scout briefly, then test the leading decision enough for a bounded comparative judgment; report other leads as uninvestigated.
-- **Investigate a named decision:** go directly to its alternatives and discriminating evidence.
-- **Explicitly comprehensive assessment:** compare multiple material decisions with bounded experiments, not exhaustive repository coverage.
+When multiple **substantive, independent** investigations are valuable, actively delegate bounded questions to parallel subagents if available; synthesize their evidence. Do not delegate trivial or overlapping questions. Otherwise work sequentially.
 
-If no candidate merits deeper testing, explain why. Use subagents only for independent, bounded questions when their benefit exceeds coordination cost; otherwise work sequentially. Never claim delegation that did not occur.
+## Find the governing decision
 
-## Discover the governing decision
+These overlapping lenses are optional search aids, not mandatory stages. Use the index to scout; **a named direction does not require reading a reference**. Consult a reference only when its specialized guidance would help.
 
-These overlapping lenses are search heuristics, **not** required stages or one-subagent-per-lens assignments. Brief scouting uses the index; **read a selected reference before substantial investigation**, not all five for coverage.
-
-- **[Mathematical framing](references/mathematical-framing.md):** generic owners, canonical notions, alternative characterizations and natural duals.
-- **[Abstraction and reuse](references/abstraction-reuse.md):** shared mathematical invariants; reuse, local/public helper, or no extraction.
-- **[API expressivity](references/api-expressivity.md):** assumptions, retained information, inference and downstream use.
+- **[Mathematical framing](references/mathematical-framing.md):** generic owners, canonical notions, alternative characterizations and duals.
+- **[Abstraction and reuse](references/abstraction-reuse.md):** shared mathematical invariants; existing result, helper, or no extraction.
+- **[API expressivity](references/api-expressivity.md):** assumptions, information retained and downstream use.
 - **[Proof architecture](references/proof-architecture.md):** competing mathematical mechanisms rather than tactic length.
-- **[Theory organization](references/theory-organization.md):** theorem ownership, dependencies, imports and placement.
+- **[Theory organization](references/theory-organization.md):** theorem ownership, imports and dependency placement.
 
-Group leads by the **underlying design decision and test**, not by lens. Merge overlapping questions; investigate prerequisites first and use independent counterchecks only when useful.
+Group overlapping symptoms by the **underlying decision**, not the lens label.
 
-## Experiment, compare, stop
+## Compare with evidence
 
-1. Establish the intended mathematics, representative consumers, constraints, and decision. Expand scope only if it could reverse the judgment.
-2. Compare credible alternatives, including the status quo. Search existing local/mathlib APIs before proposing new ones.
-3. Prefer the smallest discriminating Lean/mathlib probe (`#check`, `#synth`, `#print`, minimal imports, scratch proof or boundary case). If composition matters, trace one representative path to closure or its lowest-level obstruction.
-4. Probe a plausible *cost against* the attractive option: stronger assumptions, information loss, inference, dependency, consumer fit, or maintenance. Elaboration proves feasibility, not superiority; failed search does not prove impossibility.
-5. Stop when evidence distinguishes options, a genuine tradeoff remains, or further tests are unlikely to change the decision. Do not manufacture novelty or expand into parallel implementation work.
+1. Recover the intended mathematics, relevant consumers, and alternatives, including the current design.
+2. Prefer the smallest discriminating check: targeted mathlib search, `#check`/`#synth`, scratch Lean examples, boundary cases, minimal imports, or a representative downstream composition path.
+3. Test a potential drawback of promising alternatives (assumptions, information loss, inference, dependencies, consumer fit, maintenance). Elaboration shows feasibility, not superiority.
+4. Stop when further investigation is unlikely to change the judgment. Do not force novelty.
 
-## Output and authority
+## Outcome and scope
 
-Return the deliverable requested: for a scout, ranked questions and next tests; for an assessment, a supported judgment on the leading decision with other leads and limits; for directed/comprehensive work, alternatives, actual experiment results, comparative costs, uncertainty, and the smallest justified recommendation (including no change).
-
-Separate checked Lean facts from mathematical reasoning, judgment, and untested hypotheses. Report missing tools and verification limits explicitly. **Never edit production source or other durable repository artifacts under Challenge, even if implementation is requested.** Scratch experiments are permitted. For a recommended change, explain its design implications, material affected surfaces/invariants, and what would need verification; **do not promise an implementation plan, execution owner, cross-module workflow, or successful migration**. Execution is a separate task governed by its own authorization and capabilities.
+Return the requested shortlist or comparative judgment with actual evidence, costs, unresolved questions, and next verification needs. Distinguish checked Lean facts from unverified reasoning; report missing tools or limits. **Do not edit production source or durable repository artifacts under Challenge, even if asked to implement.** Scratch experiments are allowed. Describe implications of recommended changes without promising an implementation plan, execution owner, or migration workflow.
