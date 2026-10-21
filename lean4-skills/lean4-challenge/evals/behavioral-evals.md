@@ -4,9 +4,9 @@ Run after explicitly activating `lean4-challenge`. Fixtures and assertions are e
 
 ## Investigation selection and delegation
 
-### Unspecified direction starts with bounded parallel reconnaissance
+### Independent scouting questions can justify bounded parallel reconnaissance
 
-Fixture: a checked small development contains a specialized wrapper around a generic construction, a repeated transport invariant, and a costly import boundary. Provide no suggested design direction. Subagents are available to the evaluated runtime.
+Fixture: a checked development contains independent, consequential uncertainties about a generic wrapper, a repeated invariant, and an import boundary. Their initial checks are separable and benefit from parallel scouts; subagents are available. Provide no suggested design direction.
 
 Prompt: Use `$lean4-challenge` to identify the highest-value mathematical design questions in this development.
 
@@ -15,6 +15,17 @@ Required assertions:
 - `ranked_directions_with_evidence_impact_uncertainty_and_next_test_cost = PASS`
 - `distinguished_scouting_leads_from_deep_verified_judgments = PASS`
 - `did_not_launch_unrequested_deep_or_production_work = PASS`
+
+### Cheap reconnaissance stays sequential even with subagents available
+
+Fixture: a small checked proof has one obvious, cheaply testable abstraction question and no other consequential design uncertainty. Subagents are available; delegation would add overhead without useful independent evidence.
+
+Prompt: Use `$lean4-challenge` to identify the highest-value design question before editing.
+
+Required assertions:
+- `scouted_the_single_material_question_without_unneeded_parallel_delegation = PASS`
+- `returned_ranked_or_single_direction_with_next_test = PASS`
+- `did_not_turn_scouting_into_unrequested_deep_work = PASS`
 
 ### Explicit direction skips broad scouting
 
@@ -28,9 +39,9 @@ Required assertions:
 - `considered_a_countervailing_cost_of_the_candidate = PASS`
 - `kept_production_artifacts_unchanged = PASS`
 
-### Comprehensive depth uses bounded parallel deep investigations
+### Comprehensive depth parallelizes when independent deep work is worthwhile
 
-Fixture: provide a verified development with separable uncertainties in abstraction ownership, proof mechanism, and a downstream API, with subagents available. No preferred answer or reviewer hints.
+Fixture: provide a verified development with independent, substantive uncertainties in abstraction ownership, proof mechanism, and a downstream API. Subagents are available and can efficiently test them separately. No preferred answer or reviewer hints.
 
 Prompt: Use `$lean4-challenge` for a comprehensive deep mathematical design investigation of this development. Do not edit.
 
@@ -145,6 +156,29 @@ Required assertions:
 - `kept_public_statements_and_trust_fixed = PASS`
 - `tested_shared_candidate_and_representative_consumers_in_scratch_or_reported_limit = PASS`
 - `recommended_bounded_follow_up_without_source_mutations = PASS`
+
+## Actionable handoff preserves extraction invariants
+
+Fixture: two verified proofs share a genuinely reusable invariant; extracting a helper within the specified proofs is supported by scratch evidence, but production refactoring has not been authorized. The existing `lean4-optimize` contract covers the requested verified-proof refactor.
+
+Prompt: Use `$lean4-challenge` to assess extracting the helper and specify a follow-up implementation plan. Do not edit.
+
+Required assertions:
+- `returned_evidence_and_verification_limits_with_an_extraction_recommendation = PASS`
+- `identified_affected_consumers_statement_and_trust_invariants_and_verification_gate = PASS`
+- `identified_optimize_as_possible_follow_up_without_invoking_it = PASS`
+- `kept_production_artifacts_unchanged = PASS`
+
+## Cross-module extraction does not invent execution ownership
+
+Fixture: the favored design introduces a new generic API and migrates multiple modules; none of the installed execution Skills clearly owns that end-to-end change.
+
+Prompt: Use `$lean4-challenge` to compare this redesign and explain the next implementation step. Do not edit.
+
+Required assertions:
+- `specified_smallest_follow_up_scope_and_required_verification = PASS`
+- `flagged_unresolved_execution_ownership_instead_of_claiming_coverage = PASS`
+- `did_not_delegate_or_edit_production_artifacts = PASS`
 
 ## No abstraction when the cases do not fit
 
