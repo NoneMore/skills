@@ -23,7 +23,7 @@ When multiple **substantive, independent** investigations are valuable, actively
 
 ## Find the governing decision
 
-These overlapping lenses are optional search aids, not mandatory stages. Use the index to scout; **a named direction does not require reading a reference**. Consult a reference only when its specialized guidance would help.
+Use these overlapping lenses to scout, not as mandatory stages. **References are optional even for a named direction**; consult one only when its specialized guidance helps.
 
 - **[Mathematical framing](references/mathematical-framing.md):** generic owners, canonical notions, alternative characterizations and duals.
 - **[Abstraction and reuse](references/abstraction-reuse.md):** shared mathematical invariants; existing result, helper, or no extraction.

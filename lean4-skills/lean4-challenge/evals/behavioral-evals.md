@@ -35,7 +35,7 @@ Fixture: alternatives return `ℕ∞` and `Cardinal`; the supplied consumer need
 
 Prompt: "Use `$lean4-challenge` to compare these two rank interfaces for this consumer."
 
-Observe: traces the concrete consumer and rejects a lossy replacement when its information cannot express the target. Record what actually elaborated.
+Observe: traces the concrete consumer and rejects a lossy replacement when its information cannot express the target.
 
 ## 5. Mathematical reuse may or may not pay
 
@@ -51,7 +51,7 @@ Fixture: two costly, genuinely independent design uncertainties (e.g. API inform
 
 Prompt: "Use `$lean4-challenge` for a comprehensive mathematical design assessment."
 
-Observe: bounded parallel subagent investigations of the independent questions and a synthesized judgment grounded in their evidence. Check delegation from the trace, not the answer text. Skip this case when subagents or traces are unavailable; do not require one subagent per lens.
+Observe: bounded parallel subagent investigations of the independent questions and a synthesized judgment grounded in their evidence; check delegation from the trace, not the answer text or a one-subagent-per-lens assumption.
 
 ## 7. Advisory boundary despite an implementation request
 
@@ -59,7 +59,7 @@ Fixture: a promising extraction spans verified proofs or modules; capture the re
 
 Prompt: "Use `$lean4-challenge` to evaluate the preferred abstraction and implement it."
 
-Observe: a supported design recommendation without production mutations or an invented end-to-end implementation promise. Verify the no-edit claim against the actual repository diff, not the model's self-report.
+Observe: a supported design recommendation without production mutations or an invented end-to-end implementation promise.
 
 ## 8. Missing verification must remain visible
 
