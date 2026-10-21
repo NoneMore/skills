@@ -1,8 +1,8 @@
 # Lean 4 Skills
 
-A jointly installed family of nine capabilities for formal mathematics in Lean 4 and mathlib. The collection root is not itself a Skill.
+A jointly installed family of eight capabilities for formal mathematics in Lean 4 and mathlib. The collection root is not itself a Skill.
 
-Six Skills are model-discoverable; three focused or broader modes are explicitly user-invoked. There is no family router and no requirement that exactly one Skill own a request.
+Six Skills are model-discoverable; two focused or broader modes are explicitly user-invoked. There is no family router and no requirement that exactly one Skill own a request.
 
 The split addresses an observed discovery failure: task-specific guidance hidden behind a broad Skill was not loaded reliably enough, and distinctions available only after activation could not help pre-activation discovery. The family therefore exposes outcome-specific contracts directly while keeping overlap bounded.
 
@@ -21,8 +21,7 @@ Discovery is recall-oriented but still has a context budget. Compatible overlap 
 
 ## User-invoked capabilities
 
-- `lean4-abstract` — investigate a concrete mathematical reuse hypothesis within one proof or across declarations; validate candidates and extract only within requested scope.
-- `lean4-recon` — deliberately widen semantic/repository context to challenge the current framing before committing to implementation.
+- `lean4-challenge` — experimentally challenge consequential mathematical design choices, including problem framing, reuse/abstraction, proof strategy, and theory/module organization. Replaces the former user-invoked `lean4-recon` and `lean4-abstract` entrypoints; assessment is read-only and any extraction/implementation remains explicitly scoped.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
 ## Defensive structure
@@ -31,7 +30,7 @@ Keep defenses only where they change behavior or completion claims.
 
 Collection-level integrity regressions cover cross-cutting failures such as stale imported artifacts, manufactured success through trust weakening, and verification claims made without the required tooling or gate. Individual Skills state these common constraints tersely and keep detailed doctrine only for Skill-specific risks.
 
-Examples of justified local defenses include independent refutation when the target itself may contain `sorry`, read-only review, optimization from a verified baseline, and live upstream policy for contribution work.
+Examples of justified local defenses include independent refutation when the target itself may contain `sorry`, read-only review, bounded and independently checked challenge experiments, optimization from a verified baseline, and live upstream policy for contribution work.
 
 ## Knowledge placement
 

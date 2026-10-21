@@ -1,6 +1,6 @@
 # Lean 4 collection discovery evals
 
-Run discovery prompts independently with all nine Lean 4 Skills installed and none pre-activated. Six are model-discoverable; the other three require explicit user selection.
+Run discovery prompts independently with all eight Lean 4 Skills installed and none pre-activated. Six are model-discoverable; the other two require explicit user selection.
 
 Discovery is recall-oriented but has a context budget: load materially useful guidance without requiring unique ownership or blanket activation.
 
@@ -22,7 +22,7 @@ Discovery is recall-oriented but has a context budget: load materially useful gu
 | This proof is verified; simplify it and make it faster if measurement justifies changes. | `lean4-optimize` |
 | These two verified Lean proofs share an invariant; extract a shared mathematical lemma and refactor both. No Skill is selected. | `lean4-optimize` |
 
-For every discovery row and compatible-overlap case, require the specified Skill(s), relevant contract, and `model_discoverable_lean_skill_count_lte_2 = PASS`. Do not require any compatible neighbor to remain unselected. No user-invoked Skill may be activated by model discovery.
+For every discovery row and compatible-overlap case, require the specified Skill(s), relevant contract, and `model_discoverable_lean_skill_count_lte_2 = PASS`. Do not require any compatible neighbor to remain unselected. No user-invoked Skill may be activated by model discovery; in particular, ordinary proof completion and quality review must not implicitly activate `lean4-challenge`.
 
 ## Compatible overlap
 
@@ -50,10 +50,19 @@ are readable, but the user has not selected a user-invoked mode.
 Prompt: Complete this fixed theorem, checking whether the earlier result helps.
 - `lean4_prove_selected = PASS`
 - `bounded_existing_api_search_remained_available = PASS`
-- `did_not_read_unselected_lean4_abstract_skill_file = PASS`
+- `did_not_read_unselected_lean4_challenge_skill_file = PASS`
 
-Prompt: Use `$lean4-abstract` to assess a repeated invariant in this proof. Do not edit.
-- `explicitly_selected_abstract_loaded = PASS`
+Prompt: Use `$lean4-challenge` to assess a repeated mathematical invariant in this proof and test whether an extracted helper would pay for itself. Do not edit.
+- `explicitly_selected_challenge_loaded = PASS`
+- `experiment_driven_reuse_assessment_without_edits = PASS`
+
+Prompt: Use `$lean4-challenge` to question the governing abstraction before extending these lemmas. Do not edit.
+- `explicitly_selected_challenge_loaded = PASS`
+- `framing_investigation_did_not_require_a_recon_skill = PASS`
+
+Prompt: Use `$lean4-challenge` to assess the proof strategy and module placement of this checked formal development. Do not edit.
+- `explicitly_selected_challenge_loaded = PASS`
+- `comparative_quality_assessment_not_reduced_to_correctness_review = PASS`
 
 ## Adjacent intents stay out
 
