@@ -23,10 +23,22 @@ Choose the **investigation direction** (specified or to be discovered) and **req
 
 When intent is implicit, "find promising questions" calls for a shortlist; "assess/evaluate this design" calls for a bounded judgment. If no direction warrants deep testing, say why and retain the current design where supported. Parallelize independent work only when its expected benefit exceeds coordination cost. Use bounded sequential work if delegation is unavailable or not worthwhile; report material limits and never claim parallel work that did not occur.
 
+## Explore consequential directions
+
+Use the following **overlapping lenses** to discover design questions; they are search heuristics, not a checklist, mandatory coverage areas, or one subagent assignment per lens. For open requests, briefly scan plausible lenses and deepen only decision-changing leads. For named decisions, follow the relevant lens directly. Load a reference **when its investigative method is relevant**; do not load all five merely to establish coverage.
+
+- **[Mathematical framing and representation](references/mathematical-framing.md):** trace local objects to generic mathematical owners, canonical notions, equivalent characterizations, and natural duals.
+- **[Mathematical abstraction and reuse](references/abstraction-reuse.md):** compare shared invariants, assumptions, constructions, and conclusions; weigh existing results, local/public helpers, or no extraction.
+- **[API expressivity and information](references/api-expressivity.md):** test whether interfaces preserve distinctions downstream theorems need, and weigh hypotheses, inference, and consumer costs.
+- **[Proof architecture](references/proof-architecture.md):** compare mathematical proof mechanisms, not merely tactic length; probe conceptual directness and robustness.
+- **[Theory organization and theorem placement](references/theory-organization.md):** follow generic ownership, representative import/dependency paths, and placement or migration tradeoffs.
+
+Group candidate leads by the **underlying design decision and discriminating evidence**, not their lens labels. Multiple lenses may describe one issue. Before parallel delegation, give each subagent a bounded question and evidence target; merge substantially overlapping investigations, and sequence dependent questions. Parallel counterchecks of the same decision are valid when intentionally independent and worth the cost. The coordinator synthesizes cross-cutting findings; subagents need not explore every lens.
+
 ## Deep investigation
 
 1. Establish the mathematical goal, intended users, constraints, artifact or proposal, and primary decision. Expand to adjacent decisions only if they could change that judgment.
-2. Form credible alternatives where they could change the recommendation: framing/representation, hypotheses, proof mechanism, mathematical reuse, API information or ergonomics, theorem placement, or module dependencies. Follow the local construction toward its canonical mathematical owner where relevant.
+2. Form credible alternatives through the relevant exploration lenses, following their search paths and discriminating probes where they could change the recommendation. Look past the most visible local symptom, but do not treat the lens list as required coverage or independent workstreams.
 3. Prefer the smallest **discriminating experiment** to verbal plausibility: targeted local/mathlib search, `#check`, `#synth`, `#print`, isolated scratch examples or proofs, minimal imports, concrete instances, and one representative downstream consumer in the actual Lean/mathlib environment. Follow one uncertain composition path to closure or its lowest-level obstruction.
 4. Challenge promising alternatives too: test a countervailing cost that might reverse the decision, such as inference burden, complexity, information loss, downstream compatibility, or maintenance. Feasibility is not superiority; failed proof search is not impossibility.
 5. Stop when the decision is stable, a genuine tradeoff remains, or more experiments are unlikely to change the judgment. Do not manufacture novelty or expand into parallel implementation cases merely to produce more findings.
