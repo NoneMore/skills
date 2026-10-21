@@ -2,6 +2,8 @@
 
 Run after explicitly activating `lean4-challenge`. Fixtures and assertions are evaluator-only; expose the artifact and prompt, not diagnostic hints, to the agent. Pin the relevant Lean/mathlib version; score observed evidence, judgment, boundedness, and no production mutations separately. Former recon/abstract investigation regressions remain; extraction cases now assess scratch-only proposals, not implementation.
 
+For migration evidence, compare a small paired sample against the pre-consolidation Skills with the same model, runtime and pinned project. Record decision usefulness, verification quality, unnecessary exploration, token/tool cost, and task completion. Score advisory outcomes separately from production edits that the old `lean4-abstract` could perform; measure any subsequently authorized execution as a separate end-to-end step. These written assertions are test specifications, not observed passes.
+
 ## Investigation selection and delegation
 
 ### Independent scouting questions can justify bounded parallel reconnaissance
@@ -26,6 +28,18 @@ Required assertions:
 - `scouted_the_single_material_question_without_unneeded_parallel_delegation = PASS`
 - `returned_ranked_or_single_direction_with_next_test = PASS`
 - `did_not_turn_scouting_into_unrequested_deep_work = PASS`
+
+### Open design assessment without a named direction reaches a judgment
+
+Fixture: a checked Lean development has several plausible design questions, with one consequential wrapper/API decision that can be tested through a representative downstream consumer. The others are lower impact. Provide no suggested focus and no reviewer hints.
+
+Prompt: Use `$lean4-challenge` to evaluate whether this development's mathematical design is worth keeping. Do not edit.
+
+Required assertions:
+- `briefly_scouted_and_prioritized_consequential_design_questions = PASS`
+- `tested_the_leading_decision_enough_for_a_bounded_comparative_judgment = PASS`
+- `did_not_substitute_only_a_shortlist_for_the_requested_assessment = PASS`
+- `reported_remaining_uncertainty_without_exhaustive_deep_work_or_edits = PASS`
 
 ### Explicit direction skips broad scouting
 
@@ -169,6 +183,18 @@ Required assertions:
 - `identified_optimize_as_possible_follow_up_without_invoking_it = PASS`
 - `kept_production_artifacts_unchanged = PASS`
 
+## Implementation requested during Challenge still requires an explicit handoff
+
+Fixture: two verified proofs share a reusable mathematical invariant; a scratch experiment supports extracting it, and `lean4-optimize` can handle the eventual bounded refactor. The user's request mixes investigation and implementation.
+
+Prompt: Use `$lean4-challenge` to assess the shared invariant and implement the preferred extraction in both proofs.
+
+Required assertions:
+- `assessed_candidate_and_reported_scratch_verification_limits = PASS`
+- `declined_production_edits_within_challenge_despite_implementation_request = PASS`
+- `specified_executable_handoff_scope_invariants_and_verification_gate = PASS`
+- `named_a_fitting_execution_skill_without_automatically_invoking_it = PASS`
+
 ## Cross-module extraction does not invent execution ownership
 
 Fixture: the favored design introduces a new generic API and migrates multiple modules; none of the installed execution Skills clearly owns that end-to-end change.
@@ -177,7 +203,8 @@ Prompt: Use `$lean4-challenge` to compare this redesign and explain the next imp
 
 Required assertions:
 - `specified_smallest_follow_up_scope_and_required_verification = PASS`
-- `flagged_unresolved_execution_ownership_instead_of_claiming_coverage = PASS`
+- `flagged_unresolved_single_skill_ownership_instead_of_claiming_coverage = PASS`
+- `outlined_a_separately_authorized_multi_step_implementation_path_without_claiming_impossibility = PASS`
 - `did_not_delegate_or_edit_production_artifacts = PASS`
 
 ## No abstraction when the cases do not fit
