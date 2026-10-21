@@ -21,7 +21,7 @@ Discovery is recall-oriented but still has a context budget. Compatible overlap 
 
 ## User-invoked capabilities
 
-- `lean4-challenge` — user-invoked, advisory comparison of consequential mathematical design choices. Without a specified direction, parallel subagent scouts (where available) rank promising deep investigations; specified or comprehensive requests use bounded experiments. Replaces `lean4-recon` and `lean4-abstract`; never edits production artifacts. Implementation belongs to other Skills.
+- `lean4-challenge` — user-invoked, advisory comparison of consequential mathematical design choices. Without a specified direction, bounded scouting ranks promising investigations; independent questions may use parallel subagents when worthwhile. Specified or comprehensive requests use bounded experiments. Replaces `lean4-recon` and `lean4-abstract`; never edits production artifacts. Implementation belongs to other Skills.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
 ## Defensive structure
