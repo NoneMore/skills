@@ -25,7 +25,7 @@ When intent is implicit, "find promising questions" calls for a shortlist; "asse
 
 ## Explore consequential directions
 
-Use the following **overlapping lenses** to discover design questions; they are search heuristics, not a checklist, mandatory coverage areas, or one subagent assignment per lens. For open requests, briefly scan plausible lenses and deepen only decision-changing leads. For named decisions, follow the relevant lens directly. Load a reference **when its investigative method is relevant**; do not load all five merely to establish coverage.
+Use the following **overlapping lenses** to discover design questions; they are search heuristics, not a checklist, mandatory coverage areas, or one subagent assignment per lens. For open requests, briefly scan plausible lenses using this index and deepen only decision-changing leads. For named decisions, follow the relevant lens directly. **Before substantively investigating a selected lens, read its reference**; do not load all five merely to establish coverage.
 
 - **[Mathematical framing and representation](references/mathematical-framing.md):** trace local objects to generic mathematical owners, canonical notions, equivalent characterizations, and natural duals.
 - **[Mathematical abstraction and reuse](references/abstraction-reuse.md):** compare shared invariants, assumptions, constructions, and conclusions; weigh existing results, local/public helpers, or no extraction.
