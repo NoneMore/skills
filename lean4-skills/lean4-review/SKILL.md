@@ -1,12 +1,12 @@
 ---
 name: lean4-review
-description: "Use for independent review of Lean 4/mathlib statements or proof code, including fidelity to the intended mathematical claim, correctness, trust dependencies, robustness, library integration, maintainability, and proof quality. Review-only requests are read-only."
+description: "Use for bounded independent review of Lean 4/mathlib statements or proof code against relatively specified correctness and quality criteria: claim fidelity, trust, robustness, library integration, maintainability, and proof quality. Review-only requests are read-only."
 license: MIT
 ---
 
 # Lean 4 Review
 
-Review only the requested scope. Review-only requests are read-only; if fixes are explicitly requested, substantiate each material finding before making the corresponding bounded change.
+Review a specified artifact against relatively settled, locally assessable criteria; return evidence-backed findings rather than an open-ended comparison of alternate mathematical designs. Quality judgments need not be binary, but must be tied to concrete review criteria. Review only the requested scope. Review-only requests are read-only; if fixes are explicitly requested, substantiate each material finding before making the corresponding bounded change.
 
 ## Review order
 

@@ -14,14 +14,14 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-prove` — complete or repair a proof for an existing target.
 - `lean4-refute` — find and independently Lean-certify a counterexample or negation.
 - `lean4-diagnose` — identify a root cause and migration path for Lean/Lake/build/integration failures.
-- `lean4-review` — independently review Lean proof code or audit a declaration's trust dependencies; review-only requests are read-only.
+- `lean4-review` — independently assess Lean artifacts against relatively specified correctness, trust, and quality criteria; report bounded findings (read-only for review-only requests).
 - `lean4-optimize` — improve an already-correct proof from a verified baseline.
 
-Discovery is recall-oriented but still has a context budget. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split.
+Discovery is recall-oriented but still has a context budget. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Review produces findings against relatively fixed criteria; explicitly selected Challenge examines whether consequential design choices themselves should differ.
 
 ## User-invoked capabilities
 
-- `lean4-challenge` — experimentally challenge consequential mathematical design choices, including problem framing, reuse/abstraction, proof strategy, and theory/module organization. Replaces the former user-invoked `lean4-recon` and `lean4-abstract` entrypoints; assessment is read-only and any extraction/implementation remains explicitly scoped.
+- `lean4-challenge` — user-invoked, advisory comparison of consequential mathematical design choices. Without a specified direction, parallel subagent scouts (where available) rank promising deep investigations; specified or comprehensive requests use bounded experiments. Replaces `lean4-recon` and `lean4-abstract`; never edits production artifacts. Implementation belongs to other Skills.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
 ## Defensive structure

@@ -51,6 +51,7 @@ Prompt: Review this Lean proof for robustness and maintainability without editin
 Required assertions:
 - `reviewed_requested_proof_properties_without_speculative_refutation = PASS`
 - `did_not_expand_into_unbounded_semantic_search = PASS`
+- `did_not_turn_defined_review_into_open_ended_design_comparison = PASS`
 - `made_no_source_mutations = PASS`
 
 ## Review catches an overbroad carrier claim

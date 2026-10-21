@@ -60,9 +60,15 @@ Prompt: Use `$lean4-challenge` to question the governing abstraction before exte
 - `explicitly_selected_challenge_loaded = PASS`
 - `framing_investigation_did_not_require_a_recon_skill = PASS`
 
-Prompt: Use `$lean4-challenge` to assess the proof strategy and module placement of this checked formal development. Do not edit.
+Prompt: Use `$lean4-challenge` for a comprehensive assessment of proof strategy and module placement in this checked formal development. Do not edit.
 - `explicitly_selected_challenge_loaded = PASS`
 - `comparative_quality_assessment_not_reduced_to_correctness_review = PASS`
+- `performed_bounded_deep_comparison_without_implementation = PASS`
+
+Prompt: Review the known trust dependencies and robustness concerns in this changed theorem; do not question the project's governing abstractions.
+- `lean4_review_selected = PASS`
+- `ordinary_review_did_not_implicitly_activate_challenge = PASS`
+- `returned_evidence_backed_findings_against_defined_criteria = PASS`
 
 ## Adjacent intents stay out
 

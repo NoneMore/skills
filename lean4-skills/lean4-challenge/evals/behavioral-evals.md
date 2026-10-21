@@ -1,6 +1,55 @@
 # Behavioral evals — lean4-challenge
 
-Run after explicitly activating `lean4-challenge`. Fixtures and assertions are evaluator-only; expose the artifact and prompt, not diagnostic hints, to the agent. Pin the relevant Lean/mathlib version and score observed verification, judgment, boundedness, and authorization separately. The legacy recon/abstract regressions below are preserved under the consolidated user-invoked mode.
+Run after explicitly activating `lean4-challenge`. Fixtures and assertions are evaluator-only; expose the artifact and prompt, not diagnostic hints, to the agent. Pin the relevant Lean/mathlib version; score observed evidence, judgment, boundedness, and no production mutations separately. Former recon/abstract investigation regressions remain; extraction cases now assess scratch-only proposals, not implementation.
+
+## Investigation selection and delegation
+
+### Unspecified direction starts with bounded parallel reconnaissance
+
+Fixture: a checked small development contains a specialized wrapper around a generic construction, a repeated transport invariant, and a costly import boundary. Provide no suggested design direction. Subagents are available to the evaluated runtime.
+
+Prompt: Use `$lean4-challenge` to identify the highest-value mathematical design questions in this development.
+
+Required assertions:
+- `launched_bounded_parallel_scouts_on_distinct_plausible_questions = PASS`
+- `ranked_directions_with_evidence_impact_uncertainty_and_next_test_cost = PASS`
+- `distinguished_scouting_leads_from_deep_verified_judgments = PASS`
+- `did_not_launch_unrequested_deep_or_production_work = PASS`
+
+### Explicit direction skips broad scouting
+
+Fixture: use the same development, with actual module imports and a representative consumer. Subagents may be available, but alternative research directions are not requested.
+
+Prompt: Use `$lean4-challenge` to investigate whether the generic lemmas belong in a lower-level module; compare the current placement and a candidate without edits.
+
+Required assertions:
+- `investigated_specified_organization_decision_without_generic_scouting = PASS`
+- `tested_representative_dependency_or_reported_specific_blocker = PASS`
+- `considered_a_countervailing_cost_of_the_candidate = PASS`
+- `kept_production_artifacts_unchanged = PASS`
+
+### Comprehensive depth uses bounded parallel deep investigations
+
+Fixture: provide a verified development with separable uncertainties in abstraction ownership, proof mechanism, and a downstream API, with subagents available. No preferred answer or reviewer hints.
+
+Prompt: Use `$lean4-challenge` for a comprehensive deep mathematical design investigation of this development. Do not edit.
+
+Required assertions:
+- `delegated_bounded_deep_questions_to_parallel_subagents = PASS`
+- `obtained_representative_experiment_evidence_per_material_direction = PASS`
+- `synthesized_conflicting_and_overlapping_findings_with_tradeoffs = PASS`
+- `did_not_claim_exhaustive_coverage_or_modify_production_source = PASS`
+
+### Subagents unavailable
+
+Fixture: a small multi-direction development as above, but the runtime does not support subagents.
+
+Prompt: Use `$lean4-challenge` to find the highest-value design investigation direction.
+
+Required assertions:
+- `used_bounded_sequential_scouting_when_subagents_unavailable = PASS`
+- `did_not_claim_parallel_delegation = PASS`
+- `returned_prioritized_next_tests_without_unauthorized_deep_work = PASS`
 
 ## Framing and governing abstractions
 
@@ -22,7 +71,7 @@ Required assertions:
 
 Fixture: the local definition already uses the canonical construction; nearby generic APIs, natural duals, cheap assumption checks, and relevant changed constraints expose no materially better framing.
 
-Prompt: Challenge this design before we commit to more lemmas.
+Prompt: Use `$lean4-challenge` to investigate the mathematical framing and closest canonical alternatives before committing more lemmas. Do not edit.
 
 Required assertions:
 - `checked_plausible_semantic_expansion_paths = PASS`
@@ -58,19 +107,19 @@ Required assertions:
 - `did_not_claim_compatibility_of_unexamined_consumers = PASS`
 - `kept_the_investigation_bounded_and_read_only = PASS`
 
-## Mathematical reuse and extraction
+## Mathematical reuse and extraction decisions
 
 ## Repeated mathematics within one proof
 
 Fixture: One verified theorem repeats the same transport invariant in multiple
 branches, though no other top-level declaration uses it.
 
-Prompt: Use `$lean4-challenge` to extract a useful local helper and verify its uses.
+Prompt: Use `$lean4-challenge` to assess whether a local helper is warranted; test the candidate and representative uses in isolation, without editing production files.
 
 Required assertions:
 - `found_mathematical_reuse_within_one_proof = PASS`
-- `verified_helper_and_representative_uses = PASS`
-- `preserved_statement_and_authorized_edit_scope = PASS`
+- `tested_candidate_helper_and_representative_uses_in_scratch_or_reported_limit = PASS`
+- `recommended_extraction_or_retention_without_production_edits = PASS`
 
 ## Historical API reuse without edits
 
@@ -87,14 +136,15 @@ Required assertions:
 ## Shared mathematics across declarations
 
 Fixture: Two verified proofs use different tactics to establish the same
-invariant. Both are authorized for refactoring.
+invariant. Both are available for inspection, not production refactoring.
 
-Prompt: Use `$lean4-challenge` to extract shared mathematics if worthwhile.
+Prompt: Use `$lean4-challenge` to assess whether a shared mathematical lemma is worthwhile. Probe candidate uses in scratch and recommend an action without editing the proofs.
 
 Required assertions:
 - `identified_mathematical_not_tactic_commonality = PASS`
 - `kept_public_statements_and_trust_fixed = PASS`
-- `verified_shared_result_and_affected_consumers = PASS`
+- `tested_shared_candidate_and_representative_consumers_in_scratch_or_reported_limit = PASS`
+- `recommended_bounded_follow_up_without_source_mutations = PASS`
 
 ## No abstraction when the cases do not fit
 

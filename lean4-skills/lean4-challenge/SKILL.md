@@ -1,34 +1,35 @@
 ---
 name: lean4-challenge
 description: >-
-  User-invoked, experiment-driven challenge of consequential mathematical design
-  choices in proposed or existing Lean 4/mathlib formalizations, proofs, APIs,
-  and theory/module organization. Compare framing, abstractions, reuse and proof
-  strategies using focused counterfactual Lean experiments.
+  Explicitly user-invoked, advisory investigation of consequential Lean 4/mathlib
+  mathematical design choices. Scout promising questions or experimentally
+  compare framing, abstractions, proof mechanisms, APIs, and theory organization.
 disable-model-invocation: true
 license: MIT
 ---
 
 # Lean 4 Challenge
 
-Investigate whether consequential mathematical design choices should be retained or revised. Judge the quality of an existing or proposed formal development, not merely whether it elaborates or has reviewable correctness defects.
+Question whether consequential mathematical design choices should be retained or revised. Unlike `lean4-review`, which assesses a specified artifact against relatively settled criteria, Challenge investigates open comparative decisions, including whether the framing itself is right. Formalization, proof, and optimization techniques are available as investigative tools, not implementation deliverables.
 
-## Investigation
+## Choose investigation depth
 
-1. Establish the mathematical goal, artifact or proposal, intended users, constraints, and authorized scope. Identify design choices that could materially affect quality; do not apply an exhaustive checklist.
-2. Form credible alternatives only where they might change the decision. As relevant, challenge the mathematical framing or representation, theorem hypotheses/generality, proof mechanism, reusable abstraction, API information and ergonomics, or theorem/module placement. Follow a local construction toward its canonical mathematical owner when that matters.
-3. Prefer the smallest **discriminating experiment** over verbal plausibility: focused local/mathlib search, `#check`, `#synth`, `#print`, scratch declarations or proofs, minimal imports, concrete instances, and representative consumers in the project's actual Lean/mathlib environment. Compare hypotheses, conclusions, dependency direction, and information retained. If composition across an abstraction boundary is uncertain, follow one representative path until it closes or reveals the lowest-level obstruction.
-4. Challenge promising alternatives as well as the existing design. Probe a plausible countervailing cost when it could reverse the recommendation: inference/search burden, proof complexity, lost information, downstream usage, maintenance, or a new abstraction boundary. Feasibility does not establish superiority; failed proof search does not establish impossibility.
-5. Compare the material evidence and tradeoffs, then stop when the design decision is stable, a genuine tradeoff remains, or further experiments are unlikely to change the judgment. Do not expand into parallel cases or repository-wide discovery merely to produce more criticism.
+- **No direction specified:** use a small, bounded set of parallel subagent scouts, when available, to identify distinct, plausible high-impact design questions. Synthesize and rank directions by supporting evidence, potential impact, uncertainty, and cost of the next discriminating test. Return the shortlist and recommended first direction; do not silently turn reconnaissance into deep investigation.
+- **Direction specified:** investigate that decision directly; skip broad scouting. Delegate independent checks or counterarguments only when useful.
+- **Comprehensive depth explicitly requested:** investigate multiple consequential directions in parallel with subagents when available, giving each a bounded question and experimental remit; synthesize overlapping and conflicting evidence. Comprehensive does not mean exhaustive repository-wide exploration.
 
-## Boundaries
+When subagents are unavailable, use bounded sequential investigation and report the limitation. Do not claim parallel work that did not occur.
 
-Assessment is read-only for production source; prefer isolated scratch experiments. Never treat a speculative alternative or an unchecked scratch statement as a verified improvement. Distinguish direct Lean checks, mathematical reasoning, qualitative judgments, and unresolved hypotheses. If necessary tools or the intended mathematical specification are unavailable, report the resulting limits instead of claiming verification.
+## Deep investigation
 
-For explicitly authorized implementation or extraction, establish the existing verification baseline or its limits first. Make only evidence-backed changes to requested sites, preserve public statements and the accepted trust basis unless their revision is expressly authorized, and verify affected consumers/imports with a gate covering the changed boundaries. Inspecting additional context does not authorize its migration.
+1. Establish the mathematical goal, intended users, constraints, artifact or proposal, and primary decision. Expand to adjacent decisions only if they could change that judgment.
+2. Form credible alternatives where they could change the recommendation: framing/representation, hypotheses, proof mechanism, mathematical reuse, API information or ergonomics, theorem placement, or module dependencies. Follow the local construction toward its canonical mathematical owner where relevant.
+3. Prefer the smallest **discriminating experiment** to verbal plausibility: targeted local/mathlib search, `#check`, `#synth`, `#print`, isolated scratch examples or proofs, minimal imports, concrete instances, and one representative downstream consumer in the actual Lean/mathlib environment. Follow one uncertain composition path to closure or its lowest-level obstruction.
+4. Challenge promising alternatives too: test a countervailing cost that might reverse the decision, such as inference burden, complexity, information loss, downstream compatibility, or maintenance. Feasibility is not superiority; failed proof search is not impossibility.
+5. Stop when the decision is stable, a genuine tradeoff remains, or more experiments are unlikely to change the judgment. Do not manufacture novelty or expand into parallel implementation cases merely to produce more findings.
 
-Do not turn a challenge into routine proof repair, open-ended refutation, tactic golf, mathlib upstream readiness review, or automatic multi-Skill orchestration. Existing canonical APIs, a local helper, a justified public abstraction, and no change are all valid outcomes.
+## Boundaries and completion
 
-## Completion
+Production sources and other durable repository artifacts remain unchanged under this Skill, even if implementation is requested. Scratch experiments may test hypotheses but are not production changes. Recommend concrete follow-up work for the appropriate execution Skill without automatically invoking it. Distinguish checked Lean facts, mathematical reasoning, qualitative judgments, and unresolved hypotheses; report missing tools or specification instead of claiming verification.
 
-Return the principal design judgment, the consequential alternatives investigated, decision-changing experiments and their actual outcomes, comparison of mathematical and engineering costs, and the smallest justified next action (including retaining the current design). State unresolved tradeoffs, rejected candidates, unchecked claims, and verification limits. A successful challenge need not produce novelty or a source edit.
+For reconnaissance, return a prioritized set of consequential questions, the evidence and uncertainty behind each, and the smallest next experiment. For deep investigation, return the principal design judgment, alternatives and actual experiment outcomes, comparative costs, unresolved tradeoffs, and the smallest justified next action (including retaining the current design). A successful Challenge requires neither novelty nor an edit.
