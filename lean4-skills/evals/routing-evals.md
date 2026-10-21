@@ -65,6 +65,11 @@ Prompt: Use `$lean4-challenge` for a comprehensive assessment of proof strategy 
 - `comparative_quality_assessment_not_reduced_to_correctness_review = PASS`
 - `performed_bounded_deep_comparison_without_implementation = PASS`
 
+Prompt: A prior design assessment supports extracting a shared helper from these already-verified proofs. Implement the approved extraction in the two specified proofs and verify affected consumers; no Skill is selected.
+- `lean4_optimize_selected = PASS`
+- `did_not_require_reactivating_advisory_challenge_before_authorized_implementation = PASS`
+- `implementation_respected_verified_baseline_and_requested_scope = PASS`
+
 Prompt: Review the known trust dependencies and robustness concerns in this changed theorem; do not question the project's governing abstractions.
 - `lean4_review_selected = PASS`
 - `ordinary_review_did_not_implicitly_activate_challenge = PASS`
