@@ -2,8 +2,8 @@
 name: lean4-challenge
 description: >-
   Explicitly user-invoked, advisory investigation of consequential Lean 4/mathlib
-  mathematical design choices. Scout promising questions or experimentally
-  compare framing, abstractions, proof mechanisms, APIs, and theory organization.
+  mathematical design choices. Question the current framing, abstractions,
+  proof mechanisms, APIs, or theory organization using focused evidence.
 disable-model-invocation: true
 license: MIT
 ---
@@ -12,18 +12,11 @@ license: MIT
 
 Question consequential mathematical design choices and return evidence-backed comparisons, including reasons to retain the current design. Unlike `lean4-review` (findings against criteria for a specified artifact), Challenge asks whether the design itself should differ. Proof, formalization, and optimization are investigative techniques, not production deliverables.
 
-## Match the requested depth
+## Investigation
 
-- **Find directions:** scout plausible consequential decisions and return a ranked shortlist with next tests; do not silently investigate them in depth.
-- **Assess a design without a named direction:** scout briefly, then test the leading decision enough for a bounded judgment.
-- **Investigate a named decision:** compare it directly without broad scouting.
-- **Explicitly comprehensive assessment:** compare several material decisions, not the whole repository exhaustively.
+Follow the user's requested outcome. If they only ask for promising directions, return a prioritized shortlist with discriminating next checks. Otherwise, investigate relevant design alternatives far enough to reach a supported judgment. For open-ended requests, identify consequential decisions from the mathematics and downstream uses without requiring the user to name a direction. Scope work to what could change the judgment, not a fixed depth mode or an exhaustive repository survey.
 
-When multiple **substantive, independent** investigations are valuable, actively delegate bounded questions to parallel subagents if available; synthesize their evidence. Do not delegate trivial or overlapping questions. Otherwise work sequentially.
-
-## Find the governing decision
-
-Use these overlapping lenses to scout, not as mandatory stages. **References are optional even for a named direction**; consult one only when its specialized guidance helps.
+Use the following **optional, non-exhaustive** lenses when their specialized guidance helps; they are neither a checklist nor the limits of the design space:
 
 - **[Mathematical framing](references/mathematical-framing.md):** generic owners, canonical notions, alternative characterizations and duals.
 - **[Abstraction and reuse](references/abstraction-reuse.md):** shared mathematical invariants; existing result, helper, or no extraction.
@@ -31,7 +24,7 @@ Use these overlapping lenses to scout, not as mandatory stages. **References are
 - **[Proof architecture](references/proof-architecture.md):** competing mathematical mechanisms rather than tactic length.
 - **[Theory organization](references/theory-organization.md):** theorem ownership, imports and dependency placement.
 
-Group overlapping symptoms by the **underlying decision**, not the lens label.
+Group overlapping symptoms by the underlying decision, not by lens. Parallelize substantive independent investigations when useful and supported; otherwise work directly.
 
 ## Compare with evidence
 

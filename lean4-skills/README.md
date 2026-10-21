@@ -21,7 +21,7 @@ Discovery is recall-oriented but still has a context budget. Compatible overlap 
 
 ## User-invoked capabilities
 
-- `lean4-challenge` — explicitly invoked, advisory comparison of consequential mathematical design choices. Matches investigation depth to the requested outcome, uses bounded experiments, and can recommend retaining the current design. Replaces `lean4-recon` and `lean4-abstract`; never edits production artifacts or promises an implementation workflow.
+- `lean4-challenge` — explicitly invoked, advisory investigation of consequential mathematical design choices. Follows the requested outcome, uses focused evidence, and can recommend retaining the current design. Replaces `lean4-recon` and advisory use of `lean4-abstract`; never edits production artifacts or promises an implementation workflow.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
 ## Defensive structure
@@ -42,7 +42,7 @@ Collection-level provenance and licensing live once in [UPSTREAM.md](UPSTREAM.md
 
 - `evals/routing-evals.md` tests model discovery, user-invoked exclusion, explicit-selection boundaries, and bounded compatible overlap.
 - `evals/integrity-evals.md` owns cross-cutting verification/trust regressions.
-- Per-Skill behavioral evals test only behavior that materially distinguishes that Skill.
+- Per-Skill behavioral regressions target specific observed failures; open-ended Challenge design judgment is assessed on real tasks rather than prewritten answer-shaped fixtures.
 
 ## Scope
 
