@@ -29,7 +29,7 @@ Required assertions:
 
 ### Explicit direction skips broad scouting
 
-Fixture: use the same development, with actual module imports and a representative consumer. Subagents may be available, but alternative research directions are not requested.
+Fixture: use the multi-uncertainty development from the parallel reconnaissance case, with actual module imports and a representative consumer. Subagents may be available, but alternative research directions are not requested.
 
 Prompt: Use `$lean4-challenge` to investigate whether the generic lemmas belong in a lower-level module; compare the current placement and a candidate without edits.
 
