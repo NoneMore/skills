@@ -1,8 +1,8 @@
 # Lean 4 Skills
 
-A jointly installed family of nine capabilities for formal mathematics in Lean 4 and mathlib. The collection root is not itself a Skill.
+A jointly installed family of eight capabilities for formal mathematics in Lean 4 and mathlib. The collection root is not itself a Skill.
 
-Six Skills are model-discoverable; three focused or broader modes are explicitly user-invoked. There is no family router and no requirement that exactly one Skill own a request.
+Six Skills are model-discoverable; two focused or broader modes are explicitly user-invoked. There is no family router and no requirement that exactly one Skill own a request.
 
 The split addresses an observed discovery failure: task-specific guidance hidden behind a broad Skill was not loaded reliably enough, and distinctions available only after activation could not help pre-activation discovery. The family therefore exposes outcome-specific contracts directly while keeping overlap bounded.
 
@@ -14,15 +14,14 @@ Before materially changing this collection, follow the repository-level [Skill D
 - `lean4-prove` — complete or repair a proof for an existing target.
 - `lean4-refute` — find and independently Lean-certify a counterexample or negation.
 - `lean4-diagnose` — identify a root cause and migration path for Lean/Lake/build/integration failures.
-- `lean4-review` — independently review Lean proof code or audit a declaration's trust dependencies; review-only requests are read-only.
+- `lean4-review` — independently assess Lean artifacts against relatively specified correctness, trust, and quality criteria; report bounded findings (read-only for review-only requests).
 - `lean4-optimize` — improve an already-correct proof from a verified baseline.
 
-Discovery is recall-oriented but still has a context budget. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split.
+Discovery is recall-oriented but still has a context budget. Compatible overlap is acceptable when useful, but blanket activation of most or all Skills defeats the purpose of the split. Review produces findings against relatively fixed criteria; explicitly selected Challenge examines whether consequential design choices themselves should differ.
 
 ## User-invoked capabilities
 
-- `lean4-abstract` — investigate a concrete mathematical reuse hypothesis within one proof or across declarations; validate candidates and extract only within requested scope.
-- `lean4-recon` — deliberately widen semantic/repository context to challenge the current framing before committing to implementation.
+- `lean4-challenge` — explicitly invoked, advisory investigation of consequential mathematical design choices. Follows the requested outcome, uses focused evidence, and can recommend retaining the current design. Replaces `lean4-recon` and advisory use of `lean4-abstract`; never edits production artifacts or promises an implementation workflow.
 - `lean4-mathlib-contribute` — assess or adapt an existing artifact for upstream mathlib using current upstream policy and nearby current code.
 
 ## Defensive structure
@@ -31,7 +30,7 @@ Keep defenses only where they change behavior or completion claims.
 
 Collection-level integrity regressions cover cross-cutting failures such as stale imported artifacts, manufactured success through trust weakening, and verification claims made without the required tooling or gate. Individual Skills state these common constraints tersely and keep detailed doctrine only for Skill-specific risks.
 
-Examples of justified local defenses include independent refutation when the target itself may contain `sorry`, read-only review, optimization from a verified baseline, and live upstream policy for contribution work.
+Examples of justified local defenses include independent refutation when the target itself may contain `sorry`, read-only review, bounded and independently checked challenge experiments, optimization from a verified baseline, and live upstream policy for contribution work.
 
 ## Knowledge placement
 
@@ -43,7 +42,7 @@ Collection-level provenance and licensing live once in [UPSTREAM.md](UPSTREAM.md
 
 - `evals/routing-evals.md` tests model discovery, user-invoked exclusion, explicit-selection boundaries, and bounded compatible overlap.
 - `evals/integrity-evals.md` owns cross-cutting verification/trust regressions.
-- Per-Skill behavioral evals test only behavior that materially distinguishes that Skill.
+- Per-Skill behavioral regressions target specific observed failures; open-ended Challenge design judgment is assessed on real tasks rather than prewritten answer-shaped fixtures.
 
 ## Scope
 

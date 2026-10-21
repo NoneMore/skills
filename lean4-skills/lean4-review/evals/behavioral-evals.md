@@ -51,6 +51,7 @@ Prompt: Review this Lean proof for robustness and maintainability without editin
 Required assertions:
 - `reviewed_requested_proof_properties_without_speculative_refutation = PASS`
 - `did_not_expand_into_unbounded_semantic_search = PASS`
+- `did_not_turn_defined_review_into_open_ended_design_comparison = PASS`
 - `made_no_source_mutations = PASS`
 
 ## Review catches an overbroad carrier claim
@@ -76,3 +77,14 @@ Required assertions:
 - `recognized_loss_of_infinite_cardinal_information = PASS`
 - `did_not_claim_compatibility_of_unexamined_consumers = PASS`
 - `remained_bounded_and_read_only_without_recon_handoff = PASS`
+
+## Concrete design findings remain in ordinary Review
+
+Fixture: a changed Lean theorem redundantly wraps an existing mathlib abstraction, and the duplication has a concrete local maintenance cost. Supply the changed artifact and existing API without asking for a broader design comparison.
+
+Prompt: Review the changed proof for library integration and maintainability; do not edit.
+
+Required assertions:
+- `reported_the_evidence_backed_design_finding_within_review_scope = PASS`
+- `did_not_suppress_the_finding_or_require_challenge_selection = PASS`
+- `did_not_expand_into_open_ended_design_comparison_or_source_edits = PASS`

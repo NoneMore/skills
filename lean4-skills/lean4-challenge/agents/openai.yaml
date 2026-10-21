@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lean 4 Challenge"
+  short_description: "Advisory Lean mathematical design investigation"
+  default_prompt: "Use $lean4-challenge to question consequential Lean/mathlib design choices. Follow the user's requested outcome, compare plausible alternatives with focused evidence, and report a supported judgment without production edits."
+
+policy:
+  allow_implicit_invocation: false
