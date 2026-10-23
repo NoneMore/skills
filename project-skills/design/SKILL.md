@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Purpose
 
-Resolve material design choices into a direction that is sufficiently clear for the user's requested outcome.
+Resolve material design choices into a coherent, evolvable direction for the user's requested outcome.
 
 ## Accepts
 
@@ -22,7 +22,9 @@ A design question, an architecture or domain problem, an interface or seam decis
 - decision-changing factual uncertainty is investigated when proportionate or kept explicit rather than silently assumed;
 - intentionally deferred material choices name what blocks them and, when knowable, what would make them decidable.
 
-The default result is the decisions and remaining material uncertainty in conversation. Persist a design artifact only when the user requests one or durability is part of the requested outcome through an established project convention. When persisting, retain only knowledge whose future value justifies the artifact, such as shared domain language or a current architectural decision that later work should know.
+Design primarily addresses choices whose consequences extend beyond a single implementation task. Keep the result at the level needed to explain material structure, constraints, and tradeoffs; do not turn it into a task-specific implementation checklist or acceptance contract. Revisit decisions when constraints or evidence change, and keep shared design knowledge coherent with the revised direction.
+
+The default result is the decisions and remaining material uncertainty in conversation. Persist a design artifact only when the user requests one or durability is part of the requested outcome through an established project convention. When persisting, retain only knowledge whose future value justifies the artifact, such as shared domain language or a current architectural decision that later work should know. Update its authoritative home when the decision evolves rather than maintaining competing current versions.
 
 ## Specialized guidance
 

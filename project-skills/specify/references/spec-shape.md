@@ -1,6 +1,6 @@
 # A minimal specification shape
 
-Use only the sections that help preserve the contract.
+Use only the sections that help make the current work implementable and verifiable. This is neither a mandatory template nor a persistence convention.
 
 ## Problem / outcome
 
@@ -16,7 +16,7 @@ What is included, plus exclusions that prevent likely scope ambiguity.
 
 ## Settled decisions
 
-Product, domain, architecture, interface, data, compatibility, or operational choices that downstream work should not need to rediscover.
+Product, domain, architecture, interface, data, compatibility, or operational choices that downstream work should not need to rediscover. Reference broader design knowledge instead of duplicating it when practical.
 
 ## Acceptance
 
