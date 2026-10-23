@@ -30,7 +30,6 @@ The default result is the decisions and remaining material uncertainty in conver
 
 Load only what materially helps the current design problem:
 
-- [domain-modeling.md](references/domain-modeling.md) for domain language and durable architectural knowledge;
 - [deep-modules.md](references/deep-modules.md) for module/interface/seam vocabulary and deep-module design;
 - [deepening.md](references/deepening.md) when restructuring shallow module clusters;
 - [design-it-twice.md](references/design-it-twice.md) when materially different interface alternatives are worth comparing;
@@ -38,8 +37,7 @@ Load only what materially helps the current design problem:
 - [distributed-state.md](references/distributed-state.md) when state ownership, consistency, ordering, or reconciliation crosses a process or asynchronous boundary;
 - [compatibility-and-migration.md](references/compatibility-and-migration.md) when existing callers, data, or deployments constrain how a target design can be reached;
 - [operability.md](references/operability.md) when diagnosis, repair, or operational control materially affects the architecture;
-- [security-boundaries.md](references/security-boundaries.md) when trust, authority, isolation, or data exposure materially affects the design;
-- [decision-maps.md](references/decision-maps.md) when a large decision space benefits from a compact durable index.
+- [security-boundaries.md](references/security-boundaries.md) when trust, authority, isolation, or data exposure materially affects the design.
 
 Research, code reading, experiments, spikes, prototypes, and interactive pressure-testing are techniques available to design; none is a required stage.
 
