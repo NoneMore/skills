@@ -28,16 +28,11 @@ The default result is the decisions and remaining material uncertainty in conver
 
 ## Specialized guidance
 
-Load only what materially helps the current design problem:
+Load guidance for each concern that could materially change the design. The references group related lenses to make them easier to discover; loading a lens does not make its mechanisms mandatory. When a concern is plausibly material, prefer consulting the short relevant reference over silently assuming it away.
 
-- [deep-modules.md](references/deep-modules.md) for module/interface/seam vocabulary and deep-module design;
-- [deepening.md](references/deepening.md) when restructuring shallow module clusters;
-- [design-it-twice.md](references/design-it-twice.md) when materially different interface alternatives are worth comparing;
-- [reliability.md](references/reliability.md) when failure behavior, recovery, availability, or degradation can change the design;
-- [distributed-state.md](references/distributed-state.md) when state ownership, consistency, ordering, or reconciliation crosses a process or asynchronous boundary;
-- [compatibility-and-migration.md](references/compatibility-and-migration.md) when existing callers, data, or deployments constrain how a target design can be reached;
-- [operability.md](references/operability.md) when diagnosis, repair, or operational control materially affects the architecture;
-- [security-boundaries.md](references/security-boundaries.md) when trust, authority, isolation, or data exposure materially affects the design.
+- [module-design.md](references/module-design.md) for module depth, interface and seam design, restructuring shallow modules, and comparison of alternatives;
+- [system-semantics.md](references/system-semantics.md) for failure behavior, cross-boundary state correctness, operational interfaces, and trust or authority boundaries;
+- [compatibility-and-migration.md](references/compatibility-and-migration.md) when existing callers, data, or deployments constrain the target design.
 
 Research, code reading, experiments, spikes, prototypes, and interactive pressure-testing are techniques available to design; none is a required stage.
 

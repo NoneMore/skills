@@ -2,6 +2,8 @@
 
 Use these cases for behavior that is difficult to verify by static inspection. Run each scenario in isolation with `design` explicitly activated. Score observable design behavior and, when the runtime exposes them, reference-loading actions; do not require exact wording from the Skill.
 
+For observable reference loading, check that case 1 uses `module-design.md`; cases 2, 3, 5, 6, and 7 use `system-semantics.md`; and case 4 uses `compatibility-and-migration.md`. Check that cases 1 and 2 do not unnecessarily load unrelated bundles. Loading a bundled reference does not require addressing every lens it contains. If reference loads are not observable, mark these checks unmeasured rather than inferring them from the answer.
+
 ## 1. A narrow interface problem does not expand into system architecture
 
 Prompt: Design the interface between the parser and renderer in a single-process CLI. There is no persistence, network boundary, production operation, multi-tenant access, or migration constraint.
