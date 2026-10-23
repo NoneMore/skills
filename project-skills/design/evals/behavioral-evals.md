@@ -12,6 +12,8 @@ Required assertions:
 - `stayed_on_material_interface_design = PASS`
 - `did_not_expand_into_unrelated_system_lenses = PASS`
 - `did_not_manufacture_reliability_security_or_operations_requirements = PASS`
+- `presented_a_concrete_interface_direction_and_nonobvious_rationale = PASS`
+- `did_not_substitute_a_task_checklist_or_persistent_design_artifact = PASS`
 
 ## 2. Dependency failure behavior selects reliability without inventing distributed state
 

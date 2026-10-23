@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Purpose
 
-Resolve material design choices into a coherent, evolvable direction for the user's requested outcome.
+Resolve material design choices into a coherent direction sufficiently clear for the user's requested outcome.
 
 ## Accepts
 
@@ -22,13 +22,21 @@ A design question, an architecture or domain problem, an interface or seam decis
 - decision-changing factual uncertainty is investigated when proportionate or kept explicit rather than silently assumed;
 - intentionally deferred material choices name what blocks them and, when knowable, what would make them decidable.
 
-Design primarily addresses choices whose consequences extend beyond a single implementation task. Keep the result at the level needed to explain material structure, constraints, and tradeoffs; do not turn it into a task-specific implementation checklist or acceptance contract. Revisit decisions when constraints or evidence change, and keep shared design knowledge coherent with the revised direction.
+## Approach
 
-The default result is the decisions and remaining material uncertainty in conversation. Persist a design artifact only when the user requests one or durability is part of the requested outcome through an established project convention. When persisting, retain only knowledge whose future value justifies the artifact, such as shared domain language or a current architectural decision that later work should know. Update its authoritative home when the decision evolves rather than maintaining competing current versions.
+Frame the design problem and its material constraints. Identify choices about the system's structure, concepts, interfaces, boundaries, or behavior. Compare meaningfully different alternatives when doing so could change the direction, and choose based on relevant consequences and tradeoffs. Pressure-test the design against representative scenarios, edge cases, or evidence when useful.
+
+Adapt the depth and techniques to the problem rather than following mandatory stages.
+
+## Result
+
+Present the design in conversation. Make the chosen direction concrete through whichever responsibilities, concepts, interfaces, interactions, and invariants matter to the problem. Explain the rationale for non-obvious choices and distinguish settled decisions from material open questions.
+
+Use diagrams, examples, or interface sketches when they clarify the design. Do not substitute an implementation plan or task-level acceptance contract for the design.
 
 ## Specialized guidance
 
-Load guidance for each concern that could materially change the design. The references group related lenses to make them easier to discover; loading a lens does not make its mechanisms mandatory. When a concern is plausibly material, prefer consulting the short relevant reference over silently assuming it away.
+Consult the short reference for each plausibly material concern rather than silently assuming it away. Related lenses are grouped to reduce missed considerations; loading a reference does not require adopting every mechanism it describes.
 
 - [module-design.md](references/module-design.md) for module depth, interface and seam design, restructuring shallow modules, and comparison of alternatives;
 - [system-semantics.md](references/system-semantics.md) for failure behavior, cross-boundary state correctness, operational interfaces, and trust or authority boundaries;

@@ -56,7 +56,7 @@ Make the shared constraints explicit before comparing alternatives: caller needs
 
 ### Generate genuinely different alternatives
 
-If parallel agents are available and the comparison is worth the cost, they can explore alternatives independently. Otherwise generate them sequentially. Vary a meaningful design dimension rather than producing cosmetic renames, for example:
+Develop genuinely different alternatives rather than cosmetic renames. Vary a meaningful design dimension, for example:
 
 - smallest possible caller-facing interface;
 - strongest optimization for the common path;
