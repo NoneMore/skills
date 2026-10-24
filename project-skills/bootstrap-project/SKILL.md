@@ -77,6 +77,6 @@ The layout is illustrative, not a demand to create empty directories or placehol
 
 - Projects may adopt, modify, ignore, or contradict these defaults. Do not secretly enforce them through `design`, `specify`, `decompose`, or other skills; all remain independently user-invoked.
 - Do not require an agent to search for conflicting documents, audit completeness, reconcile design/spec/work artifacts, or propagate changes across them. Follow applicable existing project instructions for the task at hand without inventing additional obligations.
-- If a requested edit would overwrite relevant existing human policy or its destination is materially ambiguous, keep the unaffected work intact and surface only the blocking choice. If writing is not authorized or possible, provide a concrete suggested layout or edit instead of claiming setup succeeded.
+- If a requested edit would overwrite relevant existing human policy without clear authorization to change it, or its destination is materially ambiguous, keep the unaffected work intact and surface only the blocking choice. If writing is not authorized or possible, provide a concrete suggested layout or edit instead of claiming setup succeeded.
 
 Done when the requested project practice is either concretely established or adapted in its intended location, or a read-only recommendation is delivered, with the actual changed paths and any material limits stated.
