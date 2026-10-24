@@ -1,6 +1,6 @@
 ---
 name: specify
-description: Turn sufficiently settled intent into a durable specification that can guide implementation or verification. Use when the user explicitly wants a spec, requirements contract, or persistent implementation-facing statement of intent.
+description: Turn sufficiently settled intent into a precise, task-scoped implementation and verification contract. Use when the user explicitly wants a specification, requirements contract, or task-specific acceptance criteria.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Purpose
 
-Produce a durable contract for sufficiently settled intent.
+Turn sufficiently settled intent into a precise contract for the work at hand, so implementation and verification do not need to invent material choices.
 
 ## Accepts
 
@@ -16,29 +16,37 @@ Conversation decisions, an issue or request, an existing design, project context
 
 ## Owns
 
-- the problem or outcome being addressed;
-- intended observable behavior and scope;
-- material settled decisions that constrain implementation;
+- the specific problem or outcome being addressed;
+- intended observable behavior and scope at the level the task needs;
+- material settled decisions and constraints that the work must honor;
 - non-goals or boundaries whose omission would create material scope ambiguity;
-- acceptance conditions that can distinguish a satisfying result from a non-satisfying one;
+- acceptance conditions that distinguish a satisfying result from a non-satisfying one;
 - explicit material unresolved questions when the source material is not yet decision-complete.
 
-If a material product or design choice remains unresolved, do not silently resolve it as part of specification. Preserve it as an unresolved decision unless the user explicitly delegates resolution of the choice; if delegated, explicitly resolve and record it before presenting the result as implementation-ready.
+Honor established product and design decisions. Surface material conflicts or unresolved choices; resolve them only when delegated, and record the resolution before claiming implementation readiness.
 
-A specification is valuable because it preserves a contract. When the user requests persistence, use the requested destination or an established project source of truth when one clearly applies. If the user has not requested a persistent project mutation, return the complete specification in conversation. Do not invent a new persistence convention merely to make the spec durable.
+## Approach
 
-Use [spec-shape.md](references/spec-shape.md) as a starting structure when useful, not as a mandatory template.
+Identify the intent and constraints settled by the request, applicable project evidence, and existing design. Translate them into concrete behavior, boundaries, and acceptance conditions at the granularity needed for the task. Derive necessary consequences of settled requirements without introducing discretionary product or design choices.
 
-## Contract integrity
+Use representative scenarios and edge cases to expose ambiguity, contradictions, or missing decisions; do not fill gaps with plausible but ungrounded defaults.
 
-When persisting a specification, follow an established project source of truth and specification lifecycle when one clearly applies. Do not treat governance as absent merely because it is not already present in context; inspect the accessible project instructions and natural sources of truth needed to determine whether one applies.
+Include detail only when its absence could materially change implementation or verification.
 
-If no clearly applicable governance can be established and the specification is intended to become a durable project contract, use [governance-bootstrap.md](references/governance-bootstrap.md) to surface only the minimum governance decisions that require resolution. Do not choose bootstrap answers on the user's behalf: require explicit user resolution before treating any new governance choice as authoritative. Do not bootstrap governance for a conversation-only specification, when existing project mechanisms already provide the needed properties, or by mutating project state beyond the user's authorized scope.
+## Result
 
-When changing an existing contract, keep material semantic deltas reviewable. Do not silently choose between materially conflicting sources, present materially unsettled requirements as settled, or infer authority from recency, naming, or location unless the project's governance makes that property authoritative. Preserve references when they are needed to establish authority, understand a material constraint, or explain a material change.
+Present a task-scoped specification with the material outcome, expected behavior, scope, constraints, and acceptance conditions. Clearly distinguish settled requirements from unresolved decisions. Prefer observable acceptance criteria over implementation instructions unless the implementation choice is itself a requirement.
 
-These are contract-integrity constraints, not a repository workflow. Do not invent directory layouts, numbering schemes, approval stages, archival structures, mandatory artifact types, or specification-specific states unless a concrete contract-integrity failure requires them and existing project mechanisms are insufficient.
+Use the structure that best communicates the contract rather than a mandatory template.
+
+## Project conventions and default
+
+Follow applicable project conventions for specification form, placement, and change handling. Inspect relevant project instructions and sources of truth when needed to determine whether they apply.
+
+Use a project-prescribed destination when authorized; otherwise return the specification in conversation unless the user requests and authorizes another destination. If a specification file is produced without an applicable project change convention, keep its necessary revision guidance in that file: edit it in place, treat its current body as the requirements for the task, and update materially affected behavior, scope, and acceptance conditions together.
+
+Do not create a separate specification governance document, approval workflow, revision log, or archival process merely to define how the file changes.
 
 ## Done when
 
-The durable spec is clear enough that downstream work can act and verify against it without silently inventing material choices. If that condition cannot be met, the spec may still capture settled material, but it must clearly identify the unresolved decisions that block a reliable contract.
+The specification is precise enough for the current work to be implemented and verified without silently inventing material choices. If that is not yet possible, capture the settled scope and explicitly identify the decisions that still block a reliable contract.

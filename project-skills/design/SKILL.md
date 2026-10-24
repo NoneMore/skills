@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Purpose
 
-Resolve material design choices into a direction that is sufficiently clear for the user's requested outcome.
+Resolve material design choices into a coherent direction sufficiently clear for the user's requested outcome.
 
 ## Accepts
 
@@ -22,24 +22,27 @@ A design question, an architecture or domain problem, an interface or seam decis
 - decision-changing factual uncertainty is investigated when proportionate or kept explicit rather than silently assumed;
 - intentionally deferred material choices name what blocks them and, when knowable, what would make them decidable.
 
-The default result is the decisions and remaining material uncertainty in conversation. Persist a design artifact only when the user requests one or durability is part of the requested outcome through an established project convention. When persisting, retain only knowledge whose future value justifies the artifact, such as shared domain language or a current architectural decision that later work should know.
+## Approach
+
+Frame the material design question and constraints. Identify choices about structure, concepts, interfaces, boundaries, or behavior. Compare consequential alternatives against relevant tradeoffs, and pressure-test the direction with scenarios, edge cases, or evidence when useful.
+
+Adapt the depth and techniques to the problem rather than following mandatory stages.
+
+## Result
+
+Present the design in conversation. Make the chosen direction concrete through whichever responsibilities, concepts, interfaces, interactions, and invariants matter to the problem. Explain the rationale for non-obvious choices and distinguish settled decisions from material open questions.
+
+Use diagrams, examples, or interface sketches when they clarify the design. Do not substitute an implementation plan or task-level acceptance contract for the design.
 
 ## Specialized guidance
 
-Load only what materially helps the current design problem:
+Consult the short reference for each plausibly material concern rather than silently assuming it away. Related lenses are grouped to reduce missed considerations; loading a reference does not require adopting every mechanism it describes.
 
-- [domain-modeling.md](references/domain-modeling.md) for domain language and durable architectural knowledge;
-- [deep-modules.md](references/deep-modules.md) for module/interface/seam vocabulary and deep-module design;
-- [deepening.md](references/deepening.md) when restructuring shallow module clusters;
-- [design-it-twice.md](references/design-it-twice.md) when materially different interface alternatives are worth comparing;
-- [reliability.md](references/reliability.md) when failure behavior, recovery, availability, or degradation can change the design;
-- [distributed-state.md](references/distributed-state.md) when state ownership, consistency, ordering, or reconciliation crosses a process or asynchronous boundary;
-- [compatibility-and-migration.md](references/compatibility-and-migration.md) when existing callers, data, or deployments constrain how a target design can be reached;
-- [operability.md](references/operability.md) when diagnosis, repair, or operational control materially affects the architecture;
-- [security-boundaries.md](references/security-boundaries.md) when trust, authority, isolation, or data exposure materially affects the design;
-- [decision-maps.md](references/decision-maps.md) when a large decision space benefits from a compact durable index.
+- [module-design.md](references/module-design.md) for module depth, interface and seam design, restructuring shallow modules, and comparison of alternatives;
+- [system-semantics.md](references/system-semantics.md) for failure behavior, cross-boundary state correctness, operational interfaces, and trust or authority boundaries;
+- [compatibility-and-migration.md](references/compatibility-and-migration.md) when existing callers, data, or deployments constrain the target design.
 
-Research, code reading, experiments, spikes, prototypes, and interactive pressure-testing are techniques available to design; none is a required stage.
+Use code reading, research, experiments, or prototypes when they help settle material choices.
 
 ## Done when
 
