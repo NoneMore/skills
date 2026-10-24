@@ -1,0 +1,5 @@
+interface:
+  display_name: "Bootstrap Project"
+  short_description: "Set up code-first project governance"
+policy:
+  allow_implicit_invocation: false
