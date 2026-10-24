@@ -1,6 +1,6 @@
 ---
 name: decompose
-description: Split sufficiently concrete work into independently actionable pieces with explicit real dependencies and verification boundaries. Use when the user explicitly wants tickets, work items, implementation slices, or a dependency-aware breakdown.
+description: Break engineering work into actionable units with truthful dependencies and verifiable completion boundaries. Use when the user explicitly wants work items, implementation slices, or dependency-aware breakdowns.
 disable-model-invocation: true
 ---
 
@@ -8,28 +8,34 @@ disable-model-invocation: true
 
 ## Purpose
 
-Turn concrete work into a set of actionable pieces whose boundaries and dependencies make execution easier rather than merely restating implementation layers.
+Break down engineering work into actionable units whose boundaries and dependencies make execution easier.
 
 ## Accepts
 
-A specification, plan, issue, conversation, design, or other sufficiently concrete body of work.
+A user-supplied request, issue, specification, design, existing plan, or other engineering work.
 
 ## Owns
 
-- coverage of the intended work across the resulting items;
-- slices that each deliver or verify a coherent result when the work permits it;
-- explicit dependencies only where one item truly must precede another;
-- acceptance information sufficient to tell when each item is complete;
-- visible integration or sequencing work rather than hidden coordination assumptions.
+- coverage of the work being broken down;
+- coherent, actionable units with meaningful deliverables;
+- real dependencies and opportunities for independent execution;
+- necessary integration and sequencing work;
+- completion signals grounded in established outcomes and constraints.
 
-Prefer narrow end-to-end tracer bullets when they can land and be verified independently. Do not force that shape onto mechanical refactors, migrations, or other work whose affected subsets cannot remain valid independently.
+## Approach
 
-If the source material is too unsettled to define truthful deliverables, acceptance signals, or dependencies without inventing material product, scope, or design decisions, do not manufacture a complete ticket set. Identify the smallest unresolved decisions or information that block reliable decomposition. Decompose independently settled scope only when doing so does not silently predetermine those blockers.
+Break down the requested work at a useful granularity. Prefer independently verifiable end-to-end slices where feasible; preserve real ordering and cross-cutting work when independent slicing is unsafe, as in migrations or mechanical changes.
 
-Use [tracer-bullets.md](references/tracer-bullets.md) when slice boundaries or dependency edges need deeper guidance.
+Use only real prerequisites as dependency edges. Respect settled product and design decisions; do not invent material scope, behavior, design choices, or acceptance requirements. Where unresolved decisions block reliable decomposition, identify the affected work and decompose only what does not predetermine them.
 
-Publishing the breakdown to a tracker is an optional integration step when the user asks for it and an appropriate tracker is available; the decomposition itself does not depend on a suite-specific work-item role or state machine.
+## Result
+
+Present work items or ordered steps in a form appropriate to the request, without imposing a mandatory task schema.
+
+Use [tracer-bullets.md](references/tracer-bullets.md) when work-item boundaries or dependency edges need specialized guidance.
+
+Publish to a tracker only when requested and authorized, following the project's existing conventions.
 
 ## Done when
 
-The requested scope is accounted for, each item has a clear deliverable and completion signal, dependencies represent real execution constraints, and no material work is left implicit between items.
+The requested work is accounted for as far as it can be reliably decomposed, actionable units have clear deliverables and completion signals, dependencies represent real constraints, and blocked work is not presented as ready.

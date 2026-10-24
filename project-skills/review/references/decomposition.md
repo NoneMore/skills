@@ -1,9 +1,9 @@
-# Decomposition review
+# Work decomposition review
 
-Evaluate whether the breakdown covers the intended work in independently actionable pieces with truthful dependencies.
+Evaluate whether the breakdown covers the intended work in actionable units with meaningful deliverables, truthful dependencies, and verifiable completion signals.
 
-Look for missing scope, slices that cannot be verified or delivered meaningfully on their own, artificial layer-by-layer tickets where an end-to-end slice is possible, false dependencies that serialize work unnecessarily, and hidden integration work that has no owning item.
+Look for omitted or duplicated work, hidden integration, false dependencies, unjustified sequencing, units that cannot be acted on or verified, and completion conditions that invent requirements. Where unresolved material product, scope, or design choices affect a work item, check that the breakdown does not silently settle them or present blocked work as ready.
 
-Mechanical refactors and migrations may legitimately require ordered or cross-cutting steps. Do not force vertical slicing when affected subsets cannot remain valid independently.
+Prefer independently verifiable end-to-end slices where feasible, but do not force vertical slicing onto migrations, mechanical changes, or other work requiring genuine ordered or cross-cutting steps.
 
-A decomposition can be review-complete without rewriting the ticket set; findings should identify the structural issue and its consequence.
+Do not impose a mandatory ticket schema or tracker workflow beyond the user's request or project conventions.
