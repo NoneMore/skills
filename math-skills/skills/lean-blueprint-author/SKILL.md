@@ -1,84 +1,76 @@
 ---
 name: lean-blueprint-author
-description: Create, edit, and synchronize Lean blueprints with a Lean project using leanblueprint conventions.
+description: Create, edit, and synchronize leanblueprint blueprints and their Lean mappings/status.
 disable-model-invocation: true
 ---
 
 # Lean Blueprint Author
 
-Version: **v4.1**
+## Purpose
 
-Use this Skill for three tasks:
+Create, modify, or synchronize a useful mathematical blueprint while pushing repeatable project-state work into deterministic tooling.
+Use the model for mathematical structure, semantic correspondence, and editing judgment; use Lean/leanblueprint and the bundled script for facts they can determine mechanically.
 
-- **Create** a dependency/proof route for a target theorem, definition, or other tracked node.
-- **Modify** existing blueprint content, structure, dependencies, or proof routes.
-- **Update** `\lean`, `\leanok`, `\mathlibok`, and related metadata from the current Lean project.
+## Accepts
 
-The goal is a useful mathematical blueprint, not a framework around the blueprint.
-Prefer the project's existing conventions and leanblueprint's documented workflow over custom machinery.
+- a target theorem, definition, construction, or proof route to add;
+- an existing blueprint region that needs mathematical or structural editing;
+- an existing blueprint whose `\lean`, `\leanok`, `\mathlibok`, or related status needs synchronization with the Lean project;
+- standalone blueprint LaTeX when no project checkout is available.
 
-## Core Rules
+## Core Invariants
 
-1. **Keep the route minimal.** Include nodes that are needed to state or prove the target, reused later, or worth tracking as independent formalization work. Keep routine steps in proof prose.
-2. **Separate statement and proof dependencies.** Put statement dependencies in the theorem/definition environment and proof-only dependencies in the proof environment.
-3. **Treat metadata as factual.** Add or change Lean names/status only when the local project supports the claim. Do not invent declaration names or citations.
-4. **Preserve project style.** Reuse the project's theorem environments, labels, macros, citation style, and proof layout. Avoid normalizing unrelated content.
-5. **Edit the smallest useful region.** For an existing blueprint, preserve surrounding prose and metadata unless the requested change requires touching them.
-6. **Validate what changed.** Prefer one relevant build/check over broad defensive audits.
+1. **Keep the mathematical route minimal.** Track nodes that are needed to state/prove targets, reused later, or worth independent formalization. Keep routine steps in proof prose.
+2. **Separate statement and proof dependencies.** Statement prerequisites belong on the statement/definition; proof-only dependencies belong on its proof.
+3. **Treat metadata as factual.** Do not invent Lean declarations, citations, or formalization status. Leave ambiguous mappings/status unresolved.
+4. **Preserve project style and scope.** Reuse existing theorem environments, labels, macros, citations, proof layout, and build conventions. Edit the smallest useful region.
+5. **Do not change mathematics merely to make metadata fit.** A pure Update reports a blueprint/Lean semantic mismatch and leaves the disputed metadata unchanged unless the requested outcome also includes repairing blueprint content.
+6. **Prefer mechanical projection over manual reconstruction.** When working in a project, obtain graph/mapping/status facts from project-native tooling or the bundled read-only tooling rather than manually re-parsing source when a reliable mechanical view is available.
 
-For leanblueprint macro meanings and standard project layout, see `references/leanblueprint-basics.md`.
-For operation-specific steps, see `references/workflows.md`.
+For macro meanings and upstream behavior, see `references/leanblueprint-basics.md`.
+For Create/Modify/Update workflows and validation, see `references/workflows.md`.
 
-## Project Discovery
+## Bundled Mechanical Tool
 
-For work on a real project, locate:
+`scripts/blueprint.py` is a read-only helper for standard leanblueprint projects. It deliberately reuses plasTeX/leanblueprint's parsed model instead of implementing a second TeX parser.
 
-- the Lean project root containing `lakefile.lean` or `lakefile.toml`;
-- the blueprint source, usually `blueprint/src/content.tex` in the stock layout;
-- `blueprint/src/web.tex` when building the web blueprint;
-- `blueprint/src/print.tex` when building the PDF.
+Use it from a real project when its standard projection is supported:
 
-Do not require the stock layout when the repository already uses a custom build command or file organization.
-For standalone LaTeX snippets or pasted blueprint fragments, a project checkout is not required.
+```sh
+python3 <skill-path>/scripts/blueprint.py check --project-root <project-root>
+python3 <skill-path>/scripts/blueprint.py inspect --project-root <project-root> > /tmp/blueprint-state.json
+python3 <skill-path>/scripts/blueprint.py diff BEFORE.json AFTER.json
+```
 
-Do not run `leanblueprint new` unless the user asks to initialize a blueprint. The command is an opinionated convenience for Lake/Git/GitHub projects, not a prerequisite for using leanblueprint.
+- `check` verifies deterministic projection/graph invariants such as unresolved dependencies, silent single-value macro overwrite, invalid proof association, cycles, and conflicting mechanical status.
+- `inspect` emits normalized JSON only after those invariants pass. It exposes node identity/location, statement/proof dependencies, Lean mappings, and raw status markers; it does not copy mathematical prose or infer readiness/priority.
+- `diff` compares two saved normalized states without parsing TeX.
+- exit `0` means the requested mechanical operation succeeded; exit `1` means a valid projection was obtained but `check` found violations; exit `2` means the tool could not establish a reliable projection.
+
+If the project already provides a clearly authoritative read-only blueprint status/graph tool, use it for facts it computes reliably. Do not build a provider framework around project-specific tools.
+If the bundled tool exits `2`, do not silently fall back to a regex parser or claim equivalent mechanical coverage. Continue with the real project source/upstream commands as needed and bound the missing automation explicitly.
+
+The bundled tool is not semantic validation and does not replace `leanblueprint web`, Lean builds, `checkdecls`, or project-native validation.
 
 ## Operation Dispatch
 
-Choose the operation from the user's goal:
+Choose the smallest operation matching the user's outcome:
 
-- **Create** — author a new route or set of nodes for a target.
-- **Modify** — change an existing blueprint's mathematical content, proof route, structure, labels, or dependencies.
-- **Update** — synchronize an existing blueprint with current Lean declarations and formalization status without redesigning the mathematics.
+- **Create** — add a new mathematical dependency/proof route or tracked node set.
+- **Modify** — change existing blueprint mathematics, structure, labels, dependencies, proof placement, or prose.
+- **Update** — synchronize existing blueprint mappings/status with the current Lean project while keeping the mathematical route unchanged.
 
-If a request mixes operations, do the smallest combination that directly satisfies it. For example, a synchronization that exposes a genuinely missing mathematical lemma may become a small Modify task.
+Mixed requests may combine operations, but do not silently broaden a pure synchronization request into mathematical rewriting.
 
-## Validation
+## Done When
 
-When editing a real project, use the narrowest relevant checks:
+- **Create:** the target and sufficient mathematical route are expressed; statement/proof dependencies are placed correctly; metadata is evidence-backed; project validation relevant to the edit passes or remaining failures are explicit.
+- **Modify:** the requested mathematical/structural change is reflected; directly affected labels/dependencies/proof associations are coherent; unrelated content is preserved; relevant validation passes or remaining failures are explicit.
+- **Update:** every changed mapping/status is supported by the project; ambiguous or semantically mismatched cases remain unresolved rather than guessed; relevant declaration/build checks use current generated state.
 
-- Run the project's web build, normally `leanblueprint web`, after structural, dependency, or `\lean{...}` mapping edits. The web build regenerates `blueprint/lean_decls` in the stock workflow.
-- If Lean mappings/status changed, ensure the Lean project is built (`lake build` as needed), rebuild the web blueprint, then run `leanblueprint checkdecls` (or the project's equivalent declaration check). Do not rely on `checkdecls` against a stale `blueprint/lean_decls`.
-- Use `leanblueprint all` when a broad final validation is appropriate.
-- Run `leanblueprint pdf` when the user requests PDF validation, print-specific content changed, or the project's bibliography workflow requires it before the web build.
-- Inspect the resulting diff and fix errors caused by the edit.
+For project work, finish by inspecting the actual diff and reporting only material changes, validation results, and unresolved issues.
 
-A successful build or `checkdecls` confirms syntax/declaration availability, not mathematical equivalence, proof completeness, or absence of placeholders such as `sorry`. Use the Lean source/types and implementation when deciding whether a blueprint statement or proof is actually formalized.
+## Boundaries
 
-## Avoid Overengineering
-
-Keep the Skill focused on blueprint authoring and synchronization:
-
-- do not add runtime-pin auditors, CI simulators, parser emulators, evidence taxonomies, or safety-gate frameworks unless a concrete project problem requires them;
-- do not scan unrelated workflows, lockfiles, or repository history merely to establish a theoretical runtime contract;
-- prefer the project's real Lean/leanblueprint commands over bespoke static-analysis machinery;
-- when version-specific behavior actually matters, inspect that installed/upstream behavior directly and address only the concrete issue.
-
-## Output
-
-Prefer concrete edits over long process reports.
-
-- For **Create**, provide insertion-ready blueprint LaTeX and a short dependency summary.
-- For **Modify**, show/apply the changed region and summarize structural/dependency effects.
-- For **Update**, summarize Lean-name/status changes and unresolved mappings.
-- When commands were run, report only the relevant results and remaining issues.
+Do not turn the Skill into a second leanblueprint implementation. Avoid parser emulation, runtime compatibility matrices, CI simulators, confidence/evidence taxonomies, priority planners, or broad repository audits unless a concrete project failure makes one necessary.
+Deterministic helper code should project/check existing upstream semantics; mathematical interpretation remains with the model and the project's authoritative sources.
