@@ -1,6 +1,6 @@
 # Specification review
 
-Evaluate whether the specification is a usable contract for the work it is meant to guide, respecting any applicable project-specific rules for its authority or retention.
+Evaluate whether the specification is a usable contract for the intended work, respecting applicable project rules for its authority or retention.
 
 Check that the requested behavior and scope are unambiguous enough to act on, material decisions are explicit, non-goals or boundaries are clear where omission would create scope risk, and acceptance conditions can distinguish a conforming result from a non-conforming one.
 

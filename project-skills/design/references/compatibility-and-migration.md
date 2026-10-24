@@ -14,4 +14,4 @@ Expand-contract changes, dual reads or writes, backfills, translation layers, sh
 
 Prefer transitions that preserve one authoritative source of truth. When dual writes or multiple representations are unavoidable, define their failure and reconciliation semantics rather than assuming atomicity.
 
-These are constraints on the target design, not a step-by-step rollout plan. Address the material transition invariants, ownership during overlap, and exit conditions for temporary mechanisms.
+These are constraints on the target design, not a step-by-step rollout plan.

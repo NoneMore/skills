@@ -23,15 +23,15 @@ Conversation decisions, an issue or request, an existing design, project context
 - acceptance conditions that distinguish a satisfying result from a non-satisfying one;
 - explicit material unresolved questions when the source material is not yet decision-complete.
 
-Treat established product and design decisions as constraints, not as choices to silently reopen. If material sources conflict or a product or design choice remains unresolved, do not silently settle it as part of specification. If the user delegates the choice, resolve it explicitly before treating the specification as implementation-ready; otherwise identify what remains undecided.
+Honor established product and design decisions. Surface material conflicts or unresolved choices; resolve them only when delegated, and record the resolution before claiming implementation readiness.
 
 ## Approach
 
 Identify the intent and constraints settled by the request, applicable project evidence, and existing design. Translate them into concrete behavior, boundaries, and acceptance conditions at the granularity needed for the task. Derive necessary consequences of settled requirements without introducing discretionary product or design choices.
 
-Use representative scenarios and edge cases to expose material ambiguity, contradictions, or missing decisions. If a material choice is not established or delegated, keep it explicit rather than supplying a plausible default.
+Use representative scenarios and edge cases to expose ambiguity, contradictions, or missing decisions; do not fill gaps with plausible but ungrounded defaults.
 
-Include detail when its absence could materially change implementation or verification, not merely to make the specification appear complete.
+Include detail only when its absence could materially change implementation or verification.
 
 ## Result
 

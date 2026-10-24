@@ -1,6 +1,6 @@
 # System semantics and boundaries
 
-Use this guidance when failure behavior, cross-boundary state, production intervention, or trust and authority can change a material design decision. These are complementary lenses, not requirements to introduce mechanisms in every area; focus on the consequences relevant to the problem.
+Use when failure, cross-boundary state, operational intervention, or trust can change the design. The lenses are complementary; consider relevant consequences without automatically introducing mechanisms.
 
 ## State ownership and reconciliation
 
@@ -15,8 +15,6 @@ Describe guarantees in domain terms: which reads may be stale, which writes may 
 Assume asynchronous copies can diverge. When divergence matters, decide how it is detected, which side wins or how conflicts are resolved, and how repair occurs. Idempotency, deduplication, compensation, and stronger coordination earn their cost only where the corresponding duplicate, partial-execution, or conflict risk is real.
 
 Make message semantics explicit when they affect behavior: a durable fact, a request to act, and a best-effort notification imply different ownership and recovery expectations. Do not infer guarantees from the transport that the domain has not actually chosen.
-
-Choose infrastructure after the required ownership and consistency semantics are clear enough to evaluate it.
 
 ## Failure behavior and recovery
 

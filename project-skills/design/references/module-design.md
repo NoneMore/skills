@@ -1,6 +1,6 @@
 # Module and interface design
 
-Use this guidance when designing modules, interfaces, seams, or the structure of a shallow module cluster. The concepts, restructuring heuristics, and alternative-comparison technique complement one another; use only the parts that change the material design choices.
+Use for module/interface boundaries, shallow module clusters, or material interface alternatives. Apply the relevant heuristics without treating every subsection as mandatory.
 
 ## Concepts and evaluation
 
@@ -15,13 +15,11 @@ Use this guidance when designing modules, interfaces, seams, or the structure of
 
 ### Module depth and locality
 
-Prefer modules whose interfaces hide meaningful complexity rather than merely forwarding it. Use the deletion test: if deleting the module would scatter its complexity across callers, it is probably earning its place; if the complexity simply disappears, the module may be shallow indirection.
+Prefer modules that hide meaningful complexity. If removing a module would scatter complexity across callers, it likely earns its place; if the complexity disappears, it may be shallow indirection.
 
 Treat the public interface as the preferred behavioral test surface. Internal seams can exist for implementation needs, but do not expose them merely to make tests convenient.
 
 Do not introduce an abstraction solely because variation is imaginable. A seam earns its cost when real variation, isolation, or boundary control materially benefits the system.
-
-When the design space is genuinely open, compare materially different interfaces rather than polishing the first plausible shape.
 
 ## Deepening shallow module clusters
 
@@ -36,10 +34,6 @@ Different dependencies justify different designs:
 
 Do not introduce a port merely because a dependency exists. The seam should pay for itself through real variation, isolation, or locality.
 
-### Keep internal seams internal
-
-A module may have internal seams used by its implementation or tests without exposing those seams to callers. Do not enlarge the public interface simply to make internal testing convenient.
-
 ### Design a meaningful verification boundary
 
 When a deepened interface becomes the meaningful behavioral boundary, make clear which behaviors can be verified through it and where lower-level verification still protects distinct guarantees. Do not prescribe test deletion merely because the module boundary changed.
@@ -48,7 +42,7 @@ A successful deepening should reduce caller knowledge and concentrate related ch
 
 ## Comparing alternatives
 
-Use this technique when the first plausible interface may anchor the design too early and materially different alternatives could change the result. It is optional; do not pay the exploration cost when the choice is already constrained or cheap to reverse.
+Compare alternatives when the first plausible interface risks premature commitment. Skip exploration when the choice is constrained or cheap to reverse.
 
 ### Frame the design problem
 
@@ -56,7 +50,7 @@ Make the shared constraints explicit before comparing alternatives: caller needs
 
 ### Generate genuinely different alternatives
 
-Develop genuinely different alternatives rather than cosmetic renames. Vary a meaningful design dimension, for example:
+Vary a meaningful design dimension rather than cosmetically renaming one proposal:
 
 - smallest possible caller-facing interface;
 - strongest optimization for the common path;

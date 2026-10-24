@@ -24,7 +24,7 @@ A design question, an architecture or domain problem, an interface or seam decis
 
 ## Approach
 
-Frame the design problem and its material constraints. Identify choices about the system's structure, concepts, interfaces, boundaries, or behavior. Compare meaningfully different alternatives when doing so could change the direction, and choose based on relevant consequences and tradeoffs. Pressure-test the design against representative scenarios, edge cases, or evidence when useful.
+Frame the material design question and constraints. Identify choices about structure, concepts, interfaces, boundaries, or behavior. Compare consequential alternatives against relevant tradeoffs, and pressure-test the direction with scenarios, edge cases, or evidence when useful.
 
 Adapt the depth and techniques to the problem rather than following mandatory stages.
 
@@ -42,7 +42,7 @@ Consult the short reference for each plausibly material concern rather than sile
 - [system-semantics.md](references/system-semantics.md) for failure behavior, cross-boundary state correctness, operational interfaces, and trust or authority boundaries;
 - [compatibility-and-migration.md](references/compatibility-and-migration.md) when existing callers, data, or deployments constrain the target design.
 
-Research, code reading, experiments, spikes, prototypes, and interactive pressure-testing are techniques available to design; none is a required stage.
+Use code reading, research, experiments, or prototypes when they help settle material choices.
 
 ## Done when
 
