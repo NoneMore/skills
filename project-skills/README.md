@@ -6,6 +6,7 @@ Before materially changing a skill, follow the repository-level [Skill Design Pr
 
 ## Capabilities
 
+- `bootstrap-project` — explicitly initialize or adapt a code-first, change-centered project governance practice without imposing a lifecycle on other skills.
 - `design` — resolve material software, domain, architecture, and interface choices into a coherent direction.
 - `implement` — turn a requested production change into working, verified production behavior.
 - `review` — independently evaluate an existing result and report evidence-backed findings.
