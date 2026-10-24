@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Purpose
 
-Establish or adapt a lightweight, complete **recommended project practice** for organizing code, durable design knowledge, and change work. This is a user-invoked setup capability, not a coordinator or prerequisite for `design`, `specify`, or `decompose`.
+Establish or adapt a lightweight, complete **recommended project practice** for people working on the project, including agents. The governance convention belongs to the project, not to the invoking agent or this skill. This is a user-invoked setup capability, not a coordinator or prerequisite for `design`, `specify`, or `decompose`.
 
 ## Accepts
 
@@ -19,11 +19,16 @@ A repository or project and a request to bootstrap, adopt, or revise its project
 - expressing the code-first authority model and the distinct purposes of architecture, ADRs, and change work;
 - selecting the smallest project-local conventions and file organization that fit the request and existing project practice;
 - setting up or adapting those conventions without overwriting unrelated project policy;
-- making the resulting locations and usage clear enough for future user-invoked work.
+- making the resulting conventions discoverable and usable by human contributors as well as agents.
 
 ## Recommended practice
 
 Use these defaults when the project has not chosen another practice. They are recommendations, **not** runtime rules or obligations imposed on other skills.
+
+### Human-first governance entry
+
+- **Project governance is for people first.** Write shared project-governance conventions in a discoverable, human-readable project document, such as an established contributor guide or `docs/governance.md`. Make it reachable from the project's README or existing contributor entry point. This document is the canonical home for the shared rules; do not rely on `AGENTS.md` as the sole or primary governance document.
+- **Agent instructions are an adapter, not a second authority.** When useful, keep `AGENTS.md` or an established equivalent as a brief pointer to the human-facing conventions, plus only truly agent-specific instructions. Do not duplicate the governance rules there or assume a particular filename is loaded without evidence of the runtime's behavior.
 
 ### Authority and knowledge
 
@@ -46,7 +51,8 @@ A default layout (adapt names and locations to project conventions) is:
 
 ```text
 project/
-├── AGENTS.md                 # or the project's effective instruction entry
+├── README.md                 # links to the project's governance entry
+├── AGENTS.md                 # optional, concise agent-facing pointer
 ├── src/                      # existing code layout; do not restructure
 ├── tests/                    # existing test layout; do not restructure
 ├── specs/
@@ -58,6 +64,7 @@ project/
 │   └── archive/
 │       └── <change>/
 └── docs/
+    ├── governance.md         # human-readable, canonical shared conventions
     ├── architecture/
     └── adr/
         └── archive/
@@ -68,10 +75,10 @@ The layout is illustrative, not a demand to create empty directories or placehol
 ## Approach
 
 1. **Scope the request.** Identify the target project and whether the user wants a proposed convention, initial setup, or adaptation of existing conventions. Do not treat skill invocation alone as permission to edit.
-2. **Inspect locally relevant evidence.** Read the existing project instructions and the relevant code/document/change directory structure only as needed to avoid misplacing or overwriting content. Do not conduct a project-wide completeness or conflict audit, or try to resolve unrelated inconsistencies.
-3. **Adapt rather than replace.** Prefer an existing project instruction entry and established paths over new parallel governance. For an initial setup, place a short, project-specific navigation and convention section in `AGENTS.md` (or the project's established equivalent) when appropriate; do not copy the whole skill or cache easily rediscovered repo facts. Do not assert a runtime loads a filename without evidence of its loader semantics.
+2. **Inspect locally relevant evidence.** Read the existing contributor documentation, project instructions, and relevant code/document/change directory structure only as needed to avoid misplacing or overwriting content. Do not conduct a project-wide completeness or conflict audit, or try to resolve unrelated inconsistencies.
+3. **Adapt rather than replace.** Prefer an established human-facing contributor document for shared governance, or create the smallest useful human-readable document and link it from the existing README/contributor entry. Keep `AGENTS.md` (or the project's established equivalent) as a short pointer when useful; do not copy the governance document, the whole skill, or easily rediscovered repo facts. Do not assert a runtime loads a filename without evidence of its loader semantics.
 4. **Create only useful artifacts.** Establish locations through real content as requested; do not require stub specs, ADRs, tasks, indexes, schemas, approval gates, status machines, or a hierarchy of Changes. Do not rewrite production code merely to bootstrap governance.
-5. **Verify the result.** Check the changed files and local links, preserve existing policy outside the authorized scope, and report what was created or adapted, what remains a recommendation, and any material limitation.
+5. **Verify the result.** Check the changed files and local links, including a human-facing path to the governance conventions and any agent-facing pointer. Preserve existing policy outside the authorized scope, and report what was created or adapted, what remains a recommendation, and any material limitation.
 
 ## Boundaries and completion
 
@@ -79,4 +86,4 @@ The layout is illustrative, not a demand to create empty directories or placehol
 - Do not require an agent to search for conflicting documents, audit completeness, reconcile design/spec/work artifacts, or propagate changes across them. Follow applicable existing project instructions for the task at hand without inventing additional obligations.
 - If a requested edit would overwrite relevant existing human policy without clear authorization to change it, or its destination is materially ambiguous, keep the unaffected work intact and surface only the blocking choice. If writing is not authorized or possible, provide a concrete suggested layout or edit instead of claiming setup succeeded.
 
-Done when the requested project practice is either concretely established or adapted in its intended location, or a read-only recommendation is delivered, with the actual changed paths and any material limits stated.
+Done when the requested project practice is concretely established or adapted in a human-discoverable project location (with only necessary agent-facing navigation), or a read-only recommendation is delivered, with the actual changed paths and any material limits stated.
