@@ -6,10 +6,10 @@ Before materially changing a skill, follow the repository-level [Skill Design Pr
 
 ## Capabilities
 
-- `design` — resolve material software, domain, architecture, and interface choices into a coherent, evolvable direction; retain reusable knowledge selectively.
+- `design` — resolve material software, domain, architecture, and interface choices into a coherent direction.
 - `implement` — turn a requested production change into working, verified production behavior.
 - `review` — independently evaluate an existing result and report evidence-backed findings.
-- `specify` — turn sufficiently settled intent into a precise contract for a concrete task, defaulting to task-local use unless the project specifies otherwise.
+- `specify` — turn sufficiently settled intent into a precise task-level contract; follow project conventions or default to a self-contained working specification.
 - `decompose` — split concrete work into independently actionable pieces with truthful dependencies.
 - `triage` — assess incoming issues and pull requests until the next action is clear and, when requested, reflect that outcome in the project's existing tracker conventions.
 
