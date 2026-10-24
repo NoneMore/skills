@@ -39,7 +39,7 @@ Load object-specific guidance only for the result actually being evaluated. An a
 - [code.md](references/code.md) for diffs, PRs, or current implementations;
 - [design.md](references/design.md) for architecture and design directions;
 - [spec.md](references/spec.md) for specifications or requirements artifacts;
-- [decomposition.md](references/decomposition.md) for execution plans, tickets, or work breakdowns.
+- [decomposition.md](references/decomposition.md) for task decompositions or work breakdowns.
 
 ## Done when
 

@@ -1,5 +1,5 @@
 interface:
   display_name: "Decompose"
-  short_description: "Plan actionable engineering work"
+  short_description: "Break down engineering work"
 policy:
   allow_implicit_invocation: false
