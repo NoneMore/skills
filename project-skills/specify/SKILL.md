@@ -27,9 +27,11 @@ Treat established product and design decisions as constraints, not as choices to
 
 ## Approach
 
-Establish the intended outcome and applicable project constraints. Translate settled intent into observable behavior, meaningful boundaries, and acceptance conditions at the granularity the work requires.
+Identify the intent and constraints settled by the request, applicable project evidence, and existing design. Translate them into concrete behavior, boundaries, and acceptance conditions at the granularity needed for the task. Derive necessary consequences of settled requirements without introducing discretionary product or design choices.
 
-Use representative normal, edge, and failure scenarios when they expose material ambiguity. Do not invent requirements or implementation steps merely to make the specification appear complete.
+Use representative scenarios and edge cases to expose material ambiguity, contradictions, or missing decisions. If a material choice is not established or delegated, keep it explicit rather than supplying a plausible default.
+
+Include detail when its absence could materially change implementation or verification, not merely to make the specification appear complete.
 
 ## Result
 
