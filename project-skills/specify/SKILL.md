@@ -43,7 +43,7 @@ Use the structure that best communicates the contract rather than a mandatory te
 
 Follow applicable project conventions for specification form, placement, and change handling. Inspect relevant project instructions and sources of truth when needed to determine whether they apply.
 
-Return the specification in conversation unless the user requests and authorizes a file or another destination. If a specification file is produced without an applicable project change convention, make its change handling self-contained: include only the local guidance needed to revise the file coherently and recognize its current requirements. A lightweight default is to edit that file directly, updating materially affected behavior, scope, and acceptance conditions together.
+Use a project-prescribed destination when authorized; otherwise return the specification in conversation unless the user requests and authorizes another destination. If a specification file is produced without an applicable project change convention, keep its necessary revision guidance in that file: edit it in place, treat its current body as the requirements for the task, and update materially affected behavior, scope, and acceptance conditions together.
 
 Do not create a separate specification governance document, approval workflow, revision log, or archival process merely to define how the file changes.
 
