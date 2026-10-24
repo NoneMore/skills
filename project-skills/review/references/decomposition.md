@@ -1,9 +1,9 @@
-# Decomposition review
+# Execution plan and decomposition review
 
-Evaluate whether the breakdown covers the intended work in independently actionable pieces with truthful dependencies.
+Evaluate whether the plan offers a credible path to the requested outcome, with meaningful deliverables, truthful dependencies, and verification checkpoints proportionate to the work.
 
-Look for missing scope, slices that cannot be verified or delivered meaningfully on their own, artificial layer-by-layer tickets where an end-to-end slice is possible, false dependencies that serialize work unnecessarily, and hidden integration work that has no owning item.
+Look for missing scope or integration work, false dependencies, unsafe ordering or transitions, hidden material decisions, and checkpoints that cannot establish whether the work succeeded. Investigation or decision gates should identify what must be learned before dependent work proceeds; they are not permission to invent the missing decision.
 
-Mechanical refactors and migrations may legitimately require ordered or cross-cutting steps. Do not force vertical slicing when affected subsets cannot remain valid independently.
+When the plan splits work into items, check whether the slices are independently actionable and verifiable where feasible. Avoid artificial layer-by-layer tickets when an end-to-end slice would work, but do not force vertical slicing onto migrations or mechanical changes that require coordinated steps.
 
-A decomposition can be review-complete without rewriting the ticket set; findings should identify the structural issue and its consequence.
+Do not require tickets, estimates, owners, fixed phases, or tracker states unless the requested plan or project conventions call for them. Report evidenced defects and their consequences without rewriting the plan by default.

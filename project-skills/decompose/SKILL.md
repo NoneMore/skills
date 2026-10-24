@@ -1,6 +1,6 @@
 ---
 name: decompose
-description: Split sufficiently concrete work into independently actionable pieces with explicit real dependencies and verification boundaries. Use when the user explicitly wants tickets, work items, implementation slices, or a dependency-aware breakdown.
+description: Plan bounded engineering work into actionable steps, truthful dependencies, decision gates, and verification checkpoints; split into tasks or tickets when useful. Use when the user explicitly wants an execution plan, migration or investigation plan, phased work, or task breakdown.
 disable-model-invocation: true
 ---
 
@@ -8,28 +8,36 @@ disable-model-invocation: true
 
 ## Purpose
 
-Turn concrete work into a set of actionable pieces whose boundaries and dependencies make execution easier rather than merely restating implementation layers.
+Turn an engineering goal into a credible plan for reaching it, rather than requiring every plan to be a set of tickets.
 
 ## Accepts
 
-A specification, plan, issue, conversation, design, or other sufficiently concrete body of work.
+A request, goal, issue, specification, design, existing plan, or investigation problem with enough context to identify meaningful next work. Uncertainty may remain if the plan can show how to resolve it.
 
 ## Owns
 
-- coverage of the intended work across the resulting items;
-- slices that each deliver or verify a coherent result when the work permits it;
-- explicit dependencies only where one item truly must precede another;
-- acceptance information sufficient to tell when each item is complete;
-- visible integration or sequencing work rather than hidden coordination assumptions.
+- an actionable path covering the intended outcome;
+- real sequencing constraints and opportunities for independent work;
+- work boundaries and deliverables at the granularity the goal warrants;
+- material assumptions, risks, and decisions that gate dependent work;
+- checkpoints and completion signals that make progress verifiable.
 
-Prefer narrow end-to-end tracer bullets when they can land and be verified independently. Do not force that shape onto mechanical refactors, migrations, or other work whose affected subsets cannot remain valid independently.
+Respect settled product and design choices. Do not invent material decisions or present blocked work as ready. Where a choice is unresolved, identify the investigation or decision needed and what depends on it. Planning does not perform or continuously coordinate the subsequent work.
 
-If the source material is too unsettled to define truthful deliverables, acceptance signals, or dependencies without inventing material product, scope, or design decisions, do not manufacture a complete ticket set. Identify the smallest unresolved decisions or information that block reliable decomposition. Decompose independently settled scope only when doing so does not silently predetermine those blockers.
+## Approach
 
-Use [tracer-bullets.md](references/tracer-bullets.md) when slice boundaries or dependency edges need deeper guidance.
+Establish the target outcome, current state, and constraints that affect execution. Choose a proportionate approach, ordering work by real prerequisites, integration needs, and meaningful risk rather than arbitrary stages.
 
-Publishing the breakdown to a tracker is an optional integration step when the user asks for it and an appropriate tracker is available; the decomposition itself does not depend on a suite-specific work-item role or state machine.
+Expose uncertainties early enough that later work need not rely on guesses. Plan investigation, validation, and transition or recovery checks when they materially affect a safe path. If splitting work into items helps, prefer independently verifiable end-to-end slices where feasible; mechanical changes or migrations may require ordered cross-cutting work.
+
+## Result
+
+Present an execution plan in the form that fits the request: a concise path, phased rollout, investigation sequence, or work-item breakdown. Make deliverables, dependencies, decision gates, and verification checkpoints explicit where omission could change execution. Avoid invented schedules, ownership, or a mandatory template.
+
+Use [tracer-bullets.md](references/tracer-bullets.md) when work-item boundaries or dependency edges need specialized guidance.
+
+Publish tasks to a tracker only when requested and authorized, following the project's existing conventions rather than creating workflow states or coordination rules.
 
 ## Done when
 
-The requested scope is accounted for, each item has a clear deliverable and completion signal, dependencies represent real execution constraints, and no material work is left implicit between items.
+The next actor can tell what work can proceed, what must wait for a real prerequisite or decision, and how to verify the intended outcome, without material work or dependencies being left implicit.
