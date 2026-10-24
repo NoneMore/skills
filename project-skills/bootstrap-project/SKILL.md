@@ -44,7 +44,7 @@ Use these defaults when the project has not established its own conventions.
 
 - **A Change is a bounded, cohesive change intent**, not a task, PR, forced lifecycle phase, or child of another Change. It may span tasks or PRs; related work can share a Change, independent intentions can have separate Changes. Do not require a Change for every trivial edit.
 - Use `specs/active/<change>/` for the current work context, and `specs/archive/<change>/` for changes no longer being advanced (including completed, cancelled, or superseded work). `active` does not mean implementation-ready; `archive` does not prove implementation, validity, or ongoing applicability.
-- A Change directory has **no mandatory files**. It may hold `design.md`, `spec.md`, `tasks.md`, or other useful materials. Archived work is historical context, not a maintained specification.
+- A Change directory has **no mandatory files**. It may hold `design.md`, `spec.md`, `tasks.md`, or other useful materials.
 - When revising an active change-scoped specification, update it in place to reflect the settled requirements. Archived specifications remain historical and are not synchronized with later implementation changes.
 - Keep execution state such as owners, priorities, and progress in the existing tracker when one is used. Put work breakdown or dependencies in `tasks.md` only if it adds value; do not maintain the same volatile state in two places. Git, tests, and PRs retain implementation and verification evidence.
 - Change materials may inform an ADR for consequential architectural decisions or an architecture update after implementation. These remain separate activities, guided by their respective purposes.
@@ -81,6 +81,7 @@ The layout illustrates possible locations; use existing project conventions and 
 5. **Verify the result.** Check the changed files and local links, including a human-facing path to the governance conventions and any agent-facing pointer. Preserve existing policy outside the authorized scope, and report what was created or adapted, what remains a recommendation, and any material limitation.
 
 ## Stop conditions and completion
+
 - If a requested edit would overwrite relevant existing human policy without clear authorization to change it, or its destination is materially ambiguous, keep the unaffected work intact and surface only the blocking choice. If writing is not authorized or possible, provide a concrete suggested layout or edit instead of claiming setup succeeded.
 
 Done when the requested project practice is concretely established or adapted in a human-discoverable project location (with only necessary agent-facing navigation), or a read-only recommendation is delivered, with the actual changed paths and any material limits stated.
