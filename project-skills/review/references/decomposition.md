@@ -6,4 +6,4 @@ Look for omitted or duplicated work, hidden integration, false dependencies, unj
 
 Prefer independently verifiable end-to-end slices where feasible, but do not force vertical slicing onto migrations, mechanical changes, or other work requiring genuine ordered or cross-cutting steps.
 
-Do not require tickets, estimates, owners, fixed phases, or tracker states unless the user or project conventions call for them. Report evidenced defects and their consequences without rewriting the breakdown by default.
+Do not impose a mandatory ticket schema or tracker workflow beyond the user's request or project conventions.

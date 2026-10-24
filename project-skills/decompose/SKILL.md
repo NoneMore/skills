@@ -24,13 +24,13 @@ A user-supplied request, issue, specification, design, existing plan, or other e
 
 ## Approach
 
-Identify the work and constraints in the available context, then break it down at a useful granularity. Prefer independently verifiable end-to-end slices where feasible. For migrations, mechanical changes, or other work that cannot safely be split into independent slices, represent the real ordering and cross-cutting work.
+Break down the requested work at a useful granularity. Prefer independently verifiable end-to-end slices where feasible; preserve real ordering and cross-cutting work when independent slicing is unsafe, as in migrations or mechanical changes.
 
-Treat dependencies as execution constraints, not ordering preferences. Respect settled product and design decisions; do not invent material scope, behavior, design choices, or acceptance requirements to complete a breakdown. Where unresolved decisions prevent reliable decomposition, identify the blocked work and decompose only work that does not predetermine those decisions, rather than constructing a speculative investigation plan.
+Use only real prerequisites as dependency edges. Respect settled product and design decisions; do not invent material scope, behavior, design choices, or acceptance requirements. Where unresolved decisions block reliable decomposition, identify the affected work and decompose only what does not predetermine them.
 
 ## Result
 
-Present the breakdown as work items or ordered steps, with meaningful deliverables, real dependencies, and verifiable completion signals where they matter. Do not require tickets, phases, owners, estimates, or a fixed template.
+Present work items or ordered steps in a form appropriate to the request, without imposing a mandatory task schema.
 
 Use [tracer-bullets.md](references/tracer-bullets.md) when work-item boundaries or dependency edges need specialized guidance.
 
