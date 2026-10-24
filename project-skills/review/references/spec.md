@@ -6,4 +6,4 @@ Check that the requested behavior and scope are unambiguous enough to act on, ma
 
 Flag hidden design decisions that an implementer would otherwise be forced to invent, contradictions between requirements, and acceptance criteria that merely restate implementation details instead of observable outcomes.
 
-In the absence of a project-specific format or lifecycle, check that the specification is self-contained enough to implement and verify without reconstructing prior conversation. Do not require exhaustive prose or long-term persistence. Missing detail is a finding only when its absence can materially change implementation, verification, or stakeholder expectations.
+For a specification file without an applicable project change convention, check that its change handling is clear locally without requiring separate governance machinery. Do not require exhaustive prose, a fixed template, or long-term persistence. Missing detail is a finding only when its absence can materially change implementation, verification, or stakeholder expectations.

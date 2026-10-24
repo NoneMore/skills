@@ -39,11 +39,11 @@ Use the structure that best communicates the contract rather than a mandatory te
 
 ## Project conventions and default
 
-Follow applicable project conventions for specification form, placement, and lifecycle. Inspect relevant project instructions and sources of truth when needed to determine whether they apply.
+Follow applicable project conventions for specification form, placement, and change handling. Inspect relevant project instructions and sources of truth when needed to determine whether they apply.
 
-Where no convention applies, produce one self-contained working specification: include the material requirements, constraints, and acceptance conditions needed to implement and verify the task without reconstructing prior conversation. References may add context but should not replace those essentials. Return the specification in conversation unless the user requests and authorizes another destination.
+Return the specification in conversation unless the user requests and authorizes a file or another destination. If a specification file is produced without an applicable project change convention, make its change handling self-contained: include only the local guidance needed to revise the file coherently and recognize its current requirements. A lightweight default is to edit that file directly, updating materially affected behavior, scope, and acceptance conditions together.
 
-Do not introduce a new specification maintenance, approval, or archival process.
+Do not create a separate specification governance document, approval workflow, revision log, or archival process merely to define how the file changes.
 
 ## Done when
 
