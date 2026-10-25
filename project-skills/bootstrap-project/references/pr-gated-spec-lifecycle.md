@@ -66,4 +66,3 @@ History checks cannot establish that the written specification was substantively
 3. Add only the lifecycle-checking scripts, tests, and CI hooks the project can operate. Decide explicitly whether checks are advisory or required for merging; do not imply branch protection is enabled when it is not.
 4. Verify human and agent navigation, lifecycle paths, PR review, and CI failure cases. Check branch rules only if stronger enforcement is intended; document any direct-push fast path.
 
-For one concrete implementation (not a universal template), see [wenku8-downloader's specification lifecycle commit](https://github.com/NoneMore/wenku8-downloader/commit/48f0dd187a394540394c7bb4792967934d23e1f2), including its governance policy, PR template, checker, tests, and workflow.
