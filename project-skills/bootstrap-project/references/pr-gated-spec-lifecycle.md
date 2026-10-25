@@ -1,11 +1,11 @@
-# PR-gated specification lifecycle (optional)
+# PR-scoped specification lifecycle (optional)
 
-This is an opt-in, stricter variant of the Change conventions in [bootstrap-project](../SKILL.md). It trades extra specification and PR maintenance for a reviewable record of a specification being introduced, implemented or terminated, and archived before merge. It is **not** the recommended default.
+This is an opt-in, stricter PR-scoped variant of the Change conventions in [bootstrap-project](../SKILL.md). It trades extra specification and PR maintenance for a reviewable record of a specification being introduced, implemented or terminated, and archived before merge. Its PR checks can provide review feedback without being required merge gates; a project may explicitly allow direct pushes as a separate fast path. It is **not** the recommended default.
 
 ## Selection and authority
 
 - Apply only when a user explicitly requests this variant or the target project already follows it. Do not infer adoption from the use of PRs, CI, specifications, or a desire for better documentation.
-- Check that the project uses a PR-based contribution flow and accepts the cost of requiring a specification even for small or documentation-only PRs. Automated and external-contributor PRs also need a deliberate policy; do not invent silent exemptions.
+- Check which contributions actually use PRs and whether the project accepts a specification even for small or documentation-only PRs. Explicitly decide how direct pushes, automated changes, and external contributors are handled; a PR-triggered check does not cover direct pushes. Do not invent silent exemptions.
 - Put the adopted rules in the project's canonical human-readable governance document, linked from its contributor entry. An agent-facing file may point to those rules but must not become a competing authority.
 - Keep code and runtime evidence authoritative for *implemented* behavior. Change specifications describe proposed work; archived specifications preserve historical intent and outcomes, not a permanent catalog of current behavior.
 
@@ -13,13 +13,13 @@ This is an opt-in, stricter variant of the Change conventions in [bootstrap-proj
 
 | Default `bootstrap-project` convention | This optional variant |
 | --- | --- |
-| A Change may span multiple PRs. | A Change belongs to one PR; a PR may contain multiple Changes. |
+| A Change may span multiple PRs. | For PR work, a Change belongs to one PR; a PR may contain multiple Changes. |
 | Trivial work need not have a Change. | Every PR introduces at least one new active Change with a non-empty `spec.md`. |
 | A Change has no mandatory files. | Each Change has a `spec.md` covering intent, scope, and acceptance conditions. |
 | `active/` and `archive/` are sufficient. | Add `planned/` for proposals not yet being implemented. |
 | Archive when a Change stops advancing. | Archive all PR-active Changes before merge, including terminated work. |
 
-These overrides are a coherent project-level policy **only when adopted**. Otherwise, follow the default Change practice. The architecture, ADR, code-first authority, and human-first documentation conventions remain unchanged.
+These overrides form a coherent policy for contributions made through PRs **only when adopted**. If the project permits direct pushes, define their separate treatment rather than claiming PR checks enforce a repository-wide rule. Otherwise, follow the default Change practice. The architecture, ADR, code-first authority, and human-first documentation conventions remain unchanged.
 
 ## Change identity and lifecycle
 
@@ -44,7 +44,7 @@ specs/
 4. **Close Changes.** Before merge, move every active Change in the PR to `specs/archive/<change>/` under the same name, annotate outcomes and any unfinished work, and commit the result. If further fixes follow archival, keep its outcome record accurate and repeat relevant verification.
 5. **Merge.** Verify that the PR history contains a new active specification for each participating Change, that all are archived in the merge result, and that no tracked files remain under `specs/active/`. An unimplemented follow-up is a new planned Change rather than a still-active Change merged into the target branch.
 
-The PR template should make the Change names, specification commits/links, verification, and archival outcome reviewable without duplicating the full specifications.
+Keep PR descriptions focused on the change, validation, and any uncovered verification. Link Change specifications and archival outcomes when helpful; a PR template need not require a duplicate specification checklist.
 
 ## Enforcement and limits
 
@@ -55,7 +55,7 @@ Where the repository supports it, a deterministic CI check can verify:
 - each activated Change has a same-name, non-empty archived specification in the prospective merge result; and
 - the prospective merge result has no tracked `specs/active/` files.
 
-Test the check against both passing and failing synthetic Git histories, including activation from `planned/`, omitted or renamed archives, empty specifications, reused names, and changed merge results. A GitHub Actions check alone does **not** prevent merging: configure the target branch's required-status-check rules and verify they apply. Do not claim the gate is enforced until that is done.
+Test the check against both passing and failing synthetic Git histories, including activation from `planned/`, omitted or renamed archives, empty specifications, reused names, and changed merge results. A GitHub Actions check triggered by `pull_request` provides PR feedback but does **not** by itself block a merge or cover direct pushes. A project can deliberately leave it advisory and permit direct pushes. Only call it a mandatory merge gate if the target branch's required status checks and PR/branch rules are explicitly configured and verified.
 
 History checks cannot establish that the written specification was substantively complete, that its commit truly preceded all implementation work, that one Change was never worked on in another PR, or that acceptance criteria were satisfied. Human review remains necessary. Checks also depend on preserving relevant PR commits until evaluation; a squash merge may be used *after* the PR check succeeds.
 
@@ -63,7 +63,7 @@ History checks cannot establish that the written specification was substantively
 
 1. Inspect existing governance and in-flight Changes. Resolve conflicts and plan transitions explicitly; do not silently rewrite or retroactively treat old work as compliant.
 2. Establish the variant in the human-facing governance document and contributor/PR entry points; preserve other project conventions.
-3. Add only the enforcement scripts, tests, and CI hooks the project can operate. If enforcement is deferred, label the rules as conventions rather than verified merge gates.
-4. Verify human and agent navigation, lifecycle paths, PR template, CI failure cases, and branch protection where applicable.
+3. Add only the lifecycle-checking scripts, tests, and CI hooks the project can operate. Decide explicitly whether checks are advisory or required for merging; do not imply branch protection is enabled when it is not.
+4. Verify human and agent navigation, lifecycle paths, PR review, and CI failure cases. Check branch rules only if stronger enforcement is intended; document any direct-push fast path.
 
 For one concrete implementation (not a universal template), see [wenku8-downloader's specification lifecycle commit](https://github.com/NoneMore/wenku8-downloader/commit/48f0dd187a394540394c7bb4792967934d23e1f2), including its governance policy, PR template, checker, tests, and workflow.
