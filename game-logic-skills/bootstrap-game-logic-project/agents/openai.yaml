@@ -1,0 +1,5 @@
+interface:
+  display_name: "Bootstrap Game Logic Project"
+  short_description: "Initialize durable game-logic project infrastructure"
+policy:
+  allow_implicit_invocation: false
