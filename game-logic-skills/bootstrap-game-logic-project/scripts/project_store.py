@@ -1,7 +1,7 @@
-"""Deterministic helper for canonical game-logic project knowledge stores.
+"""Deterministic project-local game-logic store for analysis and application.
 
-Paths carry analysis/target scope. The manifest carries content identity,
-provenance, and graph relationships. Python 3.8+; standard library only.
+Paths carry analysis, application, or shared scope. The manifest carries content
+identity, provenance, and graph relationships. Python 3.8+; stdlib only.
 """
 
 import argparse
@@ -22,6 +22,8 @@ FINDING_STATUSES = {"confirmed", "working-hypothesis", "unknown", "superseded"}
 ARTIFACT_STATUSES = {"active", "superseded"}
 ANALYSES = "analyses"
 TARGETS = "targets"
+APPLICATIONS = "applications"
+SCHEMA_VERSION = 4
 SHARED_ARTIFACTS = Path("shared") / "artifacts"
 
 
@@ -124,6 +126,24 @@ def scope_target(root: Path, analysis_id: str, target_id: str) -> Dict[str, obje
         if not isinstance(target.get(key), str) or not target.get(key):
             raise StoreError("target metadata %s must be a non-empty string" % key)
     return target
+
+
+def scope_application(root: Path, application_id: str) -> Dict[str, object]:
+    require_id(application_id, "application id")
+    path = root / APPLICATIONS / application_id / "application.json"
+    item = read_object(path, "application metadata")
+    if item.get("id") != application_id:
+        raise StoreError("application metadata id does not match directory: %s" % application_id)
+    for key in ("game_version", "build_id", "module", "module_sha256"):
+        if not isinstance(item.get(key), str) or not item.get(key):
+            raise StoreError("application metadata %s must be a non-empty string" % key)
+    errors: List[str] = []
+    validate_refs(item.get("consumes_finding_refs"), "application consumes_finding_refs", errors)
+    if errors:
+        raise StoreError("; ".join(errors))
+    if not (root / APPLICATIONS / application_id / "record.md").is_file():
+        raise StoreError("application record.md missing: %s" % application_id)
+    return item
 
 
 def evidence_token(token: str) -> Tuple[str, str]:
@@ -274,6 +294,14 @@ def artifact_scope(path: str) -> Optional[Tuple[str, str]]:
     return parts[1], parts[3]
 
 
+def application_artifact_scope(path: str) -> Optional[str]:
+    parts = Path(path).parts
+    if (len(parts) == 4 and parts[0] == APPLICATIONS
+            and parts[2] == "artifacts" and ID_RE.fullmatch(parts[1])):
+        return parts[1]
+    return None
+
+
 def validate_refs(value: object, label: str, errors: List[str]) -> None:
     if not isinstance(value, list) or any(not isinstance(ref, str) or not ID_RE.fullmatch(ref) for ref in value):
         errors.append("%s must be an array of IDs" % label)
@@ -283,8 +311,8 @@ def validate_refs(value: object, label: str, errors: List[str]) -> None:
 
 def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) -> List[str]:
     errors: List[str] = []
-    if manifest.get("schema_version") != 3:
-        errors.append("schema_version must equal 3")
+    if manifest.get("schema_version") not in (3, SCHEMA_VERSION):
+        errors.append("unsupported schema_version (expected 3 or %s)" % SCHEMA_VERSION)
     if not isinstance(manifest.get("project"), str) or not manifest.get("project"):
         errors.append("project must be a non-empty string")
 
@@ -348,12 +376,20 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
             errors.append("duplicate artifact path: %s" % relative)
         artifact_paths.add(relative)
         scope = artifact_scope(relative)
+        application_id = application_artifact_scope(relative)
         shared = len(Path(relative).parts) == 3 and Path(relative).parts[:2] == ("shared", "artifacts")
-        if scope is None and not shared:
-            errors.append("%s must use a target or shared artifact path" % label)
+        if scope is None and not shared and application_id is None:
+            errors.append("%s must use a target, application, or shared artifact path" % label)
         if scope is not None:
             try:
                 scope_target(root, *scope)
+            except StoreError as exc:
+                errors.append(str(exc))
+        if application_id is not None:
+            if manifest.get("schema_version") != SCHEMA_VERSION:
+                errors.append("%s application scope requires schema %s" % (label, SCHEMA_VERSION))
+            try:
+                scope_application(root, application_id)
             except StoreError as exc:
                 errors.append(str(exc))
 
@@ -423,6 +459,17 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
                 except StoreError as exc:
                     errors.append(str(exc))
 
+    if manifest.get("schema_version") == SCHEMA_VERSION:
+        apps = root / APPLICATIONS
+        if not apps.is_dir():
+            errors.append("applications directory is missing")
+        else:
+            for app_dir in sorted(path for path in apps.iterdir() if path.is_dir()):
+                try:
+                    scope_application(root, app_dir.name)
+                except StoreError as exc:
+                    errors.append(str(exc))
+
     errors.extend(parse_findings(root)[2])
     return errors
 
@@ -464,6 +511,13 @@ def check_links(root: Path, manifest: Dict[str, object]) -> List[str]:
                 errors.append("artifact %s consumes missing finding %s" % (artifact_id, finding_id))
             elif ("artifact", artifact_id) in evidence.get(finding_id, set()):
                 errors.append("artifact %s both evidences and consumes finding %s" % (artifact_id, finding_id))
+    if manifest.get("schema_version") == SCHEMA_VERSION:
+        for app_path in sorted((root / APPLICATIONS).glob("*/application.json")):
+            app = read_object(app_path, "application metadata")
+            for finding_id in app.get("consumes_finding_refs", []):
+                if finding_id not in finding_ids:
+                    errors.append("application %s consumes missing finding %s" % (
+                        app_path.parent.name, finding_id))
     return errors
 
 
@@ -486,8 +540,9 @@ def cmd_init(args: argparse.Namespace) -> int:
         raise StoreError("manifest already exists; use --force only for an intentional reset")
     (root / "artifacts").mkdir(parents=True, exist_ok=True)
     (root / ANALYSES).mkdir(parents=True, exist_ok=True)
+    (root / APPLICATIONS).mkdir(parents=True, exist_ok=True)
     (root / SHARED_ARTIFACTS).mkdir(parents=True, exist_ok=True)
-    atomic_json(path, {"schema_version": 3, "project": args.project, "sources": [], "artifacts": []})
+    atomic_json(path, {"schema_version": SCHEMA_VERSION, "project": args.project, "sources": [], "artifacts": []})
     print("initialized %s" % path)
     return 0
 
@@ -517,6 +572,69 @@ def cmd_init_target(args: argparse.Namespace) -> int:
         "module_sha256": digest,
     })
     print("initialized target %s/%s" % (args.analysis_id, args.target_id))
+    return 0
+
+
+def cmd_migrate(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve()
+    manifest = load_manifest(root)
+    version = manifest.get("schema_version")
+    if version == SCHEMA_VERSION:
+        print("store already at schema %s" % SCHEMA_VERSION)
+        return 0
+    if version != 3:
+        raise StoreError("only schema 3 can be migrated to schema %s" % SCHEMA_VERSION)
+    errors = validate_store(root, manifest, True) + check_links(root, manifest)
+    if errors:
+        raise StoreError("legacy store must be repaired first: " + "; ".join(errors))
+    apps = root / APPLICATIONS
+    if apps.exists() and (not apps.is_dir() or any(apps.iterdir())):
+        raise StoreError("applications path must be absent or empty before migration")
+    apps.mkdir(parents=True, exist_ok=True)
+    manifest["schema_version"] = SCHEMA_VERSION
+    atomic_json(manifest_path(root), manifest)
+    print("migrated store schema 3 -> %s" % SCHEMA_VERSION)
+    return 0
+
+
+def cmd_init_application(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve()
+    manifest = load_manifest(root)
+    if manifest.get("schema_version") != SCHEMA_VERSION:
+        raise StoreError("application scopes require schema %s; explicitly migrate first" % SCHEMA_VERSION)
+    errors = validate_store(root, manifest, False) + check_links(root, manifest)
+    if errors:
+        raise StoreError("store must be repaired first: " + "; ".join(errors))
+    require_id(args.application_id, "application id")
+    app_dir = root / APPLICATIONS / args.application_id
+    if app_dir.exists():
+        raise StoreError("application already exists: %s" % args.application_id)
+    ref_errors: List[str] = []
+    validate_refs(args.consumes_finding_ref, "consumes_finding_ref", ref_errors)
+    if ref_errors:
+        raise StoreError("; ".join(ref_errors))
+    for finding_id in args.consumes_finding_ref:
+        find_finding(root, finding_id)
+    digest = (args.module_sha256.upper() if HEX64_RE.fullmatch(args.module_sha256)
+              else args.module_sha256)
+    app_dir.mkdir(parents=True)
+    (app_dir / "artifacts").mkdir()
+    atomic_json(app_dir / "application.json", {
+        "id": args.application_id,
+        "game_version": args.game_version,
+        "build_id": args.build_id,
+        "module": args.module,
+        "module_sha256": digest,
+        "consumes_finding_refs": list(args.consumes_finding_ref),
+    })
+    atomic_text(app_dir / "record.md", (
+        "# Application: %s\n\n"
+        "## Mechanic input\n\nDocument the exact finding or external mechanic record consumed.\n\n"
+        "## Authoritative implementation\n\nRecord the registered implementation artifact IDs and mechanism.\n\n"
+        "## Validation\n\nRecord tested cases, scope, and limitations.\n\n"
+        "## Rollback\n\nRecord original/control state and tested restoration procedure.\n"
+    ) % args.application_id)
+    print("initialized application %s" % args.application_id)
     return 0
 
 
@@ -554,13 +672,22 @@ def cmd_add_artifact(args: argparse.Namespace) -> int:
     root = Path(args.root).resolve()
     manifest = load_manifest(root)
     require_id(args.id, "artifact id")
-    if args.shared:
+    application_id = getattr(args, "application_id", None)
+    if application_id:
+        if args.shared or args.analysis_id or args.target_id:
+            raise StoreError("--application-id cannot be combined with other scopes")
+        if manifest.get("schema_version") != SCHEMA_VERSION:
+            raise StoreError("application artifacts require schema %s" % SCHEMA_VERSION)
+        scope_application(root, application_id)
+        relative = str(Path(APPLICATIONS) / application_id / "artifacts"
+                       / local_name(args.local_name))
+    elif args.shared:
         if args.analysis_id or args.target_id:
             raise StoreError("--shared cannot be combined with target scope")
         relative = str(SHARED_ARTIFACTS / local_name(args.local_name))
     else:
         if not args.analysis_id or not args.target_id:
-            raise StoreError("add-artifact requires target scope or --shared")
+            raise StoreError("add-artifact requires a target, application, or --shared scope")
         scope_target(root, args.analysis_id, args.target_id)
         relative = str(
             Path(ANALYSES) / args.analysis_id / TARGETS / args.target_id
@@ -729,6 +856,20 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--force", action="store_true")
     p.set_defaults(func=cmd_init)
 
+    p = sub.add_parser("migrate", help="Explicitly migrate a verified schema-3 store to schema 4")
+    p.add_argument("--root", required=True)
+    p.set_defaults(func=cmd_migrate)
+
+    p = sub.add_parser("init-application")
+    p.add_argument("--root", required=True)
+    p.add_argument("--application-id", required=True)
+    p.add_argument("--game-version", default="unknown")
+    p.add_argument("--build-id", default="unknown")
+    p.add_argument("--module", default="unknown")
+    p.add_argument("--module-sha256", default="unknown")
+    p.add_argument("--consumes-finding-ref", action="append", default=[])
+    p.set_defaults(func=cmd_init_application)
+
     p = sub.add_parser("init-target")
     p.add_argument("--root", required=True)
     p.add_argument("--analysis-id", required=True)
@@ -757,6 +898,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--target-id")
     p.add_argument("--local-name", required=True)
     p.add_argument("--shared", action="store_true")
+    p.add_argument("--application-id")
     p.add_argument("--kind", required=True)
     p.add_argument("--description", required=True)
     p.add_argument("--tool", required=True)
@@ -855,6 +997,24 @@ def run_self_test() -> None:
             finding_ref=["reload-result"], consumes_finding_ref=[],
         ))
 
+        cmd_init_application(argparse.Namespace(
+            root=str(root), application_id="reload-tool",
+            game_version="1.0", build_id="1", module="game.exe",
+            module_sha256="unknown", consumes_finding_ref=["reload-result"],
+        ))
+        application_file = root / APPLICATIONS / "reload-tool" / "artifacts" / "tool.py"
+        application_file.write_text("print('demo')\n", encoding="utf-8")
+        cmd_add_artifact(argparse.Namespace(
+            root=str(root), id="reload-tool-source", application_id="reload-tool",
+            analysis_id=None, target_id=None, local_name="tool.py",
+            shared=False, kind="implementation", description="sample tool",
+            tool="self-test", tool_version="1", rva_or_range="not-applicable",
+            derived_from=[], source_ref=[], finding_ref=[],
+            consumes_finding_ref=["reload-result"],
+        ))
+        if not application_artifact_scope("applications/reload-tool/artifacts/tool.py") == "reload-tool":
+            raise AssertionError("application artifact scope was not recognized")
+
         artifact_record = next(
             item for item in records(load_manifest(root), "artifacts")
             if item.get("id") == "reload-static"
@@ -863,6 +1023,20 @@ def run_self_test() -> None:
             raise AssertionError("path-derived scope was redundantly stored")
         if cmd_verify(argparse.Namespace(root=str(root))) or cmd_check_links(argparse.Namespace(root=str(root))):
             raise AssertionError("store verification failed")
+
+        legacy_root = base / "legacy"
+        cmd_init(argparse.Namespace(root=str(legacy_root), project="legacy", force=False))
+        legacy_manifest = load_manifest(legacy_root)
+        legacy_manifest["schema_version"] = 3
+        atomic_json(manifest_path(legacy_root), legacy_manifest)
+        (legacy_root / APPLICATIONS).rmdir()
+        if cmd_verify(argparse.Namespace(root=str(legacy_root))):
+            raise AssertionError("legacy store should be readable before migration")
+        cmd_migrate(argparse.Namespace(root=str(legacy_root)))
+        if load_manifest(legacy_root)["schema_version"] != SCHEMA_VERSION:
+            raise AssertionError("migration did not update schema")
+        if cmd_verify(argparse.Namespace(root=str(legacy_root))):
+            raise AssertionError("migrated store verification failed")
     print("project_store self-test: OK")
 
 
