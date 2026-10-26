@@ -43,7 +43,9 @@ def bootstrap(args: argparse.Namespace) -> None:
             raise store.StoreError("schema-3 migration requires explicit --upgrade")
         if version not in (3, store.SCHEMA_VERSION):
             raise store.StoreError("unsupported existing store schema")
-        errors = store.validate_store(root, manifest, True) + store.check_links(root, manifest)
+        errors = store.validate_store(root, manifest, True)
+        if not errors:
+            errors.extend(store.check_links(root, manifest))
         if errors:
             raise store.StoreError("existing store must be repaired first: " + "; ".join(errors))
 

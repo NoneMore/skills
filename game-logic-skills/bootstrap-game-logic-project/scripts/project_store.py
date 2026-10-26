@@ -388,6 +388,8 @@ def validate_store(root: Path, manifest: Dict[str, object], verify_files: bool) 
         if application_id is not None:
             if manifest.get("schema_version") != SCHEMA_VERSION:
                 errors.append("%s application scope requires schema %s" % (label, SCHEMA_VERSION))
+            if item.get("finding_refs"):
+                errors.append("%s application output cannot serve as mechanic evidence" % label)
             try:
                 scope_application(root, application_id)
             except StoreError as exc:
@@ -584,7 +586,9 @@ def cmd_migrate(args: argparse.Namespace) -> int:
         return 0
     if version != 3:
         raise StoreError("only schema 3 can be migrated to schema %s" % SCHEMA_VERSION)
-    errors = validate_store(root, manifest, True) + check_links(root, manifest)
+    errors = validate_store(root, manifest, True)
+    if not errors:
+        errors.extend(check_links(root, manifest))
     if errors:
         raise StoreError("legacy store must be repaired first: " + "; ".join(errors))
     apps = root / APPLICATIONS
@@ -602,7 +606,9 @@ def cmd_init_application(args: argparse.Namespace) -> int:
     manifest = load_manifest(root)
     if manifest.get("schema_version") != SCHEMA_VERSION:
         raise StoreError("application scopes require schema %s; explicitly migrate first" % SCHEMA_VERSION)
-    errors = validate_store(root, manifest, False) + check_links(root, manifest)
+    errors = validate_store(root, manifest, False)
+    if not errors:
+        errors.extend(check_links(root, manifest))
     if errors:
         raise StoreError("store must be repaired first: " + "; ".join(errors))
     require_id(args.application_id, "application id")
@@ -676,6 +682,8 @@ def cmd_add_artifact(args: argparse.Namespace) -> int:
     if application_id:
         if args.shared or args.analysis_id or args.target_id:
             raise StoreError("--application-id cannot be combined with other scopes")
+        if args.finding_ref:
+            raise StoreError("application outputs consume findings; they cannot evidence findings")
         if manifest.get("schema_version") != SCHEMA_VERSION:
             raise StoreError("application artifacts require schema %s" % SCHEMA_VERSION)
         scope_application(root, application_id)
@@ -1012,8 +1020,12 @@ def run_self_test() -> None:
             derived_from=[], source_ref=[], finding_ref=[],
             consumes_finding_ref=["reload-result"],
         ))
-        if not application_artifact_scope("applications/reload-tool/artifacts/tool.py") == "reload-tool":
+        if application_artifact_scope("applications/reload-tool/artifacts/tool.py") != "reload-tool":
             raise AssertionError("application artifact scope was not recognized")
+        application_file.write_text("tampered\n", encoding="utf-8")
+        if cmd_verify(argparse.Namespace(root=str(root))) == 0:
+            raise AssertionError("tampered application artifact went undetected")
+        application_file.write_text("print('demo')\n", encoding="utf-8")
 
         artifact_record = next(
             item for item in records(load_manifest(root), "artifacts")
