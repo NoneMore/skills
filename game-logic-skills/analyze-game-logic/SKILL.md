@@ -44,6 +44,8 @@ Stay at source/script level when it can answer the question. Prefer targeted fun
 
 If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness.
 
+Before choosing a generic language/runtime adapter, check corroborating project and data markers for a more specific game engine. Prefer the dedicated engine adapter for gameplay data and lifecycle; add a generic adapter only for a separately material runtime or bundling boundary.
+
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
 For focused/full compiled/native analysis already using an established project-scoped editable disassembler/decompiler workspace, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Do not introduce refinement work for triage.

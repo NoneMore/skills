@@ -6,6 +6,8 @@ gameplay semantic model still applies across boundaries; load one or more matchi
 adapters only when they are material to the unresolved implementation path. Do
 not preload unrelated engine references.
 
+**Specialized engine precedence:** When corroborating project layout and data identify a specific engine, select its adapter before a generic language/runtime adapter. `index.html`, NW.js, Pixi, `package.json`, or JavaScript alone are not RPG Maker identifiers. The generic Web/JS adapter is a fallback or secondary guide only for a separate material bundling/obfuscation boundary. If markers conflict, keep the classification ambiguous and inspect rather than force a route.
+
 | Material boundary | Adapter | Optional bundled tooling | Status |
 | --- | --- | --- | --- |
 | GameMaker YYC | [engine-gamemaker-yyc.md](engine-gamemaker-yyc.md) | `scripts/yyc_triage.py` | bundled |
@@ -16,6 +18,7 @@ not preload unrelated engine references.
 | Unity Mono | [engine-unity-mono.md](engine-unity-mono.md) | none | bundled |
 | Unity IL2CPP | none | none | core workflow only |
 | Unreal native code | none | none | core workflow only |
+| RPG Maker MV/MZ project, event JSON and plugins | [engine-rpgmaker-mv-mz.md](engine-rpgmaker-mv-mz.md) | `scripts/rpgmaker_triage.py` | bundled |
 | Web / JavaScript bundle or local Node.js logic | [engine-web-javascript.md](engine-web-javascript.md) | `scripts/web_js_triage.py` | bundled |
 | Windows LÖVE / Love2D Lua | [engine-love2d-lua.md](engine-love2d-lua.md) | `scripts/love2d_triage.py` | bundled |
 | Other embedded/custom runtime | none | none | core workflow only |

@@ -18,6 +18,20 @@ Apply already-recovered, version-scoped gameplay knowledge to calculators, simul
 
 Collection-level composition evaluations live under `evals/`.
 
+## RPG Maker MV/MZ
+
+The analysis engine registry now includes a specialized RPG Maker MV/MZ adapter so confirmed MV/MZ projects do not fall into generic Web/JS recovery merely because they use JavaScript, NW.js or Pixi. Analysis starts with event/database JSON, active plugin order and engine method overrides; a generic JS adapter remains available for a separately material bundle/obfuscation boundary.
+
+A read-only classifier and indexer is bundled:
+
+```sh
+python analyze-game-logic/scripts/rpgmaker_triage.py /path/to/project --events --hooks
+python -m unittest discover -s tests -v
+```
+
+Use `--out /path/outside/game-tree/report.json` if you want to save a report. This helper inventories candidate evidence; it does not execute a game, prove effective hook ownership, or modify files.
+
+
 ## Installation
 
 Install either or both skill folders under your Codex skills directory:

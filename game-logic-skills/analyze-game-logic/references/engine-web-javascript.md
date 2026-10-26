@@ -21,6 +21,8 @@ implementation boundary, for example:
 - source maps, `sourcesContent`, TypeScript paths, package names, or original
   module paths corroborate the boundary.
 
+**Specialized-engine exclusion:** A confirmed RPG Maker MV/MZ project belongs to [engine-rpgmaker-mv-mz.md](engine-rpgmaker-mv-mz.md), even when running in NW.js with Pixi and HTML/JavaScript. Do not run generic bundle recovery on readable `rpg_*.js`, `rmmz_*.js`, or RPG Maker plugins merely because those files are JavaScript. Use this adapter as a secondary adapter only for a separately material minified/bundled/obfuscated JavaScript boundary.
+
 Distinguish these nearby cases before tracing logic:
 
 - **Readable source:** use the core source-available fast path directly. Do not
