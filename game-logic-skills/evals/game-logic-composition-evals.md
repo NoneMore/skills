@@ -45,3 +45,14 @@ Required assertions:
 - Web/JavaScript application guidance is loaded only after the material mechanic, behavioral scope, and mechanism class make that guide relevant
 - mechanism selection remains on the application side and is bound to the recovered version-scoped evidence
 - change-design remains authoritative across mechanism classes; any remaining engine-specific application guide only refines a selected class
+
+## 5. Bootstrap is user-invoked, not a composition stage
+
+The user requests triage or a retained application in a project that has no initialized store.
+
+Required assertions:
+- neither Analyze nor Apply invokes bootstrap-game-logic-project implicitly
+- Analyze keeps a throwaway lookup lightweight; warranted evidence can be retained without pretending a project-level store exists
+- Apply keeps a self-contained durable output and does not route to Analyze solely for artifact bookkeeping
+- only an explicit user request initializes or upgrades shared project infrastructure
+- once explicitly initialized, both use the same installed store and Application artifacts consume Findings without masquerading as evidence for them

@@ -1,76 +1,23 @@
 # Project Knowledge
 
-Use durable storage when the user asks to retain results, the current task requires continuation across sessions, or evidence is expensive or lossy to reconstruct. Do not create a store for a throwaway lookup.
+Retain evidence when a user requests it, work already spans sessions, or evidence is expensive or lossy to recover. Do not create a durable project store for throwaway lookups. **Project initialization is a separate, explicitly user-invoked capability**, not an analysis step.
 
-## What to retain
+## What belongs in a reusable Finding
 
-Keep three concepts separate:
+Keep Source, evidence Artifact, and Finding distinct:
 
-- **Source:** original read-only material such as an executable, DLL, data file, or readable source/script.
-- **Artifact:** generated evidence worth retaining, such as a decompilation, trace, extracted table, or validation log.
-- **Finding:** a reusable interpretation that cites the source/artifact evidence supporting it.
+- **Source:** original read-only game binary/data/source, with version/build identity and material hashes.
+- **Artifact:** generated trace, extraction, decompilation, table, validation log, or analysis workspace state with independent reuse value.
+- **Finding:** the smallest reusable interpretation citing evidence locators, scoped to the observed target/version, with status (confirmed / working hypothesis / unknown), material mechanic detail, validation performed, and limitations.
 
-Let the filesystem carry stable analysis and target context:
+Do not infer authority, state lifetime, or gameplay semantics from artifact hashes or the existence of a Finding. A downstream application may consume an existing Finding directly; no normalized handoff is required solely for protocol ceremony.
 
-```text
-artifacts/manifest.json
-analyses/<analysis-id>/targets/<target-id>/target.json
-analyses/<analysis-id>/targets/<target-id>/finding.md
-analyses/<analysis-id>/targets/<target-id>/artifacts/<local-name>
-analyses/<analysis-id>/targets/<target-id>/scripts/<local-name>
-analyses/<analysis-id>/targets/<target-id>/reports/<local-name>
-shared/artifacts/<local-name>
-```
+## Existing project infrastructure
 
-An analysis ID names the stable research/mechanic question. Its directory is the analysis scope. A target ID names one build/version observation scope, with shared target facts in `target.json`. A finding belongs to a target scope but is not the identity of the analysis itself.
+When the working project already contains `.game-logic/bin/project_store.py` and `.game-logic/STORE.md`, the **installed** rules/tool are authoritative for paths, manifest schema, registration commands, lifecycle and integrity checks. Consult the installed tool's `--help` instead of copying its CLI into this reference. Retain findings and their evidence in the appropriate analysis/target scope; put genuinely cross-analysis files in shared scope.
 
-Use local filenames only to distinguish siblings inside their scope. Keep evidence owned by one analysis under that target; put genuinely cross-analysis retained evidence under `shared/artifacts/` rather than copying it for locality. Analysis-wide cross-target helpers may live under `analyses/<analysis-id>/scripts/`. Retain a project-level report only when a real rollup is useful; do not make it the default body for target-specific analysis.
-
-The analysis root must be separate from the installed game directory. Deployed copies inside the game tree are never authoritative artifacts.
-
-## Baseline and target scope
-
-Record only baseline facts material to reproducing the conclusion:
-
-- game/content version and build identifier;
-- relevant source/module paths and hashes;
-- architecture or implementation boundary when applicable;
-- engine/backend when material;
-- existing symbols, source maps, databases, or prior analysis artifacts when they materially affect reuse.
-
-Put facts shared by one target/build in its `target.json`. Keep artifact-specific locators, content identity, producer information, dependency edges, finding links, supersession, and integrity state in the manifest. Preserve conflicting version indicators instead of silently choosing one.
-
-## Findings
-
-A reusable finding should state:
-
-- stable ID and status;
-- target/version/hash scope;
-- the claim;
-- evidence locators;
-- the material mechanic detail needed later;
-- validation performed and remaining limitations.
-
-Keep findings small enough to reuse independently but large enough to assess their evidence. Do not turn them into chronological diaries or copies of raw tool output.
-
-A sufficiently complete current finding may be consumed directly by downstream application work. Do not create a second representation merely to satisfy workflow ceremony.
-
-## Artifact integrity
-
-Retain generated artifacts only when they have independent reuse value or are costly/lossy to reproduce. Keep target identity in target scope and record producer/tool plus enough provenance in the manifest to distinguish raw tool output from later annotation.
-
-Before reusing a retained file, verify that it still exists and matches its recorded identity/hash. If regenerated bytes differ intentionally, treat the new output as a new artifact or explicit successor rather than silently rewriting history.
-
-## Mechanical helper
-
-The bundled `scripts/project_store.py` helper is the source of truth for its manifest schema, supported commands, canonical retained-artifact paths, lifecycle fields, and integrity checks. Prefer it for target-scope creation, retained-artifact registration, hashing, and store maintenance when practical.
-
-Do not copy its full CLI or JSON schema into agent instructions. Inspect its current `--help` or implementation when a specific store operation is required.
-
-The semantic correctness of a gameplay finding remains an analysis responsibility; passing store integrity checks does not prove the interpretation.
+Do not install, initialize, repair, or migrate a project store by invoking Bootstrap as part of Analyze. If the project has no installed store, a narrow question can simply be answered. For warranted persistence, preserve a coherent, version-scoped finding and expensive evidence in an authorized working location and report the limitation; the user may explicitly invoke `$bootstrap-game-logic-project` when unified project management is wanted.
 
 ## Persistence cadence
 
-Preserve expensive or lossy evidence promptly. For cheap deterministic source searches, first close the evidence loop, then persist the coherent finding and useful locators together.
-
-A later session should be able to identify the analysis question and target, recover the authoritative evidence, understand the finding's confidence/limitations, and continue without relying on conversational memory. Anything beyond that should earn its complexity through demonstrated reuse.
+Preserve lossy evidence promptly. For cheap deterministic source searches, first close the evidence loop, then persist the coherent Finding and useful locators together. A later session should recover the target identity, authoritative evidence, validation state, and any remaining uncertainty without relying on conversation memory.

@@ -22,7 +22,9 @@ A compact record.md plus the authoritative implementation and any required backu
 
 ## Storage
 
-If an existing game-logic project store is already available and useful, register the retained files there using its current tooling. Otherwise keep a simple application directory in the user's working project. Durable provenance must not depend on another Skill being installed solely for bookkeeping.
+If the project already contains `.game-logic/bin/project_store.py` and `.game-logic/STORE.md`, use the installed helper and rules. In schema 4, use `init-application` to establish an independent application scope and `add-artifact --application-id` to register implementation, validation, and rollback files. Link consumed in-store findings where available; preserve and identify any external mechanic input. Keep `record.md` current as the human-facing authoritative index.
+
+If no project kit is initialized, keep a self-contained application directory in the user's working project with `record.md`, authoritative implementation, validation and required rollback files. Do **not** bootstrap implicitly or invoke Analyze solely to manage artifacts. Durable provenance must not depend on a companion Skill call.
 
 Do not treat an application artifact as new evidence that the underlying mechanic is correct merely because it was derived from that mechanic.
 

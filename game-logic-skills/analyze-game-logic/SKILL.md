@@ -2,7 +2,7 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.3.0"
+  version: "v5.4.0"
 ---
 
 # Analyze Game Logic
@@ -80,7 +80,7 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 Do not create a project store for throwaway lookups. Preserve evidence when the user asks to retain it, cross-session continuation is already required, or the evidence is expensive or lossy to reconstruct.
 
-When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) is authoritative for what to retain. Prefer the bundled helper for mechanical hashing/integrity operations, and use its current --help instead of copying its command surface into this skill.
+When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) governs what analysis knowledge merits retention. If the project already contains `.game-logic/bin/project_store.py` and `.game-logic/STORE.md`, use those installed project-local tools and rules for persistence. Never invoke `$bootstrap-game-logic-project` or initialize a store implicitly; without a store, retain only what is warranted in the working context or an explicitly requested location.
 
 ## 7. Deliver the result
 

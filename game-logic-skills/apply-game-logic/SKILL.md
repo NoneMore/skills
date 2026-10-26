@@ -2,7 +2,7 @@
 name: apply-game-logic
 description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v1.3.0"
+  version: "v1.4.0"
 ---
 
 # Apply Game Logic
@@ -73,7 +73,7 @@ If validation contradicts the recovered mechanic rather than the implementation,
 
 For a one-off explanation or calculation, provenance in the answer is enough.
 
-For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, mechanic source, validation result, and rollback/control state together. Use an existing project store when it is already available and useful; do not require a companion Skill call merely to satisfy bookkeeping.
+For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, mechanic source, validation result, and rollback/control state together. Use an already initialized project-local store when present; otherwise retain a self-contained application directory. Do not invoke `$bootstrap-game-logic-project` or `$analyze-game-logic` solely for persistence or bookkeeping.
 
 Before a destructive change, capture the original bytes/content or an integrity-verifiable backup. If the original state cannot be captured and verified well enough to restore, stop before modifying the installed target.
 

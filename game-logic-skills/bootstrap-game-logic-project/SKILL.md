@@ -2,6 +2,8 @@
 name: bootstrap-game-logic-project
 description: Initialize or explicitly upgrade a project-local store for durable game-logic findings, evidence, applications, validation, and rollback. Invoke only when the user asks to set up or upgrade this infrastructure.
 disable-model-invocation: true
+metadata:
+  version: "v1.0.0"
 ---
 
 # Bootstrap Game Logic Project
