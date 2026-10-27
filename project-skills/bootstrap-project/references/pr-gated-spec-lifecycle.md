@@ -34,7 +34,7 @@ specs/
 - A planned proposal may be activated in a PR by moving its directory into `active/`. A PR may leave unrelated proposals in `planned/`.
 - Each Change contains a non-empty `spec.md` with the intended outcome, boundaries, and acceptance conditions. Add `design.md` or `tasks.md` only when helpful. Keep volatile execution state in the existing tracker.
 - Revise an active specification in place as requirements settle. Archive the entire Change directory, preserving its history, when the PR completes or terminates it. Record the reason, acceptance outcome, verification evidence, and unresolved items in the archived specification.
-- Neither `active` nor `archive` proves readiness, correctness, implementation, or current applicability. Git, tests, PR review, and deployed behavior remain distinct evidence.
+- Archiving means the PR-scoped work has concluded, not that the PR has merged or the change deployed. Neither `active` nor `archive` proves readiness, correctness, implementation, or current applicability. Git, tests, PR review, and deployed behavior remain distinct evidence.
 
 ## PR contract and working sequence
 
@@ -43,6 +43,8 @@ specs/
 3. **Implement and review.** Keep the active specification aligned with agreed scope during implementation and review. Record verification in the PR. Update architecture documentation for significant implemented outcomes and write an ADR for consequential decisions when warranted; neither substitutes for the Change.
 4. **Close Changes.** Before merge, move every active Change in the PR to `specs/archive/<change>/` under the same name, annotate outcomes and any unfinished work, and commit the result. If further fixes follow archival, keep its outcome record accurate and repeat relevant verification.
 5. **Merge.** Verify that the PR history contains a new active specification for each participating Change, that all are archived in the merge result, and that no tracked files remain under `specs/active/`. An unimplemented follow-up is a new planned Change rather than a still-active Change merged into the target branch.
+
+If a PR is closed without merging, record the reason in the PR; its abandoned Changes need not be archived.
 
 Keep PR descriptions focused on the change, validation, and any uncovered verification. Link Change specifications and archival outcomes when helpful; a PR template need not require a duplicate specification checklist.
 
