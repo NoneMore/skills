@@ -1,6 +1,6 @@
 ---
 name: lean4-review
-description: "Use for bounded independent review of Lean 4/mathlib statements or proof code against relatively specified correctness and quality criteria: claim fidelity, trust, robustness, library integration, maintainability, and proof quality. Review-only requests are read-only."
+description: "Use for bounded independent review of Lean 4/mathlib statements or proof code against relatively specified correctness and quality criteria: claim fidelity, trust, robustness, library integration, maintainability, idiomatic Lean/code style, and proof quality. Review-only requests are read-only."
 license: MIT
 ---
 
@@ -15,6 +15,12 @@ Review a specified artifact against relatively settled, locally assessable crite
 3. **Robustness:** unnecessary automation, brittle rewrites, typeclass/coercion sensitivity, and accidental definitional dependence.
 4. **Library integration:** existing mathlib lemmas, duplicated helpers, canonical abstractions, and avoidable imports; validate candidate APIs in context.
 5. **Maintainability:** proof structure, naming, comments/docstrings, and project conventions. Consider optimization only when it materially improves directness, determinism, performance, or clarity.
+
+## Style-focused review
+
+When the user explicitly requests code cleanliness, idiomatic Lean, or style, extend the maintainability review to relevant syntax and API ergonomics: dot notation and other notation choices, explicit/implicit/strict implicit and instance binders, parameter inference for callers, `variable`/`section` scope, naming, proof layout, and unnecessary tactic or term ceremony. Follow repository-local conventions first; consult current mathlib style guidance and available lint tools when mathlib-style compliance is requested.
+
+Do not prescribe dot notation, shorter terms, or implicit binders universally. Distinguish concrete elaboration, inference, or downstream-usage problems from optional style preferences; validate nontrivial proposed replacements in their actual Lean context before claiming they preserve behavior. In ordinary reviews, report style issues only when they have material readability, maintainability, or API impact. In explicitly style-focused reviews, report actionable optional suggestions separately from blockers and material findings.
 
 ## Completion
 
