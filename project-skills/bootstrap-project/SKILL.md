@@ -77,6 +77,10 @@ project/
 
 The layout illustrates possible locations; use existing project conventions and create directories as needed.
 
+## Optional practices
+
+- **PR-scoped specification lifecycle:** When the project explicitly opts into one-Change/one-PR work, specifications committed before implementation, and archival before merge (or already has those rules), consult [PR-scoped specification lifecycle](references/pr-gated-spec-lifecycle.md). Checks may be advisory rather than mandatory merge gates, and direct pushes require an explicit separate policy. This is a stricter alternative to the default Change conventions, not a bootstrap default. Do not introduce it implicitly.
+
 ## Approach
 
 1. **Scope the request.** Identify the target project and whether the user wants a proposed convention, initial setup, or adaptation of existing conventions.
