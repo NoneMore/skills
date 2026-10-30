@@ -37,7 +37,7 @@ The contract describes the **note itself**. Every Create, Integrate, and Curate 
 1. Read the designated canonical root, search relevant included sources as needed, and inspect surrounding arguments and dependencies before editing.
 2. Judge thematic fit and distinguish duplicates, overlapping but distinct statements, and new material by comparing assumptions, conclusions, and proof status—not terminology alone.
 3. Make the smallest coherent insertion or localized rewrite in the right source: definitions near their use, counterexamples near the claims they limit, partial proof ideas near their obstruction, and citations near their claims. Preserve source-file boundaries unless reorganization is authorized.
-4. Add meaningful internal references for concrete dependencies or comparisons using the project's conventions. If requested clickable links lack hyperlink support, propose a minimal compatible fix.
+4. Add meaningful internal references for concrete dependencies or comparisons, using the project's conventions. If needed, add compatible hyperlink support within the authorized scope.
 
 ### Curate — improve an existing note
 
