@@ -73,7 +73,7 @@ If validation contradicts the recovered mechanic rather than the implementation,
 
 For a one-off explanation or calculation, provenance in the answer is enough.
 
-For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, consumed mechanic knowledge, validation result, and rollback/control state together in a self-contained working location. Do not require a project-level store, artifact registration, or an Analyze call solely for bookkeeping.
+For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md) and keep the implementation, target/mechanic context, validation, and rollback/control state together. Do not call Analyze solely for bookkeeping.
 
 Before a destructive change, capture the original bytes/content or an integrity-verifiable backup. If the original state cannot be captured and verified well enough to restore, stop before modifying the installed target.
 

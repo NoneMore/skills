@@ -29,7 +29,7 @@ Use the lightest path that can close the claim:
 - **Focused analysis:** explain one mechanic or causal path with reusable evidence.
 - **Full analysis:** reconstruct a multi-component mechanic or system with the evidence and validation needed to support the requested conclusions.
 
-Choose analysis depth from the question and remaining uncertainty, not from a storage workflow. When the user requests continuity, work already spans sessions, or knowledge/evidence would be costly or lossy to recover, consult [references/project-knowledge.md](references/project-knowledge.md) for selective retention.
+Choose analysis depth from the question and remaining uncertainty, not from a storage workflow.
 
 ## 3. Find the material implementation path
 
@@ -42,7 +42,7 @@ Treat implementation layers as a search progression. Before escalating into a mo
 
 Stay at source/script level when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation.
 
-If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness. Truncation alone does not require persistence; if recovering material evidence across partial reads would be costly or lossy, follow [references/project-knowledge.md](references/project-knowledge.md) to retain the useful captured ranges for later reading.
+If output is truncated or only a partial range was inspected, do not make completeness-dependent claims until the necessary missing ranges are checked. Expand coverage only when the claim requires it; retain costly or lossy captured ranges when useful under [references/project-knowledge.md](references/project-knowledge.md).
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
@@ -78,11 +78,9 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 ## 6. Retain reusable understanding selectively
 
-Do not create a project store for an unrequested one-off lookup. When retention is warranted, use [references/project-knowledge.md](references/project-knowledge.md): favor concise architecture notes for reusable understanding and build-scoped evidence snapshots for material raw observations. Keep exact addresses and hashes as build-scoped locators, not assumptions about later versions.
+Unrequested one-off lookups need no storage. For explicit save requests, multi-session work, or valuable evidence that is costly or lossy to recover, follow [references/project-knowledge.md](references/project-knowledge.md) to retain requested material, useful architecture notes, or build-scoped snapshots. Honor explicit requests even when material is cheap to reproduce; otherwise let future reading, verification, or recovery value justify retention. Saving does not imply ongoing maintenance.
 
-Use existing project documentation when useful; otherwise create only the smallest useful files in an authorized working location. Honor explicit requests to save material even when it is cheap to regenerate; otherwise retain scripts or evidence when their future reading, verification, recovery, or loss-avoidance value justifies the cost. Retention does not imply ongoing maintenance: a build-scoped snapshot can remain available for reading without indexing, synchronization, or updates. No Bootstrap, project store, registration graph, or schema is required.
-
-When resuming on a changed build, treat old notes as orientation and hypotheses. Re-identify relevant implementation paths and revalidate facts material to the new claim before reporting them as confirmed. Historical notes and snapshots need not be edited; update only an overview that is actively being maintained.
+For a changed build, use old notes to rediscover relevant implementation paths, not as proof of current behavior. Revalidate only material facts; leave historical notes and snapshots unchanged, and update an overview only when actively maintained.
 
 ## 7. Deliver the result
 

@@ -51,9 +51,9 @@ A multi-session investigation establishes a mechanic's structure and produces on
 Required assertions:
 - retained a concise architecture note with system/flow relationships, recognisable implementation cues, validation method, and build scope
 - retained the expensive trace because reconstructing it was materially costly or lossy
-- did not retain routine grep/read results without an explicit request or material reuse value, or require a project-store manifest or registered Finding/Artifact IDs; tool-local provenance files remain allowed
+- did not retain routine grep/read results without a user request or material reuse value, or require a project-level manifest/ID registry (tool-local provenance is allowed)
 - did not create a project-level persistence structure for the unrequested one-off lookup
-- a later session can rediscover the implementation and distinguish verified facts from hypotheses
+- a later session can find retained files, rediscover the implementation, and distinguish verified facts from hypotheses
 
 ## 6. Downstream application receives material mechanic knowledge without ceremony
 
@@ -196,7 +196,7 @@ A decompiler truncates a long function. Establishing a material control/data-flo
 Required assertions:
 - treated each truncated view as partial and inspected missing material ranges before making any completeness-dependent claim
 - retained only the costly-to-reconstruct, material captured ranges with build context and coverage/gap information sufficient for later reading
-- kept the saved raw evidence as a passive snapshot, without a manifest, synchronization, scheduled refresh, or lifecycle bookkeeping
+- kept saved evidence as a passive snapshot without requiring a project-level store manifest, synchronization, refresh, or lifecycle bookkeeping; tool-local provenance is allowed
 - did not persist the cheaply recoverable output solely because it was long or truncated
 - distinguished historical captured evidence from current verified mechanic claims when a later build was analyzed
 

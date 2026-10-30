@@ -12,7 +12,7 @@ A concise `record.md` alongside the actual implementation/configuration and any 
 - observed validation results, coverage, and unresolved limitations;
 - original/control state and an executable rollback or cleanup procedure when relevant.
 
-Use the user's existing working project or another authorized location outside the installed game. No mandated directory structure, project store, manifest, ID registration, or schema is needed. Link to existing architecture notes when helpful rather than copying a large knowledge base; preserve the specific mechanic input if the later reader would otherwise lose its meaning.
+Use an authorized location outside the installed game, preferably in the existing project; no dedicated store or schema is needed. Link existing architecture notes when helpful, and preserve the mechanic input needed for later readers to understand the result.
 
 For destructive modifications, keep the captured original content or integrity-verifiable backup with enough information to restore it, and verify the rollback precondition in [SKILL.md](../SKILL.md) **before** modifying the target. A deployed copy inside the game directory is not the authoritative source artifact. Successful implementation does not independently prove the underlying mechanic.
 

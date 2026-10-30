@@ -14,11 +14,9 @@ Apply already-recovered, version-scoped gameplay knowledge to calculators, simul
 
 ## Composition and continuity
 
-`analyze-game-logic` owns mechanic recovery, verification, and any reusable architecture understanding. `apply-game-logic` consumes sufficiently verified knowledge and returns to analysis only for material missing or stale facts. Neither requires a project-level artifact store, normalized handoff, or companion Skill for bookkeeping.
+`analyze-game-logic` recovers and verifies mechanics; `apply-game-logic` consumes sufficiently verified, version-scoped knowledge and returns to analysis only for missing or stale material facts. Neither requires a project store or normalized handoff.
 
-One-off analysis needs no persistent project structure. When continuity is useful, keep readable architecture notes and/or build-scoped evidence snapshots: system boundaries, state/data flows, recognisable function and variable roles, and ways to locate and revalidate behavior in a later build. Maintain an overview only when useful; historical notes and evidence snapshots may simply remain available for reading. Version-specific addresses remain useful evidence for that build, not cross-version authority. Retained applications keep implementation, validation, and rollback materials together.
-
-Existing schema-3/4 stores are **not** automatically migrated, modified, or deleted. Their files may be consulted as historical evidence, with version-sensitive claims revalidated before reuse; the new workflow does not require their manifests or tools.
+Unrequested one-off analysis needs no persistence. When continuity is useful, retain concise architecture notes or build-scoped evidence to help rediscover and revalidate behavior in later builds. Historical snapshots need no ongoing maintenance; retained applications keep implementation, validation, and rollback together. Existing schema-3/4 stores are not automatically migrated, modified, or deleted, but may be consulted as historical evidence.
 
 Collection-level composition evaluations live under `evals/`.
 
