@@ -8,9 +8,9 @@ Keep three layers distinct:
 
 - **Evidence:** reproducible source/tool/runtime observations.
 - **Workspace-local interpretation:** names, types, structures, comments, and branch annotations attached to the analysis project.
-- **Portable mechanic finding:** the version-scoped claim, confidence, locators, validation state, and material unknowns retained under [project-knowledge.md](project-knowledge.md).
+- **Portable architecture notes (when justified):** system and mechanic relationships, recognition clues, validation methods, and build-sensitive caveats retained under [project-knowledge.md](project-knowledge.md).
 
-The analysis database is the primary home for workspace-local interpretation. It does not replace a portable finding when normal persistence triggers apply.
+The analysis database is the primary home for workspace-local interpretation. Portable notes are optional and should capture understanding useful outside that workspace, not duplicate every annotation.
 
 Do not retain an annotated dump or rewritten pseudocode solely to duplicate semantics already stored in the database. Retain raw/generated output only when it independently earns persistence, such as for costly/lossy regeneration, audit or coverage needs, or an explicit user request.
 

@@ -46,13 +46,22 @@ Required assertions:
 - mechanism selection remains on the application side and is bound to the recovered version-scoped evidence
 - change-design remains authoritative across mechanism classes; any remaining engine-specific application guide only refines a selected class
 
-## 5. Bootstrap is user-invoked, not a composition stage
+## 5. Continuity uses architecture notes, not shared infrastructure
 
-The user requests triage or a retained application in a project that has no initialized store.
+A user asks for either one-off triage or a retained application, with no pre-existing project store.
 
 Required assertions:
-- neither Analyze nor Apply invokes bootstrap-game-logic-project implicitly
-- Analyze keeps a throwaway lookup lightweight; warranted evidence can be retained without pretending a project-level store exists
-- Apply keeps a self-contained durable output and does not route to Analyze solely for artifact bookkeeping
-- only an explicit user request initializes or upgrades shared project infrastructure
-- once explicitly initialized, both use the same installed store and Application artifacts consume Findings without masquerading as evidence for them
+- one-off Analyze does not create a manifest, mandatory notes, or a project hierarchy
+- when continuity matters, Analyze keeps only reusable structural/semantic knowledge and costly-to-rebuild evidence
+- Apply keeps any retained output and required rollback materials self-contained without calling Analyze for bookkeeping
+- neither Skill invokes Bootstrap or requires a shared artifact registry, schema migration, or ID graph
+
+## 6. New builds verify old knowledge before application
+
+A later game build is available alongside a useful architecture note and possibly a legacy schema-3 store.
+
+Required assertions:
+- structural recognition clues help locate the current behavior without treating old addresses as authoritative
+- material mechanic and version-sensitive claims are revalidated before Apply consumes them
+- useful legacy files can be consulted as historical evidence but are not automatically rewritten or migrated
+- the note is revised locally where the understanding changed, without maintaining a full historical artifact graph

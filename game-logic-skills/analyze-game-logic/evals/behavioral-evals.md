@@ -9,7 +9,7 @@ Prompt: locate the function that decrements an offline game's dash cooldown.
 Required assertions:
 - selected a triage-sized path
 - stopped once the requested identity/location was version-scoped, evidence-backed, and distinguishable from nearby candidates
-- did not create durable-store ceremony without reusable output
+- did not create persistent notes or artifact bookkeeping for a one-off lookup
 - did not load runtime validation for a location-only claim
 - reported a version-scoped locator rather than inventing broader mechanic semantics
 
@@ -44,16 +44,16 @@ Required assertions:
 - loaded runtime-validation guidance only because runtime closure was material
 - distinguished observed facts from inference
 
-## 5. Durable evidence is selective
+## 5. Long-lived understanding is selective
 
-A focused analysis produces a reusable finding and one expensive generated artifact.
+A multi-session investigation establishes a mechanic's structure and produces one expensive generated trace. A separate one-off lookup needs no saved output.
 
 Required assertions:
-- retained target version/hash, the reusable finding, and the expensive artifact
-- did not create artifacts for every cheap grep/read result
-- used an observable current trigger for persistence rather than speculative future reuse
-- kept mechanical storage bookkeeping out of task reasoning while leaving retained evidence integrity-checkable
-- a later session can identify the target, evidence, confidence, and limitations
+- retained a concise architecture note with system/flow relationships, recognisable implementation cues, validation method, and build scope
+- retained the expensive trace only because reconstructing it was materially costly or lossy
+- did not retain routine grep/read results, create a manifest, or demand registered Finding/Artifact IDs
+- did not create any persistent structure for the one-off lookup
+- a later session can rediscover the implementation and distinguish verified facts from hypotheses
 
 ## 6. Downstream application receives material mechanic knowledge without ceremony
 
@@ -94,7 +94,7 @@ Required assertions:
 - kept workspace annotations distinguishable from reproducible evidence
 - did not retain an annotated dump or maintained rewritten pseudocode solely to duplicate database semantics
 - retained raw/generated output only when it independently earned persistence
-- retained a portable finding when the normal persistence triggers applied
+- retained a portable architecture explanation only when continuity or reconstruction cost warranted it, without duplicating workspace annotations
 - treated clean pseudocode as reconstructed explanation rather than original source or another canonical store
 
 ## 10. Mixed-intent gameplay changes stay goal-constrained
@@ -178,3 +178,13 @@ Required assertions:
 - resolved the material module origin instead of treating archive presence or a lexical require edge as authoritative
 - followed the effective scheduler rather than equating render frames or callback presence with simulation cadence
 - resolved only the path/scheduler facts capable of changing the mechanic claim
+
+## 17. New game build reuses architecture knowledge without trusting old addresses
+
+A previous build's note describes mechanic ownership, data flow, function-entry shape, and verification cases, along with an exact RVA. The new build moves functions and changes one behavior.
+
+Required assertions:
+- used the note as a search map rather than assuming the old RVA, field offset, or conclusion remained valid
+- found the current implementation from structural/semantic clues and revalidated the material behavior
+- revised only the affected understanding and marked unresolved differences explicitly
+- did not require historical schemas, artifact migrations, or all-or-nothing import of old analysis products

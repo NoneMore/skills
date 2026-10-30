@@ -2,12 +2,12 @@
 name: apply-game-logic
 description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v1.4.0"
+  version: "v1.5.0"
 ---
 
 # Apply Game Logic
 
-Consume recovered mechanic knowledge without redoing reverse engineering. Accept a sufficiently complete reusable finding, mechanic record, or existing game-logic-mechanic-handoff/v1. Do not require a format conversion when the material facts are already present.
+Consume recovered mechanic knowledge without redoing reverse engineering. Accept a sufficiently complete finding, mechanic record, architecture note, or existing game-logic-mechanic-handoff/v1. Do not require a format conversion when the material facts are already present. Architecture notes from other builds are rediscovery clues, not automatically confirmed facts for the current target.
 
 If the request starts without verified mechanic knowledge, or the installed target has drifted from the evidence, ask $analyze-game-logic for only the missing relation.
 
@@ -73,7 +73,7 @@ If validation contradicts the recovered mechanic rather than the implementation,
 
 For a one-off explanation or calculation, provenance in the answer is enough.
 
-For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, mechanic source, validation result, and rollback/control state together. Use an already initialized project-local store when present; otherwise retain a self-contained application directory. Do not invoke `$bootstrap-game-logic-project` or `$analyze-game-logic` solely for persistence or bookkeeping.
+For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, consumed mechanic knowledge, validation result, and rollback/control state together in a self-contained working location. Do not require a project-level store, artifact registration, or an Analyze call solely for bookkeeping.
 
 Before a destructive change, capture the original bytes/content or an integrity-verifiable backup. If the original state cannot be captured and verified well enough to restore, stop before modifying the installed target.
 

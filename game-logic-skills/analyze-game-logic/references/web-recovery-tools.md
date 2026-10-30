@@ -77,7 +77,7 @@ prettier --write --no-config --no-editorconfig <generated-copy>
 ```
 
 Record the formatter version when line-based locators depend on its output.
-Prefer module/function/AST-structural locators for durable findings.
+Prefer module/function/AST-structural recognition clues when writing cross-session architecture notes; keep generated line locators version-scoped.
 
 ## Versioning
 

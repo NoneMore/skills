@@ -1,42 +1,21 @@
-# Durable Application Artifacts
+# Durable Application Outputs
 
-Use this reference when an application must survive the current session: a deployed mod/patch/hook/instrumentation file, retained simulator/tool, or any change whose provenance and rollback matter later.
+Use this reference for deployed or retained implementations whose provenance, validation, or rollback must survive the current session. One-off calculations and explanations need no durable records.
 
-Do not create durable records for throwaway calculations or explanations.
+## Keep the output self-contained
 
-## Minimum durable record
+A concise `record.md` alongside the actual implementation/configuration and any necessary validation results or backups is sufficient. It should let a later session identify:
 
-Keep the following together:
+- the exact target build and material version/hash guard;
+- the mechanic knowledge consumed, its evidence/validation state, and any version-sensitive assumptions;
+- the authoritative implementation and how it is applied;
+- observed validation results, coverage, and unresolved limitations;
+- original/control state and an executable rollback or cleanup procedure when relevant.
 
-- target game/content version, build, and material hashes;
-- the finding/mechanic record actually consumed;
-- authoritative implementation source/configuration;
-- mechanism and stable locator/version guard;
-- original/control state needed to restore or compare;
-- applied/derived state;
-- validation performed and limitations;
-- rollback/cleanup procedure;
-- remaining assumptions or unknowns.
+Use the user's existing working project or another authorized location outside the installed game. No mandated directory structure, project store, manifest, ID registration, or schema is needed. Link to existing architecture notes when helpful rather than copying a large knowledge base; preserve the specific mechanic input if the later reader would otherwise lose its meaning.
 
-A compact record.md plus the authoritative implementation and any required backup/validation files is sufficient. Preserve the consumed mechanic input verbatim when practical so a later session can tell exactly what the application relied on.
-
-## Storage
-
-If the project already contains `.game-logic/bin/project_store.py` and `.game-logic/STORE.md`, use the installed helper and rules. In schema 4, use `init-application` to establish an independent application scope and `add-artifact --application-id` to register implementation, validation, and rollback files. Link consumed in-store findings where available; preserve and identify any external mechanic input. Keep `record.md` current as the human-facing authoritative index.
-
-If no project kit is initialized, keep a self-contained application directory in the user's working project with `record.md`, authoritative implementation, validation and required rollback files. Do **not** bootstrap implicitly or invoke Analyze solely to manage artifacts. Durable provenance must not depend on a companion Skill call.
-
-Do not treat an application artifact as new evidence that the underlying mechanic is correct merely because it was derived from that mechanic.
-
-For destructive changes that satisfy the rollback precondition in [SKILL.md](../SKILL.md), retain the captured original bytes/content or integrity-verifiable backup with the durable record.
+For destructive modifications, keep the captured original content or integrity-verifiable backup with enough information to restore it, and verify the rollback precondition in [SKILL.md](../SKILL.md) **before** modifying the target. A deployed copy inside the game directory is not the authoritative source artifact. Successful implementation does not independently prove the underlying mechanic.
 
 ## Recovery check
 
-A later session should be able to answer four questions without chat history:
-
-1. What exact target and mechanic knowledge did this application depend on?
-2. What authoritative file/config/code produced the deployed result?
-3. What validation showed the intended behavior and scope?
-4. How can the target be disabled, restored, or rolled back?
-
-If any answer depends only on conversational memory, the retained record is incomplete.
+A later session should be able to determine what build and knowledge the output used, which file produced the result, what was tested, and how to disable or restore it without chat history. Retain only the material needed to answer those questions.

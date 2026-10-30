@@ -2,7 +2,7 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.4.0"
+  version: "v5.5.0"
 ---
 
 # Analyze Game Logic
@@ -27,9 +27,9 @@ Use the lightest path that can close the claim:
 
 - **Triage:** locate or identify a function, field, script, table, or call site.
 - **Focused analysis:** explain one mechanic or causal path with reusable evidence.
-- **Full analysis:** preserve enough baseline, evidence, and validation for multi-session or high-cost work.
+- **Full analysis:** reconstruct a multi-component mechanic or system with the evidence and validation needed to support the requested conclusions.
 
-Promote work when the current task already requires cross-session continuation, the user asks to retain results, evidence is expensive or lossy to reconstruct, or downstream application needs a durable reference. When durable storage applies, use [references/project-knowledge.md](references/project-knowledge.md).
+Choose analysis depth from the question and remaining uncertainty, not from a storage workflow. When the user requests continuity, work already spans sessions, or knowledge/evidence would be costly or lossy to recover, consult [references/project-knowledge.md](references/project-knowledge.md) for selective retention.
 
 ## 3. Find the material implementation path
 
@@ -62,7 +62,7 @@ Trace from a strong semantic anchor to the authoritative state transition. Resol
 
 Stop when the smallest material slice can be expressed as concise gameplay pseudocode and every remaining material unknown is explicit.
 
-For compiled/native boundaries, prefer stable module + RVA locators and verify address conversions against the original binary or loaded module before relying on them.
+For compiled/native boundaries, prefer module + RVA locators for the inspected build and verify address conversions against the original binary or loaded module before relying on them. Do not assume an RVA remains valid across builds.
 
 ## 5. Close the evidence loop
 
@@ -76,11 +76,13 @@ Different renderings of the same relation are not independent evidence. Cross-re
 
 Runtime validation is optional for narrow identity/location claims. When timing, causal control, caller discrimination, state lifetime, authority, or effective randomness materially depends on runtime behavior, load [references/runtime-validation.md](references/runtime-validation.md). If practical validation is omitted, keep the affected claim a working hypothesis.
 
-## 6. Retain only what earns persistence
+## 6. Retain reusable understanding selectively
 
-Do not create a project store for throwaway lookups. Preserve evidence when the user asks to retain it, cross-session continuation is already required, or the evidence is expensive or lossy to reconstruct.
+Do not create directories, manifests, or records merely for a one-off lookup. When retention is warranted, use [references/project-knowledge.md](references/project-knowledge.md): favor concise, updateable architecture notes that describe system boundaries, recognizable function/variable roles, data and state flows, mechanic behavior, and ways to find and verify them again. Keep exact addresses and hashes as build-scoped locators, not assumptions about later versions.
 
-When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) governs what analysis knowledge merits retention. If the project already contains `.game-logic/bin/project_store.py` and `.game-logic/STORE.md`, use those installed project-local tools and rules for persistence. Never invoke `$bootstrap-game-logic-project` or initialize a store implicitly; without a store, retain only what is warranted in the working context or an explicitly requested location.
+Use existing project documentation when available; otherwise create only the smallest useful note in an appropriate authorized working location. Retain scripts or expensive/lossy evidence only when they materially reduce reconstruction cost. No Bootstrap, project store, registration graph, or schema is required.
+
+When resuming on a changed build, treat old notes as orientation and hypotheses. Re-identify relevant implementation paths and revalidate any facts material to the new claim before reporting them as confirmed.
 
 ## 7. Deliver the result
 
@@ -91,7 +93,8 @@ Match output size to the analysis depth. For focused/full analysis, include:
 - stable source/function or module + RVA locators;
 - evidence and validation state;
 - material unknowns and observed-versus-inferred distinctions;
-- material analysis-workspace refinements written or proposed, when applicable.
+- material analysis-workspace refinements written or proposed, when applicable;
+- when continuity is relevant, any retained architecture note's location and the assumptions needing revalidation.
 
 When downstream application is requested, provide a compact version-scoped mechanic record containing the facts material to that application. A reusable finding with sufficient facts is valid input to $apply-game-logic; do not normalize it through an extra protocol step solely for ceremony. Existing game-logic-mechanic-handoff/v1 records remain valid compatibility inputs.
 

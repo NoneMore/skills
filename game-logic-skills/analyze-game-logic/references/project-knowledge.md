@@ -1,23 +1,25 @@
-# Project Knowledge
+# Reusable Game Architecture Knowledge
 
-Retain evidence when a user requests it, work already spans sessions, or evidence is expensive or lossy to recover. Do not create a durable project store for throwaway lookups. **Project initialization is a separate, explicitly user-invoked capability**, not an analysis step.
+Use this guidance only when the user requests retained knowledge, the work already spans sessions, or the recovered understanding/evidence would be costly or lossy to reconstruct. A one-off answer needs no persistent artifact system.
 
-## What belongs in a reusable Finding
+## Preserve what helps the next investigation
 
-Keep Source, evidence Artifact, and Finding distinct:
+Treat notes like ordinary architecture documentation, not an immutable result database. Record only the parts material to re-understanding or re-finding a mechanic:
 
-- **Source:** original read-only game binary/data/source, with version/build identity and material hashes.
-- **Artifact:** generated trace, extraction, decompilation, table, validation log, or analysis workspace state with independent reuse value.
-- **Finding:** the smallest reusable interpretation citing evidence locators, scoped to the observed target/version, with status (confirmed / working hypothesis / unknown), material mechanic detail, validation performed, and limitations.
+- system/module boundaries, ownership, authority, and how components interact;
+- recognizable function entry shapes and surrounding calls, data access patterns, meaningful constants, and variable/field roles;
+- state machines, event sequences, data flow, and semantic rules, using compact diagrams or pseudocode when clearer;
+- decisive observations, confidence/limitations, a few discriminating checks, and how to repeat verification;
+- build/version scope and, if useful, exact addresses, hashes, or locators **clearly marked as build-specific**.
 
-Do not infer authority, state lifetime, or gameplay semantics from artifact hashes or the existence of a Finding. A downstream application may consume an existing Finding directly; no normalized handoff is required solely for protocol ceremony.
+Choose an explanation suited to the mechanism; this is guidance, not a required template or schema. Avoid exhaustive call inventories, raw decompiler dumps, or line-by-line annotations as the long-lived overview. Maintain code-local annotations in the existing analysis workspace rather than duplicating them without benefit.
 
-## Existing project infrastructure
+## Reuse across versions
 
-When the working project already contains `.game-logic/bin/project_store.py` and `.game-logic/STORE.md`, the **installed** rules/tool are authoritative for paths, manifest schema, registration commands, lifecycle and integrity checks. Consult the installed tool's `--help` instead of copying its CLI into this reference. Retain findings and their evidence in the appropriate analysis/target scope; put genuinely cross-analysis files in shared scope.
+An old architecture note is a map for rediscovery, **not evidence that the new version behaves identically**. Start from structural/semantic recognition clues, identify the current implementation, and revalidate the specific relations that affect the task. Addresses, byte patterns, layout offsets, and even apparent function roles may drift. If the architecture changes, correct the affected explanation and mark unresolved differences rather than silently carrying forward a previous conclusion.
 
-Do not install, initialize, repair, or migrate a project store by invoking Bootstrap as part of Analyze. If the project has no installed store, a narrow question can simply be answered. For warranted persistence, preserve a coherent, version-scoped finding and expensive evidence in an authorized working location and report the limitation; the user may explicitly invoke `$bootstrap-game-logic-project` when unified project management is wanted.
+## Keep storage ordinary
 
-## Persistence cadence
+Prefer an existing project document; otherwise, one or a few small Markdown notes in an authorized working location outside the installed game are sufficient. Do not require a directory convention, manifest, IDs, links, hashes of every output, migrations, or a bootstrap step. Retain costly or lossy traces, extracted material, and reusable scripts only when their expected reuse earns the cost, with enough context to interpret them later.
 
-Preserve lossy evidence promptly. For cheap deterministic source searches, first close the evidence loop, then persist the coherent Finding and useful locators together. A later session should recover the target identity, authoritative evidence, validation state, and any remaining uncertainty without relying on conversation memory.
+Legacy stores can be read as historical material if present but are neither required nor automatically migrated or overwritten. A later agent should be able to understand the system, find candidate implementation paths, see uncertainty, and know what to verify without relying on chat history.
