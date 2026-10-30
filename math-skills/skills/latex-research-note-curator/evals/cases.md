@@ -64,4 +64,5 @@ Required assertions:
 - The root and included sources are identified; the correct source file receives a minimal edit.
 - The reference uses a stable project-unique label and targets the lemma within the unified document, not merely a literature citation.
 - Existing include structure and a single root-compiled PDF are preserved.
+- If the root lacks hyperlink support, the agent flags it or proposes a minimal compatible setup instead of treating plain `\ref` output as clickable.
 - If compilation or hyperlink verification is unavailable, the limitation is reported rather than implying that the links were tested.
