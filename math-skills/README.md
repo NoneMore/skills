@@ -94,7 +94,6 @@ skills/
     SKILL.md
     README.md
     agents/openai.yaml
-    examples/Working-Notes.tex
     evals/cases.md
   lean-blueprint-author/
     CHANGELOG.md
