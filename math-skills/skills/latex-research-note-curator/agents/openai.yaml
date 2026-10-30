@@ -1,0 +1,4 @@
+interface:
+  display_name: "LaTeX Research Note Curator"
+  short_description: "Maintain a long-lived math LaTeX note"
+  default_prompt: "Use $latex-research-note-curator to integrate the supplied material into my designated canonical mathematical .tex research note, preserving proof gaps and showing the diff."
