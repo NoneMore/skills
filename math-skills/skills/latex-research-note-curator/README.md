@@ -1,17 +1,24 @@
 # LaTeX Research Note Curator
 
-Conservatively integrate scattered research material into **one user-selected, thematically coherent mathematical LaTeX note project**. The note may span multiple included `.tex` source files, but has one canonical compilation entry point and one unified PDF with meaningful internal cross-references. Its theme bounds relevance, not length or depth. Preserve argument flow, source attribution, and the distinction between established and tentative claims.
+A **user-invoked** Skill for creating and maintaining one user-selected, thematically coherent mathematical LaTeX research note project per invocation. Each project has a canonical root `.tex` file, may include multiple source files, and produces one internally navigable PDF. The topic bounds relevance, not depth, page count, or file count.
 
-Use this Skill for **ongoing note curation** (fragment integration, overlap review, within-note cross-file references, or localized reorganization). For broad copyediting, independent note creation, Markdown editing, or user-authorized mathematical rewriting, use [`math-writing-editor`](../math-writing-editor/SKILL.md). Reading a paper without editing the note is the job of [`math-paper-reader`](../math-paper-reader/SKILL.md).
+## Operations
+
+- **Create:** initialize a minimal LaTeX note project from a designated theme, destination, and any supplied material, without inventing mathematical results or citations.
+- **Integrate:** place new research fragments in the right mathematical context, preserve proof gaps and provenance, and add meaningful cross-file references.
+- **Curate:** detect genuine overlap, clarify argument organization, and propose or apply a few high-signal connections without broad rewriting.
+
+All three operations follow the **Note Project Contract** in [SKILL.md](SKILL.md): thematic coherence, one root and unified PDF, mathematical organization, epistemic integrity, provenance, stable references, and consistent conventions. The Skill is standalone; it does not require another Skill, script, database, or external service.
 
 ## Contents
 
-- `SKILL.md`: canonical instructions and behavioral contract.
-- `agents/openai.yaml`: optional runtime-specific discovery metadata.
-- `evals/cases.md`: focused, inspectable acceptance scenarios; not a claim that automated evals have been run.
-
-No external service, database, extra Skill, or script is required. Source files should be organized along mathematical arguments, not split at arbitrary size thresholds; a single `.tex` file remains a valid note project.
+- `SKILL.md`: authoritative project contract, operations, decision policy, and verification.
+- `agents/openai.yaml`: optional runtime-specific interface metadata.
+- `evals/cases.md`: inspectable behavioral scenarios; not a claim that tests have been executed.
 
 ## Install
 
-Copy this **Skill folder** to the runtime's skills directory (for Codex, `${CODEX_HOME:-$HOME/.codex}/skills/`), or configure the runtime to discover it from its repository path.
+Copy the **Skill folder** into the runtime's skills directory (for Codex, `${CODEX_HOME:-$HOME/.codex}/skills/`), or configure the runtime to discover it at its repository path. Invoke it explicitly as `$latex-research-note-curator`.
+
+The former `math-writing-editor` Skill has been removed from this repository. If you previously installed it as a separate local folder, remove that installed copy yourself; updating this repository does not automatically uninstall it.
+
