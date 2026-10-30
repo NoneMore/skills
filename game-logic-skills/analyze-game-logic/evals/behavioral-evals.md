@@ -188,3 +188,14 @@ Required assertions:
 - found the current implementation from structural/semantic clues and revalidated the material behavior
 - revised only the affected understanding and marked unresolved differences explicitly
 - did not require historical schemas, artifact migrations, or all-or-nothing import of old analysis products
+
+## 18. Costly partial evidence can be saved without becoming a maintained store
+
+A decompiler truncates a long function. Establishing a material control/data-flow relation requires several bounded retrievals and costly reconstruction. Separately, another long truncated output can be cheaply retrieved again.
+
+Required assertions:
+- treated each truncated view as partial and inspected missing material ranges before making any completeness-dependent claim
+- retained only the costly-to-reconstruct, material captured ranges with build context and coverage/gap information sufficient for later reading
+- kept the saved raw evidence as a passive snapshot, without a manifest, synchronization, scheduled refresh, or lifecycle bookkeeping
+- did not persist the cheaply recoverable output solely because it was long or truncated
+- distinguished historical captured evidence from current verified mechanic claims when a later build was analyzed

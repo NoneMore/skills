@@ -42,7 +42,7 @@ Treat implementation layers as a search progression. Before escalating into a mo
 
 Stay at source/script level when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation.
 
-If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness.
+If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness. Truncation alone does not require persistence; if recovering material evidence across partial reads would be costly or lossy, follow [references/project-knowledge.md](references/project-knowledge.md) to retain the useful captured ranges for later reading.
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
@@ -80,7 +80,7 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 Do not create directories, manifests, or records merely for a one-off lookup. When retention is warranted, use [references/project-knowledge.md](references/project-knowledge.md): favor concise, updateable architecture notes that describe system boundaries, recognizable function/variable roles, data and state flows, mechanic behavior, and ways to find and verify them again. Keep exact addresses and hashes as build-scoped locators, not assumptions about later versions.
 
-Use existing project documentation when available; otherwise create only the smallest useful note in an appropriate authorized working location. Retain scripts or expensive/lossy evidence only when they materially reduce reconstruction cost. No Bootstrap, project store, registration graph, or schema is required.
+Use existing project documentation when available; otherwise create only the smallest useful note in an appropriate authorized working location. Retain scripts or expensive/lossy evidence only when they materially reduce reconstruction cost. Retention does not imply ongoing maintenance: a build-scoped evidence snapshot can simply remain available to read later without indexing, synchronization, or updates. No Bootstrap, project store, registration graph, or schema is required.
 
 When resuming on a changed build, treat old notes as orientation and hypotheses. Re-identify relevant implementation paths and revalidate any facts material to the new claim before reporting them as confirmed.
 
