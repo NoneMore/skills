@@ -31,16 +31,12 @@ The contract describes the **note itself**. Every Create, Integrate, and Curate 
 1. Identify the user's topic, goal, supplied material, and intended project location. For an explicit creation request, no existing root is required. If the user identifies a writable project directory but not a filename, choose a conservative root such as `main.tex` and report the choice. Never overwrite an existing project or invent an unrelated destination; if the location cannot safely be determined, propose a scaffold or ask for the missing destination.
 2. Create the **smallest usable** LaTeX project satisfying the Note Project Contract. Prefer a single root file initially; add `\input` files only when the mathematical organization already warrants them. Provide the minimal document class, mathematical/theorem setup, and compatible hyperlink support needed by the actual material. Do not introduce packages, source trees, generic categories, or build machinery without a concrete need.
 3. Organize supplied definitions, results, references, and research questions into a coherent initial exposition. When a user asks for a scaffold with little material, use a minimal structure with explicitly open questions or placeholders rather than inventing theorems, proofs, citations, or research findings. Generate new mathematical substance only within clearly delegated scope, and never present unverified work as established.
-4. Check the root and produced files against the contract; compile from the canonical root when safe tooling is available. Report the created paths and which checks actually ran.
-
 ### Integrate — add material to an existing note
 
 1. Identify the designated project and canonical root from the user's request or explicit active workspace context. Inspect the root and relevant included sources before editing; do not infer their contents from chat history or unrelated files. For long notes, build a **disposable** map of the root include graph, headings, and labels, search across included sources, and then read the relevant local arguments and dependencies.
 2. Judge thematic fit by the fragment's mathematical role. Compare actual hypotheses, conclusions, and proof status against nearby and cross-file statements: exact duplicate, overlapping but distinct, or genuinely new. Do not infer equivalence or a mathematical connection from matching terminology alone.
 3. Make the smallest coherent insertion or localized rewrite in the right source: definitions near their use, counterexamples near the claims they limit, partial proof ideas near their obstruction, and citations near their claims. Preserve source-file boundaries unless reorganization is authorized.
 4. Add high-signal internal references for specific dependencies, comparisons, or reused techniques. Check project-wide label uniqueness and whether the root's hyperlink setup makes those references clickable. If it does not, propose the smallest compatible fix when it exceeds the authorized edit.
-5. Review the actual diff for inadvertent changes to hypotheses, formulas, labels, provenance, proof gaps, and dependency order.
-
 ### Curate — improve an existing note
 
 1. Search the actual root and included sources for related statements, assumptions, techniques, and obstructions; inspect both sides of any candidate connection in context, even across files.
@@ -62,7 +58,6 @@ The contract describes the **note itself**. Every Create, Integrate, and Curate 
 
 ## Verification and Completion
 
-- For written changes, report the canonical root, created or changed paths, insertion/relocation locations, and a readable diff or artifact. For proposed-only work, explicitly state that nothing was written.
-- Where available, check relevant LaTeX syntax, global duplicate labels, unresolved references/citations, and compilation **from the canonical root**. Confirm one PDF when compilation succeeds; inspect internal link targets where tooling permits. A successful build alone does not establish that all links work.
-- For every operation, check that assumptions and epistemic status were not silently strengthened, provenance was not invented, and the note remains thematically coherent. Report unresolved ambiguity and checks that failed or could not be run. Never present compilation as certification of mathematical validity, originality, or proof correctness.
+- After changing project files, review the diff for unintended changes to mathematical meaning, epistemic status, provenance, or references; compile the canonical root using the project's normal LaTeX workflow. Address build errors and relevant warnings caused by the edit.
+- Report the changed paths and build result. For proposal-only work, state that no files were changed. Compilation checks the document build, not mathematical correctness.
 
