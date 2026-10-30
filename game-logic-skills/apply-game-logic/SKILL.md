@@ -1,6 +1,6 @@
 ---
 name: apply-game-logic
-description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a sufficiently verified finding, mechanic record, architecture note, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
   version: "v1.5.0"
 ---
@@ -51,7 +51,7 @@ For retained native runtime mechanisms that write process memory or install/repl
 
 ## 4. Bind implementation to evidence
 
-Every application should state which mechanic record/finding and target version it consumes.
+Every application should state the version-scoped mechanic knowledge it consumes (finding, mechanic record, architecture note, or existing handoff) and the target version.
 
 For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, persist and hand off target identity + module + RVA. Tool-local preferred/runtime VAs are transient and adapters own conversion. Retained implementations may use symbolic, site-relative, or other tool-native forms when they map unambiguously to the canonical site; derive absolute addresses from module + RVA when needed. Validate the exact emitted implementation before writing or hooking.
 

@@ -51,7 +51,7 @@ Required assertions:
 A user asks for either one-off triage or a retained application, with no pre-existing project store.
 
 Required assertions:
-- one-off Analyze does not create a manifest, mandatory notes, or a project hierarchy
+- one-off Analyze does not bootstrap a project-store manifest, mandatory architecture notes, or a project-store hierarchy; helper-local provenance/output remains allowed
 - when continuity matters, Analyze keeps only reusable structural/semantic knowledge and costly-to-rebuild evidence
 - Apply keeps any retained output and required rollback materials self-contained without calling Analyze for bookkeeping
 - neither Skill invokes Bootstrap or requires a shared artifact registry, schema migration, or ID graph
@@ -64,4 +64,14 @@ Required assertions:
 - structural recognition clues help locate the current behavior without treating old addresses as authoritative
 - material mechanic and version-sensitive claims are revalidated before Apply consumes them
 - useful legacy files can be consulted as historical evidence but are not automatically rewritten or migrated
-- the note is revised locally where the understanding changed, without maintaining a full historical artifact graph
+- the current result records changed understanding and remaining uncertainty; historical notes/snapshots stay unchanged unless an overview is actively maintained, without a historical artifact graph
+
+## 7. Verified note-only knowledge routes directly to Apply
+
+The user supplies a sufficiently verified architecture note scoped to the current build and requests an offline derived tool. No separate finding, mechanic record, or handoff exists.
+
+Required assertions:
+- discovery metadata routes the application task to apply-game-logic with the architecture note as a valid input
+- Apply consumes material verified facts from the note without a normalization-only Analyze call or a new schema
+- Apply identifies the source note and target build in its output
+- only a genuinely missing or stale material relation returns narrowly to analyze-game-logic

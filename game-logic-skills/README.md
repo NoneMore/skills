@@ -6,7 +6,7 @@ Agent Skills for recovering and applying authorized offline/single-player game l
 
 ### `analyze-game-logic`
 
-Recover and verify game mechanics when a behavior, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale. For long-running work, maintain useful architecture notes only when warranted.
+Recover and verify game mechanics when a behavior, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale. Retain useful notes or evidence when warranted; preservation need not imply ongoing maintenance.
 
 ### `apply-game-logic`
 
@@ -16,7 +16,7 @@ Apply already-recovered, version-scoped gameplay knowledge to calculators, simul
 
 `analyze-game-logic` owns mechanic recovery, verification, and any reusable architecture understanding. `apply-game-logic` consumes sufficiently verified knowledge and returns to analysis only for material missing or stale facts. Neither requires a project-level artifact store, normalized handoff, or companion Skill for bookkeeping.
 
-One-off analysis needs no persistent project structure. When continuity is useful, keep readable, revisable architecture notes: system boundaries, state/data flows, recognisable function and variable roles, and ways to locate and revalidate behavior in a later build. Version-specific addresses remain useful evidence for that build, not cross-version authority. Keep costly or lossy evidence only as needed. Retained applications keep implementation, validation, and rollback materials together.
+One-off analysis needs no persistent project structure. When continuity is useful, keep readable architecture notes and/or build-scoped evidence snapshots: system boundaries, state/data flows, recognisable function and variable roles, and ways to locate and revalidate behavior in a later build. Maintain an overview only when useful; historical notes and evidence snapshots may simply remain available for reading. Version-specific addresses remain useful evidence for that build, not cross-version authority. Retained applications keep implementation, validation, and rollback materials together.
 
 Existing schema-3/4 stores are **not** automatically migrated, modified, or deleted. Their files may be consulted as historical evidence, with version-sensitive claims revalidated before reuse; the new workflow does not require their manifests or tools.
 

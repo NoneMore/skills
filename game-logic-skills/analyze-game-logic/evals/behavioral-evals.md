@@ -32,7 +32,7 @@ Required assertions:
 - treated the inspected view as partial
 - did not claim exhaustive absence/presence from incomplete coverage
 - read the missing range only when the claim actually required completeness
-- did not add disk-backed/chunking, persistence, or other recovery machinery unless exhaustive coverage or durable reuse materially required it
+- did not add disk-backed/chunking, persistence, or other recovery machinery unless needed for exhaustive coverage, explicit retention, or materially valuable reuse
 
 ## 4. Runtime-sensitive claims keep evidence discipline
 
@@ -50,9 +50,9 @@ A multi-session investigation establishes a mechanic's structure and produces on
 
 Required assertions:
 - retained a concise architecture note with system/flow relationships, recognisable implementation cues, validation method, and build scope
-- retained the expensive trace only because reconstructing it was materially costly or lossy
-- did not retain routine grep/read results, create a manifest, or demand registered Finding/Artifact IDs
-- did not create any persistent structure for the one-off lookup
+- retained the expensive trace because reconstructing it was materially costly or lossy
+- did not retain routine grep/read results without an explicit request or material reuse value, or require a project-store manifest or registered Finding/Artifact IDs; tool-local provenance files remain allowed
+- did not create a project-level persistence structure for the unrequested one-off lookup
 - a later session can rediscover the implementation and distinguish verified facts from hypotheses
 
 ## 6. Downstream application receives material mechanic knowledge without ceremony
@@ -186,7 +186,7 @@ A previous build's note describes mechanic ownership, data flow, function-entry 
 Required assertions:
 - used the note as a search map rather than assuming the old RVA, field offset, or conclusion remained valid
 - found the current implementation from structural/semantic clues and revalidated the material behavior
-- revised only the affected understanding and marked unresolved differences explicitly
+- reported affected changes and unresolved differences in the current result, left historical notes/snapshots intact, and updated an overview only when maintenance was in scope
 - did not require historical schemas, artifact migrations, or all-or-nothing import of old analysis products
 
 ## 18. Costly partial evidence can be saved without becoming a maintained store
@@ -199,3 +199,23 @@ Required assertions:
 - kept the saved raw evidence as a passive snapshot, without a manifest, synchronization, scheduled refresh, or lifecycle bookkeeping
 - did not persist the cheaply recoverable output solely because it was long or truncated
 - distinguished historical captured evidence from current verified mechanic claims when a later build was analyzed
+
+## 19. Explicit retention does not imply maintenance
+
+A user asks to save a cheaply reproducible decompilation excerpt for later reading. No ongoing update or managed project store is requested.
+
+Required assertions:
+- saved the requested excerpt in an authorized location despite its low regeneration cost
+- reported its location, build scope, and material coverage/gaps so a later session can read and interpret it
+- did not require continuous synchronization, periodic updates, a project store, or an architecture overview
+- did not treat the archived excerpt as current-version proof without revalidation
+
+## 20. Tool-managed output is not a passive evidence archive
+
+Web/JavaScript recovery creates a helper-local `triage-manifest.json` and generated output under `--out`. A material raw view must survive a subsequent `--force` rerun.
+
+Required assertions:
+- allowed the helper-local provenance manifest without creating or requiring a project-level artifact store
+- selected a retention mode that preserved the needed raw view, then copied material evidence outside helper-managed cleanup paths before rerunning
+- reported the archived location and material build/coverage scope
+- left the snapshot unmaintained unless an independent task required changes

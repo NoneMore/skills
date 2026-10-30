@@ -78,11 +78,11 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 ## 6. Retain reusable understanding selectively
 
-Do not create directories, manifests, or records merely for a one-off lookup. When retention is warranted, use [references/project-knowledge.md](references/project-knowledge.md): favor concise, updateable architecture notes that describe system boundaries, recognizable function/variable roles, data and state flows, mechanic behavior, and ways to find and verify them again. Keep exact addresses and hashes as build-scoped locators, not assumptions about later versions.
+Do not create a project store for an unrequested one-off lookup. When retention is warranted, use [references/project-knowledge.md](references/project-knowledge.md): favor concise architecture notes for reusable understanding and build-scoped evidence snapshots for material raw observations. Keep exact addresses and hashes as build-scoped locators, not assumptions about later versions.
 
-Use existing project documentation when available; otherwise create only the smallest useful note in an appropriate authorized working location. Retain scripts or expensive/lossy evidence only when they materially reduce reconstruction cost. Retention does not imply ongoing maintenance: a build-scoped evidence snapshot can simply remain available to read later without indexing, synchronization, or updates. No Bootstrap, project store, registration graph, or schema is required.
+Use existing project documentation when useful; otherwise create only the smallest useful files in an authorized working location. Honor explicit requests to save material even when it is cheap to regenerate; otherwise retain scripts or evidence when their future reading, verification, recovery, or loss-avoidance value justifies the cost. Retention does not imply ongoing maintenance: a build-scoped snapshot can remain available for reading without indexing, synchronization, or updates. No Bootstrap, project store, registration graph, or schema is required.
 
-When resuming on a changed build, treat old notes as orientation and hypotheses. Re-identify relevant implementation paths and revalidate any facts material to the new claim before reporting them as confirmed.
+When resuming on a changed build, treat old notes as orientation and hypotheses. Re-identify relevant implementation paths and revalidate facts material to the new claim before reporting them as confirmed. Historical notes and snapshots need not be edited; update only an overview that is actively being maintained.
 
 ## 7. Deliver the result
 
@@ -94,7 +94,7 @@ Match output size to the analysis depth. For focused/full analysis, include:
 - evidence and validation state;
 - material unknowns and observed-versus-inferred distinctions;
 - material analysis-workspace refinements written or proposed, when applicable;
-- when continuity is relevant, any retained architecture note's location and the assumptions needing revalidation.
+- when material was retained, the locations of notes and evidence snapshots, their relevant build/coverage scope and gaps, and assumptions needing revalidation.
 
 When downstream application is requested, provide a compact version-scoped mechanic record containing the facts material to that application. A reusable finding with sufficient facts is valid input to $apply-game-logic; do not normalize it through an extra protocol step solely for ceremony. Existing game-logic-mechanic-handoff/v1 records remain valid compatibility inputs.
 
