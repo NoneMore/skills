@@ -1,0 +1,217 @@
+\documentclass[11pt,a4paper]{article}
+
+% A self-contained mathematical working note.  No external .bib or .sty files.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=30mm,marginparwidth=18mm}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{aliascnt}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=MidnightBlue,
+            urlcolor=MidnightBlue,bookmarksnumbered=true]{hyperref}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+
+% Shared numbering with distinct hyperlinked reference names.
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\weakto}{\rightharpoonup}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\ellone}{\ell^{1}}
+
+\title{Compact Operators and Weak Convergence\\
+       \large A Working Note on Sequential Regularity}
+\author{}
+\date{October 2026 \quad (illustrative note)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The purpose of this note is to keep together a small chain of observations
+about compact operators, weak convergence, and the role of reflexivity.
+The exposition moves between precise statements, proofs, a counterexample,
+and questions suggested by the comparison.  The references and cross-links
+are part of the argument rather than a separate catalogue of facts.
+\end{abstract}
+
+\tableofcontents
+
+\section{The distinction to keep in mind}\label{sec:setting}
+
+Let $X$ and $Y$ be Banach spaces, and let $T\in\cL(X,Y)$ be a bounded
+linear operator.  We write $\cK(X,Y)$ for the set of compact operators
+in $\cL(X,Y)$.  We write $x_n\weakto x$ for weak convergence in $X$.
+Recall that $T$ is \emph{compact} when it maps bounded subsets of $X$
+into relatively norm-compact subsets of $Y$.
+
+There are two superficially similar properties that are worth separating:
+\begin{align}
+  & T\text{ is compact}; \label{eq:compact}\tag{C}\\
+  & x_n\weakto x\quad\Longrightarrow\quad
+       \|Tx_n-Tx\|_Y\longrightarrow 0.\label{eq:seq}\tag{S}
+\end{align}
+In this note, property \eqref{eq:seq} is called \emph{complete continuity}.
+Terminology varies: in some older literature the same words have been
+used for compactness; see \cite{eom}.
+
+The point is not to introduce a new notion.  It is to record exactly
+where the implications between \eqref{eq:compact} and \eqref{eq:seq}
+use information about the domain space.
+
+\section{Compactness upgrades weak convergence}\label{sec:forward}
+
+\begin{proposition}\label{prop:compact-to-strong}
+If $T\in\cK(X,Y)$ and $x_n\weakto x$ in $X$, then
+$\|Tx_n-Tx\|_Y\to 0$.
+\end{proposition}
+
+\begin{proof}
+A weakly convergent sequence is norm-bounded, so compactness implies
+that every subsequence of $(Tx_n)$ has a further norm-convergent
+subsequence.  On the other hand, bounded linear maps preserve weak
+convergence, and hence $Tx_n\weakto Tx$ in $Y$.  If a subsequence of
+$(Tx_n)$ converges in norm to $y$, it converges weakly to $y$ as well;
+uniqueness of the weak limit gives $y=Tx$.
+
+If $Tx_n$ did not converge to $Tx$ in norm, some subsequence would remain
+at distance at least $\varepsilon>0$ from $Tx$.  Compactness would give
+a further norm-convergent subsequence, whose limit must equal $Tx$,
+a contradiction.
+\end{proof}
+
+This proof contains the mechanism we will reuse in
+\cref{lem:weak-cauchy}: \emph{relative norm-compactness produces limit
+points, while weak information identifies them}.  Compare the treatment
+of compact operators in \cite{lecture-notes}.
+
+\section{When is the converse true?}\label{sec:converse}
+
+The reverse implication is not a purely formal consequence of
+\cref{prop:compact-to-strong}; the missing ingredient is a supply of
+weakly convergent subsequences.
+
+\begin{proposition}\label{prop:reflexive-converse}
+Suppose $X$ is reflexive.  If $T\in\cL(X,Y)$ satisfies
+\eqref{eq:seq}, then $T$ is compact.
+\end{proposition}
+
+\begin{proof}
+Let $(x_n)$ be bounded in $X$.  Reflexivity, together with weak
+sequential compactness of bounded subsets of a reflexive Banach space,
+gives a subsequence $x_{n_k}\weakto x$.  By \eqref{eq:seq},
+$Tx_{n_k}\to Tx$ in norm.  Thus the image under $T$ of every bounded
+sequence admits a norm-convergent subsequence, which is precisely the
+sequential criterion for compactness.
+\end{proof}
+
+\begin{remark}\label{rem:hinge}
+The use of reflexivity occurs at exactly one point: extracting a weakly
+convergent subsequence from an arbitrary bounded sequence.  This is the
+assumption to revisit when comparing the proposition with the example
+below, rather than treating the entire proof as an indivisible black box.
+\end{remark}
+
+\begin{example}[The obstruction in $\ell^1$]\label{ex:schur}
+The space $\ellone$ has the \emph{Schur property}: a weakly convergent
+sequence in $\ellone$ converges in norm.  Consequently the identity
+$\mathrm{Id}_{\ellone}$ satisfies \eqref{eq:seq}.  It is not compact:
+the canonical unit vectors $(e_n)$ form a bounded sequence with
+$\|e_n-e_m\|_1=2$ for $n\neq m$ and hence no norm-convergent
+subsequence.  This is a counterexample to the converse without an
+assumption on $X$; see also \cite{eom}.
+\end{example}
+
+The juxtaposition of \cref{prop:reflexive-converse,ex:schur} suggests
+that the real issue is not the terminology ``completely continuous'',
+but the geometry of bounded sequences in $X$.
+
+\section{A link through weakly Cauchy sequences}\label{sec:cauchy}
+
+A sequence $(x_n)$ is \emph{weakly Cauchy} when $(f(x_n))$ is Cauchy for
+every $f\in X^*$.  Unlike a weakly convergent sequence, a weakly Cauchy
+sequence need not have a weak limit in $X$.
+
+\begin{lemma}\label{lem:weak-cauchy}
+If $T\in\cK(X,Y)$ and $(x_n)$ is weakly Cauchy in $X$, then
+$(Tx_n)$ converges in norm in $Y$.
+\end{lemma}
+
+\begin{proof}
+By the uniform boundedness principle, $(x_n)$ is bounded.  Thus
+$(Tx_n)$ is relatively norm-compact.  For every $g\in Y^*$, the scalar
+sequence $g(Tx_n)=(T^*g)(x_n)$ is Cauchy, hence has a unique limit.
+Any two norm-convergent subsequences of $(Tx_n)$ must therefore have
+the same limit, because functionals in $Y^*$ separate points.  Relative
+norm-compactness now forces the entire sequence to converge in norm.
+\end{proof}
+
+The relation to \cref{prop:compact-to-strong} is transparent: there we
+knew the weak limit in advance; here scalar Cauchy information is enough
+to show that \emph{all} possible norm-limit points agree.
+
+\paragraph{A possible line to pursue.}\label{par:possible-line}
+In \cref{prop:reflexive-converse}, reflexivity was used only to extract
+weakly convergent subsequences.  One might instead look for a condition
+on $X$ guaranteeing weakly Cauchy subsequences and separately require
+$T$ to send such sequences to norm-Cauchy sequences.  That would also
+imply compactness by the same sequential argument.  This is a way of
+\emph{organizing a question}, not a claim that a new theorem has been
+found.  The difference between weak convergence and weak Cauchyness
+must remain explicit; \cref{ex:schur} does not erase that difference.
+
+\section{Loose ends and reading pointers}\label{sec:threads}
+
+The current comparison leaves a specific task for later reading: which
+hypotheses on $X$ make bounded sequences sufficiently well behaved for
+the argument in \cref{prop:reflexive-converse} to go through?  A related
+question is whether replacing the sequential property \eqref{eq:seq}
+by a condition on weakly Cauchy sequences is natural in a particular
+problem.  These are prompts for subsequent work, not assertions about
+what is open in the literature.
+
+When adding a paper or a handwritten calculation to this note, the
+useful edit is not to create a new catalogue entry.  It is to put the
+relevant statement or obstruction \emph{next to the argument it changes},
+with a citation, a precise hypothesis, and a cross-reference to any
+other affected passage.  If an argument is unfinished, say exactly where
+it stops rather than converting it into a theorem.
+
+\begin{thebibliography}{9}
+
+\bibitem{eom}
+\emph{Encyclopedia of Mathematics},
+``Completely-continuous operator.''
+\url{https://encyclopediaofmath.org/wiki/Completely-continuous_operator}
+
+\bibitem{lecture-notes}
+\emph{Lecture notes on operator ideals}, \S2.1, ``Compact operators in
+Banach spaces.''
+\url{https://users.fmf.uni-lj.si/kostenko/teach/IdealsNotes.pdf}
+
+\end{thebibliography}
+
+\end{document}
