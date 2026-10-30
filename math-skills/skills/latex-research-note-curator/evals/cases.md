@@ -29,12 +29,12 @@ Required assertions:
 - Any suggested connection names both locations, the shared mechanism, and the topology caveat.
 - The irrelevant keyword match is not turned into a link; no speculative lemma is introduced.
 
-## Case 4 — Bundled example is not the user's note
+## Case 4 — An unspecified editing target is not invented
 
-Fixture: the Skill is installed with `examples/Working-Notes.tex`; the user supplies a fragment without selecting any canonical research file.
+Fixture: the user supplies a research fragment without selecting any canonical research file, and no active canonical target can be determined from the workspace context.
 
 Required assertions:
-- The bundled example is not edited automatically.
+- No unrelated or guessed `.tex` file is edited.
 - The agent requests the missing target or provides a clearly labeled proposed patch from the context available.
 - The response does not claim a file was modified.
 
