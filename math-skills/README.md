@@ -20,18 +20,12 @@ Use $math-paper-reader to read this mathematical paper and explain the key formu
 
 Path: `skills/latex-research-note-curator`
 
-**User-invoked** (`disable-model-invocation: true`). Creates and maintains a user-designated, thematically coherent mathematical LaTeX research note project. A single canonical root `.tex` file may include multiple sources, but produces one internally navigable PDF. The Note Project Contract preserves mathematical organization, epistemic status, provenance, and stable internal references without arbitrary length limits.
+**User-invoked.** Creates, integrates, and curates one thematic mathematical LaTeX research note, with a canonical root `.tex` and one linked PDF. Organizes mathematical arguments, partial proofs, source attribution, and meaningful cross-references.
 
-Use it explicitly to **Create** a new research note, **Integrate** fragments, or **Curate** an existing note. It is standalone: no other Skill is required.
-
-Example prompts:
+Example:
 
 ```text
-Use $latex-research-note-curator to create a LaTeX research note about [theme] in [directory], organizing these source materials while keeping open questions explicit.
-```
-
-```text
-Use $latex-research-note-curator to integrate this fragment into my designated note project, preserve proof gaps, check overlap and cross-file references, and show the diff.
+Use $latex-research-note-curator to integrate this fragment into my LaTeX research note and connect it to related results.
 ```
 
 ### `lean-blueprint-author`
@@ -57,7 +51,7 @@ cp -R skills/latex-research-note-curator "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R skills/lean-blueprint-author "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
-Install only the folders you want to expose. The former `math-writing-editor` Skill was removed; if you have an older local installation, remove that installed folder separately.
+Install only the skills you want. Remove any older local `math-writing-editor` installation separately.
 
 ## Repository Layout
 
@@ -70,9 +64,7 @@ skills/
     references/math-paper-reading-checklist.md
   latex-research-note-curator/
     SKILL.md
-    README.md
     agents/openai.yaml
-    evals/cases.md
   lean-blueprint-author/
     CHANGELOG.md
     SKILL.md

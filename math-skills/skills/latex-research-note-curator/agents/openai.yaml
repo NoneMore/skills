@@ -1,7 +1,7 @@
 interface:
   display_name: "LaTeX Research Note Curator"
-  short_description: "Create and maintain a themed LaTeX research note"
-  default_prompt: "Use $latex-research-note-curator to create or maintain my designated mathematical LaTeX research note project, following its note contract and preserving uncertainty and references."
+  short_description: "Create and curate a mathematical LaTeX research note"
+  default_prompt: "Use $latex-research-note-curator to organize my designated LaTeX research note."
 
 policy:
   allow_implicit_invocation: false
