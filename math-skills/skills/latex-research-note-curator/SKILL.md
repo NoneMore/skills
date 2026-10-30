@@ -20,6 +20,6 @@ A user-invoked Skill for one mathematical research note project, treated as a de
 
 - **Create:** Use the chosen theme, destination, and supplied material to start a minimal, compilable root (such as `main.tex`). Organize known results and questions without inventing missing mathematics.
 - **Integrate:** Read the relevant root and included sources. Place new material where it contributes to the argument, compare overlapping claims, and add useful internal references.
-- **Curate:** Look across the note for genuine repetition, mathematical connections, and better argument order. Make focused improvements while retaining distinct statements when their equivalence is unclear.
+- **Curate:** Look across the note for genuine repetition, mathematical connections, and better argument order. Make focused improvements while retaining distinct statements when their equivalence is unclear. For each proposed connection, identify the relevant locations, explain the mathematical reason, and state any uncertainty.
 
 Edit the designated note when asked to modify it; provide suggestions when asked to review. After editing, compile the root using the project's normal LaTeX workflow and briefly report the result.
