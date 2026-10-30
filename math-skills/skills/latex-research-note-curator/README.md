@@ -1,8 +1,8 @@
 # LaTeX Research Note Curator
 
-Conservatively integrate scattered research material into a **user-selected, long-lived mathematical `.tex` note** while preserving its argument flow, source attribution, and the distinction between established and tentative claims.
+Conservatively integrate scattered research material into **one user-selected, thematically coherent mathematical LaTeX note project**. The note may span multiple included `.tex` source files, but has one canonical compilation entry point and one unified PDF with meaningful internal cross-references. Its theme bounds relevance, not length or depth. Preserve argument flow, source attribution, and the distinction between established and tentative claims.
 
-Use this Skill for **ongoing note curation** (fragment integration, overlap review, cross-references, or localized reorganization). For broad copyediting, independent note creation, Markdown editing, or user-authorized mathematical rewriting, use [`math-writing-editor`](../math-writing-editor/SKILL.md). Reading a paper without editing the note is the job of [`math-paper-reader`](../math-paper-reader/SKILL.md).
+Use this Skill for **ongoing note curation** (fragment integration, overlap review, within-note cross-file references, or localized reorganization). For broad copyediting, independent note creation, Markdown editing, or user-authorized mathematical rewriting, use [`math-writing-editor`](../math-writing-editor/SKILL.md). Reading a paper without editing the note is the job of [`math-paper-reader`](../math-paper-reader/SKILL.md).
 
 ## Contents
 
@@ -10,7 +10,7 @@ Use this Skill for **ongoing note curation** (fragment integration, overlap revi
 - `agents/openai.yaml`: optional runtime-specific discovery metadata.
 - `evals/cases.md`: focused, inspectable acceptance scenarios; not a claim that automated evals have been run.
 
-No external service, database, extra Skill, or script is required to curate a `.tex` note.
+No external service, database, extra Skill, or script is required. Source files should be organized along mathematical arguments, not split at arbitrary size thresholds; a single `.tex` file remains a valid note project.
 
 ## Install
 

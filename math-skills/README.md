@@ -38,16 +38,18 @@ Use $math-writing-editor to edit, restructure, or rewrite the specified mathemat
 
 Path: `skills/latex-research-note-curator`
 
-Maintains one user-designated, long-lived mathematical `.tex` research note.
-Use it to incorporate scattered research fragments, review true duplicates,
-and add meaningful mathematical cross-references **without silently changing
-hypotheses, proof gaps, or attribution**. Unlike `math-writing-editor`, this
-skill does not generate new mathematical claims or perform general rewrites.
+Maintains one user-designated, thematically coherent LaTeX research note
+project. Its sources may span multiple included `.tex` files but compile from
+one root into **one internally navigable PDF**; thematic focus does not impose
+a size limit. Use it to integrate fragments, review true duplicates, and add
+meaningful within-note cross-references **without silently changing hypotheses,
+proof gaps, or attribution**. Unlike `math-writing-editor`, it does not generate
+new mathematical claims or perform general rewrites.
 
 Default prompt:
 
 ```text
-Use $latex-research-note-curator to integrate this fragment into my canonical mathematical .tex research note, preserve uncertainty, and show the diff.
+Use $latex-research-note-curator to integrate this fragment into my designated thematic LaTeX note project, preserve uncertainty and internal references, and show the diff.
 ```
 
 ### `lean-blueprint-author`
