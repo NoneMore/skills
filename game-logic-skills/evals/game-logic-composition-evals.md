@@ -51,9 +51,9 @@ Required assertions:
 A user asks for either one-off triage or a retained application, with no pre-existing project store.
 
 Required assertions:
-- an unrequested one-off Analyze does not bootstrap a store, mandatory notes, manifest, or ID registry; helper-local provenance is allowed
-- when continuity matters, Analyze selectively retains reusable knowledge, requested material, or valuable evidence
-- Apply keeps retained output and rollback materials self-contained, without an Analyze bookkeeping call or shared storage schema
+- neither Skill bootstraps a project-level store, manifest, ID registry, or schema migration for one-off or continuity work; helper-local provenance is allowed
+- one-off Analyze creates no mandatory notes; continuity retains only useful knowledge, requested material, or valuable evidence
+- Apply keeps retained output and rollback materials self-contained without calling Analyze for bookkeeping
 
 ## 6. New builds verify old knowledge before application
 
