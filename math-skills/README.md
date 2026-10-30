@@ -1,7 +1,6 @@
 # Math Agent Skills
 
-Installable Agent Skills for mathematical reading, writing, note editing, and
-Lean-oriented formalization workflows.
+Installable Agent Skills for mathematical reading, research-note creation and curation, and Lean-oriented formalization workflows.
 
 ## Skills
 
@@ -9,9 +8,7 @@ Lean-oriented formalization workflows.
 
 Path: `skills/math-paper-reader`
 
-Reads mathematical papers and formulas with visual PDF checks, notation
-ledgers, theorem/proof interpretation, equation references, and ambiguity
-review. Use it when the task is understanding what a paper says.
+Reads mathematical papers and formulas with visual PDF checks, notation ledgers, theorem/proof interpretation, equation references, and ambiguity review. Use it when the task is understanding what a paper says.
 
 Default prompt:
 
@@ -19,28 +16,23 @@ Default prompt:
 Use $math-paper-reader to read this mathematical paper and explain the key formulas with page or equation references.
 ```
 
-### `math-writing-editor`
+### `latex-research-note-curator`
 
-Path: `skills/math-writing-editor`
+Path: `skills/latex-research-note-curator`
 
-Creates, restructures, rewrites, or polishes mathematical `.tex` and `.md`
-notes. Use it for conservative copyediting, structural note rewrites, outline
-extraction, rebuilding a note from a framework, or user-authorized
-mathematical content edits.
+**User-invoked.** Creates, integrates, and curates one thematic mathematical LaTeX research note, with a canonical root `.tex` and one linked PDF. Organizes mathematical arguments, partial proofs, source attribution, and meaningful cross-references.
 
-Default prompt:
+Example:
 
 ```text
-Use $math-writing-editor to edit, restructure, or rewrite the specified mathematical .tex or .md note according to my requested level of autonomy.
+Use $latex-research-note-curator to integrate this fragment into my LaTeX research note and connect it to related results.
 ```
 
 ### `lean-blueprint-author`
 
 Path: `skills/lean-blueprint-author`
 
-Generates insertion-ready leanblueprint LaTeX for a specified Lean
-formalization target from local reference materials. Use it for Lean blueprint
-routes, proof routes, dependency routes, and formalization roadmaps.
+Generates insertion-ready leanblueprint LaTeX for a specified Lean formalization target from local reference materials. Use it for Lean blueprint routes, proof routes, dependency routes, and formalization roadmaps.
 
 Default prompt:
 
@@ -50,16 +42,16 @@ Use $lean-blueprint-author to generate a leanblueprint route for the specified t
 
 ## Installation
 
-Install one or more skill folders under your Codex skills directory.
+Install one or more Skill folders under your Codex skills directory.
 
 ```sh
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R skills/math-paper-reader "${CODEX_HOME:-$HOME/.codex}/skills/"
-cp -R skills/math-writing-editor "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R skills/latex-research-note-curator "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R skills/lean-blueprint-author "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
-Install only the skill folders you want to expose.
+Install only the skills you want. Remove any older local `math-writing-editor` installation separately.
 
 ## Repository Layout
 
@@ -70,7 +62,7 @@ skills/
     agents/openai.yaml
     references/formula-reading-workflow.md
     references/math-paper-reading-checklist.md
-  math-writing-editor/
+  latex-research-note-curator/
     SKILL.md
     agents/openai.yaml
   lean-blueprint-author/
@@ -81,17 +73,16 @@ skills/
     references/workflows.md
 ```
 
-There is intentionally no root-level `SKILL.md`; each skill is installed from
-its own folder under `skills/`.
+There is intentionally no root-level `SKILL.md`; each skill is installed from its own folder under `skills/`.
 
 ## Validation
 
-If your Codex installation includes the `skill-creator` validator, validate each
-skill using its local installation path:
+If your Codex installation includes the `skill-creator` validator, validate each skill using its local installation path:
 
 ```sh
 VALIDATOR="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py"
 python3 "$VALIDATOR" skills/math-paper-reader
-python3 "$VALIDATOR" skills/math-writing-editor
+python3 "$VALIDATOR" skills/latex-research-note-curator
 python3 "$VALIDATOR" skills/lean-blueprint-author
 ```
+
