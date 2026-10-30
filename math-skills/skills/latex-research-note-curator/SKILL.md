@@ -13,6 +13,7 @@ A user-invoked Skill for one mathematical research note project, treated as a de
 - Keep material relevant to the chosen investigation. Techniques from other fields belong when they advance its mathematics.
 - Maintain one canonical root `.tex` producing one PDF with clickable internal references. Use `\input` or `\include` when it helps organize the argument, not because of file length.
 - Organize definitions, statements, dependencies, proofs and attempts, examples, counterexamples, and open questions by mathematical logic. Follow existing notation, macros, writing style, labels, and bibliography conventions.
+- Preserve hypotheses, domains, quantifiers, and logical strength unless substantive mathematical changes are explicitly requested.
 - Distinguish established results, source-reported claims, conjectures, and incomplete arguments. Preserve source attribution and do not present a proof gap as resolved or invent citations. Compare hypotheses and conclusions before merging similar statements.
 
 ## Work
