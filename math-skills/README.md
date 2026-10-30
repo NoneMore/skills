@@ -34,6 +34,22 @@ Default prompt:
 Use $math-writing-editor to edit, restructure, or rewrite the specified mathematical .tex or .md note according to my requested level of autonomy.
 ```
 
+### `latex-research-note-curator`
+
+Path: `skills/latex-research-note-curator`
+
+Maintains one user-designated, long-lived mathematical `.tex` research note.
+Use it to incorporate scattered research fragments, review true duplicates,
+and add meaningful mathematical cross-references **without silently changing
+hypotheses, proof gaps, or attribution**. Unlike `math-writing-editor`, this
+skill does not generate new mathematical claims or perform general rewrites.
+
+Default prompt:
+
+```text
+Use $latex-research-note-curator to integrate this fragment into my canonical mathematical .tex research note, preserve uncertainty, and show the diff.
+```
+
 ### `lean-blueprint-author`
 
 Path: `skills/lean-blueprint-author`
@@ -56,6 +72,7 @@ Install one or more skill folders under your Codex skills directory.
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R skills/math-paper-reader "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R skills/math-writing-editor "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R skills/latex-research-note-curator "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R skills/lean-blueprint-author "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
@@ -73,6 +90,12 @@ skills/
   math-writing-editor/
     SKILL.md
     agents/openai.yaml
+  latex-research-note-curator/
+    SKILL.md
+    README.md
+    agents/openai.yaml
+    examples/Working-Notes.tex
+    evals/cases.md
   lean-blueprint-author/
     CHANGELOG.md
     SKILL.md
@@ -93,5 +116,6 @@ skill using its local installation path:
 VALIDATOR="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py"
 python3 "$VALIDATOR" skills/math-paper-reader
 python3 "$VALIDATOR" skills/math-writing-editor
+python3 "$VALIDATOR" skills/latex-research-note-curator
 python3 "$VALIDATOR" skills/lean-blueprint-author
 ```
