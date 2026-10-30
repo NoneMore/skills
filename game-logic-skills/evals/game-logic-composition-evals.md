@@ -45,3 +45,32 @@ Required assertions:
 - Web/JavaScript application guidance is loaded only after the material mechanic, behavioral scope, and mechanism class make that guide relevant
 - mechanism selection remains on the application side and is bound to the recovered version-scoped evidence
 - change-design remains authoritative across mechanism classes; any remaining engine-specific application guide only refines a selected class
+
+## 5. Continuity uses architecture notes, not shared infrastructure
+
+A user asks for either one-off triage or a retained application, with no pre-existing project store.
+
+Required assertions:
+- neither Skill bootstraps a project-level store, manifest, ID registry, or schema migration for one-off or continuity work; helper-local provenance is allowed
+- one-off Analyze creates no mandatory notes; continuity retains only useful knowledge, requested material, or valuable evidence
+- Apply keeps retained output and rollback materials self-contained without calling Analyze for bookkeeping
+
+## 6. New builds verify old knowledge before application
+
+A later game build is available alongside a useful architecture note and possibly a legacy schema-3 store.
+
+Required assertions:
+- structural recognition clues help locate the current behavior without treating old addresses as authoritative
+- material mechanic and version-sensitive claims are revalidated before Apply consumes them
+- useful legacy files can be consulted as historical evidence but are not automatically rewritten or migrated
+- the current result records changed understanding and remaining uncertainty; historical notes/snapshots stay unchanged unless an overview is actively maintained, without a historical artifact graph
+
+## 7. Verified note-only knowledge routes directly to Apply
+
+The user supplies a sufficiently verified architecture note scoped to the current build and requests an offline derived tool. No separate finding, mechanic record, or handoff exists.
+
+Required assertions:
+- discovery metadata routes the application task to apply-game-logic with the architecture note as a valid input
+- Apply consumes material verified facts from the note without a normalization-only Analyze call or a new schema
+- Apply identifies the source note and target build in its output
+- only a genuinely missing or stale material relation returns narrowly to analyze-game-logic

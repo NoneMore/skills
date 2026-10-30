@@ -77,7 +77,7 @@ prettier --write --no-config --no-editorconfig <generated-copy>
 ```
 
 Record the formatter version when line-based locators depend on its output.
-Prefer module/function/AST-structural locators for durable findings.
+Prefer module/function/AST-structural recognition clues when writing cross-session architecture notes; keep generated line locators version-scoped.
 
 ## Versioning
 
@@ -103,7 +103,10 @@ for diagnosis; successful routine logs need not become durable evidence.
 
 `--force` removes only helper-managed outputs from a recognizable prior run.
 The helper refuses to guess ownership of pre-existing managed-looking paths. It
-returns non-zero when no analyzer step can run.
+returns non-zero when no analyzer step can run. Treat `--out` as working output,
+not passive archival storage. Use `--retention all` when raw comparisons are
+material, and preserve any long-lived evidence outside helper-managed paths
+before a later forced rerun or cleanup.
 
 The helper never edits input bundles/maps, executes the game, or contacts a
 service. Electron `app.asar` is detected only as a container indicator; expose

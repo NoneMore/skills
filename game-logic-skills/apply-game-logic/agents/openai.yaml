@@ -1,4 +1,4 @@
 interface:
   display_name: "Game Logic Application"
   short_description: "Apply recovered offline game mechanics and tooling"
-  default_prompt: "Use $apply-game-logic with an existing version-scoped finding, mechanic record, or legacy handoff; invoke $analyze-game-logic only for material mechanic facts that are missing or stale."
+  default_prompt: "Use $apply-game-logic with sufficiently verified, version-scoped mechanic knowledge from a finding, mechanic record, architecture note, or legacy handoff; invoke $analyze-game-logic only for material mechanic facts that are missing or stale."

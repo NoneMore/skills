@@ -2,7 +2,7 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.3.0"
+  version: "v5.5.0"
 ---
 
 # Analyze Game Logic
@@ -27,9 +27,9 @@ Use the lightest path that can close the claim:
 
 - **Triage:** locate or identify a function, field, script, table, or call site.
 - **Focused analysis:** explain one mechanic or causal path with reusable evidence.
-- **Full analysis:** preserve enough baseline, evidence, and validation for multi-session or high-cost work.
+- **Full analysis:** reconstruct a multi-component mechanic or system with the evidence and validation needed to support the requested conclusions.
 
-Promote work when the current task already requires cross-session continuation, the user asks to retain results, evidence is expensive or lossy to reconstruct, or downstream application needs a durable reference. When durable storage applies, use [references/project-knowledge.md](references/project-knowledge.md).
+Choose analysis depth from the question and remaining uncertainty, not from a storage workflow.
 
 ## 3. Find the material implementation path
 
@@ -42,7 +42,7 @@ Treat implementation layers as a search progression. Before escalating into a mo
 
 Stay at source/script level when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation.
 
-If a tool explicitly reports truncated output or only a partial range was inspected, treat that view as partial. Do not make a conclusion that depends on complete coverage until the required missing range has been checked; expand coverage only when the claim actually needs completeness.
+If output is truncated or only a partial range was inspected, do not make completeness-dependent claims until the necessary missing ranges are checked. Expand coverage only when the claim requires it; retain costly or lossy captured ranges when useful under [references/project-knowledge.md](references/project-knowledge.md).
 
 After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
 
@@ -62,7 +62,7 @@ Trace from a strong semantic anchor to the authoritative state transition. Resol
 
 Stop when the smallest material slice can be expressed as concise gameplay pseudocode and every remaining material unknown is explicit.
 
-For compiled/native boundaries, prefer stable module + RVA locators and verify address conversions against the original binary or loaded module before relying on them.
+For compiled/native boundaries, prefer module + RVA locators for the inspected build and verify address conversions against the original binary or loaded module before relying on them. Do not assume an RVA remains valid across builds.
 
 ## 5. Close the evidence loop
 
@@ -76,11 +76,11 @@ Different renderings of the same relation are not independent evidence. Cross-re
 
 Runtime validation is optional for narrow identity/location claims. When timing, causal control, caller discrimination, state lifetime, authority, or effective randomness materially depends on runtime behavior, load [references/runtime-validation.md](references/runtime-validation.md). If practical validation is omitted, keep the affected claim a working hypothesis.
 
-## 6. Retain only what earns persistence
+## 6. Retain reusable understanding selectively
 
-Do not create a project store for throwaway lookups. Preserve evidence when the user asks to retain it, cross-session continuation is already required, or the evidence is expensive or lossy to reconstruct.
+Unrequested one-off lookups need no storage. For explicit save requests, multi-session work, or valuable evidence that is costly or lossy to recover, follow [references/project-knowledge.md](references/project-knowledge.md) to retain requested material, useful architecture notes, or build-scoped snapshots. Honor explicit requests even when material is cheap to reproduce; otherwise let future reading, verification, or recovery value justify retention. Saving does not imply ongoing maintenance.
 
-When durable storage applies, [references/project-knowledge.md](references/project-knowledge.md) is authoritative for what to retain. Prefer the bundled helper for mechanical hashing/integrity operations, and use its current --help instead of copying its command surface into this skill.
+For a changed build, use old notes to rediscover relevant implementation paths, not as proof of current behavior. Revalidate only material facts; leave historical notes and snapshots unchanged, and update an overview only when actively maintained.
 
 ## 7. Deliver the result
 
@@ -91,7 +91,8 @@ Match output size to the analysis depth. For focused/full analysis, include:
 - stable source/function or module + RVA locators;
 - evidence and validation state;
 - material unknowns and observed-versus-inferred distinctions;
-- material analysis-workspace refinements written or proposed, when applicable.
+- material analysis-workspace refinements written or proposed, when applicable;
+- when material was retained, the locations of notes and evidence snapshots, their relevant build/coverage scope and gaps, and assumptions needing revalidation.
 
 When downstream application is requested, provide a compact version-scoped mechanic record containing the facts material to that application. A reusable finding with sufficient facts is valid input to $apply-game-logic; do not normalize it through an extra protocol step solely for ceremony. Existing game-logic-mechanic-handoff/v1 records remain valid compatibility inputs.
 

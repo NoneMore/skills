@@ -1,13 +1,13 @@
 ---
 name: apply-game-logic
-description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a finding, mechanic record, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
+description: Apply recovered, version-scoped gameplay knowledge to an authorized offline/single-player target. Use for calculators, simulators, instrumentation, mods, tests, and scoped local gameplay changes when a sufficiently verified finding, mechanic record, architecture note, or existing handoff already contains the facts material to the application. Use $analyze-game-logic only when mechanic knowledge is missing or stale. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v1.3.0"
+  version: "v1.5.0"
 ---
 
 # Apply Game Logic
 
-Consume recovered mechanic knowledge without redoing reverse engineering. Accept a sufficiently complete reusable finding, mechanic record, or existing game-logic-mechanic-handoff/v1. Do not require a format conversion when the material facts are already present.
+Consume recovered mechanic knowledge without redoing reverse engineering. Accept a sufficiently complete finding, mechanic record, architecture note, or existing game-logic-mechanic-handoff/v1. Do not require a format conversion when the material facts are already present. Architecture notes from other builds are rediscovery clues, not automatically confirmed facts for the current target.
 
 If the request starts without verified mechanic knowledge, or the installed target has drifted from the evidence, ask $analyze-game-logic for only the missing relation.
 
@@ -51,7 +51,7 @@ For retained native runtime mechanisms that write process memory or install/repl
 
 ## 4. Bind implementation to evidence
 
-Every application should state which mechanic record/finding and target version it consumes.
+Every application should state the version-scoped mechanic knowledge it consumes (finding, mechanic record, architecture note, or existing handoff) and the target version.
 
 For source/script/config targets, prefer semantic locators plus a target hash when material. For native work, persist and hand off target identity + module + RVA. Tool-local preferred/runtime VAs are transient and adapters own conversion. Retained implementations may use symbolic, site-relative, or other tool-native forms when they map unambiguously to the canonical site; derive absolute addresses from module + RVA when needed. Validate the exact emitted implementation before writing or hooking.
 
@@ -73,7 +73,7 @@ If validation contradicts the recovered mechanic rather than the implementation,
 
 For a one-off explanation or calculation, provenance in the answer is enough.
 
-For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md). Keep the authoritative implementation, target identity, mechanic source, validation result, and rollback/control state together. Use an existing project store when it is already available and useful; do not require a companion Skill call merely to satisfy bookkeeping.
+For retained or deployed outputs, load [references/application-artifacts.md](references/application-artifacts.md) and keep the implementation, target/mechanic context, validation, and rollback/control state together. Do not call Analyze solely for bookkeeping.
 
 Before a destructive change, capture the original bytes/content or an integrity-verifiable backup. If the original state cannot be captured and verified well enough to restore, stop before modifying the installed target.
 

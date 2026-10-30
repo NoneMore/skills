@@ -1,76 +1,31 @@
-# Project Knowledge
+# Reusable Game Architecture Knowledge
 
-Use durable storage when the user asks to retain results, the current task requires continuation across sessions, or evidence is expensive or lossy to reconstruct. Do not create a store for a throwaway lookup.
+Use this guidance when the user requests retained material, work spans sessions, or saving understanding/evidence avoids meaningful future recovery cost or loss. An unrequested one-off answer needs no persistent artifact system.
 
-## What to retain
+## Preserve what helps the next investigation
 
-Keep three concepts separate:
+Architecture notes should communicate material understanding rather than serve as a result database. They may be maintained overviews or build-scoped historical notes. Record only the parts material to re-understanding or re-finding a mechanic:
 
-- **Source:** original read-only material such as an executable, DLL, data file, or readable source/script.
-- **Artifact:** generated evidence worth retaining, such as a decompilation, trace, extracted table, or validation log.
-- **Finding:** a reusable interpretation that cites the source/artifact evidence supporting it.
+- system/module boundaries, ownership, authority, and how components interact;
+- recognizable function entry shapes and surrounding calls, data access patterns, meaningful constants, and variable/field roles;
+- state machines, event sequences, data flow, and semantic rules, using compact diagrams or pseudocode when clearer;
+- decisive observations, confidence/limitations, a few discriminating checks, and how to repeat verification;
+- build/version scope and, if useful, exact addresses, hashes, or locators **clearly marked as build-specific**.
 
-Let the filesystem carry stable analysis and target context:
+Choose an explanation suited to the mechanism; this is guidance, not a required template or schema. Avoid exhaustive call inventories, raw decompiler dumps, or line-by-line annotations as the long-lived overview. Maintain code-local annotations in the existing analysis workspace rather than duplicating them without benefit.
 
-```text
-artifacts/manifest.json
-analyses/<analysis-id>/targets/<target-id>/target.json
-analyses/<analysis-id>/targets/<target-id>/finding.md
-analyses/<analysis-id>/targets/<target-id>/artifacts/<local-name>
-analyses/<analysis-id>/targets/<target-id>/scripts/<local-name>
-analyses/<analysis-id>/targets/<target-id>/reports/<local-name>
-shared/artifacts/<local-name>
-```
+## Retain evidence without maintenance obligations
 
-An analysis ID names the stable research/mechanic question. Its directory is the analysis scope. A target ID names one build/version observation scope, with shared target facts in `target.json`. A finding belongs to a target scope but is not the identity of the analysis itself.
+Decide whether evidence is worth keeping separately from whether it needs to be maintained. A decompilation slice, trace, or captured tool result can remain a build-scoped snapshot, kept solely for future reading; saving it does not require normalization, registration, synchronization, or routine updates. Living architecture notes may be revised when new understanding makes that useful, but do not silently rewrite historical evidence.
 
-Use local filenames only to distinguish siblings inside their scope. Keep evidence owned by one analysis under that target; put genuinely cross-analysis retained evidence under `shared/artifacts/` rather than copying it for locality. Analysis-wide cross-target helpers may live under `analyses/<analysis-id>/scripts/`. Retain a project-level report only when a real rollup is useful; do not make it the default body for target-specific analysis.
+An explicit request to save material is sufficient even when it is cheap to regenerate; retain what the user requested without adding bookkeeping. Otherwise, length or truncation alone does not justify saving raw output: recover cheaply retrievable material on demand, but retain valuable evidence when reconstruction requires repeated partial reads, expensive setup, lossy tool state, or nontrivial work. Keep the requested material or the relevant captured ranges/consolidated evidence as appropriate. Identify the target/build, the covered ranges and any gaps, and how to interpret the capture; never present partial coverage as complete. A retained snapshot is not proof that its claims hold in a later build.
 
-The analysis root must be separate from the installed game directory. Deployed copies inside the game tree are never authoritative artifacts.
+## Reuse across versions
 
-## Baseline and target scope
+An old architecture note is a map for rediscovery, **not evidence that the new version behaves identically**. Start from structural/semantic recognition clues, identify the current implementation, and revalidate the specific relations that affect the task. Addresses, byte patterns, layout offsets, and even apparent function roles may drift. Leave build-scoped historical notes and evidence snapshots unchanged; report material differences and unresolved relations in the current result. Only when an overview is actively being maintained should new evidence lead to a targeted revision. Reading or revalidating old material does not itself require updating it.
 
-Record only baseline facts material to reproducing the conclusion:
+## Keep storage ordinary
 
-- game/content version and build identifier;
-- relevant source/module paths and hashes;
-- architecture or implementation boundary when applicable;
-- engine/backend when material;
-- existing symbols, source maps, databases, or prior analysis artifacts when they materially affect reuse.
+Keep a few ordinary files in an authorized location outside the installed game, preferably within an existing project. If a later session could not discover retained material from project context alone, choose a discoverable location or add a short pointer in existing project documentation. Tool-generated working outputs can be overwritten or deleted on rerun; copy material for later reading outside helper-managed cleanup paths while available. Report paths, build and coverage scope, and gaps. No project-level store, manifest, registry, migration, or routine maintenance is required.
 
-Put facts shared by one target/build in its `target.json`. Keep artifact-specific locators, content identity, producer information, dependency edges, finding links, supersession, and integrity state in the manifest. Preserve conflicting version indicators instead of silently choosing one.
-
-## Findings
-
-A reusable finding should state:
-
-- stable ID and status;
-- target/version/hash scope;
-- the claim;
-- evidence locators;
-- the material mechanic detail needed later;
-- validation performed and remaining limitations.
-
-Keep findings small enough to reuse independently but large enough to assess their evidence. Do not turn them into chronological diaries or copies of raw tool output.
-
-A sufficiently complete current finding may be consumed directly by downstream application work. Do not create a second representation merely to satisfy workflow ceremony.
-
-## Artifact integrity
-
-Retain generated artifacts only when they have independent reuse value or are costly/lossy to reproduce. Keep target identity in target scope and record producer/tool plus enough provenance in the manifest to distinguish raw tool output from later annotation.
-
-Before reusing a retained file, verify that it still exists and matches its recorded identity/hash. If regenerated bytes differ intentionally, treat the new output as a new artifact or explicit successor rather than silently rewriting history.
-
-## Mechanical helper
-
-The bundled `scripts/project_store.py` helper is the source of truth for its manifest schema, supported commands, canonical retained-artifact paths, lifecycle fields, and integrity checks. Prefer it for target-scope creation, retained-artifact registration, hashing, and store maintenance when practical.
-
-Do not copy its full CLI or JSON schema into agent instructions. Inspect its current `--help` or implementation when a specific store operation is required.
-
-The semantic correctness of a gameplay finding remains an analysis responsibility; passing store integrity checks does not prove the interpretation.
-
-## Persistence cadence
-
-Preserve expensive or lossy evidence promptly. For cheap deterministic source searches, first close the evidence loop, then persist the coherent finding and useful locators together.
-
-A later session should be able to identify the analysis question and target, recover the authoritative evidence, understand the finding's confidence/limitations, and continue without relying on conversational memory. Anything beyond that should earn its complexity through demonstrated reuse.
+Legacy stores can be read as historical material if present but are neither required nor automatically migrated or overwritten. A later agent should be able to understand the system, find candidate implementation paths, see uncertainty, and know what to verify without relying on chat history.
