@@ -13,8 +13,7 @@ Use this skill for **incremental curation of a continuing note**: integrating ne
 
 ## Inputs and editing target
 
-- Identify the canonical `.tex` path from the user's instructions or existing explicit workspace context, and the new fragment or curation goal. Inspect the note before editing; do not infer its contents from prior chat or the bundled example.
-- `examples/Working-Notes.tex` is **illustrative**, never the active editing target unless the user explicitly selects it.
+- Identify the canonical `.tex` path from the user's instructions or existing explicit workspace context, and the new fragment or curation goal. Inspect the note before editing; do not infer its contents from prior chat or unrelated files.
 - Honor the user's requested operation and output mode. Do not modify files without authorization. If no canonical note can be identified, produce a proposed insertion/patch from the supplied context where possible; otherwise ask only for the missing target or relevant excerpt. Do not claim a file was updated.
 
 ## Invariants
