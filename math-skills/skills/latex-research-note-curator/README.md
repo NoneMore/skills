@@ -8,7 +8,7 @@ A **user-invoked** Skill for creating and maintaining one user-selected, themati
 - **Integrate:** place new research fragments in the right mathematical context, preserve proof gaps and provenance, and add meaningful cross-file references.
 - **Curate:** detect genuine overlap, clarify argument organization, and propose or apply a few high-signal connections without broad rewriting.
 
-All three operations follow the **Note Project Contract** in [SKILL.md](SKILL.md): thematic coherence, one root and unified PDF, mathematical organization, epistemic integrity, provenance, stable references, and consistent conventions. The Skill is standalone; it does not require another Skill, script, database, or external service.
+All three operations follow the **Note Project Contract** in [SKILL.md](SKILL.md): thematic coherence, one root and unified PDF, mathematical organization, epistemic integrity, provenance, stable references, and consistent conventions. The Skill is standalone; it requires no other Skill or custom supporting infrastructure.
 
 ## Contents
 
