@@ -66,8 +66,10 @@ def discover_root(root):
     identified = [c for c in candidates if c[1] != "unknown"]
     rank = {"high": 3, "medium": 2, "low": 1}
     chosen = max(identified, key=lambda c: rank.get(c[2], 0)) if identified else candidates[0]
-    editions = {c[1] for c in identified}
-    conflicts = [f"{c[0]}: {c[1]}" for c in identified] if len(editions) > 1 or "ambiguous" in editions else []
+    editions = {c[1] for c in identified if c[1] in ("MV", "MZ")}
+    conflicts = [f"{c[0]}: {c[1]}" for c in identified] if len(editions) > 1 else []
+    if not conflicts:
+        chosen = next((c for c in identified if c[1] == "ambiguous"), chosen)
     p, engine, confidence, evidence = chosen
     if conflicts:
         engine, confidence = "ambiguous", "conflicting candidate roots"

@@ -59,7 +59,9 @@ class RPGMakerTriageTest(unittest.TestCase):
         (p / "js/rpg_core.js").write_text("// MV")
         (p / "js/rmmz_core.js").write_text("// MZ")
         (p / "data/System.json").write_text("{}")
-        self.assertEqual(triage.triage(root)["engine"], "ambiguous")
+        report = triage.triage(root)
+        self.assertEqual(report["engine"], "ambiguous")
+        self.assertEqual(report["confidence"], "mixed core files")
 
     def test_conflicting_project_markers_remain_ambiguous(self):
         root, p = self.fixture()
