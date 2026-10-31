@@ -20,6 +20,17 @@ Unrequested one-off analysis needs no persistence. When continuity is useful, re
 
 Collection-level composition evaluations live under `evals/`.
 
+## RPG Maker MV/MZ
+
+Use the [specialized adapter](analyze-game-logic/references/engine-rpgmaker-mv-mz.md) for confirmed MV/MZ gameplay, not generic JS bundle recovery. Its read-only helper locates candidate roots, event commands and enabled-plugin hints without executing project JavaScript:
+
+```sh
+python analyze-game-logic/scripts/rpgmaker_triage.py /path/to/project --events --hooks
+python -m unittest discover -s tests -v
+```
+
+`--out /path/outside/game-tree/report.json` saves a report outside the project. Hook matches do not prove runtime ownership.
+
 ## Installation
 
 Install either or both skills under your Codex skills directory:
