@@ -20,6 +20,10 @@ Unrequested one-off analysis needs no persistence. When continuity is useful, re
 
 Collection-level composition evaluations live under `evals/`.
 
+## RPG Maker MV/MZ
+
+Use the [specialized adapter](analyze-game-logic/references/engine-rpgmaker-mv-mz.md) for evidenced MV/MZ gameplay rather than generic JavaScript bundle recovery. Inspect relevant project files, event JSON, and enabled plugins directly with available search and JSON tools; use focused deterministic commands when the task needs them.
+
 ## Installation
 
 Install either or both skills under your Codex skills directory:

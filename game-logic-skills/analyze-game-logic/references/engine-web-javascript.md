@@ -21,6 +21,8 @@ implementation boundary, for example:
 - source maps, `sourcesContent`, TypeScript paths, package names, or original
   module paths corroborate the boundary.
 
+**Specialized-engine boundary:** For confirmed RPG Maker MV/MZ gameplay, start with [its engine adapter](engine-rpgmaker-mv-mz.md). Readable `rpg_*.js`, `rmmz_*.js` and plugins do not require bundle recovery. Load this adapter additionally only if a distinct material JavaScript boundary (such as a worker or bundle) needs analysis.
+
 Distinguish these nearby cases before tracing logic:
 
 - **Readable source:** use the core source-available fast path directly. Do not

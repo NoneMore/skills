@@ -27,6 +27,9 @@ After behavioral scope and mechanism class are established, load only the matchi
 | Godot GDScript / scene-resource graph | [change-godot-gdscript.md](change-godot-gdscript.md) |
 | Unity Mono | [change-unity-mono.md](change-unity-mono.md) |
 | Web / JavaScript | [change-web-javascript.md](change-web-javascript.md) |
+| RPG Maker MV/MZ project, events and plugins | [change-rpgmaker-mv-mz.md](change-rpgmaker-mv-mz.md) |
+
+For RPG Maker-owned gameplay, prefer its guide over generic Web/JavaScript guidance even when plugins use readable JavaScript. Load the Web/JavaScript guide additionally only for a distinct, material JS boundary.
 
 This file remains authoritative for ordering across mechanism classes. Matching application guides refine engine-specific implementation points only within the selected class; they do not override this ordering. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
 
