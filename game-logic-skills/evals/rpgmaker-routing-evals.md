@@ -24,4 +24,4 @@ Both MV and MZ core files or contradictory edition markers produce ambiguous cla
 
 ## 6. Analysis/application separation
 
-When the user wants an authorized local one-actor adjustment, analyze returns exact mechanic, ownership/fan-out and version facts without choosing a write mechanism; apply then selects a viable class, uses RPG Maker change guidance, tests against other actors and save/load, and avoids installed-file edits by default.
+When the user wants an authorized local one-actor adjustment, analyze returns exact mechanic, ownership/fan-out and version facts without choosing a write mechanism; apply then selects a viable class, uses RPG Maker change guidance (not generic Web/JS for ordinary plugins), tests against other actors and save/load, and avoids installed-file edits by default. For a new plugin, apply confirms Plugin Manager registration, enabled status and runtime loading before claiming success.

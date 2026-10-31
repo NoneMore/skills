@@ -5,7 +5,7 @@ Load only **after** the shared change-design.md has established behavioral scope
 ## Implementation within the selected mechanism class
 
 - **Editor/database:** For an authorized editable project, use the Database, Event Editor or Plugin Manager when the selected change is expressible there. Preserve IDs, referenced commands and JSON/event structure.
-- **Separate plugin:** For a plugin-based change, add a distinct compatible file under `js/plugins/`. Alias only evidenced methods while preserving arguments, return value and `this`; check the *enabled* plugin order and subsequent overrides rather than assuming the last entry wins.
+- **Separate plugin:** For a plugin-based change, add a distinct compatible file under `js/plugins/`, then register and enable it via Plugin Manager (reflected in `js/plugins.js`). Verify that it loads in the intended order during playtest; a file on disk or passing `node --check` is not enough. Alias only evidenced methods while preserving arguments, return value and `this`; account for subsequent overrides.
 - **Event-local edit:** Target the exact event/page/command or common-event ID; preserve other pages, branches, terminators, conditions, indentation and order.
 - **Reversible runtime experiment:** Observe or wrap a narrow evidenced boundary and restore the prior state. `Scene_` or `Sprite_` hooks are not automatically authoritative state writes.
 

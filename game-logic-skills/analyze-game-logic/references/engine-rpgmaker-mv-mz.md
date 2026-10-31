@@ -45,7 +45,7 @@ Distinguish $data* database records from mutable $game* instances. Preserve 1-ba
 
 ## 5. Recommended tracing workflow
 
-1. Identify project root and MV/MZ edition using multiple markers; record version evidence and hashes for relevant core, plugin manifest, data and plugins.
+1. Identify project root and MV/MZ edition using multiple markers; record version evidence and hash only files needed to bind or verify material findings.
 2. Inventory relevant database IDs and map/common/troop events; locate event/page/command indexes and conditions.
 3. Trace from event or database anchor through Game_Interpreter, embedded script, plugin command and callbacks.
 4. Read js/plugins.js in actual order and locate aliases, prototype overrides and command registrations; identify which definition and mutation can execute.
@@ -63,7 +63,7 @@ Prefer the game's matching RPG Maker editor playtest, F8 developer tools and F9 
 
 ## 8. Version-sensitive assumptions
 
-Retain MV/MZ edition, actual core hashes, material plugin names/order/hashes and database hashes. Core scripts may be customized. Revalidate command registration, event data shapes, script execution order, animation/saving differences, and plugin modifications against the target build. Do not replace local facts with assumptions from an upstream core-script repository.
+Retain MV/MZ edition and material plugin names/order; retain core, manifest, plugin and database hashes when needed for version-scoped findings or downstream changes. Core scripts may be customized. Revalidate command registration, event data shapes, script execution order, animation/saving differences, and plugin modifications against the target build. Do not replace local facts with assumptions from an upstream core-script repository.
 
 ## 9. Common failures
 

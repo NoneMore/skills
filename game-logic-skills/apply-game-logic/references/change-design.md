@@ -29,6 +29,8 @@ After behavioral scope and mechanism class are established, load only the matchi
 | Web / JavaScript | [change-web-javascript.md](change-web-javascript.md) |
 | RPG Maker MV/MZ project, events and plugins | [change-rpgmaker-mv-mz.md](change-rpgmaker-mv-mz.md) |
 
+For RPG Maker-owned gameplay, prefer its guide over generic Web/JavaScript guidance even when plugins use readable JavaScript. Load the Web/JavaScript guide additionally only for a distinct, material JS boundary.
+
 This file remains authoritative for ordering across mechanism classes. Matching application guides refine engine-specific implementation points only within the selected class; they do not override this ordering. Analysis-side engine adapters supply the evidence and scope facts; they do not select the modification mechanism.
 
 Windows LÖVE/Lua needs no separate application guide: consume the recovered Lua source/owner/scheduler/thread facts under this shared contract. If a retained Lua mod is delivered through Lovely Injector, load [lovely-delivery.md](lovely-delivery.md).
