@@ -32,6 +32,8 @@ Adapt the depth and techniques to the problem rather than following mandatory st
 
 Present the design in conversation. Make the chosen direction concrete through whichever responsibilities, concepts, interfaces, interactions, and invariants matter to the problem. Explain the rationale for non-obvious choices and distinguish settled decisions from material open questions.
 
+Keep detail decision-centered: elaborate interfaces, behaviors, invariants, and scenarios only as far as needed to resolve or communicate material design choices. Stop when the direction is coherent; specification completeness is not a design completion criterion.
+
 Use diagrams, examples, or interface sketches when they clarify the design. Do not substitute an implementation plan or task-level acceptance contract for the design.
 
 ## Specialized guidance
