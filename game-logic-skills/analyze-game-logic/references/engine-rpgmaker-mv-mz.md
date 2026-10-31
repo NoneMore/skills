@@ -67,18 +67,13 @@ Retain MV/MZ edition, actual core hashes, material plugin names/order/hashes and
 
 ## 10. Common failures
 
-- Web/JS routing from HTML, NW.js, Pixi or package.json alone.
-- Bundle-recovery or server-side JS analysis for ordinary RPG Maker files.
-- Ignoring enabled plugin order, alias chains and overwritten core functions.
-- Treating event JSON as dialogue rather than serialized executable control flow.
-- Losing page conditions, parallel triggers, common-event recursion or script continuations.
-- Reading MZ command 357 arguments from parameters[2] instead of [3].
-- Confusing shared database definitions with per-save instance state.
-- Inferring effective state ownership from a rendering call or a regex hit.
+- Routing by generic NW.js/Pixi signals or unpacking ordinary readable RPG Maker sources.
+- Inferring effective state ownership from vanilla engine functions, regex hits or presentation hooks without tracing enabled plugins.
+- Losing event/page/script continuation context or reading MZ command 357 arguments from index 2 rather than 3.
 
 ## 11. Evidence checklist
 
-Record root/edition and marker evidence; build/source hashes; database IDs and exact event/page/command locators; manifest enabled status and ordered material plugins; override/alias chain; authoritative mutation, trigger and state scope; save and wait semantics when material; observed versus inferred behavior; practical validation state.
+Keep edition/build evidence, relevant database and event/page/command locators, effective enabled-plugin order, authoritative state mutations, and any material save/wait uncertainty; distinguish observed from inferred behavior.
 
 ## 12. Bundled helper
 

@@ -51,10 +51,7 @@ def signals(path):
         engine, confidence = "MZ", "medium" if system else "low"
     else:
         engine, confidence = "unknown", "none"
-    score = 4 * int(mv_core or mz_core) + 2 * int(system) + int(plugins)
-    if mv_project or mz_project:
-        score += 1
-    return engine, confidence, score, sigs
+    return engine, confidence, sigs
 
 
 def discover_root(root):
@@ -62,13 +59,19 @@ def discover_root(root):
     for suffix in ROOT_SUFFIXES:
         p = root / suffix
         if p.is_dir():
-            engine, confidence, score, evidence = signals(p)
-            candidates.append((score, len(suffix.split('/')), p, engine, confidence, evidence))
+            engine, confidence, evidence = signals(p)
+            candidates.append((p, engine, confidence, evidence))
     if not candidates:
         raise ValueError(f"Directory does not exist: {root}")
-    # Prefer marker-rich candidates; on ties prefer shallower paths.
-    _, _, p, engine, confidence, evidence = max(candidates, key=lambda x: (x[0], -x[1]))
-    return p, engine, confidence, evidence
+    identified = [c for c in candidates if c[1] != "unknown"]
+    rank = {"high": 3, "medium": 2, "low": 1}
+    chosen = max(identified, key=lambda c: rank.get(c[2], 0)) if identified else candidates[0]
+    editions = {c[1] for c in identified}
+    conflicts = [f"{c[0]}: {c[1]}" for c in identified] if len(editions) > 1 or "ambiguous" in editions else []
+    p, engine, confidence, evidence = chosen
+    if conflicts:
+        engine, confidence = "ambiguous", "conflicting candidate roots"
+    return p, engine, confidence, evidence, conflicts
 
 
 def read_json(path):
@@ -87,12 +90,13 @@ def read_plugins(path):
     if path.stat().st_size > MAX_JSON_BYTES:
         raise ValueError("Plugin manifest exceeds size cap")
     raw = path.read_text(encoding="utf-8-sig")
-    match = re.search(r"\b(?:var|let|const)\s+\$plugins\s*=\s*(?=\[)", raw)
+    match = re.search(r"(?m)^[ \t]*(?:var|let|const)\s+\$plugins\s*=\s*(?=\[)", raw)
     if not match:
         raise ValueError("No recognized $plugins array assignment")
-    parsed, _ = json.JSONDecoder().raw_decode(raw[match.end():].lstrip())
-    if not isinstance(parsed, list):
-        raise ValueError("$plugins was not an array")
+    literal = raw[match.end():].lstrip()
+    parsed, end = json.JSONDecoder().raw_decode(literal)
+    if not isinstance(parsed, list) or literal[end:].strip() not in ("", ";"):
+        raise ValueError("$plugins is not a standalone JSON-literal array")
     return parsed
 
 
@@ -117,7 +121,11 @@ def events_from_json(filename, data):
 
 def inspect_events(root, warnings, max_files=500):
     data_dir = root / "data"
-    filenames = sorted(data_dir.glob("Map[0-9]*.json"))[:max_files]
+    maps = sorted(data_dir.glob("Map[0-9]*.json"))
+    truncated = len(maps) > max_files
+    if truncated:
+        warnings.append(f"Map scan truncated at {max_files} of {len(maps)} maps")
+    filenames = maps[:max_files]
     filenames += [data_dir / x for x in ("CommonEvents.json", "Troops.json") if (data_dir / x).is_file()]
     totals = Counter()
     examples = []
@@ -138,8 +146,8 @@ def inspect_events(root, warnings, max_files=500):
                                              "command_index": index, "code": code})
         except (OSError, ValueError, UnicodeError) as e:
             warnings.append(f"Could not inspect {path.name}: {e}")
-    return {"scanned_files": len(filenames), "code_counts": dict(totals),
-            "sample_locators": examples}
+    return {"scanned_files": len(filenames), "truncated": truncated,
+            "code_counts": dict(totals), "sample_locators": examples}
 
 
 def scan_hooks(root, ordered_plugins, warnings):
@@ -170,17 +178,16 @@ def scan_hooks(root, ordered_plugins, warnings):
         if "Game_Interpreter.prototype.pluginCommand" in text:
             hits.append({"plugin": name, "indicator": "MV-style pluginCommand"})
     return {"warning": "Heuristic search, not proof of effective override, execution order, or authority",
-            "indicators": hits[:1000]}
+            "truncated": len(hits) > 1000, "indicators": hits[:1000]}
 
 
 def triage(given_root, with_events=False, with_hooks=False):
-    root, engine, confidence, evidence = discover_root(given_root)
+    root, engine, confidence, evidence, conflicts = discover_root(given_root)
     warnings = []
+    if conflicts:
+        warnings.append("Conflicting candidate roots: " + ", ".join(conflicts))
     result = {"root": str(root), "engine": engine, "confidence": confidence,
-              "signals": evidence, "next_adapter": (
-                  "engine-rpgmaker-mv-mz.md" if engine in ("MV", "MZ") and confidence in ("high", "medium")
-                  else "manual classification required"),
-              "hashes": {}, "plugins": [], "warnings": warnings}
+              "signals": evidence, "hashes": {}, "plugins": [], "warnings": warnings}
     for relative in ("js/rpg_core.js", "js/rmmz_core.js", "js/plugins.js", "data/System.json"):
         file = root / relative
         if file.is_file():

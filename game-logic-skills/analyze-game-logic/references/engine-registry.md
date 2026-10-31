@@ -6,7 +6,7 @@ gameplay semantic model still applies across boundaries; load one or more matchi
 adapters only when they are material to the unresolved implementation path. Do
 not preload unrelated engine references.
 
-**Specialized engine precedence:** When corroborating project layout and data identify a specific engine, select its adapter before a generic language/runtime adapter. `index.html`, NW.js, Pixi, `package.json`, or JavaScript alone are not RPG Maker identifiers. The generic Web/JS adapter is a fallback or secondary guide only for a separate material bundling/obfuscation boundary. If markers conflict, keep the classification ambiguous and inspect rather than force a route.
+**Specialized engine precedence:** When corroborating project/data markers identify an engine, use its adapter for the engine-owned gameplay path. HTML, NW.js, Pixi, `package.json` and JavaScript alone do not identify RPG Maker. Keep conflicting markers ambiguous; use the generic Web/JS adapter only for a distinct material JS implementation boundary.
 
 | Material boundary | Adapter | Optional bundled tooling | Status |
 | --- | --- | --- | --- |

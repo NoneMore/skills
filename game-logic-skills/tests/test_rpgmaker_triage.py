@@ -88,5 +88,59 @@ class RPGMakerTriageTest(unittest.TestCase):
         self.assertTrue(any("unsafe plugin name" in w for w in report["warnings"]))
 
 
+    def test_project_marker_beats_generic_subdirectory(self):
+        root, p = self.fixture("www")
+        (root / "Game.rmmzproject").touch()
+        (p / "data/System.json").write_text("{}")
+        (p / "js/plugins.js").write_text("var $plugins = [];")
+        report = triage.triage(root)
+        self.assertEqual((report["engine"], report["root"]), ("MZ", str(root)))
+
+    def test_conflicting_candidate_roots_remain_ambiguous(self):
+        root, p = self.fixture("www")
+        (root / "Game.rpgproject").touch()
+        (p / "js/rmmz_core.js").write_text("// MZ")
+        (p / "data/System.json").write_text("{}")
+        report = triage.triage(root)
+        self.assertEqual(report["engine"], "ambiguous")
+        self.assertTrue(any("Conflicting candidate roots" in w for w in report["warnings"]))
+
+    def test_rejects_dynamic_manifest_suffix(self):
+        _, p = self.fixture()
+        (p / "js/rmmz_core.js").write_text("// MZ")
+        (p / "js/plugins.js").write_text(
+            'var $plugins = [{"name":"A","status":true}].concat('
+            '[{"name":"B","status":true}]);')
+        report = triage.triage(p)
+        self.assertEqual(report["plugins"], [])
+        self.assertTrue(any("Cannot parse" in w for w in report["warnings"]))
+
+    def test_ignores_commented_manifest_assignment(self):
+        _, p = self.fixture()
+        (p / "js/rmmz_core.js").write_text("// MZ")
+        (p / "js/plugins.js").write_text(
+            '// var $plugins = [{"name":"fake"}];\n'
+            'var $plugins = [{"name":"real","status":true}];')
+        self.assertEqual(triage.triage(p)["plugins"][0]["name"], "real")
+
+    def test_map_scan_reports_truncation(self):
+        _, p = self.fixture()
+        for number in (1, 2):
+            (p / f"data/Map{number:03}.json").write_text('{"events":[]}')
+        warnings = []
+        report = triage.inspect_events(p, warnings, max_files=1)
+        self.assertTrue(report["truncated"])
+        self.assertEqual(report["scanned_files"], 1)
+        self.assertTrue(any("truncated" in w for w in warnings))
+
+    def test_hook_scan_reports_truncation(self):
+        _, p = self.fixture()
+        (p / "js/plugins").mkdir()
+        (p / "js/plugins/A.js").write_text(
+            "Game_Action.prototype.apply = function() {};\n" * 1001)
+        report = triage.scan_hooks(p, [{"name": "A", "enabled": True}], [])
+        self.assertTrue(report["truncated"])
+        self.assertEqual(len(report["indicators"]), 1000)
+
 if __name__ == "__main__":
     unittest.main()
