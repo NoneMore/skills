@@ -61,20 +61,16 @@ Use JSON-aware parsing for event arrays and IDs. Keep event command ordering, in
 
 Prefer the game's matching RPG Maker editor playtest, F8 developer tools and F9 variable/switch debug screen. Observe narrow Game_Interpreter, Game_Action, DataManager, or plugin callback boundaries only where needed. Use pure function fixtures for truly independent logic. A Node syntax check is not gameplay validation; browser automation is not equivalent to NW.js behavior if NW-specific dependencies matter.
 
-## 9. Version-sensitive assumptions
+## 8. Version-sensitive assumptions
 
 Retain MV/MZ edition, actual core hashes, material plugin names/order/hashes and database hashes. Core scripts may be customized. Revalidate command registration, event data shapes, script execution order, animation/saving differences, and plugin modifications against the target build. Do not replace local facts with assumptions from an upstream core-script repository.
 
-## 10. Common failures
+## 9. Common failures
 
 - Routing by generic NW.js/Pixi signals or unpacking ordinary readable RPG Maker sources.
 - Inferring effective state ownership from vanilla engine functions, regex hits or presentation hooks without tracing enabled plugins.
 - Losing event/page/script continuation context or reading MZ command 357 arguments from index 2 rather than 3.
 
-## 11. Evidence checklist
+## 10. Evidence checklist
 
 Keep edition/build evidence, relevant database and event/page/command locators, effective enabled-plugin order, authoritative state mutations, and any material save/wait uncertainty; distinguish observed from inferred behavior.
-
-## 12. Bundled helper
-
-scripts/rpgmaker_triage.py provides *read-only* root/edition classification, hashing, enabled plugin inventory, event-command counts and selected locations, plus heuristic prototype/registration indicators. It never executes project JavaScript, unpacks encrypted assets, edits game files, or proves an effective override chain. Prefer this helper to general Web JS triage when RPG Maker source and data are readable.

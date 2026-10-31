@@ -18,7 +18,7 @@ not preload unrelated engine references.
 | Unity Mono | [engine-unity-mono.md](engine-unity-mono.md) | none | bundled |
 | Unity IL2CPP | none | none | core workflow only |
 | Unreal native code | none | none | core workflow only |
-| RPG Maker MV/MZ project, event JSON and plugins | [engine-rpgmaker-mv-mz.md](engine-rpgmaker-mv-mz.md) | `scripts/rpgmaker_triage.py` | bundled |
+| RPG Maker MV/MZ project, event JSON and plugins | [engine-rpgmaker-mv-mz.md](engine-rpgmaker-mv-mz.md) | none | bundled |
 | Web / JavaScript bundle or local Node.js logic | [engine-web-javascript.md](engine-web-javascript.md) | `scripts/web_js_triage.py` | bundled |
 | Windows LÖVE / Love2D Lua | [engine-love2d-lua.md](engine-love2d-lua.md) | `scripts/love2d_triage.py` | bundled |
 | Other embedded/custom runtime | none | none | core workflow only |

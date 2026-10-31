@@ -20,14 +20,7 @@ Collection-level composition evaluations live under `evals/`.
 
 ## RPG Maker MV/MZ
 
-Use the [specialized adapter](analyze-game-logic/references/engine-rpgmaker-mv-mz.md) for confirmed MV/MZ gameplay, not generic JS bundle recovery. Its read-only helper locates candidate roots, event commands and enabled-plugin hints without executing project JavaScript:
-
-```sh
-python analyze-game-logic/scripts/rpgmaker_triage.py /path/to/project --events --hooks
-python -m unittest discover -s tests -v
-```
-
-`--out /path/outside/game-tree/report.json` saves a report outside the project. Hook matches do not prove runtime ownership.
+Use the [specialized adapter](analyze-game-logic/references/engine-rpgmaker-mv-mz.md) for evidenced MV/MZ gameplay rather than generic JavaScript bundle recovery. Inspect relevant project files, event JSON, and enabled plugins directly with available search and JSON tools; use focused deterministic commands when the task needs them.
 
 ## Installation
 
