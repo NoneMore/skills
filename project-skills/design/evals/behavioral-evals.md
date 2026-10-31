@@ -88,3 +88,14 @@ Required assertions:
 - `did_not_silently_assume_the_limit = PASS`
 - `kept_the_limit_explicitly_unresolved_in_case_b = PASS`
 - `deferred_the_material_choice_with_a_clear_unblocker_when_unresolved = PASS`
+
+## 9. Material design semantics stop short of a task specification
+
+Prompt: Design cancellation handling for an asynchronous job processor. Jobs may be queued, running, retrying, or completed when a cancellation request arrives, and the queue may redeliver messages. Decide who owns cancellation state and how to handle races with execution and completion.
+
+Required assertions:
+- `made_concrete_ownership_and_race_semantics_decisions = PASS`
+- `explained_consequential_tradeoffs_and_key_invariants = PASS`
+- `used_interface_and_scenario_detail_to_support_decisions = PASS`
+- `did_not_expand_into_exhaustive_behavioral_requirements_or_acceptance_criteria = PASS`
+- `did_not_produce_a_task_scoped_implementation_or_verification_contract = PASS`
