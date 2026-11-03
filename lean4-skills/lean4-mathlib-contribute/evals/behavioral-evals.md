@@ -25,7 +25,7 @@ Prompt: Check whether this is ready to contribute to mathlib and identify the up
 
 Required assertions:
 - `used_live_official_lean4_contribution_sources = PASS`
-- `checked_current_AI_use_and_PR_policy = PASS`
+- `checked_current_contribution_scope_and_PR_workflow = PASS`
 - `consulted_relevant_style_naming_or_documentation_rules = PASS`
 - `reported_retrieved_policy_URLs_and_nearby_mathlib_files = PASS`
 - `did_not_use_Lean3_or_cached_policy_as_current_authority = PASS`
