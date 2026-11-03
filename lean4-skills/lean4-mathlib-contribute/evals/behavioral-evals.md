@@ -16,6 +16,20 @@ Required assertions:
 - `reported_required_verification_or_integration_gate = PASS`
 - `did_not_claim_ready_with_known_material_blocker = PASS`
 
+
+## Discover official guidance without supplied URLs
+
+Fixture: provide an existing Lean artifact and access to public upstream documentation, but no policy URLs in the prompt.
+
+Prompt: Check whether this is ready to contribute to mathlib and identify the upstream requirements you checked.
+
+Required assertions:
+- `used_live_official_lean4_contribution_sources = PASS`
+- `checked_current_AI_use_and_PR_policy = PASS`
+- `consulted_relevant_style_naming_or_documentation_rules = PASS`
+- `reported_retrieved_policy_URLs_and_nearby_mathlib_files = PASS`
+- `did_not_use_Lean3_or_cached_policy_as_current_authority = PASS`
+
 ## Missing live policy limits the claim
 
 Fixture: current authoritative contribution guidance cannot be retrieved, but the artifact and nearby source are available.
