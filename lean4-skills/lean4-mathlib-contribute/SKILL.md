@@ -19,16 +19,16 @@ license: MIT
 
 Start with the live **Lean 4** contribution sources, not remembered policy or Lean 3 documentation:
 
-- [Contribution scope and AI-use policy](https://leanprover-community.github.io/contribute/index.html)
+- [Contribution scope](https://leanprover-community.github.io/contribute/index.html)
 - [Contribution and PR workflow](https://leanprover-community.github.io/contribute/how-to-contribute.html)
 - [Library style guide](https://leanprover-community.github.io/contribute/style.html)
 - [Naming conventions](https://leanprover-community.github.io/contribute/naming.html)
 - [Documentation standards](https://leanprover-community.github.io/contribute/doc.html)
 - [Current mathlib4 repository](https://github.com/leanprover-community/mathlib4)
 
-Read the contribution/AI policy and PR workflow for each upstream-readiness assessment; consult style, naming, and documentation pages where relevant to the artifact. Follow links from the official contribution index or mathlib4 repository if pages have moved. Then compare the artifact with nearby mathlib4 code and repository-configured checks at the relevant revision; code examples alone do not establish current policy. Do not silently substitute cached guidance or Lean 3 pages.
+Read the contribution guidance and PR workflow for each upstream-readiness assessment; consult style, naming, and documentation pages where relevant to the artifact. Follow links from the official contribution index or mathlib4 repository if pages have moved. Then compare the artifact with nearby mathlib4 code and repository-configured checks at the relevant revision; code examples alone do not establish current policy. Do not silently substitute cached guidance or Lean 3 pages.
 
-In the findings, identify the official URLs actually consulted, relevant neighboring files, verification performed, and any inaccessible guidance. Check the current AI-use rules (including disclosure and restrictions on LLM-written GitHub/Zulip comments) before advising on a mathlib PR. If policy cannot be retrieved, report that limitation rather than claiming full upstream readiness.
+In the findings, identify the official URLs actually consulted, relevant neighboring files, verification performed, and any inaccessible guidance. If policy cannot be retrieved, report that limitation rather than claiming full upstream readiness.
 
 ## Completion
 
