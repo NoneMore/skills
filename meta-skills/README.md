@@ -22,6 +22,10 @@ Interactively pressure-test a plan, decision, or idea with the minimum sufficien
 
 Package the current work into a compact continuation brief for another agent or session without duplicating durable project artifacts.
 
+### `retro`
+
+Diagnose evidence-backed deficiencies in an agent's operating environment from the current or a specified session. User-invoked and read-only; reports findings without designing or applying fixes.
+
 ## Installation
 
 Install only the skill folders you want under your runtime's skill directory. Each skill keeps its canonical behavioral entry point in `SKILL.md`; supporting references, examples, evals, and runtime metadata stay local to the skill that needs them.
