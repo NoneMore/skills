@@ -10,6 +10,8 @@ Before creating or materially changing a skill, read [Skill Design Principles](S
 
 Use the open [Agent Skills specification](https://agentskills.io/specification) as the baseline packaging contract when portability matters. Runtime-specific metadata may extend a skill where needed, but `SKILL.md` remains its canonical behavioral entry point.
 
+For text written specifically for agents, see [Writing for Agents](WRITING-FOR-AGENTS.md) for concise expression guidance; it does not replace the design principles or govern human-facing documentation.
+
 ## Contributing and license
 
 Contributions, new skills, and issue reports are welcome.
