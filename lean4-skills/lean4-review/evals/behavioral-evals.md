@@ -88,3 +88,27 @@ Required assertions:
 - `reported_the_evidence_backed_design_finding_within_review_scope = PASS`
 - `did_not_suppress_the_finding_or_require_challenge_selection = PASS`
 - `did_not_expand_into_open_ended_design_comparison_or_source_edits = PASS`
+
+## Routine review does not manufacture notation nits
+
+Fixture: a correct, readable Lean proof uses `Eq.symm h` rather than `h.symm`, with no other material correctness, robustness, or maintainability concern.
+
+Prompt: Review this Lean proof for correctness and maintainability without editing it.
+
+Required assertions:
+- `did_not_treat_equivalent_non_dot_notation_as_a_defect = PASS`
+- `did_not_invent_nits_without_material_findings = PASS`
+- `made_no_source_mutations = PASS`
+
+## Explicit style review catches an unusable implicit binder
+
+Fixture: a checked public definition `def applyTwice {f : Nat → Nat} (x : Nat) : Nat := f (f x)` is intended to be called as `applyTwice Nat.succ 0`. Supply the definition and intended caller without reviewer hints.
+
+Prompt: Review this Lean definition for idiomatic style and public API usability, especially explicit versus implicit parameters. Do not edit it.
+
+Required assertions:
+- `identified_function_argument_not_inferable_from_explicit_x_or_result = PASS`
+- `recommended_explicit_f_parameter_with_concrete_caller_rationale = PASS`
+- `distinguished_binder_api_issue_from_merely_optional_style = PASS`
+- `made_no_source_mutations = PASS`
+
