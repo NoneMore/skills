@@ -6,8 +6,6 @@ This reference is for wording **instructions written specifically for agent cons
 
 Apply to agent-only text such as `SKILL.md`, `AGENTS.md` / `CLAUDE.md`, agent-facing reference files, and runtime instructions. A document being readable or retrievable by an agent does not make it agent-only. Do not optimize human-facing or shared documents (including READMEs, governance, architecture notes, ADRs, and specifications) for agent context at the expense of human readers.
 
-For workspace instruction files, `agents-md-wizard` owns target selection, loader semantics, and preservation of existing human policy; this reference only informs the wording of content whose authority and scope are already established. Do not treat these writing suggestions as permission to alter policy.
-
 ## Instruction Precision
 
 - Name the condition under which an instruction applies when the distinction changes behavior. Use conditions an agent can determine from the task and available evidence.
