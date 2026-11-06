@@ -1,0 +1,4 @@
+interface:
+  display_name: "Math Exposition Editor"
+  short_description: "Polish mathematical prose and paper flow without proof checks"
+  default_prompt: "Use $math-exposition-editor to improve this mathematical manuscript's prose and exposition while preserving all mathematical content."
