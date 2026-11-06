@@ -1,6 +1,6 @@
 # Math Agent Skills
 
-Installable Agent Skills for mathematical reading, research-note creation and curation, and Lean-oriented formalization workflows.
+Installable Agent Skills for mathematical paper reading, exposition editing, research-note creation and curation, and Lean-oriented formalization workflows.
 
 ## Skills
 
@@ -15,6 +15,20 @@ Default prompt:
 ```text
 Use $math-paper-reader to read this mathematical paper and explain the key formulas with page or equation references.
 ```
+
+### `math-exposition-editor`
+
+Path: `skills/math-exposition-editor`
+
+**User-invoked.** Edits mathematical English, equation-adjacent prose, theorem/proof narration, and paper organization **without mathematical correctness review**. Wording edits preserve mathematical meaning; consequential structural reorganization requires author approval. Unless source-file edits are explicitly requested, return suggested revisions without modifying files.
+
+Example:
+
+```text
+Use $math-exposition-editor to polish this LaTeX section's exposition without checking its proofs or changing its claims.
+```
+
+Design influences: [Math Prose](https://github.com/TianhuaGao/math-prose) (MIT) and [Mathematics Paper Skills](https://github.com/amelieloher/math-paper-skills) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)). This skill adapts their writing/organization ideas into an independently worded, exposition-only workflow.
 
 ### `latex-research-note-curator`
 
@@ -47,6 +61,7 @@ Install one or more Skill folders under your Codex skills directory.
 ```sh
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R skills/math-paper-reader "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R skills/math-exposition-editor "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R skills/latex-research-note-curator "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R skills/lean-blueprint-author "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
@@ -62,6 +77,11 @@ skills/
     agents/openai.yaml
     references/formula-reading-workflow.md
     references/math-paper-reading-checklist.md
+  math-exposition-editor/
+    SKILL.md
+    agents/openai.yaml
+    references/local-prose.md
+    references/structural-review.md
   latex-research-note-curator/
     SKILL.md
     agents/openai.yaml
@@ -82,6 +102,7 @@ If your Codex installation includes the `skill-creator` validator, validate each
 ```sh
 VALIDATOR="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py"
 python3 "$VALIDATOR" skills/math-paper-reader
+python3 "$VALIDATOR" skills/math-exposition-editor
 python3 "$VALIDATOR" skills/latex-research-note-curator
 python3 "$VALIDATOR" skills/lean-blueprint-author
 ```
