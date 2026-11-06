@@ -22,7 +22,7 @@ Read this when editing sentences, paragraphs, theorem/proof narration, or text s
 | Candidate change | Exposition-safe action |
 | --- | --- |
 | Replace repeated "we have" with a more informative lead | Use the author's explicitly supplied operation or relation; otherwise use a neutral introduction. |
-| Change "then" to "hence", "therefore", or "equivalently" | Retain the claim-bearing connector unless the author confirms the intended force. |
+| Change "then" to "hence", "therefore", or "equivalently" | Preserve the stated logical relation. Rephrase only when its force is explicit in the source; otherwise retain the original connector and flag the ambiguity. |
 | Shorten a theorem, hypothesis, or proof sentence | Retain every condition, qualifier, scope, and attribution; hold ambiguous compression for approval. |
 | Add an intuitive explanation | Propose it separately if the author has not already stated that interpretation. |
 | Rename a notation item or technical term | Keep the established form; ask first if a global rename is important to readability. |
