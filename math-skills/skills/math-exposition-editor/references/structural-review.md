@@ -22,11 +22,9 @@ For whole-paper work, include the abstract, introduction, main statements, secti
 - **Repetition:** Is a repeated explanation unnecessary, or does it orient the reader after a long detour? Keep the latter.
 - **Deferred material:** If moving a proof or technical discussion to an appendix might help, identify the necessary pointers and reader costs; do not make that move unilaterally.
 
-## Separate edits from author decisions
+## Structural proposals requiring author decisions
 
-Low-risk local work (e.g., paragraph breaks, descriptive transitions grounded in explicit text, shortening redundant exposition) can be performed within the requested editing scope.
-
-Before executing any change that moves, splits, merges, demotes, or deletes a theorem/lemma/proof/definition; changes the hierarchy of main results; or shifts technical material between body and appendix, present a concrete proposal and ask for authorization. Such changes may affect how mathematical dependencies are read even if the formulas are copied unchanged. Do not decide equivalence, sufficiency, or dispensability of mathematical claims.
+For a proposed move, split, merge, demotion, or deletion of a theorem/lemma/proof/definition; a change to the hierarchy of main results; or a shift between body and appendix, identify the affected material, existing pointers, and reader-facing tradeoffs. Apply the author-approval requirement in `SKILL.md` before making such edits. Do not decide equivalence, sufficiency, or dispensability of mathematical claims.
 
 Suggested review format:
 
@@ -38,4 +36,4 @@ Rank findings by likely reader impact and keep a distinction between an observed
 
 ## After an authorized restructure
 
-Account for every moved item and all original labels, citations, references, and uncertainty markers. Check prose around old and new locations for broken antecedents and transition text. Build and inspect affected LaTeX pages if the toolchain is available. Report editorial coverage and unresolved choices. Never describe this check as verification of proofs or claims.
+After approval, check prose at both old and new locations for broken antecedents, missing transitions, and redundant introductions. Track the moved items and the pointers readers need to find them; apply the preservation and LaTeX artifact checks in `SKILL.md`.
