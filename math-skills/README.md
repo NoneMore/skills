@@ -20,7 +20,7 @@ Use $math-paper-reader to read this mathematical paper and explain the key formu
 
 Path: `skills/math-exposition-editor`
 
-Edits mathematical English, equation-adjacent prose, theorem/proof narration, and paper organization **without mathematical correctness review**. Direct wording edits preserve mathematical content; consequential structural reorganization is proposed for author approval.
+**User-invoked.** Edits mathematical English, equation-adjacent prose, theorem/proof narration, and paper organization **without mathematical correctness review**. Wording edits preserve mathematical meaning; consequential structural reorganization requires author approval. Unless source-file edits are explicitly requested, return suggested revisions without modifying files.
 
 Example:
 
