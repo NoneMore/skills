@@ -1,6 +1,6 @@
 # Math Agent Skills
 
-Installable Agent Skills for mathematical reading, research-note creation and curation, and Lean-oriented formalization workflows.
+Installable Agent Skills for mathematical paper reading, exposition editing, research-note creation and curation, and Lean-oriented formalization workflows.
 
 ## Skills
 
