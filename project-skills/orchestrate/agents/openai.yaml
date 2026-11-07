@@ -1,0 +1,5 @@
+interface:
+  display_name: "Orchestrate"
+  short_description: "Coordinate delegated engineering execution"
+policy:
+  allow_implicit_invocation: false
