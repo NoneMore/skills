@@ -24,7 +24,7 @@ An engineering request, issue, specification, or existing plan. Prior decomposit
 
 ## Approach
 
-Execute directly when delegation adds no material benefit. Otherwise identify executable work and real prerequisites from the task or plan; use separate decomposition only when it helps. Preserve established scope and completion conditions without inventing product or design decisions.
+Respect explicitly requested delegation. Otherwise execute directly when delegation adds no material benefit. Identify executable work and real prerequisites from the task or plan; use separate decomposition only when it helps. Preserve established scope and completion conditions without inventing product or design decisions.
 
 Before dispatch, establish that the unit is actionable with the current dependencies, shared resources, and recipient's available tools and authority. Convey its intended outcome, relevant constraints, artifact or interface boundary, and verifiable completion conditions. Keep decisions requiring parent or user authority with the parent.
 
@@ -40,7 +40,7 @@ Integrate delivered artifacts against the original requested outcome and cross-t
 
 ## Boundaries
 
-Execution roles own their assigned outputs within their actual tools and permissions. Return material scope or product decisions and unavailable parent-control operations to the parent; skill instructions do not grant tool authority.
+Execution roles own their assigned outputs within their actual tools and permissions. Keep parent-only decisions and control operations out of execution assignments. Handle escalated material scope or product decisions at the parent level, seeking user input when required; skill instructions do not grant tool authority.
 
 Do not require a `decompose → orchestrate → implement` pipeline, introduce a tracker workflow, or add runtime scheduling or permission mechanisms.
 
