@@ -44,7 +44,13 @@ An independent reviewer should be able to identify an operative consequential de
 
 **Setup:** A subagent has implementation tools but lacks parent-control tools such as `ask_user_question` and `todo`. A material product decision or parent-only action arises during its assigned work.
 
-**Observe:** Whether the subagent returns the decision or control operation to the parent rather than attempting unavailable tool calls. Check the actual tool trace, not merely whether the role was warned.
+**Observe:** Whether the parent keeps unavailable control operations out of the assignment, handles escalated decisions at the appropriate authority level, and avoids relying on instructions as tool permissions. Inspect parent assignments and actual subagent tool traces; a subagent's failed call alone does not establish that the parent orchestration contract was violated.
+
+### 7. Orchestrate directly from a specification
+
+**Setup:** The user supplies an engineering specification with multiple implementation slices and integration requirements, and explicitly asks the parent to delegate execution to subagents. There is no precomputed task breakdown. In the candidate, only `orchestrate` is invoked; `decompose` is not loaded. In the baseline, use the current `decompose`-as-proxy workflow for the same requested outcome.
+
+**Observe:** Whether the candidate independently identifies actionable assignments, real prerequisites, and verification conditions from the specification; respects the requested delegation; coordinates execution and integration; and verifies the final result against the original specification. It must not require a separate `decompose` invocation, silently discard requirements, or invent unsettled product decisions.
 
 ## Decision on adoption
 
