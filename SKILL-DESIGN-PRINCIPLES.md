@@ -149,7 +149,7 @@ Format compliance is the floor, not the definition of a good skill.
 Distinguish three related properties:
 
 - **Artifact inspectability** — whether the Skill's rules and design can be checked directly.
-- **Execution reviewability** — whether consequential claims about a particular run can be independently checked through its result and existing evidence, or, when those are insufficient, through records of material execution actions and decisions.
+- **Execution reviewability** — whether consequential outcomes, claims, and material gaps in a particular run can be independently checked through its result and existing evidence, or, when those are insufficient, through records of material execution actions and decisions.
 - **Evaluability** — whether the relevant behavior can be judged against meaningful criteria.
 
 A skill should be inspectable as an artifact. Prefer static inspection for properties that can be checked directly: ambiguous or conflicting rules, unnecessary discretion, unverifiable completion conditions, probabilistic work better made deterministic, and stale dependencies or runtime assumptions.
