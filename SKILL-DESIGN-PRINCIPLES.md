@@ -74,7 +74,7 @@ For model-invoked skills, routing intent should be explicit in discovery metadat
 
 Prefer explicit, checkable conditions over vague instructions such as “be thorough.”
 
-A completion contract may cover both the primary artifact and concise **meta-output** about the execution. For consequential outcomes, make the smallest useful chain independently checkable: **claim or decision → evidence locator → verification performed and actual result → limitations or unverified scope**. Point to existing diffs, test results, logs, citations, or artifacts rather than duplicating them; a structured self-report is not proof.
+A completion contract may cover both the primary artifact and concise **meta-output** about the execution. For consequential outcomes, make the smallest useful chain independently checkable: **claim or decision → reviewer-accessible evidence locator → verification performed and actual result → limitations or unverified scope**. Point to existing diffs, test results, logs, citations, or artifacts rather than duplicating them; a structured self-report is not proof.
 
 ---
 
