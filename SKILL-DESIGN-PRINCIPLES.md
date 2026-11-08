@@ -67,11 +67,14 @@ Make clear, when relevant:
 - **Behavioral scope and invariants** — what the agent should do and what must remain true.
 - **Decision points** — meaningful branches and how to resolve them.
 - **Output and completion** — what must be produced and what observable conditions mean “done.”
+- **Execution reviewability, when warranted** — which consequential claims, decisions, verification results, and material limits an independent reviewer should be able to inspect.
 - **Failure and stop behavior** — what to do when information, tools, or permissions are insufficient, and where the skill must stop.
 
 For model-invoked skills, routing intent should be explicit in discovery metadata before activation; the skill body may refine it once loaded.
 
 Prefer explicit, checkable conditions over vague instructions such as “be thorough.”
+
+Where reviewability matters, make consequential outcome and quality claims checkable against task-relevant criteria and reviewer-accessible evidence. Use task-appropriate output structure when it reduces review cost, but neither structure nor self-report proves correctness. Reuse existing diffs, test results, logs, citations, or artifacts. When these cannot establish material claims or limits, add concise execution meta-output linking **claim or decision → evidence → checks performed and actual results, if any → limitations or unverified scope**.
 
 ---
 
@@ -143,7 +146,17 @@ Format compliance is the floor, not the definition of a good skill.
 
 ## L6 — Inspectability and Maintenance
 
+Distinguish three related properties:
+
+- **Artifact inspectability** — whether the Skill's rules and design can be checked directly.
+- **Execution reviewability** — whether consequential outcomes, claims, and material gaps in a particular run can be independently checked through its result and existing evidence, or, when those are insufficient, through records of material execution actions and decisions.
+- **Evaluability** — whether the relevant behavior can be judged against meaningful criteria.
+
 A skill should be inspectable as an artifact. Prefer static inspection for properties that can be checked directly: ambiguous or conflicting rules, unnecessary discretion, unverifiable completion conditions, probabilistic work better made deterministic, and stale dependencies or runtime assumptions.
+
+Design execution reviewability into behavioral and completion contracts where it materially reduces verification cost. Prefer reviewing results against task-relevant criteria and existing evidence; add process evidence only where consequential claims cannot otherwise be checked. Scale any additional review surface with responsibility breadth, invocation frequency, and failure consequences. Reuse existing evidence, expose material unverified scope, and allow reviewers to challenge claims against the underlying evidence. Avoid universal reporting templates and exhaustive execution traces.
+
+Reviewing recorded execution evidence is different from re-running a Skill. Re-execution may be useful when evidence is missing or important behavior remains uncertain, but it should not be the default substitute for a reviewable run.
 
 Use dynamic eval only for important behavioral uncertainty that inspection cannot resolve, when useful cases can be derived from the contract or representative use, the behavior is reproducible enough to diagnose, plausible results would change a concrete decision, and the expected value justifies the setup and maintenance cost. Prefer small, targeted cases around boundaries, transitions, and regressions.
 
@@ -162,6 +175,6 @@ Before adding or changing a skill, ask:
 5. **Invocation and routing** — Who owns invocation? If model-invoked, can the right task discover the skill without excessive overlap? If user-invoked, is explicit human selection clear without unnecessary model-routing machinery?
 6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-8. **Inspectability** — Can artifact defects be found directly, and is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
+8. **Inspectability and reviewability** — Can artifact defects be found directly? Can an independent reviewer check consequential outcomes and claims against the task contract, meaningful criteria, and accessible evidence, and identify material omissions or unverified scope, with process records only where needed? Is remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
 
 > **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**
