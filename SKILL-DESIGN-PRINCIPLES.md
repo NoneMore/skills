@@ -74,7 +74,7 @@ For model-invoked skills, routing intent should be explicit in discovery metadat
 
 Prefer explicit, checkable conditions over vague instructions such as “be thorough.”
 
-A completion contract may cover both the primary artifact and concise **meta-output** about the execution. For consequential outcomes, make the smallest useful chain independently checkable: **claim or decision → reviewer-accessible evidence locator → verification performed and actual result → limitations or unverified scope**. Point to existing diffs, test results, logs, citations, or artifacts rather than duplicating them; a structured self-report is not proof.
+A completion contract should make the primary result independently reviewable where practical. Include concise **meta-output** about the execution when material claims, decisions, or limitations cannot be adequately checked from the result and existing evidence. For consequential outcomes, make the smallest useful chain independently checkable: **claim or decision → reviewer-accessible evidence locator → verification performed and actual result → limitations or unverified scope**. Point to existing diffs, test results, logs, citations, or artifacts rather than duplicating them; a structured self-report is not proof.
 
 ---
 
@@ -149,12 +149,14 @@ Format compliance is the floor, not the definition of a good skill.
 Distinguish three related properties:
 
 - **Artifact inspectability** — whether the Skill's rules and design can be checked directly.
-- **Execution reviewability** — whether a reviewer can inspect evidence from a particular run without reconstructing or repeating the work.
+- **Execution reviewability** — whether consequential claims about a particular run can be independently checked through its result and existing evidence, or, when those are insufficient, through records of material execution actions and decisions.
 - **Evaluability** — whether the relevant behavior can be judged against meaningful criteria.
 
 A skill should be inspectable as an artifact. Prefer static inspection for properties that can be checked directly: ambiguous or conflicting rules, unnecessary discretion, unverifiable completion conditions, probabilistic work better made deterministic, and stale dependencies or runtime assumptions.
 
-Design execution reviewability into behavioral and completion contracts where it reduces consequential verification cost. Scale the review surface with responsibility breadth, invocation frequency, and failure consequences; broad, frequent, or high-consequence Skills may warrant a stable interface, while narrow or infrequent ones may need no extra reporting. Reuse evidence already generated in the task, and make missing or untested scope visible. A reviewer must be able to challenge critical claims against the underlying evidence rather than trust the producer's assessment.
+Prefer result-based review when the outcome and available evidence sufficiently establish the relevant claims. Require additional process evidence only where consequential facts cannot be established from the result.
+
+Design execution reviewability into behavioral and completion contracts where it reduces consequential verification cost. Scale the review surface with responsibility breadth, invocation frequency, and failure consequences; broad, frequent, or high-consequence Skills may warrant a stable interface, while sufficient existing evidence may eliminate the need for extra reporting. Reuse evidence already generated in the task, and make missing or untested scope visible. A reviewer must be able to challenge critical claims against the underlying evidence rather than trust the producer's assessment.
 
 Keep review surfaces task-specific rather than mandating a universal reporting template or exhaustive execution traces.
 
@@ -177,6 +179,6 @@ Before adding or changing a skill, ask:
 5. **Invocation and routing** — Who owns invocation? If model-invoked, can the right task discover the skill without excessive overlap? If user-invoked, is explicit human selection clear without unnecessary model-routing machinery?
 6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-8. **Inspectability and reviewability** — Can artifact defects be found directly? For consequential runs, can an independent reviewer check material claims, observed verification results, and unverified scope without repeating the task? Is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
+8. **Inspectability and reviewability** — Can artifact defects be found directly? For consequential runs, can an independent reviewer check material claims, observed verification results, and unverified scope from the result and available evidence? Where those are insufficient, is the necessary process evidence reviewable without repeating the task? Is any remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
 
 > **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**
