@@ -36,6 +36,8 @@ specs/
 - Revise an active specification in place as requirements settle. Archive the entire Change directory, preserving its history, when the PR completes or terminates it. Record the reason, acceptance outcome, verification evidence, and unresolved items in the archived specification.
 - Archiving means the PR-scoped work has concluded, not that the PR has merged or the change deployed. Neither `active` nor `archive` proves readiness, correctness, implementation, or current applicability. Git, tests, PR review, and deployed behavior remain distinct evidence.
 
+Later, explicitly authorized project renewal may retire older archived Change directories from the current tree after preserving required history and evidence. This does **not** relax the rule that each PR's participating Changes must be archived before merge, including a renewal PR when this policy applies. If a project requires Change-name uniqueness across retired history, its checks must consult retained history rather than only current archive paths. Any different PR treatment must be established in the human-facing project policy and checks, not inferred by an agent.
+
 ## PR contract and working sequence
 
 1. **Scope.** Identify the Change or Changes covered by this PR. Split larger proposals into independently closable Changes when necessary; one PR may complete several, but a Change must not be split across PRs.

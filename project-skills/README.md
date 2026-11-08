@@ -7,6 +7,7 @@ Before materially changing a skill, follow the repository-level [Skill Design Pr
 ## Capabilities
 
 - `bootstrap-project` — explicitly initialize or adapt a code-first, change-centered project governance practice without imposing a lifecycle on other skills.
+- `renew-project` — explicitly improve an established development baseline through bounded documentation, structural, and optional historical cleanup.
 - `design` — resolve material software, domain, architecture, and interface choices into a coherent direction.
 - `review` — independently evaluate an existing result and report evidence-backed findings.
 - `specify` — turn settled intent into a precise task-level contract, following project conventions or keeping any file-local change rules self-contained.
