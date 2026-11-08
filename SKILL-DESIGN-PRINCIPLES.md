@@ -156,7 +156,7 @@ A skill should be inspectable as an artifact. Prefer static inspection for prope
 
 Design execution reviewability into behavioral and completion contracts where it reduces consequential verification cost. Scale the review surface with responsibility breadth, invocation frequency, and failure consequences; broad, frequent, or high-consequence Skills may warrant a stable interface, while narrow or infrequent ones may need no extra reporting. Reuse evidence already generated in the task, and make missing or untested scope visible. A reviewer must be able to challenge critical claims against the underlying evidence rather than trust the producer's assessment.
 
-For example, `project-skills/implement` can link the changed artifact to relevant tests and their observed results while naming untested boundaries; `project-skills/review` can link findings to governing expectations and concrete evidence while delimiting coverage; `meta-skills/retro` can link a session observation to inspected environment mechanisms and distinguish supported diagnosis from uncertainty. These are task-specific review surfaces, not a universal reporting template or a requirement to retain exhaustive traces.
+Keep review surfaces task-specific rather than mandating a universal reporting template or exhaustive execution traces.
 
 Reviewing recorded execution evidence is different from re-running a Skill. Re-execution may be useful when evidence is missing or important behavior remains uncertain, but it should not be the default substitute for a reviewable run.
 
