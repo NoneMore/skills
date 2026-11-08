@@ -30,17 +30,17 @@ Before dispatch, establish that the unit is actionable with the current dependen
 
 For a dependent assignment, establish that the upstream artifact or interface is available to its consumer and sufficiently verified for the dependent work. A producer's interface declaration or completion claim alone is not evidence of a cleared handoff. Obtain a relevant consumer check or other concrete availability evidence before releasing the dependency.
 
-Before a consequential or costly stage, assess evidence for the task's actual failure risks, including checks of the affected execution path and any established independent review conditions. Validate or hold the affected stage when necessary evidence is missing; do not invent a universal approval gate.
+Before a consequential or costly stage, assess evidence for the task's actual failure risks, including checks of the affected execution path and any established independent review conditions. Validate or hold the affected stage when necessary evidence is missing.
 
 When new evidence undermines a material assumption behind a launch or continuation decision, promptly reassess the affected scope. Stop or revise unsafe work while preserving independently useful progress.
 
-Make consequential decisions reviewable in the ordinary execution record: what triggered the decision, who owned it, the evidence relied on, what was decided, and what would require reconsideration. When existing artifacts or execution records are insufficient, briefly report available supporting evidence, checks actually performed and their results (if any), and remaining verification limits. Use detail proportionate to the risk; do not impose a fixed schema, permanent decision log, or ceremony on routine work.
+Make consequential decisions reviewable in the ordinary execution record: what triggered the decision, who owned it, the evidence relied on, what was decided, and what would require reconsideration. When existing artifacts or execution records are insufficient, briefly report available supporting evidence, checks actually performed and their results (if any), and remaining verification limits. Use detail proportionate to the risk.
 
 Integrate delivered artifacts against the original requested outcome and cross-task constraints. Verify material completion claims independently where appropriate rather than treating subagent reports as proof.
 
 ## Boundaries
 
-Execution roles own their assigned outputs within their actual tools and permissions. Keep parent-only decisions and control operations out of execution assignments. Handle escalated material scope or product decisions at the parent level, seeking user input when required; skill instructions do not grant tool authority.
+Execution roles own their assigned outputs within their actual tools and permissions. Keep parent-only decisions and control operations out of execution assignments. Handle escalated material scope or product decisions at the parent level, seeking user input when required.
 
 ## Result
 
