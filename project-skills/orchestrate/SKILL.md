@@ -42,7 +42,6 @@ Integrate delivered artifacts against the original requested outcome and cross-t
 
 Execution roles own their assigned outputs within their actual tools and permissions. Keep parent-only decisions and control operations out of execution assignments. Handle escalated material scope or product decisions at the parent level, seeking user input when required; skill instructions do not grant tool authority.
 
-
 ## Result
 
 Report verified outcomes, material evidence supporting completion, and any blocked, failed, or incomplete work without presenting unverified results as done.
