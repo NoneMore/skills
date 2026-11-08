@@ -175,6 +175,6 @@ Before adding or changing a skill, ask:
 5. **Invocation and routing** — Who owns invocation? If model-invoked, can the right task discover the skill without excessive overlap? If user-invoked, is explicit human selection clear without unnecessary model-routing machinery?
 6. **Execution** — Are deterministic operations delegated to deterministic mechanisms where appropriate?
 7. **Trust and compatibility** — Are authorization boundaries enforced outside prompt text, and does the package fit the target runtime?
-8. **Inspectability and reviewability** — Can artifact defects be found directly? Are consequential claims and unverified scope independently checkable against meaningful criteria and accessible evidence, with process records only where needed? Is remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
+8. **Inspectability and reviewability** — Can artifact defects be found directly? Can an independent reviewer check consequential outcomes and claims against the task contract, meaningful criteria, and accessible evidence, and identify material omissions or unverified scope, with process records only where needed? Is remaining behavioral uncertainty testable, reproducible, actionable, and worth the evaluation cost?
 
 > **A good skill encodes only what earns its cost, making the surrounding system clearer, cheaper, more reliable, more reusable, and easier to verify.**
