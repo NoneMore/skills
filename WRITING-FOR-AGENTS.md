@@ -48,7 +48,7 @@ The second instruction names work that can be checked; it does not ask the model
 - Remove stale details, repeated policy, and copies of repository state that tools or maintained files can recover cheaply. Keep non-obvious conventions, rationale, and constraints that a lookup would not reveal.
 - Keep each durable rule in its authoritative location; link to it at the point of need rather than paraphrasing it throughout the instruction set.
 - Treat a suspected no-op as a model-, runtime-, and task-dependent hypothesis. Prune it when removing it does not introduce a meaningful execution or verification regression; do not infer uselessness from terse wording alone.
-- Avoid speculative and historical prohibitions: do not write `never X` solely because X is imaginable, or because a removed instruction once required X. Check for a plausible, consequential failure under the current instructions, model, runtime, and task before retaining a ban; preserve justified safeguards.
+- Avoid speculative and historical prohibitions: do not write `never X` solely because X is imaginable, or because a removed instruction once required X. Before adding or retaining such a ban, check for a plausible, consequential failure in the intended instruction, model, runtime, and task contexts; preserve justified safeguards.
 - Prefer deleting a behaviorally inert instruction to replacing it with a different motivational slogan.
 
 **Pruning example (illustrative):** instead of maintaining a stale list of currently available check commands, point to the project manifest or build configuration where those commands are defined, while retaining any non-obvious rule about which check a particular change requires.
