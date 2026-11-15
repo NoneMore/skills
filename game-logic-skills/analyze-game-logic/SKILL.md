@@ -7,9 +7,9 @@ metadata:
 
 # Analyze Game Logic
 
-Recover the smallest version-scoped mechanic slice that answers the user's question. Keep narrow lookup questions narrow. Do not add persistence, runtime work, or binary analysis unless the question needs them.
+Recover the smallest version-scoped mechanic slice that answers the question. Escalate analysis depth, runtime work, or persistence only when they resolve material uncertainty or serve an explicit request.
 
-This skill produces mechanic knowledge. For downstream requests, use the desired outcome only to determine which mechanic facts are material. Pass the recovered version-scoped facts to $apply-game-logic; do not choose the change mechanism here.
+This skill produces mechanic knowledge, not a change mechanism. For downstream tasks, use the desired outcome to select material facts and pass version-scoped findings to $apply-game-logic.
 
 ## 1. Bound the task
 
@@ -35,18 +35,11 @@ Choose analysis depth from the question and remaining uncertainty, not from a st
 
 Start with cheap semantic evidence: readable configuration/source, strings, symbols, RTTI/reflection, imports, resources, file layout, metadata, and existing analysis projects.
 
-Treat implementation layers as a search progression. Before escalating into a more opaque boundary, identify the unresolved fact and establish either:
+Escalate from readable code to opaque layers only for a named unresolved fact. Require either evidence that the relevant path crosses that boundary or a bounded search showing the readable layers cannot answer it. Stay with source/scripts when sufficient; prefer targeted functions and data-flow slices over broad decompilation.
 
-- positive transition evidence showing the readable path terminates at that boundary; or
-- a bounded search showing the relevant readable layers do not contain the required relation.
+Truncated output or a partial inspection cannot support completeness claims. Inspect missing ranges only when material; preserve costly or lossy ranges under [references/project-knowledge.md](references/project-knowledge.md) when useful.
 
-Stay at source/script level when it can answer the question. Prefer targeted functions and data-flow slices over broad decompilation.
-
-If output is truncated or only a partial range was inspected, do not make completeness-dependent claims until the necessary missing ranges are checked. Expand coverage only when the claim requires it; retain costly or lossy captured ranges when useful under [references/project-knowledge.md](references/project-knowledge.md).
-
-Before choosing a generic language/runtime adapter, check corroborating project and data markers for a more specific game engine. Prefer the dedicated engine adapter for gameplay data and lifecycle; add a generic adapter only for a separately material runtime or bundling boundary.
-
-After the material boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only the adapter needed for that boundary.
+Once the relevant boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only its material adapter. Check corroborating project/data markers for a dedicated game-engine adapter before generic language/runtime guidance; use a generic adapter only for a distinct material boundary.
 
 For focused/full compiled/native analysis already using an established project-scoped editable disassembler/decompiler workspace, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Do not introduce refinement work for triage.
 
@@ -80,26 +73,24 @@ Runtime validation is optional for narrow identity/location claims. When timing,
 
 ## 6. Retain reusable understanding selectively
 
-Unrequested one-off lookups need no storage. For explicit save requests, multi-session work, or valuable evidence that is costly or lossy to recover, follow [references/project-knowledge.md](references/project-knowledge.md) to retain requested material, useful architecture notes, or build-scoped snapshots. Honor explicit requests even when material is cheap to reproduce; otherwise let future reading, verification, or recovery value justify retention. Saving does not imply ongoing maintenance.
+Unrequested one-off lookups need no storage. For explicit save requests, multi-session work, or materially costly/lossy evidence, follow [references/project-knowledge.md](references/project-knowledge.md). Honor explicit retention even for cheap material; otherwise keep only what has future reading or verification value. Retention does not imply maintenance.
 
-For a changed build, use old notes to rediscover relevant implementation paths, not as proof of current behavior. Revalidate only material facts; leave historical notes and snapshots unchanged, and update an overview only when actively maintained.
+Across builds, old notes guide rediscovery rather than prove current behavior. Revalidate material facts; preserve historical snapshots and update only actively maintained overviews.
 
 ## 7. Deliver the result
 
-Match output size to the analysis depth. For focused/full analysis, include:
+Match output size to analysis depth. For focused/full work, report:
 
-- target version/build/hash scope;
-- the conclusion and compact mechanic pseudocode;
+- target version/build/hash and conclusion with compact mechanic pseudocode;
 - stable source/function or module + RVA locators;
-- evidence and validation state;
-- material unknowns and observed-versus-inferred distinctions;
-- material analysis-workspace refinements written or proposed, when applicable;
-- when material was retained, the locations of notes and evidence snapshots, their relevant build/coverage scope and gaps, and assumptions needing revalidation.
+- supporting evidence, validation state, material unknowns, and observed versus inferred details;
+- analysis-workspace refinements, if material;
+- retained note/snapshot paths, build/coverage scope, gaps, and revalidation assumptions, when applicable.
 
-When downstream application is requested, provide a compact version-scoped mechanic record containing the facts material to that application. A reusable finding with sufficient facts is valid input to $apply-game-logic; do not normalize it through an extra protocol step solely for ceremony. Existing game-logic-mechanic-handoff/v1 records remain valid compatibility inputs.
+For downstream application, pass only material version-scoped facts to $apply-game-logic. A sufficiently complete finding is already a valid handoff; no extra format conversion is required.
 
 ## Completion
 
-For triage, stop when the requested identity or location is version-scoped, evidence-backed, and specific enough to distinguish the intended implementation target. Do not infer or reconstruct broader mechanic semantics unless the question requires them.
+For triage, stop when the requested identity/location is version-scoped, evidence-backed, and distinguishable from nearby candidates; do not reconstruct unrelated semantics.
 
-Before finishing focused/full work, verify that the claimed behavior is version-scoped, material unknowns are explicit, confidence matches the evidence, required practical runtime validation was not silently skipped, and the output contains enough mechanic detail for the user's next step without unrelated workflow machinery. When static-analysis refinement applied, verify that its annotations remain evidence-backed, uncertainty-preserving, and non-destructive.
+For focused/full work, verify that conclusions are version-scoped; material unknowns and evidence levels are explicit; required practical runtime validation was performed or identified as missing; and next-step facts are present. Any workspace annotations must remain evidence-backed, uncertainty-preserving, and non-destructive.
