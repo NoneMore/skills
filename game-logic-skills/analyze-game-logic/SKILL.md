@@ -7,7 +7,7 @@ metadata:
 
 # Analyze Game Logic
 
-Recover the smallest version-scoped mechanic slice that answers the question. Escalate analysis depth, runtime work, or persistence only when they resolve material uncertainty or serve an explicit request.
+Recover the smallest version-scoped mechanic slice that answers the question. Keep narrow lookups narrow; add deeper analysis, runtime work, or retained artifacts only for a task-relevant reason.
 
 This skill produces mechanic knowledge, not a change mechanism. For downstream tasks, use the desired outcome to select material facts and pass version-scoped findings to $apply-game-logic.
 
