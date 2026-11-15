@@ -84,7 +84,7 @@ Match output size to analysis depth. For focused/full work, report:
 - target version/build/hash and conclusion with compact mechanic pseudocode;
 - stable source/function or module + RVA locators;
 - supporting evidence, validation state, material unknowns, and observed versus inferred details;
-- analysis-workspace refinements, if material;
+- material analysis-workspace refinements written or proposed;
 - retained note/snapshot paths, build/coverage scope, gaps, and revalidation assumptions, when applicable.
 
 For downstream application, pass only material version-scoped facts to $apply-game-logic. A sufficiently complete finding is already a valid handoff; no extra format conversion is required.
@@ -93,4 +93,4 @@ For downstream application, pass only material version-scoped facts to $apply-ga
 
 For triage, stop when the requested identity/location is version-scoped, evidence-backed, and distinguishable from nearby candidates; do not reconstruct unrelated semantics.
 
-For focused/full work, verify that conclusions are version-scoped; material unknowns and evidence levels are explicit; required practical runtime validation was performed or identified as missing; and next-step facts are present. Any workspace annotations must remain evidence-backed, uncertainty-preserving, and non-destructive.
+For focused/full work, verify that conclusions are version-scoped; material unknowns are explicit and confidence matches evidence; required practical runtime validation was performed or identified as missing; and next-step facts are present. Any workspace annotations must remain evidence-backed, uncertainty-preserving, and non-destructive.
