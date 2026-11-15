@@ -54,4 +54,3 @@ A compact record usually contains:
 
 Do not add empty fields for dimensions that do not matter.
 
-For compatibility, existing records identified as game-logic-mechanic-handoff/v1 remain valid application inputs. Consumers should validate the material facts they need rather than requiring an exact top-level shape or forcing a new normalization pass.
