@@ -84,7 +84,7 @@ Match output size to analysis depth. For focused/full work, report:
 - target version/build/hash and conclusion with compact mechanic pseudocode;
 - stable source/function or module + RVA locators;
 - supporting evidence, validation state, material unknowns, and observed versus inferred details;
-- material analysis-workspace refinements written or proposed;
+- material analysis-workspace refinements written or proposed, when applicable;
 - retained note/snapshot paths, build/coverage scope, gaps, and revalidation assumptions, when applicable.
 
 For downstream application, pass only material version-scoped facts to $apply-game-logic. A sufficiently complete finding is already a valid handoff; no extra format conversion is required.
