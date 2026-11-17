@@ -47,7 +47,7 @@ For behavior questions, trace the material path:
 
 Resolve only consequential formula order, clamps/rounding, units, RNG, event source, timing, state owner/sharing/lifetime, persistence/reset, and gameplay versus presentation authority. For nontrivial cross-cutting semantics, read [gameplay-semantics.md](references/gameplay-semantics.md).
 
-For location-only questions, stop at a distinct, evidence-backed locator. For compiled/native code, verify module + RVA against the inspected build; do not assume addresses survive updates.
+For location-only questions, stop at a distinct, evidence-backed locator. For native machine-code locators, verify module + RVA against the inspected build; do not assume addresses survive updates.
 
 ### 4. Verify and report
 
@@ -57,9 +57,9 @@ Load [runtime-validation.md](references/runtime-validation.md) only when timing,
 
 Report the build/version/hash scope, conclusion and brief pseudocode when relevant, stable implementation locator, evidence, validation state, and material unknowns. Distinguish observations from inferences; scale output to the question.
 
-**Stop once the requested identity or behavior is supported and remaining consequential uncertainty is explicit.**
+**Stop investigating once the requested identity or behavior is supported and remaining consequential uncertainty is explicit.**
 
-## Optional follow-through
+## Follow-through when applicable
 
 - For substantive compiled/native work in an existing editable analysis workspace, use [static-analysis-refinement.md](references/static-analysis-refinement.md) for bounded, non-destructive, evidence-backed annotations; not for narrow lookups.
 - For explicitly requested retention, multi-session work, or costly/lossy evidence, use [project-knowledge.md](references/project-knowledge.md). One-off lookups need no storage; historical build snapshots guide rediscovery, not current proof, and saving does not imply maintenance.

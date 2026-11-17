@@ -32,4 +32,4 @@ Preserve analyst-authored semantic state by default. Revise it only when recover
 
 Treat installed game files and source binaries as read-only during analysis. Database refinement must not silently become a binary patch, runtime hook, or gameplay change.
 
-If write-back is unavailable or disallowed, report the useful proposed refinements inline. Do not create a durable artifact solely to satisfy this reference.
+Report material refinements written or proposed with stable locators sufficient for review. If write-back is unavailable or disallowed, report the useful proposed refinements inline. Do not create a durable artifact solely to satisfy this reference.
