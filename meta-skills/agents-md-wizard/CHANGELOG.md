@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — three-question refactor
+
+- Recenter authoring on what belongs in agent instructions, what belongs in contributor-facing documentation, and how to write concise behavior-changing guidance.
+- Delegate wording to the repository-wide `WRITING-FOR-AGENTS.md` and remove the multi-stage decision framework, runtime-loader snapshots, and redundant examples.
+- Replace process-heavy evaluations with focused content-placement and writing checks; keep explicit invocation and respect for existing human guardrails.
+
 ## 0.6 — 2026-09-10
 
 - Change the default from autonomous authoring to a guided, user-controlled workflow: a bare invocation permits focused read-only inspection and interviewing, not an artifact write.
