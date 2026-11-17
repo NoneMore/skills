@@ -8,9 +8,9 @@ A small, explicitly invoked Meta Skill for creating, refreshing, or auditing `AG
 
 1. **What to write?** Agent-specific behavior, external tools or adjacent workspaces, and task-triggered pointers to shared knowledge that agents might miss.
 2. **What not to write?** Architecture, business rules, and development conventions that all contributors need belong in shared docs. Do not copy readily recoverable config, directory listings, or generic advice.
-3. **How to write it?** Follow [Writing for Agents](../../WRITING-FOR-AGENTS.md): concrete actions, relevant triggers, useful pointers, and minimal duplication.
+3. **How to write it?** Use concrete actions, relevant triggers, useful pointers, and minimal duplication. The repository's [Writing for Agents](../../WRITING-FOR-AGENTS.md) provides additional guidance when available.
 
-Personal machine paths, private configuration, and volatile state belong in local/user-level configuration or tools rather than committed instructions. If important shared documentation is missing, report that gap instead of making `AGENTS.md` its only source.
+Personal machine paths and non-secret local settings belong in local/user-level configuration rather than committed instructions. Credentials and other secrets belong in appropriate secret-management tools, not agent instruction files. If important shared documentation is missing, report that gap instead of making `AGENTS.md` its only source.
 
 ## Usage
 
@@ -32,5 +32,7 @@ Creation/update requests authorize the necessary edits once important decisions 
 - `agents/openai.yaml` — explicit-invocation metadata.
 - `examples/agent-only-AGENTS.md` — an illustrative agent-specific supplement.
 - `evals/scenarios.md` — focused behavioral checks.
+
+`SKILL.md` contains the core writing rules, so standalone installations do not require the repository-level writing guide.
 
 Runtime-specific loading details are obtained from the active environment when needed, rather than maintained as a second instruction-management framework.
