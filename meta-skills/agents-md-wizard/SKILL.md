@@ -16,7 +16,7 @@ Inspect existing agent instructions and only the project evidence relevant to th
 - External context: relevant tools, services, or adjacent workspaces, including how and when the agent should locate or use them.
 - Task-triggered pointers to authoritative shared documents that an agent might otherwise overlook.
 
-Prefer stable relationships and discovery methods over hard-coded environment details. Put personal, machine-specific, or sensitive configuration in local/user-level instructions or tooling rather than tracked project instructions.
+Prefer stable relationships and discovery methods over hard-coded environment details. Keep personal or machine-specific non-secret settings in local/user-level configuration rather than committed agent instructions. Do not read secret values merely to author instructions, and do not embed credentials or secrets in instruction files; use appropriate secret-management tools instead.
 
 Ground instructions in the user's intent or maintained project authority. Do not turn directory names, plausible conventions, or current runtime restrictions into permanent project policy.
 
@@ -32,7 +32,7 @@ Preserve valid existing human-authored rules. A proposed relocation or removal o
 
 ## 3. How should it be written?
 
-Follow the repository's [Writing for Agents](../../WRITING-FOR-AGENTS.md) guide when available. In particular, write concrete actions and constraints, name conditions when they change applicability, and say when and why a referenced resource should be read. Avoid reproducing the guide here.
+Use the repository's [Writing for Agents](../../WRITING-FOR-AGENTS.md) guide for additional wording guidance when available. These core rules apply even when that file is absent: write concrete actions and constraints, name conditions when they change applicability, and say when and why a referenced resource should be read.
 
 Each line should justify its context and maintenance cost by preventing a plausible mistake, avoiding repeated reasoning, or improving verification.
 
