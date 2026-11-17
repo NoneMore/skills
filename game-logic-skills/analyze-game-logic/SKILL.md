@@ -2,95 +2,65 @@
 name: analyze-game-logic
 description: Recover and verify authorized offline/single-player game logic with reproducible evidence. Use when a mechanic, formula, state transition, timing rule, RNG path, ownership boundary, or implementation locator is unknown or stale, including cold-start requests that later feed $apply-game-logic. Excludes multiplayer or online-service interference, credential theft, DRM or payment bypass, piracy, and copyrighted-asset distribution.
 metadata:
-  version: "v5.5.0"
+  version: "v5.6.0"
 ---
 
 # Analyze Game Logic
 
-Recover the smallest version-scoped mechanic slice that answers the question. Keep narrow lookups narrow; add deeper analysis, runtime work, or retained artifacts only for a task-relevant reason.
+Recover the smallest evidence-backed, build-scoped answer. A function lookup needs no full mechanic reconstruction, runtime experiment, or saved project.
 
-This skill produces mechanic knowledge, not a change mechanism. For downstream tasks, use the desired outcome to select material facts and pass version-scoped findings to $apply-game-logic.
+## Boundaries
 
-## 1. Bound the task
+- Work only on authorized offline/local targets. If online impact or authorization is unclear, stay with non-invasive static inspection.
+- Do not interfere with multiplayer/server state, other players, accounts, credentials, DRM, payments, licensing, or anti-cheat.
+- Treat installed game files as read-only; observation-only instrumentation must be reversible.
+- Names, xrefs, constants, and UI/presentation evidence alone do not prove units, probabilities, causality, ownership, lifetime, or authority.
 
-Work only on authorized offline/local targets.
+## Workflow
 
-- If online impact or authorization is genuinely unclear, stay with non-invasive static inspection until the distinction matters.
-- Do not manipulate multiplayer state, matchmaking, leaderboards, server-authoritative state, accounts, credentials, or another player's experience.
-- Do not bypass DRM, payments, licensing, or anti-cheat.
-- Treat installed game files as read-only during analysis. Observation-only instrumentation must be reversible.
-- Do not infer units, probabilities, ownership, lifetime, authority, or causal control from names, xrefs, constants, or presentation evidence alone.
+### 1. Scope
 
-## 2. Match analysis depth to the question
+Identify the target build/files and the exact mechanic or locator the user needs. Let unresolved facts determine depth: identify a location, explain one causal path, or reconstruct a system only when necessary. A requested future change bounds relevant facts; selecting how to change the game belongs to $apply-game-logic.
 
-Use the lightest path that can close the claim:
+### 2. Locate
 
-- **Triage:** locate or identify a function, field, script, table, or call site.
-- **Focused analysis:** explain one mechanic or causal path with reusable evidence.
-- **Full analysis:** reconstruct a multi-component mechanic or system with the evidence and validation needed to support the requested conclusions.
+Start with readable source, scripts, configuration, resources, strings, symbols, metadata, and existing analysis projects. Prefer targeted data-flow slices over broad decompilation. Escalate to an opaque layer only with evidence that the relevant path crosses it, or a bounded search showing readable layers cannot answer the question. Partial or truncated inspection cannot support completeness claims.
 
-Choose analysis depth from the question and remaining uncertainty, not from a storage workflow.
+When engine-specific knowledge matters, identify the gameplay implementation from corroborating markers and load its adapter directly:
 
-## 3. Find the material implementation path
+| Boundary | Adapter |
+| --- | --- |
+| GameMaker YYC | [YYC](references/engine-gamemaker-yyc.md) |
+| Godot GDScript / scene-resource graph | [Godot](references/engine-godot-gdscript.md) |
+| Unity Mono | [Unity](references/engine-unity-mono.md) |
+| RPG Maker MV/MZ | [RPG Maker](references/engine-rpgmaker-mv-mz.md) |
+| Web/JavaScript | [Web/JS](references/engine-web-javascript.md) |
+| Windows LÖVE/Love2D Lua | [LÖVE](references/engine-love2d-lua.md) |
 
-Start with cheap semantic evidence: readable configuration/source, strings, symbols, RTTI/reflection, imports, resources, file layout, metadata, and existing analysis projects.
+Prefer the dedicated game-engine adapter for engine-owned logic; use a generic adapter only for a separate material runtime boundary. For unsupported or ambiguous backends (e.g. IL2CPP, Unreal native, GameMaker VM), use the core workflow without inventing engine rules.
 
-Escalate from readable code to opaque layers only for a named unresolved fact. Require either evidence that the relevant path crosses that boundary or a bounded search showing the readable layers cannot answer it. Stay with source/scripts when sufficient; prefer targeted functions and data-flow slices over broad decompilation.
+### 3. Understand
 
-Truncated output or a partial inspection cannot support completeness claims. Inspect missing ranges only when material; preserve costly or lossy ranges under [references/project-knowledge.md](references/project-knowledge.md) when useful.
+For behavior questions, trace the material path:
 
-Once the relevant boundary is known, consult [references/engine-registry.md](references/engine-registry.md) and load only its material adapter. Check corroborating project/data markers for a dedicated game-engine adapter before generic language/runtime guidance; use a generic adapter only for a distinct material boundary.
+**Trigger/source → Gate → Rule/transition → Authoritative state mutation**
 
-For focused/full compiled/native analysis already using an established project-scoped editable disassembler/decompiler workspace, load [references/static-analysis-refinement.md](references/static-analysis-refinement.md). Do not introduce refinement work for triage.
+Resolve only consequential formula order, clamps/rounding, units, RNG, event source, timing, state owner/sharing/lifetime, persistence/reset, and gameplay versus presentation authority. For nontrivial cross-cutting semantics, read [gameplay-semantics.md](references/gameplay-semantics.md).
 
-## 4. Reconstruct the mechanic, not just the address
+For location-only questions, stop at a distinct, evidence-backed locator. For native machine-code locators, verify module + RVA against the inspected build; do not assume addresses survive updates.
 
-For behavior or causality questions, load [references/gameplay-semantics.md](references/gameplay-semantics.md).
+### 4. Verify and report
 
-Trace from a strong semantic anchor to the authoritative state transition. Resolve only dimensions that can change the answer, such as:
+Use semantic evidence and an independent check when material; another rendering of the same code is not independent evidence. Label conclusions **Confirmed** (material checks satisfied), **Working hypothesis** (material validation missing), or **Unknown** (a consequential fact unresolved).
 
-- trigger and eligibility;
-- formula/order, clamps, rounding, units, and RNG;
-- state owner, lifetime, sharing/fan-out, persistence, and reset;
-- scheduling, caller/event source, and authority;
-- presentation versus gameplay ownership.
+Load [runtime-validation.md](references/runtime-validation.md) only when timing, causality, caller, lifetime, authority, or effective randomness needs runtime evidence. If practical validation is omitted, keep the affected claim a hypothesis.
 
-Stop when the smallest material slice can be expressed as concise gameplay pseudocode and every remaining material unknown is explicit.
+Report the build/version/hash scope, conclusion and brief pseudocode when relevant, stable implementation locator, evidence, validation state, and material unknowns. Distinguish observations from inferences; scale output to the question.
 
-For compiled/native boundaries, prefer module + RVA locators for the inspected build and verify address conversions against the original binary or loaded module before relying on them. Do not assume an RVA remains valid across builds.
+**Stop investigating once the requested identity or behavior is supported and remaining consequential uncertainty is explicit.**
 
-## 5. Close the evidence loop
+## Follow-through when applicable
 
-Use three states:
-
-- **Confirmed:** semantic evidence supports the claim and any material independent check has been satisfied.
-- **Working hypothesis:** plausible, but a material independent check or runtime validation is still missing.
-- **Unknown:** a fact that can change the interpretation remains unresolved.
-
-Different renderings of the same relation are not independent evidence. Cross-references show association, not gameplay semantics.
-
-Runtime validation is optional for narrow identity/location claims. When timing, causal control, caller discrimination, state lifetime, authority, or effective randomness materially depends on runtime behavior, load [references/runtime-validation.md](references/runtime-validation.md). If practical validation is omitted, keep the affected claim a working hypothesis.
-
-## 6. Retain reusable understanding selectively
-
-Unrequested one-off lookups need no storage. For explicit save requests, multi-session work, or materially costly/lossy evidence, follow [references/project-knowledge.md](references/project-knowledge.md). Honor explicit retention even for cheap material; otherwise keep only what has future reading or verification value. Retention does not imply maintenance.
-
-Across builds, old notes guide rediscovery rather than prove current behavior. Revalidate material facts; preserve historical snapshots and update only actively maintained overviews.
-
-## 7. Deliver the result
-
-Match output size to analysis depth. For focused/full work, report:
-
-- target version/build/hash and conclusion with compact mechanic pseudocode;
-- stable source/function or module + RVA locators;
-- supporting evidence, validation state, material unknowns, and observed versus inferred details;
-- material analysis-workspace refinements written or proposed, when applicable;
-- retained note/snapshot paths, build/coverage scope, gaps, and revalidation assumptions, when applicable.
-
-For downstream application, pass only material version-scoped facts to $apply-game-logic. A sufficiently complete finding is already a valid handoff; no extra format conversion is required.
-
-## Completion
-
-For triage, stop when the requested identity/location is version-scoped, evidence-backed, and distinguishable from nearby candidates; do not reconstruct unrelated semantics.
-
-For focused/full work, verify that conclusions are version-scoped; material unknowns are explicit and confidence matches evidence; required practical runtime validation was performed or identified as missing; and next-step facts are present. Any workspace annotations must remain evidence-backed, uncertainty-preserving, and non-destructive.
+- For substantive compiled/native work in an existing editable analysis workspace, use [static-analysis-refinement.md](references/static-analysis-refinement.md) for bounded, non-destructive, evidence-backed annotations; not for narrow lookups.
+- For explicitly requested retention, multi-session work, or costly/lossy evidence, use [project-knowledge.md](references/project-knowledge.md). One-off lookups need no storage; historical build snapshots guide rediscovery, not current proof, and saving does not imply maintenance.
+- Pass material version-scoped findings to $apply-game-logic when application is requested. A sufficient finding needs no extra handoff format.

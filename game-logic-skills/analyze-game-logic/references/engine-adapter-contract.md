@@ -91,3 +91,7 @@ structured interfaces only as optional optimizations. Keep helpers mechanical.
 If third-party-tool recipes or volatile CLI/version details become lengthy, put
 them in a focused support reference and load it only when that recovery/tooling
 path is needed.
+
+## Adding an adapter
+
+Create a focused `engine-<boundary>.md` using only the applicable sections above, then add its direct link to the adapter table in `../SKILL.md`. Keep engine-specific implementation details out of the core workflow. Add helper scripts only for repeatable mechanical triage; scripts do not establish gameplay semantics by themselves.
