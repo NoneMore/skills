@@ -38,7 +38,7 @@ Each line should justify its context and maintenance cost by preventing a plausi
 
 ## Apply
 
-- For create or refresh requests, inspect the relevant scope, keep the useful agent-only content, and make the smallest effective edit. Respect how the active environment loads instruction files; do not assume nested files compose automatically.
+- For create or refresh requests, inspect the relevant project evidence, keep useful agent-facing content, and make the smallest effective edit.
 - For audits, report misplaced, missing, duplicated, stale, or unclear instructions without editing files.
 - Do not write on a bare Skill invocation without a requested outcome. An explicit create/update request authorizes the corresponding edit; do not add a routine approval gate.
 - Ask only when an unresolved decision changes the instruction, its scope, or an existing human guardrail. Do not invent a rule to avoid asking.
