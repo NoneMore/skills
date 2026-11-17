@@ -24,7 +24,7 @@ Use $agents-md-wizard to refresh AGENTS.md without losing existing human-authore
 Audit AGENTS.md using $agents-md-wizard, but do not edit files.
 ```
 
-Creation/update requests authorize the necessary edits once important decisions are grounded; audit is read-only. When the requested file would not be loaded by the active runtime, the Skill should explain the mismatch instead of silently changing the requested target.
+Creation/update requests authorize the necessary edits once important decisions are grounded; audit is read-only.
 
 ## Package
 
@@ -35,4 +35,3 @@ Creation/update requests authorize the necessary edits once important decisions 
 
 `SKILL.md` contains the core writing rules, so standalone installations do not require the repository-level writing guide.
 
-Runtime-specific loading details are obtained from the active environment when needed, rather than maintained as a second instruction-management framework.
