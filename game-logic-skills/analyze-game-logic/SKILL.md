@@ -31,11 +31,11 @@ When engine-specific knowledge matters, identify the gameplay implementation fro
 | Boundary | Adapter |
 | --- | --- |
 | GameMaker YYC | [YYC](references/engine-gamemaker-yyc.md) |
-| Godot GDScript | [Godot](references/engine-godot-gdscript.md) |
+| Godot GDScript / scene-resource graph | [Godot](references/engine-godot-gdscript.md) |
 | Unity Mono | [Unity](references/engine-unity-mono.md) |
 | RPG Maker MV/MZ | [RPG Maker](references/engine-rpgmaker-mv-mz.md) |
 | Web/JavaScript | [Web/JS](references/engine-web-javascript.md) |
-| LÖVE/Love2D Lua | [LÖVE](references/engine-love2d-lua.md) |
+| Windows LÖVE/Love2D Lua | [LÖVE](references/engine-love2d-lua.md) |
 
 Prefer the dedicated game-engine adapter for engine-owned logic; use a generic adapter only for a separate material runtime boundary. For unsupported or ambiguous backends (e.g. IL2CPP, Unreal native, GameMaker VM), use the core workflow without inventing engine rules.
 
