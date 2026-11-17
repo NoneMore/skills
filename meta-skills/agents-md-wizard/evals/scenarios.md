@@ -50,8 +50,3 @@ Fixture: the user asks to audit `AGENTS.md`.
 
 Expect: report agent-only gaps, content that belongs in shared docs, incorrect pointers, and unclear language, without edits.
 
-## 9. Placement follows the real loader
-
-Fixture: the active environment does not compose nested instruction files, and the user requests effective instructions for a subdirectory.
-
-Expect: avoid assuming inheritance; use the effective target when the request is result-oriented. If the user explicitly named an inert file, explain the mismatch rather than silently substituting it.
