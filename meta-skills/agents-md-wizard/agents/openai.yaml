@@ -1,6 +1,0 @@
-interface:
-  display_name: "AGENTS.md Wizard"
-  short_description: "Decide what belongs in agent instructions, then create, refresh, or audit them"
-  default_prompt: "Use $agents-md-wizard to inspect this workspace and create or refresh a minimal AGENTS.md. Keep agent-specific guidance, point to shared docs instead of copying them, preserve existing human rules, and ask only about consequential unresolved decisions."
-policy:
-  allow_implicit_invocation: false

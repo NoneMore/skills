@@ -6,9 +6,9 @@ Before materially changing a Skill, follow the repository-level [Skill Design Pr
 
 ## Skills
 
-### `agents-md-wizard`
+### `agents-md`
 
-Create, refresh, or audit `AGENTS.md` or an equivalent workspace instruction artifact. It resolves effective loading, preserves existing human policy, and keeps scoped instructions minimal.
+Create, refresh, or audit `AGENTS.md` and related agent instruction files. Keep agent-specific context and instructions concise, and leave shared project knowledge in shared documentation.
 
 ### `skill-prototype-forge`
 
