@@ -40,8 +40,6 @@ Do not include speculative candidates or an `Open Questions` section. If nothing
 ## Boundaries
 
 - **Read-only:** do not edit files, change configuration or policy, create tracking items, prescribe a concrete fix, or perform remediation. You may identify the environment layer implicated by the evidence.
-- **Not artifact review:** `project-skills/review` evaluates whether an existing artifact meets its requirements. Retro examines the agent's operating environment as evidenced by session execution.
-- **Not Skill prototyping or instruction maintenance:** `skill-prototype-forge` derives prototypes from interactions; `agents-md-wizard` manages workspace instructions. Retro does neither.
 - Do not require a specific coding standards file, pre-commit setup, reviewer-agent architecture, other Skill invocation, or session-log API that the environment does not provide.
 
 ## Representative uses
